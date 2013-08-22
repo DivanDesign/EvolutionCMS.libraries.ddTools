@@ -837,6 +837,44 @@ class ddTools {
 	}
 	
 	/**
+	 * getDocumentIdByUrl
+	 * @version 1.0 (2013-08-22)
+	 *
+	 * @desc 
+	 *
+	 * @param $url {string} - @required
+	 *
+	 * @return {integer} - 
+	 */
+	public static function getDocumentIdByUrl($url){
+		global $modx;
+		
+		$url = parse_url($url);
+		$path = $url['path'];
+		
+		//Если в адресе не было хоста, значит он относительный
+		if (empty($url['host'])){
+			//Получаем хост из конфига
+			$siteHost = parse_url($modx->getConfig('site_url'));
+			
+			//На всякий случай вышережем host из адреса (а то вдруг url просто без http:// передали) + лишние слэши по краям
+			$path = trim($path, $siteHost['host'].'/');
+		}else{
+			//Просто убираем лишние слэши по краям
+			$path = trim($url['path'], '/');
+		}
+		
+		//Если документ с таким путём есть
+		if (!empty($modx->documentListing[$path])){
+			//Возвращаем его id
+			return $modx->documentListing[$path];
+		//В противном случае возвращаем 0
+		}else{
+			return 0;
+		}
+	}
+	
+	/**
 	 * removeDir
 	 * @version 1.0 (2013-03-09)
 	 *
