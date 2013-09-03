@@ -838,13 +838,13 @@ class ddTools {
 	
 	/**
 	 * getDocumentIdByUrl
-	 * @version 1.0 (2013-08-22)
+	 * @version 1.1 (2013-08-30)
 	 *
-	 * @desc 
+	 * @desc Gets id of a document by its url.
 	 *
 	 * @param $url {string} - @required
 	 *
-	 * @return {integer} - 
+	 * @return {integer} - Document ID.
 	 */
 	public static function getDocumentIdByUrl($url){
 		global $modx;
@@ -864,8 +864,11 @@ class ddTools {
 			$path = trim($url['path'], '/');
 		}
 		
+		//Если путь пустой, то мы в корне
+		if ($path == ''){
+			return $modx->getConfig('site_start');
 		//Если документ с таким путём есть
-		if (!empty($modx->documentListing[$path])){
+		}else if (!empty($modx->documentListing[$path])){
 			//Возвращаем его id
 			return $modx->documentListing[$path];
 		//В противном случае возвращаем 0
