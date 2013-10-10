@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version: 0.9 (2013-09-03)
+ * @version: 0.9.1 (2013-10-10)
  *
  * @uses modx 1.0.10 (Evo)
  *
- * @link http://code.divandesign.biz/modx/ddtools/0.9
+ * @link http://code.divandesign.biz/modx/ddtools/0.9.1
  *
  * @copyright Copyright 2013, DivanDesign
  * http://www.DivanDesign.biz
@@ -678,7 +678,7 @@ class ddTools {
 		}else{
 			$result = array();
 	
-			//Если указано поле ключя результирующего массива, добавим это поле (если ещё нету конечно)
+			//Если указано поле ключа результирующего массива, добавим это поле (если ещё нету конечно)
 			if ($resultKey !== false && !in_array($resultKey, $fields)) $fields[] = $resultKey;
 	
 			//Перебираем все документы
@@ -705,13 +705,13 @@ class ddTools {
 	
 	/**
 	 * parseFileNameVersion
-	 * @version 1.0 (2013-07-06)
+	 * @version 1.1 (2013-10-10)
 	 * 
-	 * @desc Parses a file path and gets its name & version.
+	 * @desc Parses a file path and gets its name, version & extension.
 	 * 
 	 * @param $file {string; array} - String of file path or result array of pathinfo() function. @required
 	 * 
-	 * @return {array: associative} - Array of: 'name' {string} => File name; 'version' => File version.
+	 * @return {array: associative} - Array of: 'name' {string} => File name; 'version' => File version; 'extension' => File extension.
 	 */
 	public static function parseFileNameVersion($file){
 		//Если сразу передали массив
@@ -727,7 +727,11 @@ class ddTools {
 		}
 		
 		//Fail by default
-		$result = array('name' => strtolower($file), 'version' => '0');
+		$result = array(
+			'name' => strtolower($file),
+			'version' => '0',
+			'extension' => !$fileinfo['extension'] ? '' : $fileinfo['extension']
+		);
 		
 		//Try to get file version [0 — full name, 1 — script name, 2 — version, 3 — all chars after version]
 		preg_match('/(\D*?)-?(\d(?:\.\d+)*(?:-?[A-Za-z])*)(.*)/', $fileinfo['basename'], $match);
