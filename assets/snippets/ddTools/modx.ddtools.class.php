@@ -56,7 +56,13 @@ class ddTools {
 	);
 
 	//Contains full names of some db tables
-	public static $tables;
+	public static $tables = array(
+		'site_content' => '',
+		'site_tmplvars' => '',
+		'site_tmplvar_templates' => '',
+		'site_tmplvar_contentvalues' => '',
+		'document_groups' => ''
+	);
 
 	/**
 	 * screening
@@ -935,12 +941,8 @@ class ddTools {
 }
 
 //Решение спорное, но делать Синглтон очень не хотелось
-ddTools::$tables = array(
-	'site_content' => $modx->getFullTableName('site_content'),
-	'site_tmplvars' => $modx->getFullTableName('site_tmplvars'),
-	'site_tmplvar_templates' => $modx->getFullTableName('site_tmplvar_templates'),
-	'site_tmplvar_contentvalues' => $modx->getFullTableName('site_tmplvar_contentvalues'),
-	'document_groups' => $modx->getFullTableName('document_groups')
-);
+foreach (ddTools::$tables as $key => $val){
+	ddTools::$tables[$key] = $modx->getFullTableName($key);
+}
 }
 ?>
