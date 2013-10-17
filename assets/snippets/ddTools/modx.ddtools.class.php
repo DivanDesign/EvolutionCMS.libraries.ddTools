@@ -1,13 +1,13 @@
 <?php
 /**
  * modx ddTools class
- * @version: 0.9.1 (2013-10-10)
+ * @version: 0.9.2 (2013-10-17)
  *
- * @uses modx 1.0.10 (Evo)
+ * @uses modx 1.0.12 (Evo)
  *
- * @link http://code.divandesign.biz/modx/ddtools/0.9.1
+ * @link http://code.divandesign.biz/modx/ddtools/0.9.2
  *
- * @copyright Copyright 2013, DivanDesign
+ * @copyright 2013, DivanDesign
  * http://www.DivanDesign.biz
  */
 
@@ -51,7 +51,8 @@ class ddTools {
 		'privateweb',
 		'privatemgr',
 		'content_dispo',
-		'hidemenu'
+		'hidemenu',
+		'alias_visible'
 	);
 
 	//Contains full names of some db tables
