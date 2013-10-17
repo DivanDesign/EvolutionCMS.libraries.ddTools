@@ -116,7 +116,54 @@ class ddTools {
 
 		return $result;
 	}
-
+	
+	/**
+	 * unfoldArray
+	 * @version 1.0 (2013-04-23)
+	 * 
+	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
+	 * For example, array(
+	 * 	'a': '',
+	 * 	'b': array(
+	 * 		'b1': '',
+	 * 		'b2': array(
+	 * 			'b21': '',
+	 * 			'b22': ''
+	 * 		)
+	 * 	),
+	 * 	'c': ''
+	 * ) turns into array(
+	 * 	'a': '',
+	 * 	'b.b1': '',
+	 * 	'b.b2.b21': '',
+	 * 	'b.b2.b22': '',
+	 * 	'c': ''
+	 * ).
+	 * 
+	 * @param $arr {array} - An array to convert. @required
+	 * @param $keyPrefix {string} - Prefix of the keys of an array (it's an internal varible, can be used if required). Default: ''.
+	 * 
+	 * @return {array} - Unfolded array.
+	 */
+	function unfoldArray($arr, $keyPrefix = ''){
+		$output = array();
+		
+		//Перебираем массив
+		foreach ($arr as $key => $val){
+			//Если значение является массивом
+			if (is_array($val)){
+				//Запускаем рекурсию дальше
+				$output = array_merge($output, self::unfoldArray($val, $keyPrefix.$key.'.'));
+			//Если значение — не массив
+			}else{
+				//Запоминаем (в соответствии с ключом родителя)
+				$output[$keyPrefix.$key] = $val;
+			}
+		}
+		
+		return $output;
+	}
+	
 	/**
 	 * parseText
 	 * @version 1.1 (2012-03-21)
