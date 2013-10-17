@@ -3,7 +3,7 @@
  * modx ddTools class
  * @version: 0.9.2 (2013-10-17)
  *
- * @uses modx 1.0.12 (Evo)
+ * @uses modx 1.0.10 (Evo)
  *
  * @link http://code.divandesign.biz/modx/ddtools/0.9.2
  *
@@ -51,8 +51,7 @@ class ddTools {
 		'privateweb',
 		'privatemgr',
 		'content_dispo',
-		'hidemenu',
-		'alias_visible'
+		'hidemenu'
 	);
 
 	//Contains full names of some db tables
@@ -943,6 +942,11 @@ class ddTools {
 //Решение спорное, но делать Синглтон очень не хотелось
 foreach (ddTools::$tables as $key => $val){
 	ddTools::$tables[$key] = $modx->getFullTableName($key);
+}
+
+//If version of MODX > 1.0.11
+if (method_exists($modx, 'getVersionData') && version_compare($modx->getVersionData('version'), '1.0.11', '>')){
+	ddTools::$documentFields[]  = 'alias_visible';
 }
 }
 ?>
