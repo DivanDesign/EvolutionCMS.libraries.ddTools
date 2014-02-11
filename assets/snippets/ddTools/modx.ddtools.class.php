@@ -165,6 +165,62 @@ class ddTools {
 	}
 	
 	/**
+	 * sort2dArray
+	 * @version 1.1 (2013-07-11)
+	 * 
+	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
+	 * 
+	 * @param $array {array} - Array to sort. @required
+	 * @param $sortBy {array} - Columns (second level keys) by which the array is sorted. @required
+	 * @param $sortDir {1; -1} - Sort direction (1 == ASC; -1 == DESC). Default: 1.
+	 * @param $i {integer} - Count, an internal variable used during recursive calls. Default: 0.
+	 * 
+	 * @return {array} - Sorted array.
+	 */
+	public static function sort2dArray($array, $sortBy, $sortDir = 1, $i = 0){
+		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
+		$tek = $array[0][$sortBy[$i]];
+		$tekIsNumeric = is_numeric($tek);
+		
+		$arrLeft = array();
+		$arrRight = array();
+		$arrCent = array();
+		
+		//Перебираем массив
+		foreach ($array as $val){
+			//Если эталон и текущее значение — числа
+			if ($tekIsNumeric && is_numeric($val[$sortBy[$i]])){
+				//Получаем нужную циферку
+				$cmpRes = ($val[$sortBy[$i]] == $tek) ? 0 : (($val[$sortBy[$i]] > $tek) ? 1 : -1);
+				//Если они строки
+			}else{
+				//Сравниваем текущее значение со значением эталонного
+				$cmpRes = strcmp($val[$sortBy[$i]], $tek);
+			}
+			
+			//Если меньше эталона, отбрасываем в массив меньших
+			if ($cmpRes * $sortDir < 0){
+				$arrLeft[] = $val;
+			//Если больше - в массив больших
+			}else if ($cmpRes * $sortDir > 0){
+				$arrRight[] = $val;
+			//Если раво - в центральный
+			}else{
+				$arrCent[] = $val;
+			}
+		}
+		
+		//Массивы меньших и массивы больших прогоняем по тому же алгоритму (если в них что-то есть)
+		$arrLeft = (count($arrLeft) > 1) ? self::sort2dArray($arrLeft, $sortBy, $sortDir, $i) : $arrLeft;
+		$arrRight = (count($arrRight) > 1) ? self::sort2dArray($arrRight, $sortBy, $sortDir, $i) : $arrRight;
+		//Массив одинаковых прогоняем по следующему условию сортировки (если есть условие и есть что сортировать)
+		$arrCent = ((count($arrCent) > 1) && $sortBy[$i + 1]) ? self::sort2dArray($arrCent, $sortBy, $sortDir, $i + 1) : $arrCent;
+		
+		//Склеиваем отсортированные меньшие, средние и большие
+		return array_merge($arrLeft, $arrCent, $arrRight);
+	}
+	
+	/**
 	 * parseText
 	 * @version 1.1 (2012-03-21)
 	 *
