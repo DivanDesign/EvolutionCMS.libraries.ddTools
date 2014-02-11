@@ -145,7 +145,7 @@ class ddTools {
 	 * 
 	 * @return {array} - Unfolded array.
 	 */
-	function unfoldArray($arr, $keyPrefix = ''){
+	public static function unfoldArray($arr, $keyPrefix = ''){
 		$output = array();
 		
 		//Перебираем массив
