@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.11 (2014-02-11)
+ * @version 0.11.1 (2014-04-11)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.11
+ * @link http://code.divandesign.biz/modx/ddtools/0.11.1
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
@@ -328,26 +328,26 @@ class ddTools {
 		global $modx;
 		
 		//Если нет хотя бы заголовка, выкидываем
-		if (!$fields['pagetitle']) return false;
+		if (!$fields['pagetitle']){return false;}
 		
 		//Если не передана дата создания документа, ставим текущую
-		if (!$fields['createdon']) $fields['createdon'] = time();
+		if (!$fields['createdon']){$fields['createdon'] = time();}
 		
 		//Если не передано, кем документ создан, ставим 1
-		if (!$fields['createdby']) $fields['createdby'] = 1;
+		if (!$fields['createdby']){$fields['createdby'] = 1;}
 		
 		//Если группы заданы, то это приватный документ
-		if ($groups) $fields['privatemgr'] = 1;
+		if ($groups){$fields['privatemgr'] = 1;}
 		
 		//Если надо публиковать, поставим дату публикации текущей
-		if ($fields['published'] == 1) $fields['pub_date'] = $fields['createdon'];
+		if ($fields['published'] == 1){$fields['pub_date'] = $fields['createdon'];}
 		
 		$fields = self::explodeFieldsArr($fields);
 		
 		//Вставляем новый документ в базу, получаем id, если что-то пошло не так, выкидываем
 		$id = $modx->db->insert($fields[0], self::$tables['site_content']);
 		
-		if (!$id) return false;
+		if (!$id){return false;}
 		
 		//Если есть хоть одна TV
 		if (count($fields[1]) > 0){
@@ -392,7 +392,7 @@ class ddTools {
 	public static function updateDocument($id = 0, $update = array(), $where = ''){
 		global $modx;
 		
-		if ($id == 0 && trim($where) == '') return false;
+		if ($id == 0 && trim($where) == ''){return false;}
 		
 		$where_sql = '';
 		
@@ -582,7 +582,6 @@ class ddTools {
 		if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
 			return false;
 		}else{
-			
 			// get document record
 			if ($docid == ''){
 				$docid = $modx->documentIdentifier;
@@ -866,9 +865,9 @@ class ddTools {
 	 * @see ddRegJsCssLinks snippet (http://code.divandesign.biz/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
 	 * 
 	 * The parameters ara passed as an associative array, where:
-	 * @param name {string} - Script name. @required
-	 * @param version {string} - Script version. Default: '0'.
-	 * @param startup {boolean} - Is the script connected in the <head>? Default: false.
+	 * @param $name {string} - Script name. @required
+	 * @param $version {string} - Script version. Default: '0'.
+	 * @param $startup {boolean} - Is the script connected in the <head>? Default: false.
 	 * 
 	 * @return {array: associative} - Array of: 'name' {string} => Script name; 'version' {string} => Script version (если был ранее подключен более поздняя версия, вернётся она); 'useThisVer' {boolean} => Использовалась ли та версия, что передали; 'startup' {boolean} => Подключён ли скрипт в <head>?; 'pos' {integer} => Ключ зарегистрированного скрипта в соответствующем внутреннем массиве MODx.
 	 */
