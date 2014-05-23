@@ -992,6 +992,40 @@ class ddTools {
 	}
 	
 	/**
+	 * verifyRenamedParams
+	 * @version 1.0 (2014-05-23)
+	 * 
+	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
+	 * 
+	 * @param $params {array} - The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
+	 * @param $compliance {array} - An array of correspondence between old parameter names and new ones, in which the new names are the keys and the old names are the values. @required
+	 * 
+	 * @return {array} - An associative array, in which the correct parameter names are the keys and the parameter values are the values.
+	 */
+	public static function verifyRenamedParams($params, $compliance){
+		$result = array();
+		$msg = array();
+		
+		//Перебираем таблицу соответствия
+		foreach ($compliance as $new => $old){
+			//Если старый параметр задан, а новый — нет
+			if (isset($params[$old]) && !isset($params[$new])){
+				//Зададим
+				$result[$new] = $params[$old];
+				$msg[] .= '<li>“'.$old.'” must be renamed as “'.$new.'”;</li>';
+			}
+		}
+		
+		if (count($result) > 0){
+			global $modx;
+			
+			$modx->logEvent(1, 2, '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $msg).'</ul><br /><p>The snippet has been called in the document with id '.$modx->documentIdentifier.'.</p>', $modx->currentSnippet);
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * removeDir
 	 * @version 1.0 (2013-03-09)
 	 * 
