@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.12 (2014-05-23)
+ * @version 0.13 (2014-07-13)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.12
+ * @link http://code.divandesign.biz/modx/ddtools/0.13
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
@@ -1020,6 +1020,97 @@ class ddTools {
 			global $modx;
 			
 			$modx->logEvent(1, 2, '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $msg).'</ul><br /><p>The snippet has been called in the document with id '.$modx->documentIdentifier.'.</p>', $modx->currentSnippet);
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * sendMail
+	 * @version 1.0 (2014-07-13)
+	 * 
+	 * @desc Method for sending e-mails.
+	 * 
+	 * @param $to {array} - Addresses to mail. @required
+	 * @param $text {string} - E-mail text. @required
+	 * @param $from {string} - Mailer address. Default: 'info@divandesign.biz'.
+	 * @param $subject {string} - E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
+	 * @param $fileInputName {array} - “input” tags names from which accepted files are taken. Default: array().
+	 * 
+	 * @return {array} - Returns the array of email statuses.
+	 */
+	public static function sendMail($to, $text, $from = 'info@divandesign.biz', $subject = '', $fileInputName = array()){
+		global $modx;
+		
+		//Тема письма
+		if ($subject == ''){$subject = 'Mail from '.$modx->config['site_url'];}
+		//Конвертируем тему в base64
+		$subject = "=?UTF-8?B?".base64_encode($subject)."?=";
+		//Заголовки сообщения
+		$headers = "From: $from\r\nMIME-Version: 1.0\r\n";
+		
+		//Разделитель блоков в сообщении
+		$bound = 'bound'.md5(time());
+		$multipart = "Content-Type: multipart/mixed; boundary = \"".$bound."\"\r\n\r\n--".$bound;
+		
+		//Добавлеям текст в сообщения
+		$multipart .= "\r\nContent-Type: text/html; charset=UTF-8 \r\n\r\n".$text."\r\n\r\n--".$bound;
+		
+		if(!empty($fileInputName)){
+			$attachFiles = array();
+			
+			//Перебираем имена полей с файлами
+			foreach($fileInputName as $value){
+				//Проверяем находится ли в POST массив
+				if(is_array($_FILES[$value]['name'])){
+					//Если массив пустой обрываем итерацию
+					if(!$_FILES[$value]['tmp_name'][0]){break;}
+					
+					//Перебираем пост
+					foreach($_FILES[$value]['name'] as $key => $name){
+						//Если нет ошибок
+						if ($_FILES[$value]['error'][$key] == 0){
+							//Добавляем в массив файлы
+							$attachFiles[$name] = fread(fopen($_FILES[$value]['tmp_name'][$key], 'r'), filesize($_FILES[$value]['tmp_name'][$key]));
+						}
+					}
+				}else{
+					//Если массив пустой обрываем итерацию
+					if(!$_FILES[$value]['tmp_name']){break;}
+					//Если нет ошибок
+					if ($_FILES[$value]['error'] == 0){
+						//Если не массив, то добавляем один файл
+						$attachFiles[$_FILES[$value]['name']] = fread(fopen($_FILES[$value]['tmp_name'], 'r'), filesize($_FILES[$value]['tmp_name']));
+					}
+				}
+			}
+			
+			//Перебираем присоединяемые файлы
+			if(!empty($attachFiles)){
+				foreach($attachFiles as $name => $value){
+					$multipart .= "\r\n".
+						'Content-Type: application/octet-stream; name = "=?UTF-8?B?'.base64_encode($name)."?=\"\r\n".
+						"Content-Transfer-Encoding: base64\r\n\r\n".
+						base64_encode($value)."\r\n\r\n--".$bound;
+				}
+			}
+		}
+		
+		//Добавляем разделитель окончания сообщения
+		$headers .= $multipart."--\r\n";
+		
+		$result = array();
+		
+		foreach ($to as $val){
+			//Если адрес валидный
+			if (filter_var($val, FILTER_VALIDATE_EMAIL)){
+				//Отправляем письмо
+				if(mail($val, $subject, '', $headers)){
+					$result[] = 1;
+				}else{
+					$result[] = 0;
+				}
+			}
 		}
 		
 		return $result;
