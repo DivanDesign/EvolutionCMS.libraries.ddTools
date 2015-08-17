@@ -1047,14 +1047,14 @@ class ddTools {
 		//Конвертируем тему в base64
 		$subject = "=?UTF-8?B?".base64_encode($subject)."?=";
 		//Заголовки сообщения
-		$headers = "From: $from\r\nMIME-Version: 1.0\r\n";
+		$headers = "From: ".$from.PHP_EOL."MIME-Version: 1.0".PHP_EOL;
 		
 		//Разделитель блоков в сообщении
 		$bound = 'bound'.md5(time());
-		$multipart = "Content-Type: multipart/mixed; boundary = \"".$bound."\"\r\n\r\n--".$bound;
+		$multipart = "Content-Type: multipart/mixed; boundary = \"".$bound."\"".PHP_EOL."--".$bound.PHP_EOL;
 		
 		//Добавлеям текст в сообщения
-		$multipart .= "\r\nContent-Type: text/html; charset=UTF-8 \r\n\r\n".$text."\r\n\r\n--".$bound;
+		$multipart .= "Content-Type: text/html; charset=UTF-8 ".PHP_EOL.trim($text, PHP_EOL).PHP_EOL."--".$bound;
 		
 		if(!empty($fileInputName)){
 			$attachFiles = array();
@@ -1088,16 +1088,16 @@ class ddTools {
 			//Перебираем присоединяемые файлы
 			if(!empty($attachFiles)){
 				foreach($attachFiles as $name => $value){
-					$multipart .= "\r\n".
-						'Content-Type: application/octet-stream; name = "=?UTF-8?B?'.base64_encode($name)."?=\"\r\n".
-						"Content-Transfer-Encoding: base64\r\n\r\n".
-						base64_encode($value)."\r\n\r\n--".$bound;
+					$multipart .= PHP_EOL.
+						'Content-Type: application/octet-stream; name = "=?UTF-8?B?'.base64_encode($name)."?=\"".PHP_EOL.
+						"Content-Transfer-Encoding: base64".PHP_EOL.
+						base64_encode($value).PHP_EOL."--".$bound;
 				}
 			}
 		}
 		
 		//Добавляем разделитель окончания сообщения
-		$headers .= $multipart."--\r\n";
+		$headers .= $multipart."--".PHP_EOL;
 		
 		$result = array();
 		
