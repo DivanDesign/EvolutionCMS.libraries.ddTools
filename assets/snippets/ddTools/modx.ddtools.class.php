@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.13.1 (2015-08-17)
+ * @version 0.13.2 (2015-09-07)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.13
+ * @link http://code.divandesign.biz/modx/ddtools/0.13.2
  * 
  * @copyright 2015, DivanDesign
  * http://www.DivanDesign.biz
@@ -315,7 +315,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.1 (2012-03-20)
+	 * @version 1.1.1 (2015-09-07)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -370,6 +370,25 @@ class ddTools {
 			foreach ($groups as $gr){
 				$modx->db->insert(array('document_group' => $gr, 'document' => $id), self::$tables['document_groups']);
 			}
+		}
+		
+		//Смотрим родителя нового документа, является ли он папкой и его псевдоним
+		$documentParent = isset($fields[0]['parent'])? $fields[0]['parent']: 0;
+		$documentIsFolder = isset($fields[0]['isfolder'])? $fields[0]['isfolder']: 0;
+		$documentAlias = isset($fields[0]['alias'])? $fields[0]['alias']: '';
+		
+		//Добавляем в массивы documentMap и aliasListing информацию о новом документе
+		$modx->documentMap[] = array($documentParent => $id);
+		$modx->aliasListing[$id] = array(
+			'id' => $id,
+			'alias' => $documentAlias,
+			'path' => isset($modx->aliasListing[$documentParent]['path'])? $modx->aliasListing[$documentParent]['path']: '',
+			'parent' => $documentParent,
+			'isfolder' => $documentIsFolder
+		);
+		
+		if(($modx->aliasListing[$id]['path'] !== '') && ($modx->aliasListing[$id]['alias'] !== '')){
+			$modx->documentListing[$modx->aliasListing[$id]['path'].DIRECTORY_SEPARATOR.$modx->aliasListing[$id]['alias']] = $id;
 		}
 		
 		return $id;
