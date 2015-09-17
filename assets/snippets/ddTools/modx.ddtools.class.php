@@ -315,7 +315,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.1.1 (2015-09-07)
+	 * @version 1.1.2 (2015-09-17)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -377,18 +377,38 @@ class ddTools {
 		$documentIsFolder = isset($fields[0]['isfolder'])? $fields[0]['isfolder']: 0;
 		$documentAlias = isset($fields[0]['alias'])? $fields[0]['alias']: '';
 		
+		//Пусть созданного документа
+		$documentPath = '';
+		
+		//Собираем путь в зависимости от пути родителя
+		if(isset($modx->aliasListing[$documentParent]['path'])){
+			$documentPath = $modx->aliasListing[$documentParent]['path'];
+			
+			if($modx->aliasListing[$documentParent]['alias'] != ''){
+				$documentPath .= '/'.$modx->aliasListing[$documentParent]['alias'];
+			}else{
+				$documentPath .= '/'.$modx->aliasListing[$documentParent]['id'];
+			}
+		}
+		
 		//Добавляем в массивы documentMap и aliasListing информацию о новом документе
 		$modx->documentMap[] = array($documentParent => $id);
 		$modx->aliasListing[$id] = array(
 			'id' => $id,
 			'alias' => $documentAlias,
-			'path' => isset($modx->aliasListing[$documentParent]['path'])? $modx->aliasListing[$documentParent]['path']: '',
+			'path' => $documentPath,
 			'parent' => $documentParent,
 			'isfolder' => $documentIsFolder
 		);
 		
-		if(($modx->aliasListing[$id]['path'] !== '') && ($modx->aliasListing[$id]['alias'] !== '')){
-			$modx->documentListing[$modx->aliasListing[$id]['path'].DIRECTORY_SEPARATOR.$modx->aliasListing[$id]['alias']] = $id;
+		//Добавляем в documentListing
+		if($modx->aliasListing[$id]['path'] !== ''){
+			$modx->documentListing[
+				$modx->aliasListing[$id]['path'].'/'.
+					($modx->aliasListing[$id]['alias'] != ''?
+						$modx->aliasListing[$id]['alias']:
+						$modx->aliasListing[$id]['id'])
+			] = $id;
 		}
 		
 		return $id;
