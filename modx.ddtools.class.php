@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.13.3 (2015-09-17)
+ * @version 0.14 (2015-10-04)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.13.2
+ * @link http://code.divandesign.biz/modx/ddtools/0.14
  * 
  * @copyright 2015, DivanDesign
  * http://www.DivanDesign.biz
