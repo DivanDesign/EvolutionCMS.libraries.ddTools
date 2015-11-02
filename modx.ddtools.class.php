@@ -648,7 +648,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.2 (2015-11-02)
+	 * @version 1.3 (2015-11-02)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -688,7 +688,7 @@ class ddTools {
 				$docid = $modx->documentIdentifier;
 				$docRow = $modx->documentObject;
 			}else{
-				$docRow = self::getDocument($docid, '*', $published);
+				$docRow = self::getDocument($docid, '*', $published, 'all');
 				
 				if (!$docRow){
 					return false;
