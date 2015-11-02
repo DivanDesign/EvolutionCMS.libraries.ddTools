@@ -499,28 +499,52 @@ class ddTools {
 	
 	/**
 	 * getDocuments
-	 * @version 1.1 (2014-03-19)
+	 * @version 1.2 (2015-11-02)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
 	 * @note
 	 * Differences from the native method:
-	 * 	— $published parameter can be set as ===false, and if it is then document publication status does not matter.
-	 * 	— $deleted parameter can be set as ===false, and if it is then document publication status does not matter either.
+	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
+	 * 	— $deleted parameter can be set as ==='all' to retrieve the documents regardless of their removal status.
 	 * 
 	 * @param $ids {array} - Documents Ids to get. @required
-	 * @param $published {false; 0; 1} - Documents publication status which does not matter if published === false. Default: false.
-	 * @param $deleted {false; 0; 1} - Documents removal status which does not matter if deleted === false. Default: 0.
+	 * @param $published {'all'; 0; 1} - Documents publication status which does not matter if published === 'all'. Default: 'all'.
+	 * @param $deleted {'all'; 0; 1} - Documents removal status which does not matter if deleted === 'all'. Default: 0.
 	 * @param $fields {comma separated string; '*'} - Documents fields to get. Default: '*'.
 	 * @param $where {string} - SQL WHERE clause. Default: ''.
 	 * @param $sort {string} - A field to sort by. Default: 'menuindex'.
 	 * @param $dir {'ASC'; 'DESC'} - Sorting direction. Default: 'ASC'.
 	 * @param $limit {string} - SQL LIMIT (without 'LIMIT'). Default: ''.
 	 * 
-	 * @return {mixed} - Массив документов или false, если что-то не так.
+	 * @return {array|false}
 	 */
-	public static function getDocuments($ids = array(), $published = false, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+	public static function getDocuments($ids = array(), $published = 'all', $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
 		global $modx;
+		
+		//Проверка на устаревшее значение $published
+		if($published === false){
+			$published = 'all';
+			
+			$modx->logEvent(
+				1,
+				2,
+				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+			);
+		}
+		
+		//Проверка на устаревшее значение $deleted === false
+		if($deleted === false){
+			$deleted = 'all';
+			
+			$modx->logEvent(
+				1,
+				2,
+				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
+				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+			);
+		}
 		
 		if(is_string($ids)){
 			if(strpos($ids, ',') !== false){
@@ -540,8 +564,8 @@ class ddTools {
 				$where = 'AND '.$where;
 			}
 			
-			$published = ($published !== false) ? "AND sc.published = '{$published}'" : '';
-			$deleted = ($deleted !== false) ? "AND sc.deleted = '{$deleted}'" : '';
+			$published = ($published !== 'all') ? "AND sc.published = '{$published}'" : '';
+			$deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
 			
 			// get document groups for current user
 			if ($docgrp = $modx->getUserDocGroups()){
@@ -566,23 +590,49 @@ class ddTools {
 	
 	/**
 	 * getDocument
-	 * @version 1.0 (2013-03-16)
+	 * @version 1.1 (2015-11-02)
 	 * 
 	 * @desc Returns required data of a document (document fields).
 	 * 
 	 * @note
 	 * Differences from the native method:
-	 * 	— $published parameter can be set as false, and if it is then document publication status does not matter.
-	 * 	— $deleted parameter can be set as false, and if it is then document publication status does not matter either.
+	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
+	 * 	— $deleted parameter can be set as ==='all' to retrieve the documents regardless of their removal status.
 	 * 
 	 * @param $id {integer} - Id of a document which data is being got. @required
 	 * @param $fields {comma separated string; '*'} - Documents fields to get. Default: '*'.
-	 * @param $published {false; 0; 1} - Document publication status which does not matter if published === false. Default: false.
-	 * @param $deleted {false; 0; 1} - Document removal status which does not matter if published === false. Default: 0.
+	 * @param $published {'all'; 0; 1} - Document publication status which does not matter if published === 'all'. Default: 'all'.
+	 * @param $deleted {'all'; 0; 1} - Document removal status which does not matter if published === 'all'. Default: 0.
 	 * 
-	 * @return {mixed} - Массив данных документа или false, если что-то не так.
+	 * @return {array|false}
 	 */
-	public static function getDocument($id = 0, $fields = '*', $published = false, $deleted = 0){
+	public static function getDocument($id = 0, $fields = '*', $published = 'all', $deleted = 0){
+		global $modx;
+		
+		//Проверка на устаревшее значение $published
+		if($published === false){
+			$published = 'all';
+			
+			$modx->logEvent(
+				1,
+				2,
+				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+			);
+		}
+		
+		//Проверка на устаревшее значение $deleted === false
+		if($deleted === false){
+			$deleted = 'all';
+			
+			$modx->logEvent(
+				1,
+				2,
+				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
+				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+			);
+		}
+		
 		if ($id == 0){
 			return false;
 		}else{
@@ -598,25 +648,37 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.1 (2014-03-19)
+	 * @version 1.2 (2015-11-02)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
 	 * @note
 	 * Differences from the native method:
-	 * 	— $published parameter can be set as false, and if it is then document publication status does not matter.
+	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
 	 * 
 	 * @param $idnames {array; '*'} - Id, TVs names, or documents fields to get. @required
 	 * @param $fields {comma separated string; '*'} - Fields names in the TV table of MODx database. Default: '*'.
 	 * @param $docid {integer; ''} - Id of a document to get. Default: Current document.
-	 * @param $published {false; 0; 1} - Document publication status which does not matter if published === false. Default: false.
+	 * @param $published {'all'; 0; 1} - Document publication status which does not matter if published === 'all'. Default: 'all'.
 	 * @param $sort {comma separated string} - Fields of the TV table to sort by. Default: 'rank'.
 	 * @param $dir {'ASC'; 'DESC'} - Sorting direction. Default: 'ASC'.
 	 * 
-	 * @return {mixed} - Массив TV или false, если что-то не так.
+	 * @return {array|false}
 	 */
-	public static function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = false, $sort = 'rank', $dir = 'ASC'){
+	public static function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 'all', $sort = 'rank', $dir = 'ASC'){
 		global $modx;
+		
+		//Проверка на устаревшее значение $published
+		if($published === false){
+			$published = 'all';
+			
+			$modx->logEvent(
+				1,
+				2,
+				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+			);
+		}
 		
 		if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
 			return false;
@@ -672,23 +734,35 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.0.1 (2014-03-19)
+	 * @version 1.1 (2015-11-02)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
 	 * @note
 	 * Differences from the native method:
-	 * 	— $published parameter can be set as false, and if it is then document publication status does not matter.
+	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
 	 * 
 	 * @param $idnames {array; '*'} - Id, TVs names, or documents fields to get. @required
 	 * @param $docid {integer; ''} - Id of a document to get. Default: Current document.
-	 * @param $published {false; 0; 1} - Document publication status which does not matter if published === false. Default: false.
+	 * @param $published {'all'; 0; 1} - Document publication status which does not matter if published === 'all'. Default: 'all'.
 	 * @param $sep {string} - Separator that is used while concatenating in getTVDisplayFormat(). Default: ''.
 	 * 
-	 * @return {mixed} - Массив TV или false, если что-то не так.
+	 * @return {array|false}
 	 */
-	public static function getTemplateVarOutput($idnames = array(), $docid = '', $published = false, $sep = ''){
+	public static function getTemplateVarOutput($idnames = array(), $docid = '', $published = 'all', $sep = ''){
 		global $modx;
+		
+		//Проверка на устаревшее значение $published
+		if($published === false){
+			$published = 'all';
+			
+			$modx->logEvent(
+				1,
+				2,
+				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+			);
+		}
 		
 		if (count($idnames) == 0){
 			return false;
@@ -724,18 +798,18 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.1 (2014-03-19)
+	 * @version 1.2 (2015-11-02)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
 	 * @note
 	 * Differences from the native method:
-	 * 	— $published parameter can be set as false, and if it is then document publication status does not matter.
-	 * 	— $deleted parameter can be set as false, and if it is then document publication status does not matter either.
+	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
+	 * 	— $deleted parameter can be set as ==='all' to retrieve the documents regardless of their removal status.
 	 * 
 	 * @param $parentid {integer} - Id of parent document. Default: 0.
-	 * @param $published {false; 0; 1} - Documents publication status which does not matter if published === false. Default: 1.
-	 * @param $deleted {false; 0; 1} - Documents removal status which does not matter if deleted === false. Default: 0.
+	 * @param $published {'all'; 0; 1} - Documents publication status which does not matter if published === 'all'. Default: 1.
+	 * @param $deleted {'all'; 0; 1} - Documents removal status which does not matter if deleted === 'all'. Default: 0.
 	 * @param $fields {comma separated string} - Documents fields to get. Default: '*'.
 	 * @param $where {string} - SQL WHERE clause. Default: ''.
 	 * @param $sort {string; comma separated string} - Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
@@ -747,8 +821,32 @@ class ddTools {
 	public static function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
 		global $modx;
 		
-		$published = ($published !== false) ? 'AND sc.published = '.$published : '';
-		$deleted = ($deleted !== false) ? 'AND sc.deleted = '.$deleted : '';
+		//Проверка на устаревшее значение $published
+		if($published === false){
+			$published = 'all';
+			
+			$modx->logEvent(
+				1,
+				2,
+				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+			);
+		}
+		
+		//Проверка на устаревшее значение $deleted === false
+		if($deleted === false){
+			$deleted = 'all';
+			
+			$modx->logEvent(
+				1,
+				2,
+				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
+				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+			);
+		}
+		
+		$published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
+		$deleted = ($deleted !== 'all') ? 'AND sc.deleted = '.$deleted : '';
 		
 		if ($where != ''){
 			$where = 'AND '.$where;
@@ -782,7 +880,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildrenTVarOutput
-	 * @version 1.2 (2014-03-19)
+	 * @version 1.3 (2015-11-02)
 	 * 
 	 * @desc Get necessary children of document.
 	 * 
@@ -791,11 +889,11 @@ class ddTools {
 	 * 	— The parameter $where that allows an sql where condition to be set (only the fields of a required document can be used).
 	 * 	— The parameter $resultKey that allows result array keys to be set as values of one of the document fields.
 	 * 	— $modx->getDocumentChildren receives only IDs, other data is received later.
-	 * 	— The $published parameter can be set as ===false so documents data can be got regardless of their publication status.
+	 * 	— The $published parameter can be set as ==='all' so documents data can be retrieved regardless of their publication status.
 	 * 
 	 * @param $parentid {integer} - Id of parent document. Default: 0.
 	 * @param $tvidnames {array} - Array of document fields or TVs to get. Default: array($resultKey).
-	 * @param $published {false; 0; 1} - Documents publication status which does not matter if published === false. Default: 1.
+	 * @param $published {'all'; 0; 1} - Documents publication status which does not matter if published === 'all'. Default: 1.
 	 * @param $sortBy {string; comma separated string} - Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
 	 * @param $sortDir {'ASC'; 'DESC'; ''} - Direction for sort. Default: 'ASC'.
 	 * @param $where {string} - SQL WHERE condition (use only document fields, not TV). Default: ''.
