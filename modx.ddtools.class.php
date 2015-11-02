@@ -530,7 +530,7 @@ class ddTools {
 				1,
 				2,
 				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
-				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
 		
@@ -542,7 +542,7 @@ class ddTools {
 				1,
 				2,
 				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
-				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+				__METHOD__.': Deprecated use of the $deleted parameter'
 			);
 		}
 		
@@ -617,7 +617,7 @@ class ddTools {
 				1,
 				2,
 				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
-				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
 		
@@ -629,7 +629,7 @@ class ddTools {
 				1,
 				2,
 				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
-				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+				__METHOD__.': Deprecated use of the $deleted parameter'
 			);
 		}
 		
@@ -676,7 +676,7 @@ class ddTools {
 				1,
 				2,
 				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
-				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
 		
@@ -760,7 +760,7 @@ class ddTools {
 				1,
 				2,
 				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
-				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
 		
@@ -829,7 +829,7 @@ class ddTools {
 				1,
 				2,
 				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
-				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
 		
@@ -841,7 +841,7 @@ class ddTools {
 				1,
 				2,
 				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
-				'Deprecated use of $deleted as false inside the '.__METHOD__.' method'
+				__METHOD__.': Deprecated use of the $deleted parameter'
 			);
 		}
 		
