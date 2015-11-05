@@ -11,6 +11,8 @@
  * http://www.DivanDesign.biz
  */
 
+global $modx;
+
 if (!class_exists('ddTools')){
 class ddTools {
 	//Contains names of document fields (`site_content`)
