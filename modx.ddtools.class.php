@@ -1,7 +1,7 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.14.1 (2015-11-02)
+ * @version 0.14.2 (2015-11-05)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
@@ -10,6 +10,8 @@
  * @copyright 2015, DivanDesign
  * http://www.DivanDesign.biz
  */
+
+global $modx;
 
 if (!class_exists('ddTools')){
 class ddTools {
