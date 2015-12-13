@@ -1307,9 +1307,11 @@ class ddTools {
 	}
 }
 
-//Решение спорное, но делать Синглтон очень не хотелось
-foreach (ddTools::$tables as $key => $val){
-	ddTools::$tables[$key] = $modx->getFullTableName($key);
+if(isset($modx)){
+	//Решение спорное, но делать Синглтон очень не хотелось
+	foreach (ddTools::$tables as $key => $val){
+		ddTools::$tables[$key] = $modx->getFullTableName($key);
+	}
 }
 
 if (method_exists($modx, 'getVersionData')){
