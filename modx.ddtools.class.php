@@ -1305,6 +1305,22 @@ class ddTools {
 		
 		return $string;
 	}
+	
+	/**
+	 * getResponse
+	 * @version 1.0 (2015-12-19)
+	 * 
+	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request
+	 */
+	public static function getResponse(){
+		$output = false;
+		
+		if(class_exists('\DDTools\Response\Response_v02')){
+			$output = new \DDTools\Response\Response_v02();
+		}
+		
+		return $output;
+	}
 }
 
 if(isset($modx)){

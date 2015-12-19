@@ -10,6 +10,9 @@
     "dd/composer-plugin-modxevo-library-ddtools-installer": "~1.0"
   },
   "autoload": {
-    "files": ["modx.ddtools.class.php"]
+    "files": ["modx.ddtools.class.php"],
+    "psr-4": {
+      "DDTools\\": "src/"
+    }
   }
 }
