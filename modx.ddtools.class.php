@@ -1317,6 +1317,7 @@ class ddTools {
 	 * @return bool|DDTools\Response
 	 */
 	public static function getResponse($version = null){
+		global $modx;
 		$output = false;
 		
 		switch($version){
@@ -1324,6 +1325,13 @@ class ddTools {
 			case '0.2':
 				if(class_exists('\DDTools\Response\Response_v02')){
 					$output = new \DDTools\Response\Response_v02();
+				}else{
+					$modx->logEvent(
+						1,
+						2,
+						"<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this 'require_once(\$modx->config['base_path'].'vendor/autoload.php')'</p>",
+						__METHOD__.': \DDTools\Response\Response_v02'
+					);
 				}
 				break;
 		}
