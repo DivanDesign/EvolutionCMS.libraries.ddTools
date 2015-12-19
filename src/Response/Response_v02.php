@@ -36,7 +36,7 @@ class Response_v02 extends Response
 	/**
 	 * validateMeta
 	 * 
-	 * $meta - is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
+	 * @param array $meta - is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
 	 * and, optionally, with a title.
 	 * 
@@ -60,31 +60,31 @@ class Response_v02 extends Response
 	 * 
 	 * @return bool
 	 */
-	public function validateMeta(){
+	public function validateMeta(array $meta){
 		$output = false;
 		
 		if(
 			//code is set and int
-			isset($this->meta['code']) && is_int($this->meta['code']) &&
+			isset($meta['code']) && is_int($meta['code']) &&
 			//success is set and bool
-			isset($this->meta['success']) && is_bool($this->meta['success']) &&
+			isset($meta['success']) && is_bool($meta['success']) &&
 			(
 				//message is not set
-				!isset($this->meta['message']) ||
+				!isset($meta['message']) ||
 				(
 					//message is set and contains content
-					is_array($this->meta['message']) && isset($this->meta['content'])
+					is_array($meta['message']) && isset($meta['content'])
 				)
 			)
 		){
 			if(
 				//there is no diff between meta keys and allowed meta keys
-				!count(array_diff(array_keys($this->meta), static::$allowedMetaKeys)) &&
+				!count(array_diff(array_keys($meta), static::$allowedMetaKeys)) &&
 				(
 					//message is not set
-					!isset($this->meta['message']) ||
+					!isset($meta['message']) ||
 					//there is no diff between meta message keys and allowed meta message keys
-					!count(array_diff(array_keys($this->meta['message']), static::$allowedMetaMessageKeys))
+					!count(array_diff(array_keys($meta['message']), static::$allowedMetaMessageKeys))
 				)
 			){
 				$output = true;

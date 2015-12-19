@@ -11,9 +11,11 @@ abstract class Response
 	 * 
 	 * Validates the “meta” part of a response.
 	 * 
+	 * @param $meta
+	 * 
 	 * @return bool
 	 */
-	abstract public function validateMeta();
+	abstract public function validateMeta(array $meta);
 	
 	/**
 	 * setMeta
@@ -27,7 +29,7 @@ abstract class Response
 	public function setMeta($meta){
 		$output = false;
 		
-		if($this->validateMeta()){
+		if($this->validateMeta($meta)){
 			$this->meta = $meta;
 			$output = true;
 		}
