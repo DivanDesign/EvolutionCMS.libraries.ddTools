@@ -73,7 +73,7 @@ class Response_v02 extends Response
 				!isset($meta['message']) ||
 				(
 					//message is set and contains content
-					is_array($meta['message']) && isset($meta['content'])
+					is_array($meta['message']) && isset($meta['message']['content'])
 				)
 			)
 		){
