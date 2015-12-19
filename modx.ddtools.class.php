@@ -1310,13 +1310,22 @@ class ddTools {
 	 * getResponse
 	 * @version 1.0 (2015-12-19)
 	 * 
+	 * @param string $version - the required version of Response.
+	 * 
 	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request
+	 * 
+	 * @return bool|DDTools\Response
 	 */
-	public static function getResponse(){
+	public static function getResponse($version = null){
 		$output = false;
 		
-		if(class_exists('\DDTools\Response\Response_v02')){
-			$output = new \DDTools\Response\Response_v02();
+		switch($version){
+			case null:
+			case '0.2':
+				if(class_exists('\DDTools\Response\Response_v02')){
+					$output = new \DDTools\Response\Response_v02();
+				}
+				break;
 		}
 		
 		return $output;
