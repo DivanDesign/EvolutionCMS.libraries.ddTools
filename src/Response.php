@@ -36,6 +36,39 @@ abstract class Response
 	}
 	
 	/**
+	 * getMeta
+	 * 
+	 * Getter for $this->meta
+	 * 
+	 * @return null|array
+	 */
+	public function getMeta(){
+		return $this->meta;
+	}
+	
+	/**
+	 * setData
+	 * 
+	 * Setter for $this->data.
+	 * 
+	 * @param $data
+	 */
+	public function setData($data){
+		$this->data = $data;
+	}
+	
+	/**
+	 * getData
+	 * 
+	 * Getter for $this->data.
+	 * 
+	 * @return mixed
+	 */
+	public function getData(){
+		return $this->data;
+	}
+	
+	/**
 	 * toArray
 	 * 
 	 * Converts this object to array.
@@ -43,10 +76,15 @@ abstract class Response
 	 * @return array
 	 */
 	public function toArray(){
-		return array(
-			'meta' => $this->meta,
-			'data' => $this->data
+		$output = array(
+			'meta' => $this->meta
 		);
+		
+		if(isset($this->data)){
+			$output['data'] = $this->data;
+		}
+		
+		return $output;
 	}
 	
 	/**
