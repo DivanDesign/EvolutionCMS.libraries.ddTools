@@ -242,24 +242,24 @@ class ddTools {
 	
 	/**
 	 * copyDir
-	 * @version 1.0 (2015-12-23)
+	 * @version 1.0.1 (2015-12-23)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
 	 * @param $sourceDir {string} - Path to the directory, that should copied. @required
-	 * @param $dectinationDir {string} - The destination path. @required
+	 * @param $destinationDir {string} - The destination path. @required
 	 * 
 	 * @return {boolean} — Returns true on success or false on failure.
 	 */
-	public static function copyDir($sourceDir, $dectinationDir){
+	public static function copyDir($sourceDir, $destinationDir){
 		//Допишем папкам недостающие '/' при необходимости
 		if (substr($sourceDir, -1) != '/'){$sourceDir .= '/';}
-		if (substr($dectinationDir, -1) != '/'){$dectinationDir .= '/';}
+		if (substr($destinationDir, -1) != '/'){$destinationDir .= '/';}
 		
 		//Проверяем существование
 		if (!file_exists($sourceDir)){return false;}
 		//Если папки назначения нет, создадим её
-		if (!file_exists($dectinationDir)){mkdir($dectinationDir);}
+		if (!file_exists($destinationDir)){mkdir($destinationDir);}
 		
 		//Получаем файлы в директории
 		$files = array_diff(scandir($sourceDir), array('.', '..'));
@@ -267,9 +267,9 @@ class ddTools {
 		foreach ($files as $file){
 			//Если это папка, обработаем её
 			if (is_dir($sourceDir.$file)){
-				self::copyDir($sourceDir.$file, $dectinationDir.$file);
+				self::copyDir($sourceDir.$file, $destinationDir.$file);
 			}else{
-				copy($sourceDir.$file, $dectinationDir.$file);
+				copy($sourceDir.$file, $destinationDir.$file);
 			}
 		}
 		
