@@ -699,17 +699,10 @@ class ddTools {
 			$published = ($published !== 'all') ? "AND sc.published = '{$published}'" : '';
 			$deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
 			
-			// get document groups for current user
-			if ($docgrp = $modx->getUserDocGroups()){
-				$docgrp = implode(',', $docgrp);
-			}
-			
-			$access = ($modx->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
-			
 			$result = $modx->db->select(
 				"DISTINCT {$fields}",
 				self::$tables['site_content']." sc LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id",
-				"(sc.id IN (".implode(',', $ids).") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
+				"(sc.id IN (".implode(',', $ids).") {$published} {$deleted} {$where}) GROUP BY sc.id",
 				($sort ? "{$sort} {$dir}" : ""),
 				$limit
 			);
