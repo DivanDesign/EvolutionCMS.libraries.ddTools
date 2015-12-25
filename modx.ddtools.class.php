@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.14.3 (2015-12-13)
+ * @version 0.15 (2015-12-25)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.14.3
+ * @link http://code.divandesign.biz/modx/ddtools/0.15
  * 
  * @copyright 2015, DivanDesign
  * http://www.DivanDesign.biz
@@ -64,30 +64,6 @@ class ddTools {
 		'site_tmplvar_contentvalues' => '',
 		'document_groups' => ''
 	);
-	
-	/**
-	 * screening
-	 * @version 1.0 (2012-03-21)
-	 * 
-	 * @desc Screening chars in string.
-	 * 
-	 * @param $str {string} - String to screening. @required
-	 * 
-	 * @return {string} - Экранированная строка.
-	 */
-	public static function screening($str){
-		$str = str_replace("\r\n", ' ', $str);
-		$str = str_replace("\n", ' ', $str);
-		$str = str_replace("\r", ' ', $str);
-		$str = str_replace(chr(9), ' ', $str);
-		$str = str_replace('  ', ' ', $str);
-		$str = str_replace('[+', '\[\+', $str);
-		$str = str_replace('+]', '\+\]', $str);
-		$str = str_replace("'", "\'", $str);
-		$str = str_replace('"', '\"', $str);
-		
-		return $str;
-	}
 	
 	/**
 	 * explodeAssoc
@@ -220,6 +196,160 @@ class ddTools {
 		
 		//Склеиваем отсортированные меньшие, средние и большие
 		return array_merge($arrLeft, $arrCent, $arrRight);
+	}
+	
+	/**
+	 * parseFileNameVersion
+	 * @version 1.1 (2013-10-10)
+	 * 
+	 * @desc Parses a file path and gets its name, version & extension.
+	 * 
+	 * @param $file {string; array} - String of file path or result array of pathinfo() function. @required
+	 * 
+	 * @return {array: associative} - Array of: 'name' {string} => File name; 'version' => File version; 'extension' => File extension.
+	 */
+	public static function parseFileNameVersion($file){
+		//Если сразу передали массив
+		if (is_array($file)){
+			//Просто запоминаем его
+			$fileinfo = $file;
+			//А также запоминаем строку
+			$file = $fileinfo['dirname'].'/'.$fileinfo['basename'];
+			//Если передали строку
+		}else{
+			//Получаем необходимые данные
+			$fileinfo = pathinfo($file);
+		}
+		
+		//Fail by default
+		$result = array(
+			'name' => strtolower($file),
+			'version' => '0',
+			'extension' => !$fileinfo['extension'] ? '' : $fileinfo['extension']
+		);
+		
+		//Try to get file version [0 — full name, 1 — script name, 2 — version, 3 — all chars after version]
+		preg_match('/(\D*?)-?(\d(?:\.\d+)*(?:-?[A-Za-z])*)(.*)/', $fileinfo['basename'], $match);
+		
+		//If not fail
+		if (count($match) >= 4){
+			$result['name'] = strtolower($match[1]);
+			$result['version'] = strtolower($match[2]);
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * copyDir
+	 * @version 1.0.1 (2015-12-23)
+	 * 
+	 * @desc Copies a required folder with all contents recursively.
+	 * 
+	 * @param $sourceDir {string} - Path to the directory, that should copied. @required
+	 * @param $destinationDir {string} - The destination path. @required
+	 * 
+	 * @return {boolean} — Returns true on success or false on failure.
+	 */
+	public static function copyDir($sourceDir, $destinationDir){
+		//Допишем папкам недостающие '/' при необходимости
+		if (substr($sourceDir, -1) != '/'){$sourceDir .= '/';}
+		if (substr($destinationDir, -1) != '/'){$destinationDir .= '/';}
+		
+		//Проверяем существование
+		if (!file_exists($sourceDir)){return false;}
+		//Если папки назначения нет, создадим её
+		if (!file_exists($destinationDir)){mkdir($destinationDir);}
+		
+		//Получаем файлы в директории
+		$files = array_diff(scandir($sourceDir), array('.', '..'));
+		
+		foreach ($files as $file){
+			//Если это папка, обработаем её
+			if (is_dir($sourceDir.$file)){
+				self::copyDir($sourceDir.$file, $destinationDir.$file);
+			}else{
+				copy($sourceDir.$file, $destinationDir.$file);
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * removeDir
+	 * @version 1.0 (2013-03-09)
+	 * 
+	 * @desc Removes a required folder with all contents recursively.
+	 * 
+	 * @param $dir {string} - Path to the directory, that should removed. @required
+	 * 
+	 * @return {boolean}
+	 */
+	public static function removeDir($dir){
+		//Если не существует, ок
+		if (!file_exists($dir)){return true;}
+		
+		//Получаем файлы в директории
+		$files = array_diff(scandir($dir), array('.','..'));
+		
+		foreach ($files as $file){
+			//Если это папка, обработаем её
+			if (is_dir("$dir/$file")){
+				self::removeDir("$dir/$file");
+			}else{
+				unlink("$dir/$file");
+			}
+		}
+		
+		return rmdir($dir);
+	}
+	
+	/**
+	 * generateRandomString
+	 * @version 1.0 (2012-02-13)
+	 * 
+	 * @desc Generate random string with necessary length.
+	 * 
+	 * @param $length {integer} - Length of output string. Default: 8.
+	 * @param $chars {string} - Chars to generate. Default: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'.
+	 * 
+	 * @return {string}
+	 */
+	public static function generateRandomString($length = 8, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'){
+		$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
+		$numChars = strlen($chars);
+		$string = '';
+		
+		for ($i = 0; $i < $length; $i++){
+			$string .= substr($chars, rand(1, $numChars) - 1, 1);
+		}
+		
+		return $string;
+	}
+	
+	/**
+	 * screening
+	 * @version 1.0 (2012-03-21)
+	 * 
+	 * @desc Screening chars in string.
+	 * 
+	 * @param $str {string} - String to screening. @required
+	 * 
+	 * @return {string} - Экранированная строка.
+	 */
+	public static function screening($str){
+		$str = str_replace("\r\n", ' ', $str);
+		$str = str_replace("\n", ' ', $str);
+		$str = str_replace("\r", ' ', $str);
+		$str = str_replace(chr(9), ' ', $str);
+		$str = str_replace('  ', ' ', $str);
+		$str = str_replace('[+', '\[\+', $str);
+		$str = str_replace('+]', '\+\]', $str);
+		$str = str_replace("'", "\'", $str);
+		$str = str_replace('"', '\"', $str);
+		
+		return $str;
 	}
 	
 	/**
@@ -478,7 +608,7 @@ class ddTools {
 							);
 							
 							//Проверяем сколько строк нашлось при обновлении
-							preg_match('/Rows matched: (\d+)/', mysql_info(), $updatedRows);
+							preg_match('/Rows matched: (\d+)/', mysqli_info($modx->db->conn), $updatedRows);
 							
 							//Если ничего не обновилось (не нашлось)
 							if ($updatedRows[1] == 0){
@@ -569,17 +699,10 @@ class ddTools {
 			$published = ($published !== 'all') ? "AND sc.published = '{$published}'" : '';
 			$deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
 			
-			// get document groups for current user
-			if ($docgrp = $modx->getUserDocGroups()){
-				$docgrp = implode(',', $docgrp);
-			}
-			
-			$access = ($modx->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
-			
 			$result = $modx->db->select(
 				"DISTINCT {$fields}",
 				self::$tables['site_content']." sc LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id",
-				"(sc.id IN (".implode(',', $ids).") {$published} {$deleted} {$where}) AND ({$access}) GROUP BY sc.id",
+				"(sc.id IN (".implode(',', $ids).") {$published} {$deleted} {$where}) GROUP BY sc.id",
 				($sort ? "{$sort} {$dir}" : ""),
 				$limit
 			);
@@ -953,48 +1076,6 @@ class ddTools {
 	}
 	
 	/**
-	 * parseFileNameVersion
-	 * @version 1.1 (2013-10-10)
-	 * 
-	 * @desc Parses a file path and gets its name, version & extension.
-	 * 
-	 * @param $file {string; array} - String of file path or result array of pathinfo() function. @required
-	 * 
-	 * @return {array: associative} - Array of: 'name' {string} => File name; 'version' => File version; 'extension' => File extension.
-	 */
-	public static function parseFileNameVersion($file){
-		//Если сразу передали массив
-		if (is_array($file)){
-			//Просто запоминаем его
-			$fileinfo = $file;
-			//А также запоминаем строку
-			$file = $fileinfo['dirname'].'/'.$fileinfo['basename'];
-		//Если передали строку
-		}else{
-			//Получаем необходимые данные
-			$fileinfo = pathinfo($file);
-		}
-		
-		//Fail by default
-		$result = array(
-			'name' => strtolower($file),
-			'version' => '0',
-			'extension' => !$fileinfo['extension'] ? '' : $fileinfo['extension']
-		);
-		
-		//Try to get file version [0 — full name, 1 — script name, 2 — version, 3 — all chars after version]
-		preg_match('/(\D*?)-?(\d(?:\.\d+)*(?:-?[A-Za-z])*)(.*)/', $fileinfo['basename'], $match);
-		
-		//If not fail
-		if (count($match) >= 4){
-			$result['name'] = strtolower($match[1]);
-			$result['version'] = strtolower($match[2]);
-		}
-		
-		return $result;
-	}
-	
-	/**
 	 * regEmptyClientScript
 	 * @version 1.0.1 (2013-03-12)
 	 * 
@@ -1256,54 +1337,36 @@ class ddTools {
 	}
 	
 	/**
-	 * removeDir
-	 * @version 1.0 (2013-03-09)
+	 * getResponse
+	 * @version 1.0 (2015-12-19)
 	 * 
-	 * @desc Removes a required folder with all contents recursively.
+	 * @param string $version - the required version of Response.
 	 * 
-	 * @param $dir {string} - Path to the directory, that should removed. @required
+	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request
 	 * 
-	 * @return {boolean}
+	 * @return bool|DDTools\Response
 	 */
-	public static function removeDir($dir){
-		//Если не существует, ок
-		if (!file_exists($dir)){return true;}
+	public static function getResponse($version = null){
+		global $modx;
+		$output = false;
 		
-		//Получаем файлы в директории
-		$files = array_diff(scandir($dir), array('.','..'));
-		
-		foreach ($files as $file){
-			//Если это папка, обработаем её
-			if (is_dir("$dir/$file")){
-				self::removeDir("$dir/$file");
-			}else{
-				unlink("$dir/$file");
-			}
+		switch($version){
+			case null:
+			case '0.2':
+				if(class_exists('\DDTools\Response\Response_v02')){
+					$output = new \DDTools\Response\Response_v02();
+				}else{
+					$modx->logEvent(
+						1,
+						2,
+						"<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this 'require_once(\$modx->config['base_path'].'vendor/autoload.php')'</p>",
+						__METHOD__.': \DDTools\Response\Response_v02'
+					);
+				}
+				break;
 		}
 		
-		return rmdir($dir);
-	}
-	
-	/**
-	 * generateRandomString
-	 * @version 1.0 (2012-02-13)
-	 * 
-	 * @desc Generate random string with necessary length.
-	 * 
-	 * @param $length {integer} - Length of output string. Default: 8.
-	 * @param $chars {string} - Chars to generate. Default: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'.
-	 * 
-	 * @return {string}
-	 */
-	public static function generateRandomString($length = 8, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'){
-		$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
-		$numChars = strlen($chars);
-		$string = '';
-		for ($i = 0; $i < $length; $i++){
-			$string .= substr($chars, rand(1, $numChars) - 1, 1);
-		}
-		
-		return $string;
+		return $output;
 	}
 }
 
