@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.15 (2015-12-25)
+ * @version 0.15.1 (2015-12-29)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.15
+ * @link http://code.divandesign.biz/modx/ddtools/0.15.1
  * 
  * @copyright 2015, DivanDesign
  * http://www.DivanDesign.biz
@@ -909,7 +909,7 @@ class ddTools {
 				for ($i= 0; $i < count($result); $i++){
 					$row = $result[$i];
 					
-					if (!$row['id']){
+					if (!isset($row['id'])){
 						$output[$row['name']] = $row['value'];
 					}else{
 						$output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
@@ -1375,15 +1375,15 @@ if(isset($modx)){
 	foreach (ddTools::$tables as $key => $val){
 		ddTools::$tables[$key] = $modx->getFullTableName($key);
 	}
-}
-
-if (method_exists($modx, 'getVersionData')){
-	//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
-	$modxVersionData = $modx->getVersionData();
 	
-	//If version of MODX > 1.0.11
-	if (version_compare($modxVersionData['version'], '1.0.11', '>')){
-		ddTools::$documentFields[] = 'alias_visible';
+	if (method_exists($modx, 'getVersionData')){
+		//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
+		$modxVersionData = $modx->getVersionData();
+		
+		//If version of MODX > 1.0.11
+		if (version_compare($modxVersionData['version'], '1.0.11', '>')){
+			ddTools::$documentFields[] = 'alias_visible';
+		}
 	}
 }
 }
