@@ -909,7 +909,7 @@ class ddTools {
 				for ($i= 0; $i < count($result); $i++){
 					$row = $result[$i];
 					
-					if (!$row['id']){
+					if (!isset($row['id'])){
 						$output[$row['name']] = $row['value'];
 					}else{
 						$output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
