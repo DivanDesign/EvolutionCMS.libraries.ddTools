@@ -1375,15 +1375,15 @@ if(isset($modx)){
 	foreach (ddTools::$tables as $key => $val){
 		ddTools::$tables[$key] = $modx->getFullTableName($key);
 	}
-}
-
-if (method_exists($modx, 'getVersionData')){
-	//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
-	$modxVersionData = $modx->getVersionData();
 	
-	//If version of MODX > 1.0.11
-	if (version_compare($modxVersionData['version'], '1.0.11', '>')){
-		ddTools::$documentFields[] = 'alias_visible';
+	if (method_exists($modx, 'getVersionData')){
+		//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
+		$modxVersionData = $modx->getVersionData();
+		
+		//If version of MODX > 1.0.11
+		if (version_compare($modxVersionData['version'], '1.0.11', '>')){
+			ddTools::$documentFields[] = 'alias_visible';
+		}
 	}
 }
 }
