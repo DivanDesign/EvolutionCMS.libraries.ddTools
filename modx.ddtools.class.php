@@ -608,7 +608,13 @@ class ddTools {
 							);
 							
 							//Проверяем сколько строк нашлось при обновлении
-							preg_match('/Rows matched: (\d+)/', mysqli_info($modx->db->conn), $updatedRows);
+							//Если используется mysqli
+							if(is_a($modx->db->conn, 'mysqli')){
+								preg_match('/Rows matched: (\d+)/', mysqli_info($modx->db->conn), $updatedRows);
+							}else{
+								//Если $modx->db->conn не является экземпляром mysqli, то пробуем через устаревший mysql_info
+								preg_match('/Rows matched: (\d+)/', mysql_info(), $updatedRows);
+							}
 							
 							//Если ничего не обновилось (не нашлось)
 							if ($updatedRows[1] == 0){
