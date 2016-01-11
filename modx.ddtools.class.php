@@ -5,7 +5,7 @@
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.15.1
+ * @link http://code.divandesign.biz/modx/ddtools/0.15.2
  * 
  * @copyright 2015, DivanDesign
  * http://www.DivanDesign.biz
@@ -548,7 +548,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.2 (2012-10-26)
+	 * @version 1.2.1 (2015-01-11)
 	 * 
 	 * @desc Update a document.
 	 * 
