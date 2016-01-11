@@ -5,7 +5,7 @@
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.15.1
+ * @link http://code.divandesign.biz/modx/ddtools/0.15.2
  * 
  * @copyright 2015, DivanDesign
  * http://www.DivanDesign.biz
@@ -548,7 +548,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.2 (2012-10-26)
+	 * @version 1.2.1 (2015-01-11)
 	 * 
 	 * @desc Update a document.
 	 * 
@@ -608,7 +608,13 @@ class ddTools {
 							);
 							
 							//Проверяем сколько строк нашлось при обновлении
-							preg_match('/Rows matched: (\d+)/', mysqli_info($modx->db->conn), $updatedRows);
+							//Если используется mysqli
+							if(is_a($modx->db->conn, 'mysqli')){
+								preg_match('/Rows matched: (\d+)/', mysqli_info($modx->db->conn), $updatedRows);
+							}else{
+								//Если $modx->db->conn не является экземпляром mysqli, то пробуем через устаревший mysql_info
+								preg_match('/Rows matched: (\d+)/', mysql_info(), $updatedRows);
+							}
 							
 							//Если ничего не обновилось (не нашлось)
 							if ($updatedRows[1] == 0){
