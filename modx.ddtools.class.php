@@ -1,11 +1,11 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.15.1 (2015-12-29)
+ * @version 0.15.3 (2015-01-12)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.15.2
+ * @link http://code.divandesign.biz/modx/ddtools/0.15.3
  * 
  * @copyright 2015, DivanDesign
  * http://www.DivanDesign.biz
@@ -1277,10 +1277,12 @@ class ddTools {
 		
 		//Разделитель блоков в сообщении
 		$bound = 'bound'.md5(time());
-		$multipart = "Content-Type: multipart/mixed; boundary = \"".$bound."\"".PHP_EOL."--".$bound.PHP_EOL;
+		$headers .= "Content-Type: multipart/mixed; boundary = \"".$bound."\"";
+		
+		$message = "--".$bound.PHP_EOL;
 		
 		//Добавлеям текст в сообщения
-		$multipart .= "Content-Type: text/html; charset=UTF-8 ".PHP_EOL.trim($text, PHP_EOL).PHP_EOL."--".$bound;
+		$message .= "Content-Type: text/html; charset=UTF-8 ".PHP_EOL.PHP_EOL.trim($text, PHP_EOL).PHP_EOL."--".$bound;
 		
 		if(!empty($fileInputName)){
 			$attachFiles = array();
@@ -1314,7 +1316,7 @@ class ddTools {
 			//Перебираем присоединяемые файлы
 			if(!empty($attachFiles)){
 				foreach($attachFiles as $name => $value){
-					$multipart .= PHP_EOL.
+					$message .= PHP_EOL.
 						'Content-Type: application/octet-stream; name = "=?UTF-8?B?'.base64_encode($name)."?=\"".PHP_EOL.
 						"Content-Transfer-Encoding: base64".PHP_EOL.
 						base64_encode($value).PHP_EOL."--".$bound;
@@ -1323,7 +1325,7 @@ class ddTools {
 		}
 		
 		//Добавляем разделитель окончания сообщения
-		$headers .= $multipart."--".PHP_EOL;
+		$message .= "--";
 		
 		$result = array();
 		
@@ -1331,7 +1333,7 @@ class ddTools {
 			//Если адрес валидный
 			if (filter_var($val, FILTER_VALIDATE_EMAIL)){
 				//Отправляем письмо
-				if(mail($val, $subject, '', $headers)){
+				if(mail($val, $subject, $message, $headers)){
 					$result[] = 1;
 				}else{
 					$result[] = 0;
