@@ -1,14 +1,13 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.15.3 (2015-01-12)
+ * @version 0.15.4 (2016-06-17)
  * 
  * @uses modx 1.0.10 (Evo)
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.15.3
+ * @link http://code.divandesign.biz/modx/ddtools/0.15.4
  * 
- * @copyright 2015, DivanDesign
- * http://www.DivanDesign.biz
+ * @copyright 2012–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
 global $modx;
@@ -1219,33 +1218,65 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.0 (2014-05-23)
+	 * @version 1.1.1 (2016-06-17)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
 	 * @param $params {array} - The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
-	 * @param $compliance {array} - An array of correspondence between old parameter names and new ones, in which the new names are the keys and the old names are the values. @required
+	 * @param $compliance {array} - An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
+	 * @param $compliance[i] {string|array} - The old name(s). Use a string for a single name or an array for multiple. @required
+	 * 
+	 * @example ```php
+	 * exctract(ddTools::verifyRenamedParams(
+	 * 	//We called the method inside of a snippet, so its parameters are contained in the “$params” variable (MODX feature)
+	 * 	$params,
+	 * 	//Complience
+	 * 	array(
+	 * 		//“docId” is the new name, “param1Name” — the old name
+	 * 		'docId' => 'param1Name',
+	 * 		//Multiple old names are supported too
+	 * 		'docField' => array('param2Name', 'getId')
+	 * 	)
+	 * ));
+	 * //After extraction we can safaly use the variables “$docId” and “docField”
+	 * ```
 	 * 
 	 * @return {array} - An associative array, in which the correct parameter names are the keys and the parameter values are the values.
 	 */
 	public static function verifyRenamedParams($params, $compliance){
 		$result = array();
-		$msg = array();
+		$message = array();
+		
+		$params_names = array_keys($params);
 		
 		//Перебираем таблицу соответствия
-		foreach ($compliance as $new => $old){
-			//Если старый параметр задан, а новый — нет
-			if (isset($params[$old]) && !isset($params[$new])){
-				//Зададим
-				$result[$new] = $params[$old];
-				$msg[] .= '<li>“'.$old.'” must be renamed as “'.$new.'”;</li>';
+		foreach ($compliance as $newName => $oldNames){
+			//Если параметр с новым именем не задан
+			if (!isset($params[$newName])){
+				//Если старое имя только одно, всё равно приведём к массиву для удобства
+				if (!is_array($oldNames)){$oldNames = array($oldNames);}
+				
+				//Находим все старые, которые используются
+				$oldNames = array_values(array_intersect($params_names, $oldNames));
+				
+				//Если что-то нашлось
+				if (count($oldNames) > 0){
+					//Зададим (берём значение первого попавшегося)
+					$result[$newName] = $params[$oldNames[0]];
+					$message[] .= '<li>“'.implode('”, “', $oldNames).'” must be renamed as “'.$newName.'”;</li>';
+				}
 			}
 		}
 		
 		if (count($result) > 0){
 			global $modx;
 			
-			$modx->logEvent(1, 2, '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $msg).'</ul><br /><p>The snippet has been called in the document with id '.$modx->documentIdentifier.'.</p>', $modx->currentSnippet);
+			$modx->logEvent(
+				1,
+				2,
+				'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $message).'</ul><br /><p>The snippet has been called in the document with id '.$modx->documentIdentifier.'.</p>',
+				$modx->currentSnippet
+			);
 		}
 		
 		return $result;
