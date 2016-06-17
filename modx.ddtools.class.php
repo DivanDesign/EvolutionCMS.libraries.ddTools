@@ -1219,13 +1219,28 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.1 (2016-06-17)
+	 * @version 1.1.1 (2016-06-17)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
 	 * @param $params {array} - The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
-	 * @param $compliance {array} - An array of correspondence between old parameter names and new ones, in which the new names are the keys and the old names are the values. @required
+	 * @param $compliance {array} - An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
 	 * @param $compliance[i] {string|array} - The old name(s). Use a string for a single name or an array for multiple. @required
+	 * 
+	 * @example ```php
+	 * exctract(ddTools::verifyRenamedParams(
+	 * 	//We called the method inside of a snippet, so its parameters are contained in the “$params” variable (MODX feature)
+	 * 	$params,
+	 * 	//Complience
+	 * 	array(
+	 * 		//“docId” is the new name, “param1Name” — the old name
+	 * 		'docId' => 'param1Name',
+	 * 		//Multiple old names are supported too
+	 * 		'docField' => array('param2Name', 'getId')
+	 * 	)
+	 * ));
+	 * //After extraction we can safaly use the variables “$docId” and “docField”
+	 * ```
 	 * 
 	 * @return {array} - An associative array, in which the correct parameter names are the keys and the parameter values are the values.
 	 */
@@ -1236,20 +1251,20 @@ class ddTools {
 		$params_names = array_keys($params);
 		
 		//Перебираем таблицу соответствия
-		foreach ($compliance as $newName => $oldName){
+		foreach ($compliance as $newName => $oldNames){
 			//Если параметр с новым именем не задан
 			if (!isset($params[$newName])){
 				//Если старое имя только одно, всё равно приведём к массиву для удобства
-				if (!is_array($oldName)){$oldName = array($oldName);}
+				if (!is_array($oldNames)){$oldNames = array($oldNames);}
 				
 				//Находим все старые, которые используются
-				$oldName = array_values(array_intersect($params_names, $oldName));
+				$oldNames = array_values(array_intersect($params_names, $oldNames));
 				
 				//Если что-то нашлось
-				if (count($oldName) > 0){
+				if (count($oldNames) > 0){
 					//Зададим (берём значение первого попавшегося)
-					$result[$newName] = $params[$oldName[0]];
-					$message[] .= '<li>“'.implode('”, “', $oldName).'” must be renamed as “'.$newName.'”;</li>';
+					$result[$newName] = $params[$oldNames[0]];
+					$message[] .= '<li>“'.implode('”, “', $oldNames).'” must be renamed as “'.$newName.'”;</li>';
 				}
 			}
 		}
