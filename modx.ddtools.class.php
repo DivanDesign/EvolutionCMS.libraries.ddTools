@@ -3,7 +3,7 @@
  * modx ddTools class
  * @version 0.15.4 (2016-06-17)
  * 
- * @uses modx 1.0.10 (Evo)
+ * @uses MODX Evo >= 1.0.10
  * 
  * @link http://code.divandesign.biz/modx/ddtools/0.15.4
  * 
@@ -70,11 +70,11 @@ class ddTools {
 	 * 
 	 * @desc Splits string on two separators in the associative array.
 	 * 
-	 * @param $str {separated string} - String to explode. @required
-	 * @param $splY {string} - Separator between pairs of key-value. Default: '||'.
-	 * @param $splX {string} - Separator between key and value. Default: '::'.
+	 * @param $str {string_separated} — String to explode. @required
+	 * @param $splY {string} — Separator between pairs of key-value. Default: '||'.
+	 * @param $splX {string} — Separator between key and value. Default: '::'.
 	 * 
-	 * @return {array: associative}
+	 * @return {array_associative}
 	 */
 	public static function explodeAssoc($str, $splY = '||', $splX = '::'){
 		$result = array();
@@ -99,28 +99,28 @@ class ddTools {
 	 * @version 1.0 (2013-04-23)
 	 * 
 	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
-	 * For example, array(
+	 * For example, [
 	 * 	'a': '',
-	 * 	'b': array(
+	 * 	'b': [
 	 * 		'b1': '',
-	 * 		'b2': array(
+	 * 		'b2': [
 	 * 			'b21': '',
 	 * 			'b22': ''
-	 * 		)
-	 * 	),
+	 * 		]
+	 * 	],
 	 * 	'c': ''
-	 * ) turns into array(
+	 * ] turns into [
 	 * 	'a': '',
 	 * 	'b.b1': '',
 	 * 	'b.b2.b21': '',
 	 * 	'b.b2.b22': '',
 	 * 	'c': ''
-	 * ).
+	 * ].
 	 * 
-	 * @param $arr {array} - An array to convert. @required
-	 * @param $keyPrefix {string} - Prefix of the keys of an array (it's an internal varible, can be used if required). Default: ''.
+	 * @param $arr {array} — An array to convert. @required
+	 * @param $keyPrefix {string} — Prefix of the keys of an array (it's an internal varible, can be used if required). Default: ''.
 	 * 
-	 * @return {array} - Unfolded array.
+	 * @return {array} — Unfolded array.
 	 */
 	public static function unfoldArray($arr, $keyPrefix = ''){
 		$output = array();
@@ -143,16 +143,16 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.1 (2013-07-11)
+	 * @version 1.1.1 (2016-10-27)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
-	 * @param $array {array} - Array to sort. @required
-	 * @param $sortBy {array} - Columns (second level keys) by which the array is sorted. @required
-	 * @param $sortDir {1; -1} - Sort direction (1 == ASC; -1 == DESC). Default: 1.
-	 * @param $i {integer} - Count, an internal variable used during recursive calls. Default: 0.
+	 * @param $array {array} — Array to sort. @required
+	 * @param $sortBy {array} — Columns (second level keys) by which the array is sorted. @required
+	 * @param $sortDir {1|-1} — Sort direction (1 == ASC; -1 == DESC). Default: 1.
+	 * @param $i {integer} — Count, an internal variable used during recursive calls. Default: 0.
 	 * 
-	 * @return {array} - Sorted array.
+	 * @return {array} — Sorted array.
 	 */
 	public static function sort2dArray($array, $sortBy, $sortDir = 1, $i = 0){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
@@ -166,7 +166,10 @@ class ddTools {
 		//Перебираем массив
 		foreach ($array as $val){
 			//Если эталон и текущее значение — числа
-			if ($tekIsNumeric && is_numeric($val[$sortBy[$i]])){
+			if (
+				$tekIsNumeric &&
+				is_numeric($val[$sortBy[$i]])
+			){
 				//Получаем нужную циферку
 				$cmpRes = ($val[$sortBy[$i]] == $tek) ? 0 : (($val[$sortBy[$i]] > $tek) ? 1 : -1);
 				//Если они строки
@@ -178,10 +181,10 @@ class ddTools {
 			//Если меньше эталона, отбрасываем в массив меньших
 			if ($cmpRes * $sortDir < 0){
 				$arrLeft[] = $val;
-			//Если больше - в массив больших
+			//Если больше — в массив больших
 			}else if ($cmpRes * $sortDir > 0){
 				$arrRight[] = $val;
-			//Если раво - в центральный
+			//Если раво — в центральный
 			}else{
 				$arrCent[] = $val;
 			}
@@ -203,9 +206,12 @@ class ddTools {
 	 * 
 	 * @desc Parses a file path and gets its name, version & extension.
 	 * 
-	 * @param $file {string; array} - String of file path or result array of pathinfo() function. @required
+	 * @param $file {string|array} — String of file path or result array of pathinfo() function. @required
 	 * 
-	 * @return {array: associative} - Array of: 'name' {string} => File name; 'version' => File version; 'extension' => File extension.
+	 * @return $result {array_associative} — File data.
+	 * @return $result['name'] {string} — File name.
+	 * @return $result['version'] {string} — File version.
+	 * @return $result['extension'] {string} — File extension.
 	 */
 	public static function parseFileNameVersion($file){
 		//Если сразу передали массив
@@ -245,8 +251,8 @@ class ddTools {
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
-	 * @param $sourceDir {string} - Path to the directory, that should copied. @required
-	 * @param $destinationDir {string} - The destination path. @required
+	 * @param $sourceDir {string} — Path to the directory, that should copied. @required
+	 * @param $destinationDir {string} — The destination path. @required
 	 * 
 	 * @return {boolean} — Returns true on success or false on failure.
 	 */
@@ -277,11 +283,11 @@ class ddTools {
 	
 	/**
 	 * removeDir
-	 * @version 1.0 (2013-03-09)
+	 * @version 1.0.1 (2016-10-27)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
-	 * @param $dir {string} - Path to the directory, that should removed. @required
+	 * @param $dir {string} — Path to the directory, that should removed. @required
 	 * 
 	 * @return {boolean}
 	 */
@@ -294,10 +300,10 @@ class ddTools {
 		
 		foreach ($files as $file){
 			//Если это папка, обработаем её
-			if (is_dir("$dir/$file")){
-				self::removeDir("$dir/$file");
+			if (is_dir($dir.'/'.$file)){
+				self::removeDir($dir.'/'.$file);
 			}else{
-				unlink("$dir/$file");
+				unlink($dir.'/'.$file);
 			}
 		}
 		
@@ -310,8 +316,8 @@ class ddTools {
 	 * 
 	 * @desc Generate random string with necessary length.
 	 * 
-	 * @param $length {integer} - Length of output string. Default: 8.
-	 * @param $chars {string} - Chars to generate. Default: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'.
+	 * @param $length {integer} — Length of output string. Default: 8.
+	 * @param $chars {string} — Chars to generate. Default: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'.
 	 * 
 	 * @return {string}
 	 */
@@ -331,11 +337,11 @@ class ddTools {
 	 * screening
 	 * @version 1.0 (2012-03-21)
 	 * 
-	 * @desc Screening chars in string.
+	 * @desc Escaping chars in string for JS.
 	 * 
-	 * @param $str {string} - String to screening. @required
+	 * @param $str {string} — String to escaping. @required
 	 * 
-	 * @return {string} - Экранированная строка.
+	 * @return {string} — Экранированная строка.
 	 */
 	public static function screening($str){
 		$str = str_replace("\r\n", ' ', $str);
@@ -353,19 +359,19 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.1 (2012-03-21)
+	 * @version 1.1.1 (2016-10-27)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
-	 * @param $chunk {string} - String to parse. @required
-	 * @param $chunkArr {array} - Array of values. Key — placeholder name, value — value. @required
-	 * @param $prefix {string} - Placeholders prefix. Default: '[+'.
-	 * @param $suffix {string} - Placeholders suffix. Default: '+]'.
-	 * @param $mergeAll {boolean} -Additional parsing the document fields, settings, chunks. Default: true.
+	 * @param $chunk {string} — String to parse. @required
+	 * @param $chunkArr {array_associative} — Array of values. Key — placeholder name, value — value. @required
+	 * @param $prefix {string} — Placeholders prefix. Default: '[+'.
+	 * @param $suffix {string} — Placeholders suffix. Default: '+]'.
+	 * @param $mergeAll {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
 	 * 
 	 * @return {string}
 	 */
-	public static function parseText($chunk, $chunkArr, $prefix= '[+', $suffix= '+]', $mergeAll = true){
+	public static function parseText($chunk, $chunkArr, $prefix= '[+', $suffix = '+]', $mergeAll = true){
 		global $modx;
 		
 		//Если значения для парсинга не переданы, ничего не делаем
@@ -379,7 +385,7 @@ class ddTools {
 			$chunk = $modx->mergeChunkContent($chunk);
 		}
 		
-		foreach ($chunkArr as $key => $value) {
+		foreach ($chunkArr as $key => $value){
 			$chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
 		}
 		
@@ -392,7 +398,7 @@ class ddTools {
 	 * 
 	 * @desc Parse the source (run $modx->parseDocumentSource and $modx->rewriteUrls);
 	 * 
-	 * @param $sourse {string} - Text to parse. @required
+	 * @param $sourse {string} — Text to parse. @required
 	 * 
 	 * @return {string}
 	 */
@@ -408,9 +414,9 @@ class ddTools {
 	 * 
 	 * @desc Explode associative array of fields and TVs in two individual arrays.
 	 * 
-	 * @param $fields {array} - Associative array of document fields (from table `site_content`) or TVs values. @required
+	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs values. @required
 	 * 
-	 * @return {array} - Массив из двух элементов, где первый — поля документа, второй — TV. Элементами массива TV являются ассоциативные массивы, в которых хранятся 'id' и 'val'.
+	 * @return {array} — Массив из двух элементов, где первый — поля документа, второй — TV. Элементами массива TV являются ассоциативные массивы, в которых хранятся 'id' и 'val'.
 	 */
 	public static function explodeFieldsArr($fields = array()){
 		global $modx;
@@ -446,14 +452,15 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.1.2 (2015-09-17)
+	 * @version 1.1.3 (2016-10-27)
 	 * 
 	 * @desc Create a new document.
 	 * 
-	 * @param $fields {array} - Array of document fields or TVs. Key — name, value — value. The pagetitle is required. @required
-	 * @param $groups {array} - Array of document groups id.
+	 * @param $fields {array_associative} — Array of document fields or TVs. Key — name, value — value. @required
+	 * @param $fields['pagetitle'] {string} — Document pagetitle. @required
+	 * @param $groups {array} — Array of document groups id.
 	 * 
-	 * @return {mixed} - ID нового документа или false, если что-то не так.
+	 * @return {integer|false} — ID нового документа или false, если что-то не так.
 	 */
 	public static function createDocument($fields = array(), $groups = false){
 		global $modx;
@@ -536,9 +543,11 @@ class ddTools {
 		if($modx->aliasListing[$id]['path'] !== ''){
 			$modx->documentListing[
 				$modx->aliasListing[$id]['path'].'/'.
-					($modx->aliasListing[$id]['alias'] != ''?
-						$modx->aliasListing[$id]['alias']:
-						$modx->aliasListing[$id]['id'])
+					(
+						$modx->aliasListing[$id]['alias'] != ''?
+						$modx->aliasListing[$id]['alias'] :
+						$modx->aliasListing[$id]['id']
+					)
 			] = $id;
 		}
 		
@@ -547,17 +556,17 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.2.1 (2015-01-11)
+	 * @version 1.2.2 (2016-10-27)
 	 * 
 	 * @desc Update a document.
 	 * 
-	 * @note $id и/или $where должны быть переданы
+	 * @note $id и/или $where должны быть переданы.
 	 * 
-	 * @param $id {integer; array} - Document id to update. @required
-	 * @param $update {array} - Array of document fields or TVs to update. Key — name, value — value. @required
-	 * @param $where {string} - SQL WHERE string. Default: ''.
+	 * @param $id {integer|array} — Document id to update. @required
+	 * @param $update {array_associative} — Array of document fields or TVs to update. Key — name, value — value. @required
+	 * @param $where {string} — SQL WHERE string. Default: ''.
 	 * 
-	 * @return {boolean} - true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
+	 * @return {boolean} — true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
 	 */
 	public static function updateDocument($id = 0, $update = array(), $where = ''){
 		global $modx;
@@ -566,12 +575,15 @@ class ddTools {
 		
 		$where_sql = '';
 		
-		if (is_array($id) && count($id)){
+		if (
+			is_array($id) &&
+			count($id)
+		){
 			//Обрабатываем массив id
-			$where_sql .= "`id` IN ('".implode("','", $id)."')";
+			$where_sql .= '`id` IN ("'.implode('","', $id).'")';
 		}else if (is_numeric($id) && $id != 0){
 			//Обрабатываем числовой id
-			$where_sql .= "`id`='$id'";
+			$where_sql .= '`id`="'.$id.'"';
 		}
 		
 		//Добавляем дополнительное условие
@@ -601,9 +613,9 @@ class ddTools {
 						if (isset($val['id'])){
 							//Пробуем обновить значение нужной TV
 							$modx->db->update(
-								"`value` = '{$val['val']}'",
+								'`value` = "'.$val['val'].'"',
 								self::$tables['site_tmplvar_contentvalues'],
-								"`tmplvarid` = {$val['id']} AND `contentid` = {$doc['id']}"
+								'`tmplvarid` = '.$val['id'].' AND `contentid` = '.$doc['id']
 							);
 							
 							//Проверяем сколько строк нашлось при обновлении
@@ -619,7 +631,11 @@ class ddTools {
 							if ($updatedRows[1] == 0){
 								//Добавляем значение нужной TV в базу
 								$modx->db->insert(
-									array('value' => $val['val'], 'tmplvarid' => $val['id'], 'contentid' => $doc['id']),
+									array(
+										'value' => $val['val'],
+										'tmplvarid' => $val['id'],
+										'contentid' => $doc['id']
+									),
 									self::$tables['site_tmplvar_contentvalues']
 								);
 							}
@@ -636,7 +652,7 @@ class ddTools {
 	
 	/**
 	 * getDocuments
-	 * @version 1.2 (2015-11-02)
+	 * @version 1.2.1 (2016-10-27)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
@@ -645,14 +661,14 @@ class ddTools {
 	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
 	 * 	— $deleted parameter can be set as ==='all' to retrieve the documents regardless of their removal status.
 	 * 
-	 * @param $ids {array} - Documents Ids to get. @required
-	 * @param $published {'all'; 0; 1} - Documents publication status which does not matter if published === 'all'. Default: 'all'.
-	 * @param $deleted {'all'; 0; 1} - Documents removal status which does not matter if deleted === 'all'. Default: 0.
-	 * @param $fields {comma separated string; '*'} - Documents fields to get. Default: '*'.
-	 * @param $where {string} - SQL WHERE clause. Default: ''.
-	 * @param $sort {string} - A field to sort by. Default: 'menuindex'.
-	 * @param $dir {'ASC'; 'DESC'} - Sorting direction. Default: 'ASC'.
-	 * @param $limit {string} - SQL LIMIT (without 'LIMIT'). Default: ''.
+	 * @param $ids {array} — Documents Ids to get. @required
+	 * @param $published {'all'|0|1} — Documents publication status which does not matter if published === 'all'. Default: 'all'.
+	 * @param $deleted {'all'|0|1} — Documents removal status which does not matter if deleted === 'all'. Default: 0.
+	 * @param $fields {string_commaSeparated|'*'} — Documents fields to get. Default: '*'.
+	 * @param $where {string} — SQL WHERE clause. Default: ''.
+	 * @param $sort {string} — A field to sort by. Default: 'menuindex'.
+	 * @param $dir {'ASC'|'DESC'} — Sorting direction. Default: 'ASC'.
+	 * @param $limit {string} — SQL LIMIT (without 'LIMIT'). Default: ''.
 	 * 
 	 * @return {array|false}
 	 */
@@ -666,7 +682,7 @@ class ddTools {
 			$modx->logEvent(
 				1,
 				2,
-				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
 				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
@@ -678,7 +694,7 @@ class ddTools {
 			$modx->logEvent(
 				1,
 				2,
-				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
+				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
 				__METHOD__.': Deprecated use of the $deleted parameter'
 			);
 		}
@@ -705,10 +721,10 @@ class ddTools {
 			$deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
 			
 			$result = $modx->db->select(
-				"DISTINCT {$fields}",
-				self::$tables['site_content']." sc LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id",
-				"(sc.id IN (".implode(',', $ids).") {$published} {$deleted} {$where}) GROUP BY sc.id",
-				($sort ? "{$sort} {$dir}" : ""),
+				'DISTINCT '.$fields,
+				self::$tables['site_content'].' sc LEFT JOIN '.self::$tables['document_groups'].' dg on dg.document = sc.id',
+				'(sc.id IN ('.implode(',', $ids).') '.$published.' '.$deleted.' '.$where.') GROUP BY sc.id',
+				($sort ? $sort.' '.$dir : ''),
 				$limit
 			);
 			
@@ -720,19 +736,19 @@ class ddTools {
 	
 	/**
 	 * getDocument
-	 * @version 1.1 (2015-11-02)
+	 * @version 1.1.1 (2016-10-27)
 	 * 
 	 * @desc Returns required data of a document (document fields).
 	 * 
 	 * @note
 	 * Differences from the native method:
-	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
-	 * 	— $deleted parameter can be set as ==='all' to retrieve the documents regardless of their removal status.
+	 * 	— $published parameter can be set as === 'all' to retrieve the documents regardless of their publication status.
+	 * 	— $deleted parameter can be set as === 'all' to retrieve the documents regardless of their removal status.
 	 * 
-	 * @param $id {integer} - Id of a document which data is being got. @required
-	 * @param $fields {comma separated string; '*'} - Documents fields to get. Default: '*'.
-	 * @param $published {'all'; 0; 1} - Document publication status which does not matter if published === 'all'. Default: 'all'.
-	 * @param $deleted {'all'; 0; 1} - Document removal status which does not matter if published === 'all'. Default: 0.
+	 * @param $id {integer} — Id of a document which data is being got. @required
+	 * @param $fields {string_commaSeparated|'*'} — Documents fields to get. Default: '*'.
+	 * @param $published {'all'|0|1} — Document publication status which does not matter if published === 'all'. Default: 'all'.
+	 * @param $deleted {'all'|0|1} — Document removal status which does not matter if published === 'all'. Default: 0.
 	 * 
 	 * @return {array|false}
 	 */
@@ -746,7 +762,7 @@ class ddTools {
 			$modx->logEvent(
 				1,
 				2,
-				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
 				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
@@ -758,7 +774,7 @@ class ddTools {
 			$modx->logEvent(
 				1,
 				2,
-				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
+				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
 				__METHOD__.': Deprecated use of the $deleted parameter'
 			);
 		}
@@ -778,7 +794,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3 (2015-11-02)
+	 * @version 1.3.1 (2016-10-27)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -786,12 +802,12 @@ class ddTools {
 	 * Differences from the native method:
 	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
 	 * 
-	 * @param $idnames {array; '*'} - Id, TVs names, or documents fields to get. @required
-	 * @param $fields {comma separated string; '*'} - Fields names in the TV table of MODx database. Default: '*'.
-	 * @param $docid {integer; ''} - Id of a document to get. Default: Current document.
-	 * @param $published {'all'; 0; 1} - Document publication status which does not matter if published === 'all'. Default: 'all'.
-	 * @param $sort {comma separated string} - Fields of the TV table to sort by. Default: 'rank'.
-	 * @param $dir {'ASC'; 'DESC'} - Sorting direction. Default: 'ASC'.
+	 * @param $idnames {array|'*'} — Id, TVs names, or documents fields to get. @required
+	 * @param $fields {string_commaSeparated|'*'} — Fields names in the TV table of MODx database. Default: '*'.
+	 * @param $docid {integer|''} — Id of a document to get. Default: Current document.
+	 * @param $published {'all'|0|1} — Document publication status which does not matter if published === 'all'. Default: 'all'.
+	 * @param $sort {string_commaSeparated} — Fields of the TV table to sort by. Default: 'rank'.
+	 * @param $dir {'ASC'|'DESC'} — Sorting direction. Default: 'ASC'.
 	 * 
 	 * @return {array|false}
 	 */
@@ -805,12 +821,15 @@ class ddTools {
 			$modx->logEvent(
 				1,
 				2,
-				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
 				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
 		
-		if (($idnames != '*' && !is_array($idnames)) || count($idnames) == 0){
+		if (
+			($idnames != '*' && !is_array($idnames)) ||
+			count($idnames) == 0
+		){
 			return false;
 		}else{
 			// get document record
@@ -832,16 +851,16 @@ class ddTools {
 			if ($idnames == '*'){
 				$query = 'tv.id<>0';
 			}else{
-				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name')." IN ('".implode("','", $idnames)."')";
+				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name').' IN ("'.implode('","', $idnames).'")';
 			}
 			
 			$rs = $modx->db->select(
-				"{$fields}, IF(tvc.value != '', tvc.value, tv.default_text) as value",
-				self::$tables['site_tmplvars']." tv
-					INNER JOIN ".self::$tables['site_tmplvar_templates']." tvtpl ON tvtpl.tmplvarid = tv.id
-					LEFT JOIN ".self::$tables['site_tmplvar_contentvalues']." tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = '{$docid}'",
-				"{$query} AND tvtpl.templateid = '{$docRow['template']}'",
-				($sort ? "{$sort} {$dir}" : "")
+				$fields.', IF(tvc.value != "", tvc.value, tv.default_text) as value',
+				self::$tables['site_tmplvars'].' tv
+					INNER JOIN '.self::$tables['site_tmplvar_templates'].' tvtpl ON tvtpl.tmplvarid = tv.id
+					LEFT JOIN '.self::$tables['site_tmplvar_contentvalues'].' tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = "'.$docid.'"',
+				$query.' AND tvtpl.templateid = "'.$docRow['template'].'"',
+				($sort ? $sort.' '.$dir : '')
 			);
 			
 			$result = $modx->db->makeArray($rs);
@@ -864,7 +883,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1 (2015-11-02)
+	 * @version 1.1.1 (2016-10-27)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -872,10 +891,10 @@ class ddTools {
 	 * Differences from the native method:
 	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
 	 * 
-	 * @param $idnames {array; '*'} - Id, TVs names, or documents fields to get. @required
-	 * @param $docid {integer; ''} - Id of a document to get. Default: Current document.
-	 * @param $published {'all'; 0; 1} - Document publication status which does not matter if published === 'all'. Default: 'all'.
-	 * @param $sep {string} - Separator that is used while concatenating in getTVDisplayFormat(). Default: ''.
+	 * @param $idnames {array|'*'} — Id, TVs names, or documents fields to get. @required
+	 * @param $docid {integer|''} — Id of a document to get. Default: Current document.
+	 * @param $published {'all'|0|1} — Document publication status which does not matter if published === 'all'. Default: 'all'.
+	 * @param $sep {string} — Separator that is used while concatenating in getTVDisplayFormat(). Default: ''.
 	 * 
 	 * @return {array|false}
 	 */
@@ -889,7 +908,7 @@ class ddTools {
 			$modx->logEvent(
 				1,
 				2,
-				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
 				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
@@ -928,7 +947,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.2 (2015-11-02)
+	 * @version 1.2.1 (2016-10-27)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
@@ -937,16 +956,16 @@ class ddTools {
 	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
 	 * 	— $deleted parameter can be set as ==='all' to retrieve the documents regardless of their removal status.
 	 * 
-	 * @param $parentid {integer} - Id of parent document. Default: 0.
-	 * @param $published {'all'; 0; 1} - Documents publication status which does not matter if published === 'all'. Default: 1.
-	 * @param $deleted {'all'; 0; 1} - Documents removal status which does not matter if deleted === 'all'. Default: 0.
-	 * @param $fields {comma separated string} - Documents fields to get. Default: '*'.
-	 * @param $where {string} - SQL WHERE clause. Default: ''.
-	 * @param $sort {string; comma separated string} - Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
-	 * @param $dir {'ASC'; 'DESC'; ''} - Direction for sort. Default: 'ASC'.
-	 * @param $limit {string} - SQL LIMIT (without 'LIMIT'). Default: ''.
+	 * @param $parentid {integer} — Id of parent document. Default: 0.
+	 * @param $published {'all'|0|1} — Documents publication status which does not matter if published === 'all'. Default: 1.
+	 * @param $deleted {'all'|0|1} — Documents removal status which does not matter if deleted === 'all'. Default: 0.
+	 * @param $fields {string_commaSeparated} — Documents fields to get. Default: '*'.
+	 * @param $where {string} — SQL WHERE clause. Default: ''.
+	 * @param $sort {string|string_commaSeparated} — Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
+	 * @param $dir {'ASC'|'DESC'|''} — Direction for sort. Default: 'ASC'.
+	 * @param $limit {string} — SQL LIMIT (without 'LIMIT'). Default: ''.
 	 * 
-	 * @return {mixed} - Массив документов или false, если что-то не так.
+	 * @return {array|false} — Массив документов или false, если что-то не так.
 	 */
 	public static function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
 		global $modx;
@@ -958,7 +977,7 @@ class ddTools {
 			$modx->logEvent(
 				1,
 				2,
-				"<p>False is no longer allowed as a value for the \$published parameter. Use 'all' instead</p>",
+				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
 				__METHOD__.': Deprecated use of the $published parameter'
 			);
 		}
@@ -970,7 +989,7 @@ class ddTools {
 			$modx->logEvent(
 				1,
 				2,
-				"<p>False is no longer allowed as a value for the \$deleted parameter. Use 'all' instead</p>",
+				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
 				__METHOD__.': Deprecated use of the $deleted parameter'
 			);
 		}
@@ -995,11 +1014,11 @@ class ddTools {
 		$access = ($modx->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
 		
 		$result = $modx->db->select(
-			"DISTINCT {$fields}",
-			self::$tables['site_content']." sc
-				LEFT JOIN ".self::$tables['document_groups']." dg on dg.document = sc.id",
-			"sc.parent = '{$parentid}' {$published} {$deleted} {$where} AND ({$access}) GROUP BY sc.id",
-			($sort ? "{$sort} {$dir}" : ""),
+			'DISTINCT '.$fields,
+			self::$tables['site_content'].' sc
+				LEFT JOIN '.self::$tables['document_groups'].' dg on dg.document = sc.id',
+			'sc.parent = "'.$parentid.'" '.$published.' '.$deleted.' '.$where.' AND ('.$access.') GROUP BY sc.id',
+			($sort ? $sort.' '.$dir : ''),
 			$limit
 		);
 		
@@ -1010,7 +1029,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildrenTVarOutput
-	 * @version 1.3 (2015-11-02)
+	 * @version 1.3.1 (2016-10-27)
 	 * 
 	 * @desc Get necessary children of document.
 	 * 
@@ -1021,15 +1040,15 @@ class ddTools {
 	 * 	— $modx->getDocumentChildren receives only IDs, other data is received later.
 	 * 	— The $published parameter can be set as ==='all' so documents data can be retrieved regardless of their publication status.
 	 * 
-	 * @param $parentid {integer} - Id of parent document. Default: 0.
-	 * @param $tvidnames {array} - Array of document fields or TVs to get. Default: array($resultKey).
-	 * @param $published {'all'; 0; 1} - Documents publication status which does not matter if published === 'all'. Default: 1.
-	 * @param $sortBy {string; comma separated string} - Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
-	 * @param $sortDir {'ASC'; 'DESC'; ''} - Direction for sort. Default: 'ASC'.
-	 * @param $where {string} - SQL WHERE condition (use only document fields, not TV). Default: ''.
-	 * @param $resultKey {string; false} - Field, which values are keys into result array. Use the “false”, that result array keys just will be numbered. Default: 'id'.
+	 * @param $parentid {integer} — Id of parent document. Default: 0.
+	 * @param $tvidnames {array} — Array of document fields or TVs to get. Default: array($resultKey).
+	 * @param $published {'all'|0|1} — Documents publication status which does not matter if published === 'all'. Default: 1.
+	 * @param $sortBy {string|string_commaSeparated} — Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
+	 * @param $sortDir {'ASC'|'DESC'|''} — Direction for sort. Default: 'ASC'.
+	 * @param $where {string} — SQL WHERE condition (use only document fields, not TV). Default: ''.
+	 * @param $resultKey {string|false} — Field, which values are keys into result array. Use the “false”, that result array keys just will be numbered. Default: 'id'.
 	 * 
-	 * @return {mixed} - Массив документов или false, если что-то не так.
+	 * @return {array|false} — Массив документов или false, если что-то не так.
 	 */
 	public static function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = array(), $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
 		//Получаем всех детей
@@ -1049,7 +1068,10 @@ class ddTools {
 						$tvidnames[] = $resultKey;
 						$unsetResultKey = true;
 					}
-				}else if ($tvidnames != '*' && $tvidnames != $resultKey){
+				}else if (
+					$tvidnames != '*' &&
+					$tvidnames != $resultKey
+				){
 					$tvidnames = array($tvidnames, $resultKey);
 					$unsetResultKey = true;
 				}
@@ -1082,7 +1104,7 @@ class ddTools {
 	
 	/**
 	 * regEmptyClientScript
-	 * @version 1.0.1 (2013-03-12)
+	 * @version 1.0.2 (2016-10-27)
 	 * 
 	 * @desc Adds a required JS-file into a required MODX inner list according to its version and name. The method is used to register the scripts, that has already been connected manually.
 	 * Be advised that the method does not add script code, but register its name and version to avoid future connections with $modx->regClientScript and $modx->regClientStartupScript, and the script code will be deleted if the script had been connected with $modx->regClientScript or $modx->regClientStartupScript.
@@ -1090,17 +1112,26 @@ class ddTools {
 	 * @see ddRegJsCssLinks snippet (http://code.divandesign.biz/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
 	 * 
 	 * The parameters ara passed as an associative array, where:
-	 * @param $name {string} - Script name. @required
-	 * @param $version {string} - Script version. Default: '0'.
-	 * @param $startup {boolean} - Is the script connected in the <head>? Default: false.
+	 * @param $name {string} — Script name. @required
+	 * @param $version {string} — Script version. Default: '0'.
+	 * @param $startup {boolean} — Is the script connected in the <head>? Default: false.
 	 * 
-	 * @return {array: associative} - Array of: 'name' {string} => Script name; 'version' {string} => Script version (если был ранее подключен более поздняя версия, вернётся она); 'useThisVer' {boolean} => Использовалась ли та версия, что передали; 'startup' {boolean} => Подключён ли скрипт в <head>?; 'pos' {integer} => Ключ зарегистрированного скрипта в соответствующем внутреннем массиве MODx.
+	 * @return $result {array_associative|''} — empty string if $name is not set or an array of:
+	 * @return $result['name'] {string} — Script name.
+	 * @return $result['version'] {string} — Script version (если был ранее подключен более поздняя версия, вернётся она).
+	 * @return $result['useThisVer'] {boolean} — Использовалась ли та версия, что передали.
+	 * @return $result['startup'] {boolean} — Подключён ли скрипт в <head>?.
+	 * @return $result['pos'] {integer} — Ключ зарегистрированного скрипта в соответствующем внутреннем массиве MODX.
 	 */
 	public static function regEmptyClientScript($options = array('name' => '', 'version' => '0', 'startup' => false)){
 		global $modx;
 		
 		//Если ничего не передали или не передали хотя бы имя
-		if (!is_array($options) || !isset($options['name']) || empty($options['name'])){
+		if (
+			!is_array($options) ||
+			!isset($options['name']) ||
+			empty($options['name'])
+		){
 			//С пляжу
 			return '';
 		}
@@ -1181,9 +1212,9 @@ class ddTools {
 	 * 
 	 * @desc Gets id of a document by its url.
 	 * 
-	 * @param $url {string} - @required
+	 * @param $url {string} — Document URL. @required
 	 * 
-	 * @return {integer} - Document ID.
+	 * @return {integer|0} — Document ID.
 	 */
 	public static function getDocumentIdByUrl($url){
 		global $modx;
@@ -1222,26 +1253,26 @@ class ddTools {
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
-	 * @param $params {array} - The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
-	 * @param $compliance {array} - An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
-	 * @param $compliance[i] {string|array} - The old name(s). Use a string for a single name or an array for multiple. @required
+	 * @param $params {array} — The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
+	 * @param $compliance {array} — An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
+	 * @param $compliance[i] {string|array} — The old name(s). Use a string for a single name or an array for multiple. @required
 	 * 
 	 * @example ```php
 	 * exctract(ddTools::verifyRenamedParams(
 	 * 	//We called the method inside of a snippet, so its parameters are contained in the “$params” variable (MODX feature)
 	 * 	$params,
 	 * 	//Complience
-	 * 	array(
+	 * 	[
 	 * 		//“docId” is the new name, “param1Name” — the old name
 	 * 		'docId' => 'param1Name',
 	 * 		//Multiple old names are supported too
 	 * 		'docField' => array('param2Name', 'getId')
-	 * 	)
+	 * 	]
 	 * ));
 	 * //After extraction we can safaly use the variables “$docId” and “docField”
 	 * ```
 	 * 
-	 * @return {array} - An associative array, in which the correct parameter names are the keys and the parameter values are the values.
+	 * @return {array_associative} — An array, in which the correct parameter names are the keys and the parameter values are the values.
 	 */
 	public static function verifyRenamedParams($params, $compliance){
 		$result = array();
@@ -1288,13 +1319,14 @@ class ddTools {
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
-	 * @param $to {array} - Addresses to mail. @required
-	 * @param $text {string} - E-mail text. @required
-	 * @param $from {string} - Mailer address. Default: 'info@divandesign.biz'.
-	 * @param $subject {string} - E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
-	 * @param $fileInputName {array} - “input” tags names from which accepted files are taken. Default: array().
+	 * @param $to {array} — Addresses to mail. @required
+	 * @param $to[i] {string_email} — An address. @required
+	 * @param $text {string} — E-mail text. @required
+	 * @param $from {string} — Mailer address. Default: 'info@divandesign.biz'.
+	 * @param $subject {string} — E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
+	 * @param $fileInputName {array} — “input” tags names from which accepted files are taken. Default: array().
 	 * 
-	 * @return {array} - Returns the array of email statuses.
+	 * @return {array} — Returns the array of email statuses.
 	 */
 	public static function sendMail($to, $text, $from = 'info@divandesign.biz', $subject = '', $fileInputName = array()){
 		global $modx;
@@ -1377,13 +1409,13 @@ class ddTools {
 	
 	/**
 	 * getResponse
-	 * @version 1.0 (2015-12-19)
-	 * 
-	 * @param string $version - the required version of Response.
+	 * @version 1.0.1 (2016-10-27)
 	 * 
 	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request
 	 * 
-	 * @return bool|DDTools\Response
+	 * @param $version {string} — The required version of Response.
+	 * 
+	 * @return {DDTools\Response|false}
 	 */
 	public static function getResponse($version = null){
 		global $modx;
@@ -1398,7 +1430,7 @@ class ddTools {
 					$modx->logEvent(
 						1,
 						2,
-						"<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this 'require_once(\$modx->config['base_path'].'vendor/autoload.php')'</p>",
+						'<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this “require_once(\$modx->getConfig("base_path")."vendor/autoload.php")”.</p>',
 						__METHOD__.': \DDTools\Response\Response_v02'
 					);
 				}
