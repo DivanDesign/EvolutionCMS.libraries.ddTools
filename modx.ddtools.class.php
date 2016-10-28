@@ -359,37 +359,37 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.1.1 (2016-10-27)
+	 * @version 1.1.2 (2016-10-28)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
-	 * @param $chunk {string} — String to parse. @required
-	 * @param $chunkArr {array_associative} — Array of values. Key — placeholder name, value — value. @required
-	 * @param $prefix {string} — Placeholders prefix. Default: '[+'.
-	 * @param $suffix {string} — Placeholders suffix. Default: '+]'.
+	 * @param $text {string} — String to parse. @required
+	 * @param $data {array_associative} — Array of values. Key — placeholder name, value — value. @required
+	 * @param $placeholderPrefix {string} — Placeholders prefix. Default: '[+'.
+	 * @param $placeholderSuffix {string} — Placeholders suffix. Default: '+]'.
 	 * @param $mergeAll {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
 	 * 
 	 * @return {string}
 	 */
-	public static function parseText($chunk, $chunkArr, $prefix= '[+', $suffix = '+]', $mergeAll = true){
+	public static function parseText($text, $data, $placeholderPrefix = '[+', $placeholderSuffix = '+]', $mergeAll = true){
 		global $modx;
 		
 		//Если значения для парсинга не переданы, ничего не делаем
-		if (!is_array($chunkArr)){
-			return $chunk;
+		if (!is_array($data)){
+			return $text;
 		}
 		
 		if ($mergeAll){
-			$chunk = $modx->mergeDocumentContent($chunk);
-			$chunk = $modx->mergeSettingsContent($chunk);
-			$chunk = $modx->mergeChunkContent($chunk);
+			$text = $modx->mergeDocumentContent($text);
+			$text = $modx->mergeSettingsContent($text);
+			$text = $modx->mergeChunkContent($text);
 		}
 		
-		foreach ($chunkArr as $key => $value){
-			$chunk = str_replace($prefix.$key.$suffix, $value, $chunk);
+		foreach ($data as $key => $value){
+			$text = str_replace($placeholderPrefix.$key.$placeholderSuffix, $value, $text);
 		}
 		
-		return $chunk;
+		return $text;
 	}
 	
 	/**
