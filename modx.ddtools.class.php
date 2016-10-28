@@ -14,6 +14,8 @@ global $modx;
 
 if (!class_exists('ddTools')){
 class ddTools {
+	public static $modx;
+	
 	//Contains names of document fields (`site_content`)
 	public static $documentFields = array(
 		'id',
@@ -359,7 +361,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.2 (2016-10-28)
+	 * @version 1.2.1 (2016-10-28)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
@@ -381,8 +383,6 @@ class ddTools {
 			'mergeAll' => true
 		], (array) $params);
 		
-		global $modx;
-		
 		//For backward compatibility
 		if (func_num_args() > 1){
 			$paramsOld = func_get_args();
@@ -394,7 +394,7 @@ class ddTools {
 			if (isset($paramsOld[3])){$params->placeholderSuffix = $paramsOld[3];}
 			if (isset($paramsOld[4])){$params->mergeAll = $paramsOld[4];}
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
@@ -422,9 +422,9 @@ ddTools::parseText([
 		}
 		
 		if ($params->mergeAll){
-			$params->text = $modx->mergeDocumentContent($params->text);
-			$params->text = $modx->mergeSettingsContent($params->text);
-			$params->text = $modx->mergeChunkContent($params->text);
+			$params->text = self::$modx->mergeDocumentContent($params->text);
+			$params->text = self::$modx->mergeSettingsContent($params->text);
+			$params->text = self::$modx->mergeChunkContent($params->text);
 		}
 		
 		foreach ($params->data as $key => $value){
@@ -436,7 +436,7 @@ ddTools::parseText([
 	
 	/**
 	 * parseSource
-	 * @version 1.0 (2012-02-13)
+	 * @version 1.0.1 (2016-10-28)
 	 * 
 	 * @desc Parse the source (run $modx->parseDocumentSource and $modx->rewriteUrls);
 	 * 
@@ -445,14 +445,12 @@ ddTools::parseText([
 	 * @return {string}
 	 */
 	public static function parseSource($source){
-		global $modx;
-		
-		return $modx->rewriteUrls($modx->parseDocumentSource($source));
+		return self::$modx->rewriteUrls(self::$modx->parseDocumentSource($source));
 	}
 	
 	/**
 	 * explodeFieldsArr
-	 * @version 1.0 (2012-03-20)
+	 * @version 1.0.1 (2016-10-28)
 	 * 
 	 * @desc Explode associative array of fields and TVs in two individual arrays.
 	 * 
@@ -461,8 +459,6 @@ ddTools::parseText([
 	 * @return {array} — Массив из двух элементов, где первый — поля документа, второй — TV. Элементами массива TV являются ассоциативные массивы, в которых хранятся 'id' и 'val'.
 	 */
 	public static function explodeFieldsArr($fields = array()){
-		global $modx;
-		
 		$tvs = array();
 		//Перебираем поля, раскидываем на поля документа и TV
 		foreach ($fields as $key => $val){
@@ -478,13 +474,13 @@ ddTools::parseText([
 		//Если есть хоть одна TV
 		if (count($tvs) > 0){
 			//Получаем id всех необходимых TV
-			$dbRes = $modx->db->select(
+			$dbRes = self::$modx->db->select(
 				"`name`, `id`",
 				self::$tables['site_tmplvars'],
 				"`name` IN ('".implode("','", array_keys($tvs))."')"
 			);
 			
-			while ($row = $modx->db->getRow($dbRes)){
+			while ($row = self::$modx->db->getRow($dbRes)){
 				$tvs[$row['name']]['id'] = $row['id'];
 			}
 		}
@@ -494,7 +490,7 @@ ddTools::parseText([
 	
 	/**
 	 * createDocument
-	 * @version 1.1.3 (2016-10-27)
+	 * @version 1.1.4 (2016-10-28)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -505,8 +501,6 @@ ddTools::parseText([
 	 * @return {integer|false} — ID нового документа или false, если что-то не так.
 	 */
 	public static function createDocument($fields = array(), $groups = false){
-		global $modx;
-		
 		//Если нет хотя бы заголовка, выкидываем
 		if (!$fields['pagetitle']){return false;}
 		
@@ -525,7 +519,7 @@ ddTools::parseText([
 		$fields = self::explodeFieldsArr($fields);
 		
 		//Вставляем новый документ в базу, получаем id, если что-то пошло не так, выкидываем
-		$id = $modx->db->insert($fields[0], self::$tables['site_content']);
+		$id = self::$modx->db->insert($fields[0], self::$tables['site_content']);
 		
 		if (!$id){return false;}
 		
@@ -536,7 +530,7 @@ ddTools::parseText([
 				//Проверим, что id существует (а то ведь могли и именем ошибиться)
 				if (isset($val['id'])){
 					//Добавляем значение TV в базу
-					$modx->db->insert(
+					self::$modx->db->insert(
 						array('value' => $val['val'], 'tmplvarid' => $val['id'], 'contentid' => $id),
 						self::$tables['site_tmplvar_contentvalues']
 					);
@@ -548,7 +542,7 @@ ddTools::parseText([
 		if ($groups){
 			//Перебираем все группы
 			foreach ($groups as $gr){
-				$modx->db->insert(array('document_group' => $gr, 'document' => $id), self::$tables['document_groups']);
+				self::$modx->db->insert(array('document_group' => $gr, 'document' => $id), self::$tables['document_groups']);
 			}
 		}
 		
@@ -561,19 +555,19 @@ ddTools::parseText([
 		$documentPath = '';
 		
 		//Собираем путь в зависимости от пути родителя
-		if(isset($modx->aliasListing[$documentParent]['path'])){
-			$documentPath = $modx->aliasListing[$documentParent]['path'];
+		if(isset(self::$modx->aliasListing[$documentParent]['path'])){
+			$documentPath = self::$modx->aliasListing[$documentParent]['path'];
 			
-			if($modx->aliasListing[$documentParent]['alias'] != ''){
-				$documentPath .= '/'.$modx->aliasListing[$documentParent]['alias'];
+			if(self::$modx->aliasListing[$documentParent]['alias'] != ''){
+				$documentPath .= '/'.self::$modx->aliasListing[$documentParent]['alias'];
 			}else{
-				$documentPath .= '/'.$modx->aliasListing[$documentParent]['id'];
+				$documentPath .= '/'.self::$modx->aliasListing[$documentParent]['id'];
 			}
 		}
 		
 		//Добавляем в массивы documentMap и aliasListing информацию о новом документе
-		$modx->documentMap[] = array($documentParent => $id);
-		$modx->aliasListing[$id] = array(
+		self::$modx->documentMap[] = array($documentParent => $id);
+		self::$modx->aliasListing[$id] = array(
 			'id' => $id,
 			'alias' => $documentAlias,
 			'path' => $documentPath,
@@ -582,13 +576,13 @@ ddTools::parseText([
 		);
 		
 		//Добавляем в documentListing
-		if($modx->aliasListing[$id]['path'] !== ''){
-			$modx->documentListing[
-				$modx->aliasListing[$id]['path'].'/'.
+		if(self::$modx->aliasListing[$id]['path'] !== ''){
+			self::$modx->documentListing[
+				self::$modx->aliasListing[$id]['path'].'/'.
 					(
-						$modx->aliasListing[$id]['alias'] != ''?
-						$modx->aliasListing[$id]['alias'] :
-						$modx->aliasListing[$id]['id']
+						self::$modx->aliasListing[$id]['alias'] != ''?
+						self::$modx->aliasListing[$id]['alias'] :
+						self::$modx->aliasListing[$id]['id']
 					)
 			] = $id;
 		}
@@ -598,7 +592,7 @@ ddTools::parseText([
 	
 	/**
 	 * updateDocument
-	 * @version 1.2.2 (2016-10-27)
+	 * @version 1.2.3 (2016-10-28)
 	 * 
 	 * @desc Update a document.
 	 * 
@@ -611,8 +605,6 @@ ddTools::parseText([
 	 * @return {boolean} — true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
 	 */
 	public static function updateDocument($id = 0, $update = array(), $where = ''){
-		global $modx;
-		
 		if ($id == 0 && trim($where) == ''){return false;}
 		
 		$where_sql = '';
@@ -634,27 +626,27 @@ ddTools::parseText([
 		}
 		
 		//Получаем id документов для обновления
-		$update_ids_res = $modx->db->select('id', self::$tables['site_content'], $where_sql);
+		$update_ids_res = self::$modx->db->select('id', self::$tables['site_content'], $where_sql);
 		
-		if ($modx->db->getRecordCount($update_ids_res)){
+		if (self::$modx->db->getRecordCount($update_ids_res)){
 			//Разбиваем на поля документа и TV
 			$update = self::explodeFieldsArr($update);
 			
 			//Обновляем информацию по документу
 			if (count($update[0])){
-				$modx->db->update($update[0], self::$tables['site_content'], $where_sql);
+				self::$modx->db->update($update[0], self::$tables['site_content'], $where_sql);
 			}
 			
 			//Если есть хоть одна TV
 			if (count($update[1]) > 0){
 				//Обновляем TV всех найденых документов
-				while ($doc = $modx->db->getRow($update_ids_res)){
+				while ($doc = self::$modx->db->getRow($update_ids_res)){
 					//Перебираем массив TV
 					foreach ($update[1] as $val){
 						//Проверим, что id существует (а то ведь могли и именем ошибиться)
 						if (isset($val['id'])){
 							//Пробуем обновить значение нужной TV
-							$modx->db->update(
+							self::$modx->db->update(
 								'`value` = "'.$val['val'].'"',
 								self::$tables['site_tmplvar_contentvalues'],
 								'`tmplvarid` = '.$val['id'].' AND `contentid` = '.$doc['id']
@@ -662,17 +654,17 @@ ddTools::parseText([
 							
 							//Проверяем сколько строк нашлось при обновлении
 							//Если используется mysqli
-							if(is_a($modx->db->conn, 'mysqli')){
-								preg_match('/Rows matched: (\d+)/', mysqli_info($modx->db->conn), $updatedRows);
+							if(is_a(self::$modx->db->conn, 'mysqli')){
+								preg_match('/Rows matched: (\d+)/', mysqli_info(self::$modx->db->conn), $updatedRows);
 							}else{
-								//Если $modx->db->conn не является экземпляром mysqli, то пробуем через устаревший mysql_info
+								//Если self::$modx->db->conn не является экземпляром mysqli, то пробуем через устаревший mysql_info
 								preg_match('/Rows matched: (\d+)/', mysql_info(), $updatedRows);
 							}
 							
 							//Если ничего не обновилось (не нашлось)
 							if ($updatedRows[1] == 0){
 								//Добавляем значение нужной TV в базу
-								$modx->db->insert(
+								self::$modx->db->insert(
 									array(
 										'value' => $val['val'],
 										'tmplvarid' => $val['id'],
@@ -694,7 +686,7 @@ ddTools::parseText([
 	
 	/**
 	 * getDocuments
-	 * @version 1.2.1 (2016-10-27)
+	 * @version 1.2.2 (2016-10-28)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
@@ -715,13 +707,11 @@ ddTools::parseText([
 	 * @return {array|false}
 	 */
 	public static function getDocuments($ids = array(), $published = 'all', $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
-		global $modx;
-		
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
@@ -733,7 +723,7 @@ ddTools::parseText([
 		if($deleted === false){
 			$deleted = 'all';
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
@@ -762,7 +752,7 @@ ddTools::parseText([
 			$published = ($published !== 'all') ? "AND sc.published = '{$published}'" : '';
 			$deleted = ($deleted !== 'all') ? "AND sc.deleted = '{$deleted}'" : '';
 			
-			$result = $modx->db->select(
+			$result = self::$modx->db->select(
 				'DISTINCT '.$fields,
 				self::$tables['site_content'].' sc LEFT JOIN '.self::$tables['document_groups'].' dg on dg.document = sc.id',
 				'(sc.id IN ('.implode(',', $ids).') '.$published.' '.$deleted.' '.$where.') GROUP BY sc.id',
@@ -770,7 +760,7 @@ ddTools::parseText([
 				$limit
 			);
 			
-			$resourceArray = $modx->db->makeArray($result);
+			$resourceArray = self::$modx->db->makeArray($result);
 			
 			return $resourceArray;
 		}
@@ -778,7 +768,7 @@ ddTools::parseText([
 	
 	/**
 	 * getDocument
-	 * @version 1.1.1 (2016-10-27)
+	 * @version 1.1.2 (2016-10-28)
 	 * 
 	 * @desc Returns required data of a document (document fields).
 	 * 
@@ -795,13 +785,11 @@ ddTools::parseText([
 	 * @return {array|false}
 	 */
 	public static function getDocument($id = 0, $fields = '*', $published = 'all', $deleted = 0){
-		global $modx;
-		
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
@@ -813,7 +801,7 @@ ddTools::parseText([
 		if($deleted === false){
 			$deleted = 'all';
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
@@ -836,7 +824,7 @@ ddTools::parseText([
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.1 (2016-10-27)
+	 * @version 1.3.2 (2016-10-28)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -854,13 +842,11 @@ ddTools::parseText([
 	 * @return {array|false}
 	 */
 	public static function getTemplateVars($idnames = array(), $fields = '*', $docid = '', $published = 'all', $sort = 'rank', $dir = 'ASC'){
-		global $modx;
-		
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
@@ -876,8 +862,8 @@ ddTools::parseText([
 		}else{
 			// get document record
 			if ($docid == ''){
-				$docid = $modx->documentIdentifier;
-				$docRow = $modx->documentObject;
+				$docid = self::$modx->documentIdentifier;
+				$docRow = self::$modx->documentObject;
 			}else{
 				$docRow = self::getDocument($docid, '*', $published, 'all');
 				
@@ -896,7 +882,7 @@ ddTools::parseText([
 				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name').' IN ("'.implode('","', $idnames).'")';
 			}
 			
-			$rs = $modx->db->select(
+			$rs = self::$modx->db->select(
 				$fields.', IF(tvc.value != "", tvc.value, tv.default_text) as value',
 				self::$tables['site_tmplvars'].' tv
 					INNER JOIN '.self::$tables['site_tmplvar_templates'].' tvtpl ON tvtpl.tmplvarid = tv.id
@@ -905,7 +891,7 @@ ddTools::parseText([
 				($sort ? $sort.' '.$dir : '')
 			);
 			
-			$result = $modx->db->makeArray($rs);
+			$result = self::$modx->db->makeArray($rs);
 			
 			// get default/built-in template variables
 			ksort($docRow);
@@ -925,7 +911,7 @@ ddTools::parseText([
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.1 (2016-10-27)
+	 * @version 1.1.2 (2016-10-28)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -941,13 +927,11 @@ ddTools::parseText([
 	 * @return {array|false}
 	 */
 	public static function getTemplateVarOutput($idnames = array(), $docid = '', $published = 'all', $sep = ''){
-		global $modx;
-		
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
@@ -961,7 +945,7 @@ ddTools::parseText([
 			$output = array();
 			$vars = ($idnames == '*' || is_array($idnames)) ? $idnames : array($idnames);
 			
-			$docid = intval($docid) ? intval($docid) : $modx->documentIdentifier;
+			$docid = intval($docid) ? intval($docid) : self::$modx->documentIdentifier;
 			// remove sort for speed
 			$result = self::getTemplateVars($vars, '*', $docid, $published, '', '');
 			
@@ -989,7 +973,7 @@ ddTools::parseText([
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.2.1 (2016-10-27)
+	 * @version 1.2.2 (2016-10-28)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
@@ -1010,13 +994,11 @@ ddTools::parseText([
 	 * @return {array|false} — Массив документов или false, если что-то не так.
 	 */
 	public static function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
-		global $modx;
-		
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
@@ -1028,7 +1010,7 @@ ddTools::parseText([
 		if($deleted === false){
 			$deleted = 'all';
 			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
 				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
@@ -1048,14 +1030,14 @@ ddTools::parseText([
 		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
 		
 		// get document groups for current user
-		if ($docgrp = $modx->getUserDocGroups()){
+		if ($docgrp = self::$modx->getUserDocGroups()){
 			$docgrp = implode(',', $docgrp);
 		}
 		
 		// build query
-		$access = ($modx->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
+		$access = (self::$modx->isFrontend() ? 'sc.privateweb=0' : '1="'.$_SESSION['mgrRole'].'" OR sc.privatemgr=0').(!$docgrp ? '' : ' OR dg.document_group IN ('.$docgrp.')');
 		
-		$result = $modx->db->select(
+		$result = self::$modx->db->select(
 			'DISTINCT '.$fields,
 			self::$tables['site_content'].' sc
 				LEFT JOIN '.self::$tables['document_groups'].' dg on dg.document = sc.id',
@@ -1064,7 +1046,7 @@ ddTools::parseText([
 			$limit
 		);
 		
-		$resourceArray = $modx->db->makeArray($result);
+		$resourceArray = self::$modx->db->makeArray($result);
 		
 		return $resourceArray;
 	}
@@ -1146,7 +1128,7 @@ ddTools::parseText([
 	
 	/**
 	 * regEmptyClientScript
-	 * @version 1.0.2 (2016-10-27)
+	 * @version 1.0.3 (2016-10-28)
 	 * 
 	 * @desc Adds a required JS-file into a required MODX inner list according to its version and name. The method is used to register the scripts, that has already been connected manually.
 	 * Be advised that the method does not add script code, but register its name and version to avoid future connections with $modx->regClientScript and $modx->regClientStartupScript, and the script code will be deleted if the script had been connected with $modx->regClientScript or $modx->regClientStartupScript.
@@ -1166,8 +1148,6 @@ ddTools::parseText([
 	 * @return $result['pos'] {integer} — Ключ зарегистрированного скрипта в соответствующем внутреннем массиве MODX.
 	 */
 	public static function regEmptyClientScript($options = array('name' => '', 'version' => '0', 'startup' => false)){
-		global $modx;
-		
 		//Если ничего не передали или не передали хотя бы имя
 		if (
 			!is_array($options) ||
@@ -1191,53 +1171,53 @@ ddTools::parseText([
 		$useThisVer = true;
 		
 		//Если такой скрипт ужебыл подключён
-		if (isset($modx->loadedjscripts[$name])){
+		if (isset(self::$modx->loadedjscripts[$name])){
 			//Если он подключался в <header>
-			if ($modx->loadedjscripts[$name]['startup']){
+			if (self::$modx->loadedjscripts[$name]['startup']){
 				//Этот пусть будет так же
 				$startup = true;
 			}
 			
 			//Сравниваем версию раннее подключённого скрипта с текущей: если старая меньше новой, надо юзать новую, иначе — старую
-			$useThisVer = version_compare($modx->loadedjscripts[$name]['version'], $version, '<');
+			$useThisVer = version_compare(self::$modx->loadedjscripts[$name]['version'], $version, '<');
 			
 			//Если надо юзать старую версию
 			if (!$useThisVer){
 				//Запомним версию как старую. Здесь нам пофиг на его код, ведь новый код будет подключен мануально.
-				$version = $modx->loadedjscripts[$name]['version'];
+				$version = self::$modx->loadedjscripts[$name]['version'];
 			}
 			
 			//Если новая версия должна подключаться в <header>, а старая подключалась перед </body>
-			if ($startup == true && $modx->loadedjscripts[$name]['startup'] == false){
+			if ($startup == true && self::$modx->loadedjscripts[$name]['startup'] == false){
 				//Снесём старый скрипт из массива подключения перед </body> (ведь новая подключится в <head>). Здесь нам пофиг на его код, ведь новый код будет подключен мануально.
-				unset($modx->jscripts[$modx->loadedjscripts[$name]['pos']]);
+				unset(self::$modx->jscripts[self::$modx->loadedjscripts[$name]['pos']]);
 				//Если новая версия должна подключаться перед </body> или старая уже подключалась перед </head>. На самом деле, сработает только если обе перед </body> или обе перед </head>, т.к. если старая была перед </head>, то новая выставится также кодом выше.
 			}else{
 				//Запомним позицию старого скрипта (порядок подключения может быть важен для зависимых скриптов), на новую пофиг. Дальше код старой просто перетрётся в соответсвтии с позицией.
-				$overwritepos = $modx->loadedjscripts[$name]['pos'];
+				$overwritepos = self::$modx->loadedjscripts[$name]['pos'];
 			}
 		}
 		
 		//Если надо подключить перед </head>
 		if ($startup){
 			//Позиция такова: либо старая (уже вычислена), либо максимальное значение между нолём и одним из ключей массива подключённых скриптов + 1 (это, чтобы заполнить возможные дыры)
-			$pos = isset($overwritepos) ? $overwritepos : max(array_merge(array(0), array_keys($modx->sjscripts))) + 1;
+			$pos = isset($overwritepos) ? $overwritepos : max(array_merge(array(0), array_keys(self::$modx->sjscripts))) + 1;
 			if ($useThisVer){
 				//Запоминаем пустую строку подключения в нужный массив, т.к. подключаем мануально.
-				$modx->sjscripts[$pos] = '';
+				self::$modx->sjscripts[$pos] = '';
 			}
 		//Если надо подключить перед </body>, то всё по аналогии, только массив другой
 		}else{
-			$pos = isset($overwritepos) ? $overwritepos : max(array_merge(array(0), array_keys($modx->jscripts))) + 1;
+			$pos = isset($overwritepos) ? $overwritepos : max(array_merge(array(0), array_keys(self::$modx->jscripts))) + 1;
 			if ($useThisVer){
-				$modx->jscripts[$pos] = '';
+				self::$modx->jscripts[$pos] = '';
 			}
 		}
 		
 		//Запомним новоиспечённый скрипт для последующих обработок
-		$modx->loadedjscripts[$name]['version'] = $version;
-		$modx->loadedjscripts[$name]['startup'] = $startup;
-		$modx->loadedjscripts[$name]['pos'] = $pos;
+		self::$modx->loadedjscripts[$name]['version'] = $version;
+		self::$modx->loadedjscripts[$name]['startup'] = $startup;
+		self::$modx->loadedjscripts[$name]['pos'] = $pos;
 		
 		return array(
 			'name' => $name,
@@ -1250,7 +1230,7 @@ ddTools::parseText([
 	
 	/**
 	 * getDocumentIdByUrl
-	 * @version 1.1 (2013-08-30)
+	 * @version 1.1.1 (2016-10-28)
 	 * 
 	 * @desc Gets id of a document by its url.
 	 * 
@@ -1259,15 +1239,13 @@ ddTools::parseText([
 	 * @return {integer|0} — Document ID.
 	 */
 	public static function getDocumentIdByUrl($url){
-		global $modx;
-		
 		$url = parse_url($url);
 		$path = $url['path'];
 		
 		//Если в адресе не было хоста, значит он относительный
 		if (empty($url['host'])){
 			//Получаем хост из конфига
-			$siteHost = parse_url($modx->getConfig('site_url'));
+			$siteHost = parse_url(self::$modx->getConfig('site_url'));
 			
 			//На всякий случай вышережем host из адреса (а то вдруг url просто без http:// передали) + лишние слэши по краям
 			$path = trim($path, $siteHost['host'].'/');
@@ -1278,11 +1256,11 @@ ddTools::parseText([
 		
 		//Если путь пустой, то мы в корне
 		if ($path == ''){
-			return $modx->getConfig('site_start');
+			return self::$modx->getConfig('site_start');
 		//Если документ с таким путём есть
-		}else if (!empty($modx->documentListing[$path])){
+		}else if (!empty(self::$modx->documentListing[$path])){
 			//Возвращаем его id
-			return $modx->documentListing[$path];
+			return self::$modx->documentListing[$path];
 		//В противном случае возвращаем 0
 		}else{
 			return 0;
@@ -1291,7 +1269,7 @@ ddTools::parseText([
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.1.1 (2016-06-17)
+	 * @version 1.1.2 (2016-10-28)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
@@ -1342,13 +1320,11 @@ ddTools::parseText([
 		}
 		
 		if (count($result) > 0){
-			global $modx;
-			
-			$modx->logEvent(
+			self::$modx->logEvent(
 				1,
 				2,
-				'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $message).'</ul><br /><p>The snippet has been called in the document with id '.$modx->documentIdentifier.'.</p>',
-				$modx->currentSnippet
+				'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $message).'</ul><br /><p>The snippet has been called in the document with id '.self::$modx->documentIdentifier.'.</p>',
+				self::$modx->currentSnippet
 			);
 		}
 		
@@ -1357,7 +1333,7 @@ ddTools::parseText([
 	
 	/**
 	 * sendMail
-	 * @version 1.0 (2014-07-13)
+	 * @version 2.0.1 (2016-10-28)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -1371,10 +1347,8 @@ ddTools::parseText([
 	 * @return {array} — Returns the array of email statuses.
 	 */
 	public static function sendMail($to, $text, $from = 'info@divandesign.biz', $subject = '', $fileInputName = array()){
-		global $modx;
-		
 		//Тема письма
-		if ($subject == ''){$subject = 'Mail from '.$modx->config['site_url'];}
+		if ($subject == ''){$subject = 'Mail from '.self::$modx->config['site_url'];}
 		//Конвертируем тему в base64
 		$subject = "=?UTF-8?B?".base64_encode($subject)."?=";
 		//Заголовки сообщения
@@ -1451,7 +1425,7 @@ ddTools::parseText([
 	
 	/**
 	 * getResponse
-	 * @version 1.0.1 (2016-10-27)
+	 * @version 1.0.2 (2016-10-28)
 	 * 
 	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request
 	 * 
@@ -1460,7 +1434,6 @@ ddTools::parseText([
 	 * @return {DDTools\Response|false}
 	 */
 	public static function getResponse($version = null){
-		global $modx;
 		$output = false;
 		
 		switch($version){
@@ -1469,7 +1442,7 @@ ddTools::parseText([
 				if(class_exists('\DDTools\Response\Response_v02')){
 					$output = new \DDTools\Response\Response_v02();
 				}else{
-					$modx->logEvent(
+					self::$modx->logEvent(
 						1,
 						2,
 						'<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this “require_once(\$modx->getConfig("base_path")."vendor/autoload.php")”.</p>',
@@ -1484,6 +1457,8 @@ ddTools::parseText([
 }
 
 if(isset($modx)){
+	ddTools::$modx = $modx;
+	
 	//Решение спорное, но делать Синглтон очень не хотелось
 	foreach (ddTools::$tables as $key => $val){
 		ddTools::$tables[$key] = $modx->getFullTableName($key);
