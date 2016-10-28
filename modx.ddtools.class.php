@@ -361,7 +361,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.2.2 (2016-10-28)
+	 * @version 1.3 (2016-10-28)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
@@ -370,6 +370,7 @@ class ddTools {
 	 * @param $params['data'] {array_associative} — Array of values. Key — placeholder name, value — value. @required
 	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
 	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
+	 * @param $params['removeEmptyPlaceholders'] {boolean} — Do you need to remove empty placeholders? Default: false.
 	 * @param $params['mergeAll'] {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
 	 * 
 	 * @return {string}
@@ -380,6 +381,7 @@ class ddTools {
 			'text' => '',
 			'placeholderPrefix' => '[+',
 			'placeholderSuffix' => '+]',
+			'removeEmptyPlaceholders' => false,
 			'mergeAll' => true
 		], (array) $params);
 		
@@ -429,6 +431,10 @@ ddTools::parseText([
 			$result = self::$modx->mergeDocumentContent($result);
 			$result = self::$modx->mergeSettingsContent($result);
 			$result = self::$modx->mergeChunkContent($result);
+		}
+		
+		if ($params->removeEmptyPlaceholders){
+			$result = preg_replace('/(\[\+\S+?\+\])/m', '', $result);
 		}
 		
 		return $result;
