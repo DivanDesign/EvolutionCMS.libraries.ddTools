@@ -359,37 +359,79 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.1.2 (2016-10-28)
+	 * @version 1.2 (2016-10-28)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
-	 * @param $text {string} — String to parse. @required
-	 * @param $data {array_associative} — Array of values. Key — placeholder name, value — value. @required
-	 * @param $placeholderPrefix {string} — Placeholders prefix. Default: '[+'.
-	 * @param $placeholderSuffix {string} — Placeholders suffix. Default: '+]'.
-	 * @param $mergeAll {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params['text'] {string} — String to parse. @required
+	 * @param $params['data'] {array_associative} — Array of values. Key — placeholder name, value — value. @required
+	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
+	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
+	 * @param $params['mergeAll'] {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
 	 * 
 	 * @return {string}
 	 */
-	public static function parseText($text, $data, $placeholderPrefix = '[+', $placeholderSuffix = '+]', $mergeAll = true){
+	public static function parseText($params = []){
+		//Defaults
+		$params = (object) array_merge([
+			'text' => '',
+			'placeholderPrefix' => '[+',
+			'placeholderSuffix' => '+]',
+			'mergeAll' => true
+		], (array) $params);
+		
 		global $modx;
 		
+		//For backward compatibility
+		if (func_num_args() > 1){
+			$paramsOld = func_get_args();
+			
+			//parseText($text, $data, $placeholderPrefix = '[+', $placeholderSuffix = '+]', $mergeAll = true)
+			$params->text = $paramsOld[0];
+			$params->data = $paramsOld[1];
+			if (isset($paramsOld[2])){$params->placeholderPrefix = $paramsOld[2];}
+			if (isset($paramsOld[3])){$params->placeholderSuffix = $paramsOld[3];}
+			if (isset($paramsOld[4])){$params->mergeAll = $paramsOld[4];}
+			
+			$modx->logEvent(
+				1,
+				2,
+				'<p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
+				<pre><code>//Old style
+ddTools::parseText("Hi, [+userName+]!", ["userName" => "John Doe"], "[+", "+]", true);
+//Pass-by-name
+ddTools::parseText([
+	"text" => "Hi, [+userName+]!",
+	"data" => ["userName" => "John Doe"],
+	"placeholderPrefix" => "[+",
+	"placeholderSuffix" => "+]",
+	"mergeAll" => true
+]);
+				</code></pre>',
+				__METHOD__.': Deprecated use of ordered parameters list'
+			);
+		}
+		
 		//Если значения для парсинга не переданы, ничего не делаем
-		if (!is_array($data)){
-			return $text;
+		if (
+			!isset($params->data) ||
+			!is_array($params->data)
+		){
+			return $params->text;
 		}
 		
-		if ($mergeAll){
-			$text = $modx->mergeDocumentContent($text);
-			$text = $modx->mergeSettingsContent($text);
-			$text = $modx->mergeChunkContent($text);
+		if ($params->mergeAll){
+			$params->text = $modx->mergeDocumentContent($params->text);
+			$params->text = $modx->mergeSettingsContent($params->text);
+			$params->text = $modx->mergeChunkContent($params->text);
 		}
 		
-		foreach ($data as $key => $value){
-			$text = str_replace($placeholderPrefix.$key.$placeholderSuffix, $value, $text);
+		foreach ($params->data as $key => $value){
+			$params->text = str_replace($params->placeholderPrefix.$key.$params->placeholderSuffix, $value, $params->text);
 		}
 		
-		return $text;
+		return $params->text;
 	}
 	
 	/**
