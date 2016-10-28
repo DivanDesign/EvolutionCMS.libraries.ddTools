@@ -361,7 +361,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.2.1 (2016-10-28)
+	 * @version 1.2.2 (2016-10-28)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
@@ -413,25 +413,25 @@ ddTools::parseText([
 			);
 		}
 		
-		//Если значения для парсинга не переданы, ничего не делаем
+		$result = $params->text;
+		
+		//Если значения для парсинга переданы
 		if (
-			!isset($params->data) ||
-			!is_array($params->data)
+			isset($params->data) &&
+			is_array($params->data)
 		){
-			return $params->text;
+			foreach ($params->data as $key => $value){
+				$result = str_replace($params->placeholderPrefix.$key.$params->placeholderSuffix, $value, $result);
+			}
 		}
 		
 		if ($params->mergeAll){
-			$params->text = self::$modx->mergeDocumentContent($params->text);
-			$params->text = self::$modx->mergeSettingsContent($params->text);
-			$params->text = self::$modx->mergeChunkContent($params->text);
+			$result = self::$modx->mergeDocumentContent($result);
+			$result = self::$modx->mergeSettingsContent($result);
+			$result = self::$modx->mergeChunkContent($result);
 		}
 		
-		foreach ($params->data as $key => $value){
-			$params->text = str_replace($params->placeholderPrefix.$key.$params->placeholderSuffix, $value, $params->text);
-		}
-		
-		return $params->text;
+		return $result;
 	}
 	
 	/**
