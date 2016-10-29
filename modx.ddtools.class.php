@@ -69,7 +69,7 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1.1 (2016-10-29)
+	 * @version 1.1.2 (2016-10-29)
 	 * 
 	 * @desc Convert list of ordered parameters to named.
 	 * 
@@ -79,7 +79,7 @@ class ddTools {
 	 * 
 	 * @return {array_associative}
 	 */
-	private static function orderedParamsToNamed($params = []){
+	private static function orderedParamsToNamed($params){
 		$params = (object) $params;
 		
 		$result = [];
