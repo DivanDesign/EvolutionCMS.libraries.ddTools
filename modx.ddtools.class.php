@@ -69,7 +69,7 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.0 (2016-10-29)
+	 * @version 1.1 (2016-10-29)
 	 * 
 	 * @desc Convert list of ordered parameters to named.
 	 * 
@@ -101,17 +101,28 @@ class ddTools {
 		$caller = $backtrace[1];
 		$caller = (isset($caller['class']) ? $caller['class'].'->' : '').$caller['function'];
 		
-		self::$modx->logEvent(
-			1,
-			2,
-			'<p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
-			<pre><code>//Old style
+		//General info with code example
+		$message = '<p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
+		<pre><code>//Old style
 '.$caller.'($'.implode(', $', $params->compliance).');
 //Pass-by-name
 '.$caller.'([
 	'.implode(','.PHP_EOL."\t", $message).'
 ]);
-			</code></pre>'.self::$modx->get_backtrace($backtrace),
+		</code></pre>';
+		
+		//Info about doc id
+		$message .= '<p>The method has been called in the document with id == “'.self::$modx->documentIdentifier.'”';
+		//And about snippet
+		if (!empty(self::$modx->currentSnippet)){
+			$message .= ', the snippet “'.self::$modx->currentSnippet.'”';
+		}
+		$message .= '.</p>';
+		
+		self::$modx->logEvent(
+			1,
+			2,
+			$message.self::$modx->get_backtrace($backtrace),
 			$caller.': Deprecated ordered parameters'
 		);
 		
