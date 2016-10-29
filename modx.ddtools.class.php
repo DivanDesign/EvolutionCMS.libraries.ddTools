@@ -1379,28 +1379,43 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 2.0.4 (2016-10-29)
+	 * @version 2.1 (2016-10-29)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
-	 * @param $to {array} — Addresses to mail. @required
-	 * @param $to[i] {string_email} — An address. @required
-	 * @param $text {string} — E-mail text. @required
-	 * @param $from {string} — Mailer address. Default: $modx->getConfig('emailsender').
-	 * @param $subject {string} — E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
-	 * @param $fileInputNames {array} — “input” tags names from which accepted files are taken. Default: [].
-	 * @param $fileInputNames[i] {string} — Input name. @required
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params['to'] {array} — Addresses to mail. @required
+	 * @param $params['to'][i] {string_email} — An address. @required
+	 * @param $params['text'] {string} — E-mail text. @required
+	 * @param $params['from'] {string} — Mailer address. Default: $modx->getConfig('emailsender').
+	 * @param $params['subject'] {string} — E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
+	 * @param $params['fileInputNames'] {array} — “input” tags names from which accepted files are taken. Default: [].
+	 * @param $params['fileInputNames'][i] {string} — Input name. @required
 	 * 
-	 * @return {array} — Returns the array of email statuses.
+	 * @return $result {array} — Returns the array of email statuses.
+	 * @return $result[i] {0|1} — Status.
 	 */
-	public static function sendMail($to, $text, $from = '', $subject = '', $fileInputNames = []){
-		if ($from == ''){$from = self::$modx->getConfig('emailsender');}
-		//Тема письма
-		if ($subject == ''){$subject = 'Mail from '.self::$modx->config['site_url'];}
+	public static function sendMail($params){
+		//For backward compatibility
+		if (func_num_args() > 1){
+			//Convert ordered list of params to named
+			$params = self::orderedParamsToNamed([
+				'paramsList' => func_get_args(),
+				'compliance' => ['to', 'text', 'from', 'subject', 'fileInputNames']
+			]);
+		}
+		
+		//Defaults
+		$params = (object) array_merge([
+			'from' => self::$modx->getConfig('emailsender'),
+			'subject' => 'Mail from '.self::$modx->config['site_url'],
+			'fileInputNames' => []
+		], (array) $params);
+		
 		//Конвертируем тему в base64
-		$subject = "=?UTF-8?B?".base64_encode($subject)."?=";
+		$params->subject = "=?UTF-8?B?".base64_encode($params->subject)."?=";
 		//Заголовки сообщения
-		$headers = "From: ".$from.PHP_EOL."MIME-Version: 1.0".PHP_EOL;
+		$headers = "From: ".$params->from.PHP_EOL."MIME-Version: 1.0".PHP_EOL;
 		
 		//Разделитель блоков в сообщении
 		$bound = 'bound'.md5(time());
@@ -1409,13 +1424,13 @@ class ddTools {
 		$message = "--".$bound.PHP_EOL;
 		
 		//Добавлеям текст в сообщения
-		$message .= "Content-Type: text/html; charset=UTF-8 ".PHP_EOL.PHP_EOL.trim($text, PHP_EOL).PHP_EOL."--".$bound;
+		$message .= "Content-Type: text/html; charset=UTF-8 ".PHP_EOL.PHP_EOL.trim($params->text, PHP_EOL).PHP_EOL."--".$bound;
 		
-		if(!empty($fileInputNames)){
+		if(!empty($params->fileInputNames)){
 			$attachFiles = [];
 			
 			//Перебираем имена полей с файлами
-			foreach($fileInputNames as $value){
+			foreach($params->fileInputNames as $value){
 				//Проверяем находится ли в POST массив
 				if(is_array($_FILES[$value]['name'])){
 					//Если массив пустой обрываем итерацию
@@ -1456,11 +1471,11 @@ class ddTools {
 		
 		$result = [];
 		
-		foreach ($to as $val){
+		foreach ($params->to as $val){
 			//Если адрес валидный
 			if (filter_var($val, FILTER_VALIDATE_EMAIL)){
 				//Отправляем письмо
-				if(mail($val, $subject, $message, $headers)){
+				if(mail($val, $params->subject, $message, $headers)){
 					$result[] = 1;
 				}else{
 					$result[] = 0;
