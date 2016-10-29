@@ -1172,17 +1172,17 @@ class ddTools {
 	
 	/**
 	 * regEmptyClientScript
-	 * @version 1.0.4 (2016-10-29)
+	 * @version 1.1 (2016-10-29)
 	 * 
 	 * @desc Adds a required JS-file into a required MODX inner list according to its version and name. The method is used to register the scripts, that has already been connected manually.
 	 * Be advised that the method does not add script code, but register its name and version to avoid future connections with $modx->regClientScript and $modx->regClientStartupScript, and the script code will be deleted if the script had been connected with $modx->regClientScript or $modx->regClientStartupScript.
 	 * 
 	 * @see ddRegJsCssLinks snippet (http://code.divandesign.biz/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
 	 * 
-	 * The parameters ara passed as an associative array, where:
-	 * @param $name {string} — Script name. @required
-	 * @param $version {string} — Script version. Default: '0'.
-	 * @param $startup {boolean} — Is the script connected in the <head>? Default: false.
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params['name'] {string} — Script name. @required
+	 * @param $params['version'] {string} — Script version. Default: '0'.
+	 * @param $params['startup'] {boolean} — Is the script connected in the <head>? Default: false.
 	 * 
 	 * @return $result {array_associative|''} — empty string if $name is not set or an array of:
 	 * @return $result['name'] {string} — Script name.
@@ -1191,23 +1191,25 @@ class ddTools {
 	 * @return $result['startup'] {boolean} — Подключён ли скрипт в <head>?.
 	 * @return $result['pos'] {integer} — Ключ зарегистрированного скрипта в соответствующем внутреннем массиве MODX.
 	 */
-	public static function regEmptyClientScript($options = ['name' => '', 'version' => '0', 'startup' => false]){
-		//Если ничего не передали или не передали хотя бы имя
-		if (
-			!is_array($options) ||
-			!isset($options['name']) ||
-			empty($options['name'])
-		){
-			//С пляжу
+	public static function regEmptyClientScript($params = []){
+		//Defaults
+		$params = (object) array_merge([
+			'name' => '',
+			'version' => '0',
+			'startup' => false
+		], (array) $params);
+		
+		//Required params
+		if (empty($params->name)){
 			return '';
 		}
 		
 		//Приведём имя к нижнему регистру (чтоб сравнивать потом проще было, ведь нам пофиг)
-		$name = strtolower($options['name']);
+		$name = strtolower($params->name);
 		//Если версия не задана, будет нулевая (полезно дальше при сравнении version_compare)
-		$version = isset($options['version']) ? strtolower($options['version']) : '0';
+		$version = isset($params->version) ? strtolower($params->version) : '0';
 		//Куда подключён скрипт: перед </head>, или перед </body>
-		$startup = isset($options['startup']) ? $options['startup'] : false;
+		$startup = isset($params->startup) ? $params->startup : false;
 		//Ну мало ли
 		unset($overwritepos);
 		
