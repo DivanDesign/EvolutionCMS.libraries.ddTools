@@ -68,6 +68,57 @@ class ddTools {
 	];
 	
 	/**
+	 * orderedParamsToNamed
+	 * @version 1.0 (2016-10-29)
+	 * 
+	 * @desc Convert list of ordered parameters to named.
+	 * 
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params['paramsList'] {array} — Parameters in ordered list (func_get_args). @required
+	 * @param $params['compliance'] {array} — The order of parameters. @required
+	 * 
+	 * @return {array_associative}
+	 */
+	private static function orderedParamsToNamed($params = []){
+		$params = (object) $params;
+		
+		$result = [];
+		
+		$message = [];
+		
+		//Перебираем массив соответствия
+		foreach ($params->compliance as $index => $name){
+			//Если параметр задан
+			if (isset($params->paramsList[$index])){
+				//Сохраним его
+				$result[$name] = $params->paramsList[$index];
+			}
+			
+			$message[] = "'".$name."' => $".$name;
+		}
+		
+		$backtrace = debug_backtrace();
+		$caller = $backtrace[1];
+		$caller = (isset($caller['class']) ? $caller['class'].'->' : '').$caller['function'];
+		
+		self::$modx->logEvent(
+			1,
+			2,
+			'<p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
+			<pre><code>//Old style
+'.$caller.'($'.implode(', $', $params->compliance).');
+//Pass-by-name
+'.$caller.'([
+	'.implode(','.PHP_EOL."\t", $message).'
+]);
+			</code></pre>'.self::$modx->get_backtrace($backtrace),
+			$caller.': Deprecated ordered parameters'
+		);
+		
+		return $result;
+	}
+	
+	/**
 	 * explodeAssoc
 	 * @version 1.1.2 (2016-10-29)
 	 * 
@@ -362,7 +413,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.3 (2016-10-28)
+	 * @version 1.3.1 (2016-10-29)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
@@ -377,6 +428,15 @@ class ddTools {
 	 * @return {string}
 	 */
 	public static function parseText($params = []){
+		//For backward compatibility
+		if (func_num_args() > 1){
+			//Convert ordered list of params to named
+			$params = self::orderedParamsToNamed([
+				'paramsList' => func_get_args(),
+				'compliance' => ['text', 'data', 'placeholderPrefix', 'placeholderSuffix', 'mergeAll']
+			]);
+		}
+		
 		//Defaults
 		$params = (object) array_merge([
 			'text' => '',
@@ -385,36 +445,6 @@ class ddTools {
 			'removeEmptyPlaceholders' => false,
 			'mergeAll' => true
 		], (array) $params);
-		
-		//For backward compatibility
-		if (func_num_args() > 1){
-			$paramsOld = func_get_args();
-			
-			//parseText($text, $data, $placeholderPrefix = '[+', $placeholderSuffix = '+]', $mergeAll = true)
-			$params->text = $paramsOld[0];
-			$params->data = $paramsOld[1];
-			if (isset($paramsOld[2])){$params->placeholderPrefix = $paramsOld[2];}
-			if (isset($paramsOld[3])){$params->placeholderSuffix = $paramsOld[3];}
-			if (isset($paramsOld[4])){$params->mergeAll = $paramsOld[4];}
-			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
-				<pre><code>//Old style
-ddTools::parseText("Hi, [+userName+]!", ["userName" => "John Doe"], "[+", "+]", true);
-//Pass-by-name
-ddTools::parseText([
-	"text" => "Hi, [+userName+]!",
-	"data" => ["userName" => "John Doe"],
-	"placeholderPrefix" => "[+",
-	"placeholderSuffix" => "+]",
-	"mergeAll" => true
-]);
-				</code></pre>',
-				__METHOD__.': Deprecated use of ordered parameters list'
-			);
-		}
 		
 		$result = $params->text;
 		
