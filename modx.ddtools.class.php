@@ -1339,20 +1339,21 @@ ddTools::parseText([
 	
 	/**
 	 * sendMail
-	 * @version 2.0.1 (2016-10-28)
+	 * @version 2.0.2 (2016-10-29)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
 	 * @param $to {array} — Addresses to mail. @required
 	 * @param $to[i] {string_email} — An address. @required
 	 * @param $text {string} — E-mail text. @required
-	 * @param $from {string} — Mailer address. Default: 'info@divandesign.biz'.
+	 * @param $from {string} — Mailer address. Default: $modx->getConfig('emailsender').
 	 * @param $subject {string} — E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
 	 * @param $fileInputName {array} — “input” tags names from which accepted files are taken. Default: array().
 	 * 
 	 * @return {array} — Returns the array of email statuses.
 	 */
-	public static function sendMail($to, $text, $from = 'info@divandesign.biz', $subject = '', $fileInputName = array()){
+	public static function sendMail($to, $text, $from = '', $subject = '', $fileInputName = array()){
+		if ($from == ''){$from = self::$modx->getConfig('emailsender');}
 		//Тема письма
 		if ($subject == ''){$subject = 'Mail from '.self::$modx->config['site_url'];}
 		//Конвертируем тему в base64
