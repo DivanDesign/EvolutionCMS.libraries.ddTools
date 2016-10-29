@@ -69,7 +69,7 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1 (2016-10-29)
+	 * @version 1.1.1 (2016-10-29)
 	 * 
 	 * @desc Convert list of ordered parameters to named.
 	 * 
@@ -98,7 +98,9 @@ class ddTools {
 		}
 		
 		$backtrace = debug_backtrace();
-		$caller = $backtrace[1];
+		//Remove this method
+		array_shift($backtrace);
+		$caller = $backtrace[0];
 		$caller = (isset($caller['class']) ? $caller['class'].'->' : '').$caller['function'];
 		
 		//General info with code example
