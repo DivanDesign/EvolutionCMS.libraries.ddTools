@@ -1379,7 +1379,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 2.0.3 (2016-10-29)
+	 * @version 2.0.4 (2016-10-29)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -1388,11 +1388,12 @@ class ddTools {
 	 * @param $text {string} — E-mail text. @required
 	 * @param $from {string} — Mailer address. Default: $modx->getConfig('emailsender').
 	 * @param $subject {string} — E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
-	 * @param $fileInputName {array} — “input” tags names from which accepted files are taken. Default: [].
+	 * @param $fileInputNames {array} — “input” tags names from which accepted files are taken. Default: [].
+	 * @param $fileInputNames[i] {string} — Input name. @required
 	 * 
 	 * @return {array} — Returns the array of email statuses.
 	 */
-	public static function sendMail($to, $text, $from = '', $subject = '', $fileInputName = []){
+	public static function sendMail($to, $text, $from = '', $subject = '', $fileInputNames = []){
 		if ($from == ''){$from = self::$modx->getConfig('emailsender');}
 		//Тема письма
 		if ($subject == ''){$subject = 'Mail from '.self::$modx->config['site_url'];}
@@ -1410,11 +1411,11 @@ class ddTools {
 		//Добавлеям текст в сообщения
 		$message .= "Content-Type: text/html; charset=UTF-8 ".PHP_EOL.PHP_EOL.trim($text, PHP_EOL).PHP_EOL."--".$bound;
 		
-		if(!empty($fileInputName)){
+		if(!empty($fileInputNames)){
 			$attachFiles = [];
 			
 			//Перебираем имена полей с файлами
-			foreach($fileInputName as $value){
+			foreach($fileInputNames as $value){
 				//Проверяем находится ли в POST массив
 				if(is_array($_FILES[$value]['name'])){
 					//Если массив пустой обрываем итерацию
