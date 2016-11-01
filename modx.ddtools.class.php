@@ -69,9 +69,9 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1.2 (2016-10-29)
+	 * @version 1.1.2b (2016-10-29)
 	 * 
-	 * @desc Convert list of ordered parameters to named.
+	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params['paramsList'] {array} — Parameters in ordered list (func_get_args). @required
@@ -79,7 +79,7 @@ class ddTools {
 	 * 
 	 * @return {array_associative}
 	 */
-	private static function orderedParamsToNamed($params){
+	public static function orderedParamsToNamed($params){
 		$params = (object) $params;
 		
 		$result = [];
