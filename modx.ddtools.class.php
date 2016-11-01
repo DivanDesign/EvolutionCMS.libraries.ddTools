@@ -1,12 +1,12 @@
 <?php
 /**
  * modx ddTools class
- * @version 0.16 (2016-10-29)
+ * @version 0.16.1 (2016-11-01)
  * 
  * @uses PHP >= 5.4.
- * @uses MODX Evo >= 1.0.10.
+ * @uses MODXEvo >= 1.0.10.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.16
+ * @link http://code.divandesign.biz/modx/ddtools/0.16.1
  * 
  * @copyright 2012–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -69,9 +69,9 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1.2 (2016-10-29)
+	 * @version 1.1.2b (2016-10-29)
 	 * 
-	 * @desc Convert list of ordered parameters to named.
+	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params['paramsList'] {array} — Parameters in ordered list (func_get_args). @required
@@ -79,7 +79,7 @@ class ddTools {
 	 * 
 	 * @return {array_associative}
 	 */
-	private static function orderedParamsToNamed($params){
+	public static function orderedParamsToNamed($params){
 		$params = (object) $params;
 		
 		$result = [];
@@ -400,17 +400,33 @@ class ddTools {
 		return $string;
 	}
 	
+	
 	/**
 	 * screening
+	 * @deprecated Use ddTools::escapeForJS.
+	 */
+	public static function screening($str){
+		self::$modx->logEvent(
+			1,
+			2,
+			'<p>The “ddTools::screening” method is deprecated, use “ddTools::escapeForJS” instead.</p>',
+			__METHOD__.': Deprecated'
+		);
+		
+		return self::escapeForJS($str);
+	}
+	
+	/**
+	 * escapingForJS
 	 * @version 1.0 (2012-03-21)
 	 * 
 	 * @desc Escaping chars in string for JS.
 	 * 
 	 * @param $str {string} — String to escaping. @required
 	 * 
-	 * @return {string} — Экранированная строка.
+	 * @return {string}
 	 */
-	public static function screening($str){
+	public static function escapeForJS($str){
 		$str = str_replace("\r\n", ' ', $str);
 		$str = str_replace("\n", ' ', $str);
 		$str = str_replace("\r", ' ', $str);
