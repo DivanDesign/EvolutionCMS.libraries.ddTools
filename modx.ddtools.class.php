@@ -400,17 +400,33 @@ class ddTools {
 		return $string;
 	}
 	
+	
 	/**
 	 * screening
+	 * @deprecated Use ddTools::escapeForJS.
+	 */
+	public static function screening($str){
+		self::$modx->logEvent(
+			1,
+			2,
+			'<p>The “ddTools::screening” method is deprecated, use “ddTools::escapeForJS” instead.</p>',
+			__METHOD__.': Deprecated'
+		);
+		
+		return self::escapeForJS($str);
+	}
+	
+	/**
+	 * escapingForJS
 	 * @version 1.0 (2012-03-21)
 	 * 
 	 * @desc Escaping chars in string for JS.
 	 * 
 	 * @param $str {string} — String to escaping. @required
 	 * 
-	 * @return {string} — Экранированная строка.
+	 * @return {string}
 	 */
-	public static function screening($str){
+	public static function escapeForJS($str){
 		$str = str_replace("\r\n", ' ', $str);
 		$str = str_replace("\n", ' ', $str);
 		$str = str_replace("\r", ' ', $str);
