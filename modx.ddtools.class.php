@@ -379,7 +379,7 @@ class ddTools {
 	
 	/**
 	 * generateRandomString
-	 * @version 1.0 (2012-02-13)
+	 * @version 1.0.1 (2016-12-15)
 	 * 
 	 * @desc Generate random string with necessary length.
 	 * 
@@ -389,7 +389,6 @@ class ddTools {
 	 * @return {string}
 	 */
 	public static function generateRandomString($length = 8, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'){
-		$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
 		$numChars = strlen($chars);
 		$string = '';
 		
