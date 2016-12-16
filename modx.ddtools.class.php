@@ -1,12 +1,12 @@
 <?php
 /**
- * modx ddTools class
- * @version 0.16.1 (2016-11-01)
+ * MODXEvo.library.ddTools
+ * @version 0.16.2 (2016-12-16)
  * 
  * @uses PHP >= 5.4.
  * @uses MODXEvo >= 1.0.10.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.16.1
+ * @link http://code.divandesign.biz/modx/ddtools/0.16.2
  * 
  * @copyright 2012–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
