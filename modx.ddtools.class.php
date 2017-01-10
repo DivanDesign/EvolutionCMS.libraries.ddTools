@@ -1,14 +1,14 @@
 <?php
 /**
  * MODXEvo.library.ddTools
- * @version 0.16.2 (2016-12-16)
+ * @version 0.17 (2017-01-10)
  * 
  * @uses PHP >= 5.4.
  * @uses MODXEvo >= 1.0.10.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.16.2
+ * @link http://code.divandesign.biz/modx/ddtools/0.17
  * 
- * @copyright 2012–2016 DivanDesign {@link http://www.DivanDesign.biz }
+ * @copyright 2012–2017 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
 global $modx;
