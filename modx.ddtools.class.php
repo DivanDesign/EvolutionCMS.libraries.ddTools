@@ -441,13 +441,13 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.3.1 (2016-10-29)
+	 * @version 1.4 (2017-01-10)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params['text'] {string} — String to parse. @required
-	 * @param $params['data'] {array_associative} — Array of values. Key — placeholder name, value — value. @required
+	 * @param $params['data'] {array_associative} — Array of values. Key — placeholder name, value — value. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”.
 	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
 	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
 	 * @param $params['removeEmptyPlaceholders'] {boolean} — Do you need to remove empty placeholders? Default: false.
@@ -481,6 +481,9 @@ class ddTools {
 			isset($params->data) &&
 			is_array($params->data)
 		){
+			//Unfold for arrays support (e. g. “some[a]=one&some[b]=two” => “[+some.a+]”, “[+some.b+]”; “some[]=one&some[]=two” => “[+some.0+]”, “[some.1]”)
+			$params->data = self::unfoldArray($params->data);
+			
 			foreach ($params->data as $key => $value){
 				$result = str_replace($params->placeholderPrefix.$key.$params->placeholderSuffix, $value, $result);
 			}
