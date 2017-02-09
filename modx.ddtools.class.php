@@ -427,6 +427,50 @@ class ddTools {
 	}
 	
 	/**
+	 * encodedStringToArray
+	 * @version 1.0 (2017-02-07)
+	 * 
+	 * @desc Converts encoded strings to arrays.
+	 * Supported formats:
+	 * — JSON (https://en.wikipedia.org/wiki/JSON);
+	 * — Query string (https://en.wikipedia.org/wiki/Query_string).
+	 * 
+	 * @param $inputString {string} — Input string. @required
+	 * 
+	 * @return {array}
+	 */
+	public static function encodedStringToArray($inputString){
+		$result = [];
+		
+		//JSON
+		if (in_array(substr($inputString, 0, 1), ['{', '['])){
+			try {
+				$result = json_decode($inputString, true);
+			}catch (\Exception $e){
+				//Flag
+				$result = [];
+			}
+		}
+		
+		//Not JSON
+		if (empty($result)){
+			//Query string
+			if (strpos($inputString, '=') !== false){
+				parse_str($inputString, $result);
+			//The old deprecated format where string is separated by '||' and '::'
+			}else{
+				$result = self::explodeAssoc($inputString);
+				
+				self::logEvent([
+					'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+				]);
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * logEvent
 	 * @version 1.0 (2017-02-07)
 	 * 
