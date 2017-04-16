@@ -1503,7 +1503,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 2.1 (2016-10-29)
+	 * @version 2.1.1 (2017-04-16)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -1584,7 +1584,7 @@ class ddTools {
 				foreach($attachFiles as $name => $value){
 					$message .= PHP_EOL.
 						'Content-Type: application/octet-stream; name = "=?UTF-8?B?'.base64_encode($name)."?=\"".PHP_EOL.
-						"Content-Transfer-Encoding: base64".PHP_EOL.
+						"Content-Transfer-Encoding: base64".PHP_EOL.PHP_EOL.
 						base64_encode($value).PHP_EOL."--".$bound;
 				}
 			}
