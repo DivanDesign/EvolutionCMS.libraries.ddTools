@@ -1,12 +1,12 @@
 <?php
 /**
  * MODXEvo.library.ddTools
- * @version 0.17 (2017-01-10)
+ * @version 0.18 (2017-02-10)
  * 
  * @uses PHP >= 5.4.
  * @uses MODXEvo >= 1.0.10.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.17
+ * @link http://code.divandesign.biz/modx/ddtools/0.18
  * 
  * @copyright 2012–2017 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -69,7 +69,7 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1.2b (2016-10-29)
+	 * @version 1.1.3b (2017-02-07)
 	 * 
 	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
@@ -104,7 +104,7 @@ class ddTools {
 		$caller = (isset($caller['class']) ? $caller['class'].'->' : '').$caller['function'];
 		
 		//General info with code example
-		$message = '<p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
+		$message = '<p>Deprecated ordered parameters.</p><p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
 		<pre><code>//Old style
 '.$caller.'($'.implode(', $', $params->compliance).');
 //Pass-by-name
@@ -113,20 +113,10 @@ class ddTools {
 ]);
 		</code></pre>';
 		
-		//Info about doc id
-		$message .= '<p>The method has been called in the document with id == “'.self::$modx->documentIdentifier.'”';
-		//And about snippet
-		if (!empty(self::$modx->currentSnippet)){
-			$message .= ', the snippet “'.self::$modx->currentSnippet.'”';
-		}
-		$message .= '.</p>';
-		
-		self::$modx->logEvent(
-			1,
-			2,
-			$message.self::$modx->get_backtrace($backtrace),
-			$caller.': Deprecated ordered parameters'
-		);
+		self::logEvent([
+			'message' => $message,
+			'backtraceArray' => $backtrace
+		]);
 		
 		return $result;
 	}
@@ -405,12 +395,9 @@ class ddTools {
 	 * @deprecated Use ddTools::escapeForJS.
 	 */
 	public static function screening($str){
-		self::$modx->logEvent(
-			1,
-			2,
-			'<p>The “ddTools::screening” method is deprecated, use “ddTools::escapeForJS” instead.</p>',
-			__METHOD__.': Deprecated'
-		);
+		self::logEvent([
+			'message' => '<p>The “ddTools::screening” method is deprecated, use “ddTools::escapeForJS” instead.</p>'
+		]);
 		
 		return self::escapeForJS($str);
 	}
@@ -437,6 +424,139 @@ class ddTools {
 		$str = str_replace('"', '\"', $str);
 		
 		return $str;
+	}
+	
+	/**
+	 * encodedStringToArray
+	 * @version 1.0 (2017-02-07)
+	 * 
+	 * @desc Converts encoded strings to arrays.
+	 * Supported formats:
+	 * — JSON (https://en.wikipedia.org/wiki/JSON);
+	 * — Query string (https://en.wikipedia.org/wiki/Query_string).
+	 * 
+	 * @param $inputString {string} — Input string. @required
+	 * 
+	 * @return {array}
+	 */
+	public static function encodedStringToArray($inputString){
+		$result = [];
+		
+		//JSON
+		if (in_array(substr($inputString, 0, 1), ['{', '['])){
+			try {
+				$result = json_decode($inputString, true);
+			}catch (\Exception $e){
+				//Flag
+				$result = [];
+			}
+		}
+		
+		//Not JSON
+		if (empty($result)){
+			//Query string
+			if (strpos($inputString, '=') !== false){
+				parse_str($inputString, $result);
+			//The old deprecated format where string is separated by '||' and '::'
+			}else{
+				$result = self::explodeAssoc($inputString);
+				
+				self::logEvent([
+					'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+				]);
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * logEvent
+	 * @version 1.0 (2017-02-07)
+	 * 
+	 * @desc Add an alert message to the system event log with debug info (backtrace, snippet name, document id, etc).
+	 * 
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params['message'] {string} — Message to be logged. Default: ''.
+	 * @param $params['source'] {string} — Source of the event (module, snippet name, etc). Default: $modx->currentSnippet || caller.
+	 * @param $params['eventId'] {integer} — Event ID. Default: 1.
+	 * @param $params['eventType'] {'information'|'warning'|'error'} — Event type. Default: 'warning'.
+	 * @param $params['backtraceArray'] {array} — Backtrace (if default is not suitable). See http://php.net/manual/en/function.debug-backtrace.php. Default: debug_backtrace().
+	 * 
+	 * @return {void}
+	 */
+	public static function logEvent($params){
+		//Defaults
+		$params = (object) array_merge([
+			'message' => '',
+			'source' => '',
+			//TODO: Why “1”, what does it mean?
+			'eventId' => 1,
+			'eventType' => 'warning',
+// 			'backtraceArray' => debug_backtrace(),
+		], (array) $params);
+		
+		
+		//Prepare backtrace and caller
+		if (!isset($params->backtraceArray)){
+			$params->backtraceArray = debug_backtrace();
+			//Remove this method
+			array_shift($params->backtraceArray);
+		}
+		$caller = $params->backtraceArray[0];
+		$caller = (isset($caller['class']) ? $caller['class'].'->' : '').$caller['function'];
+		
+		
+		$debugInfo = [];
+		
+		//Add current document Id to debug info
+		if (!empty(self::$modx->documentIdentifier)){
+			$debugInfo[] = '<li>Document id: “'.self::$modx->documentIdentifier.'”;</li>';
+		}
+		
+		//Is the code being run in the snippet?
+		if (!empty(self::$modx->currentSnippet)){
+			//Empty source
+			if ($params->source == ''){
+				//Set as source
+				$params->source = self::$modx->currentSnippet;
+			}else{
+				//Add to debug info
+				$debugInfo[] = '<li>Snippet: “'.self::$modx->currentSnippet.'”;</li>';
+			}
+		}
+		
+		if ($params->source == ''){$params->source = $caller;}
+		
+		
+		//Add debug info to the message
+		$params->message .= '<h3>Debug info</h3>';
+		
+		if (!empty($debugInfo)){
+			$params->message .= '<ul>'.implode('', $debugInfo).'</ul>';
+		}
+		
+		//Add backtrace to message
+		$params->message .= self::$modx->get_backtrace($params->backtraceArray);
+		
+		
+		//Prepare event type
+		switch (substr($params->eventType, 0, 1)){
+			//Information
+			case 'i': $params->eventType = 1; break;
+			//Warning
+			case 'w': $params->eventType = 2; break;
+			//Error
+			case 'e': $params->eventType = 3; break;
+		}
+		
+		
+		self::$modx->logEvent(
+			$params->eventId,
+			$params->eventType,
+			$params->message,
+			$params->source
+		);
 	}
 	
 	/**
@@ -761,7 +881,7 @@ class ddTools {
 	
 	/**
 	 * getDocuments
-	 * @version 1.2.3 (2016-10-29)
+	 * @version 1.2.4 (2017-02-07)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
@@ -786,24 +906,18 @@ class ddTools {
 		if($published === false){
 			$published = 'all';
 			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
-				__METHOD__.': Deprecated use of the $published parameter'
-			);
+			self::logEvent([
+				'message' => '<p>Deprecated use of the $published parameter.</p><p>False is no longer allowed as a value for the $published parameter. Use “all” instead.</p>'
+			]);
 		}
 		
 		//Проверка на устаревшее значение $deleted === false
 		if($deleted === false){
 			$deleted = 'all';
 			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
-				__METHOD__.': Deprecated use of the $deleted parameter'
-			);
+			self::logEvent([
+				'message' => '<p>Deprecated use of the $deleted parameter.</p><p>False is no longer allowed as a value for the $deleted parameter. Use “all” instead.</p>'
+			]);
 		}
 		
 		if(is_string($ids)){
@@ -843,7 +957,7 @@ class ddTools {
 	
 	/**
 	 * getDocument
-	 * @version 1.1.3 (2016-10-29)
+	 * @version 1.1.4 (2017-02-07)
 	 * 
 	 * @desc Returns required data of a document (document fields).
 	 * 
@@ -864,24 +978,18 @@ class ddTools {
 		if($published === false){
 			$published = 'all';
 			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
-				__METHOD__.': Deprecated use of the $published parameter'
-			);
+			self::logEvent([
+				'message' => '<p>Deprecated use of the $published parameter.</p><p>False is no longer allowed as a value for the $published parameter. Use “all” instead.</p>'
+			]);
 		}
 		
 		//Проверка на устаревшее значение $deleted === false
 		if($deleted === false){
 			$deleted = 'all';
 			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
-				__METHOD__.': Deprecated use of the $deleted parameter'
-			);
+			self::logEvent([
+				'message' => '<p>Deprecated use of the $deleted parameter.</p><p>False is no longer allowed as a value for the $deleted parameter. Use “all” instead.</p>'
+			]);
 		}
 		
 		if ($id == 0){
@@ -899,7 +1007,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.3 (2016-10-29)
+	 * @version 1.3.4 (2017-02-07)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -921,12 +1029,9 @@ class ddTools {
 		if($published === false){
 			$published = 'all';
 			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
-				__METHOD__.': Deprecated use of the $published parameter'
-			);
+			self::logEvent([
+				'message' => '<p>Deprecated use of the $published parameter.</p><p>False is no longer allowed as a value for the $published parameter. Use “all” instead.</p>'
+			]);
 		}
 		
 		if (
@@ -986,7 +1091,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.3 (2016-10-29)
+	 * @version 1.1.4 (2017-02-07)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -1006,12 +1111,9 @@ class ddTools {
 		if($published === false){
 			$published = 'all';
 			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
-				__METHOD__.': Deprecated use of the $published parameter'
-			);
+			self::logEvent([
+				'message' => '<p>Deprecated use of the $published parameter.</p><p>False is no longer allowed as a value for the $published parameter. Use “all” instead.</p>'
+			]);
 		}
 		
 		if (count($idnames) == 0){
@@ -1048,7 +1150,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.2.2 (2016-10-28)
+	 * @version 1.2.3 (2017-02-07)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
@@ -1073,24 +1175,18 @@ class ddTools {
 		if($published === false){
 			$published = 'all';
 			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>False is no longer allowed as a value for the \$published parameter. Use “all” instead</p>',
-				__METHOD__.': Deprecated use of the $published parameter'
-			);
+			self::logEvent([
+				'message' => '<p>Deprecated use of the $published parameter.</p><p>False is no longer allowed as a value for the $published parameter. Use “all” instead.</p>'
+			]);
 		}
 		
 		//Проверка на устаревшее значение $deleted === false
 		if($deleted === false){
 			$deleted = 'all';
 			
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>False is no longer allowed as a value for the \$deleted parameter. Use “all” instead</p>',
-				__METHOD__.': Deprecated use of the $deleted parameter'
-			);
+			self::logEvent([
+				'message' => '<p>Deprecated use of the $deleted parameter.</p><p>False is no longer allowed as a value for the $deleted parameter. Use “all” instead.</p>'
+			]);
 		}
 		
 		$published = ($published !== 'all') ? 'AND sc.published = '.$published : '';
@@ -1346,7 +1442,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.1.3 (2016-10-29)
+	 * @version 1.1.4 (2017-02-07)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
@@ -1397,12 +1493,9 @@ class ddTools {
 		}
 		
 		if (count($result) > 0){
-			self::$modx->logEvent(
-				1,
-				2,
-				'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $message).'</ul><br /><p>The snippet has been called in the document with id '.self::$modx->documentIdentifier.'.</p>',
-				self::$modx->currentSnippet
-			);
+			self::logEvent([
+				'message' => '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $message).'</ul>'
+			]);
 		}
 		
 		return $result;
@@ -1410,7 +1503,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 2.1 (2016-10-29)
+	 * @version 2.1.1 (2017-04-16)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -1491,7 +1584,7 @@ class ddTools {
 				foreach($attachFiles as $name => $value){
 					$message .= PHP_EOL.
 						'Content-Type: application/octet-stream; name = "=?UTF-8?B?'.base64_encode($name)."?=\"".PHP_EOL.
-						"Content-Transfer-Encoding: base64".PHP_EOL.
+						"Content-Transfer-Encoding: base64".PHP_EOL.PHP_EOL.
 						base64_encode($value).PHP_EOL."--".$bound;
 				}
 			}
@@ -1519,7 +1612,7 @@ class ddTools {
 	
 	/**
 	 * getResponse
-	 * @version 1.0.2 (2016-10-28)
+	 * @version 1.0.3 (2017-02-07)
 	 * 
 	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request
 	 * 
@@ -1536,12 +1629,9 @@ class ddTools {
 				if(class_exists('\DDTools\Response\Response_v02')){
 					$output = new \DDTools\Response\Response_v02();
 				}else{
-					self::$modx->logEvent(
-						1,
-						2,
-						'<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this “require_once(\$modx->getConfig("base_path")."vendor/autoload.php")”.</p>',
-						__METHOD__.': \DDTools\Response\Response_v02'
-					);
+					self::logEvent([
+						'message' => '<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this “require_once(\$modx->getConfig("base_path")."vendor/autoload.php")”.</p>'
+					]);
 				}
 				break;
 		}
