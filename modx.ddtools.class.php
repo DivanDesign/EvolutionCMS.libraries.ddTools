@@ -404,7 +404,7 @@ class ddTools {
 	
 	/**
 	 * escapingForJS
-	 * @version 1.0 (2012-03-21)
+	 * @version 1.1 (2017-05-24)
 	 * 
 	 * @desc Escaping chars in string for JS.
 	 * 
@@ -413,15 +413,21 @@ class ddTools {
 	 * @return {string}
 	 */
 	public static function escapeForJS($str){
+		//Line breaks
 		$str = str_replace("\r\n", ' ', $str);
 		$str = str_replace("\n", ' ', $str);
 		$str = str_replace("\r", ' ', $str);
+		//Tabs
 		$str = str_replace(chr(9), ' ', $str);
 		$str = str_replace('  ', ' ', $str);
+		//MODX placeholders
 		$str = str_replace('[+', '\[\+', $str);
 		$str = str_replace('+]', '\+\]', $str);
+		//Quotes
 		$str = str_replace("'", "\'", $str);
 		$str = str_replace('"', '\"', $str);
+		//Backslach escaping (see issue #1)
+		$str = str_replace('\\', '\\\\', $str);
 		
 		return $str;
 	}
