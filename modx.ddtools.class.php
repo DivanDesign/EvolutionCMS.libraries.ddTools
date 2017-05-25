@@ -1618,29 +1618,18 @@ class ddTools {
 	
 	/**
 	 * getResponse
-	 * @version 1.0.3 (2017-02-07)
+	 * @version 1.0.4 (2017-05-25)
 	 * 
-	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request
+	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request.
 	 * 
-	 * @param $version {string} — The required version of Response.
+	 * @param $version {string} — The required version of Response. Default: '0.2'.
 	 * 
-	 * @return {DDTools\Response|false}
+	 * @return {DDTools\Response}
 	 */
-	public static function getResponse($version = null){
-		$output = false;
+	public static function getResponse($version = '0.2'){
+		$responseClass = \DDTools\Response::includeResponseByVersion($version);
 		
-		switch($version){
-			case null:
-			case '0.2':
-				if(class_exists('\DDTools\Response\Response_v02')){
-					$output = new \DDTools\Response\Response_v02();
-				}else{
-					self::logEvent([
-						'message' => '<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this “require_once(\$modx->getConfig("base_path")."vendor/autoload.php")”.</p>'
-					]);
-				}
-				break;
-		}
+		$output = new $responseClass;
 		
 		return $output;
 	}
@@ -1662,6 +1651,11 @@ if(isset($modx)){
 		if (version_compare($modxVersionData['version'], '1.0.11', '>')){
 			ddTools::$documentFields[] = 'alias_visible';
 		}
+	}
+	
+	//If Composer is not used
+	if(!class_exists('\DDTools\Response')){
+		require_once __DIR__.DIRECTORY_SEPARATOR.'require.php';
 	}
 }
 }

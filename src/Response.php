@@ -7,6 +7,28 @@ abstract class Response
 	protected $meta, $data;
 	
 	/**
+	 * includeResponseByVersion
+	 * @version 1.0 (2017-05-25)
+	 * 
+	 * @param $version {string} — Response version.
+	 * 
+	 * @return {string}
+	 * @throws \Exception
+	 */
+	public final static function includeResponseByVersion($version){
+		//Only digits
+		$className = 'Response_v'.preg_replace('/\D/', '', $version);
+		$versionPath = __DIR__.DIRECTORY_SEPARATOR.'Response'.DIRECTORY_SEPARATOR.$className.'.php';
+		
+		if(is_file($versionPath)){
+			require_once $versionPath;
+			return __NAMESPACE__.'\\Response\\'.$className;
+		}else{
+			throw new \Exception('ddTools Response '.$version.' is not found.', 500);
+		}
+	}
+	
+	/**
 	 * validateMeta
 	 * 
 	 * Validates the “meta” part of a response.
