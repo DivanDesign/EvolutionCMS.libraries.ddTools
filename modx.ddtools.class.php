@@ -1,12 +1,12 @@
 <?php
 /**
  * MODXEvo.library.ddTools
- * @version 0.18 (2017-02-10)
+ * @version 0.19 (2017-05-28)
  * 
  * @uses PHP >= 5.4.
  * @uses MODXEvo >= 1.0.10.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.18
+ * @link http://code.divandesign.biz/modx/ddtools/0.19
  * 
  * @copyright 2012–2017 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -404,7 +404,7 @@ class ddTools {
 	
 	/**
 	 * escapingForJS
-	 * @version 1.0 (2012-03-21)
+	 * @version 1.1 (2017-05-24)
 	 * 
 	 * @desc Escaping chars in string for JS.
 	 * 
@@ -413,15 +413,21 @@ class ddTools {
 	 * @return {string}
 	 */
 	public static function escapeForJS($str){
+		//Line breaks
 		$str = str_replace("\r\n", ' ', $str);
 		$str = str_replace("\n", ' ', $str);
 		$str = str_replace("\r", ' ', $str);
+		//Tabs
 		$str = str_replace(chr(9), ' ', $str);
 		$str = str_replace('  ', ' ', $str);
+		//MODX placeholders
 		$str = str_replace('[+', '\[\+', $str);
 		$str = str_replace('+]', '\+\]', $str);
+		//Quotes
 		$str = str_replace("'", "\'", $str);
 		$str = str_replace('"', '\"', $str);
+		//Backslach escaping (see issue #1)
+		$str = str_replace('\\', '\\\\', $str);
 		
 		return $str;
 	}
@@ -1503,7 +1509,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 2.1 (2016-10-29)
+	 * @version 2.1.1 (2017-04-16)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -1584,7 +1590,7 @@ class ddTools {
 				foreach($attachFiles as $name => $value){
 					$message .= PHP_EOL.
 						'Content-Type: application/octet-stream; name = "=?UTF-8?B?'.base64_encode($name)."?=\"".PHP_EOL.
-						"Content-Transfer-Encoding: base64".PHP_EOL.
+						"Content-Transfer-Encoding: base64".PHP_EOL.PHP_EOL.
 						base64_encode($value).PHP_EOL."--".$bound;
 				}
 			}
@@ -1612,29 +1618,18 @@ class ddTools {
 	
 	/**
 	 * getResponse
-	 * @version 1.0.3 (2017-02-07)
+	 * @version 1.0.4 (2017-05-25)
 	 * 
-	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request
+	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request.
 	 * 
-	 * @param $version {string} — The required version of Response.
+	 * @param $version {string} — The required version of Response. Default: '0.2'.
 	 * 
-	 * @return {DDTools\Response|false}
+	 * @return {DDTools\Response}
 	 */
-	public static function getResponse($version = null){
-		$output = false;
+	public static function getResponse($version = '0.2'){
+		$responseClass = \DDTools\Response::includeResponseByVersion($version);
 		
-		switch($version){
-			case null:
-			case '0.2':
-				if(class_exists('\DDTools\Response\Response_v02')){
-					$output = new \DDTools\Response\Response_v02();
-				}else{
-					self::logEvent([
-						'message' => '<p>The class \DDTools\Response\Response_v02 is unreachable. Perhaps, you are not using the Composer autoload file. Please, check the way you include ddTools, it should be like this “require_once(\$modx->getConfig("base_path")."vendor/autoload.php")”.</p>'
-					]);
-				}
-				break;
-		}
+		$output = new $responseClass;
 		
 		return $output;
 	}
@@ -1656,6 +1651,11 @@ if(isset($modx)){
 		if (version_compare($modxVersionData['version'], '1.0.11', '>')){
 			ddTools::$documentFields[] = 'alias_visible';
 		}
+	}
+	
+	//If Composer is not used
+	if(!class_exists('\DDTools\Response')){
+		require_once __DIR__.DIRECTORY_SEPARATOR.'require.php';
 	}
 }
 }
