@@ -403,7 +403,7 @@ class ddTools {
 	
 	/**
 	 * escapingForJS
-	 * @version 1.1 (2017-05-24)
+	 * @version 1.1.1 (2017-07-06)
 	 * 
 	 * @desc Escaping chars in string for JS.
 	 * 
@@ -412,6 +412,8 @@ class ddTools {
 	 * @return {string}
 	 */
 	public static function escapeForJS($str){
+		//Backslach escaping (see issue #1)
+		$str = str_replace('\\', '\\\\', $str);
 		//Line breaks
 		$str = str_replace("\r\n", ' ', $str);
 		$str = str_replace("\n", ' ', $str);
@@ -425,8 +427,6 @@ class ddTools {
 		//Quotes
 		$str = str_replace("'", "\'", $str);
 		$str = str_replace('"', '\"', $str);
-		//Backslach escaping (see issue #1)
-		$str = str_replace('\\', '\\\\', $str);
 		
 		return $str;
 	}
