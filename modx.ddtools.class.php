@@ -389,7 +389,6 @@ class ddTools {
 		return $string;
 	}
 	
-	
 	/**
 	 * screening
 	 * @deprecated Use ddTools::escapeForJS.
@@ -472,6 +471,43 @@ class ddTools {
 				]);
 			}
 		}
+		
+		return $result;
+	}
+
+	/**
+	 * getPlaceholdersFromText
+	 * @version 1.0 (2017-07-06)
+	 * 
+	 * @desc Finds all placeholders' names and returns them as an array.
+	 * 
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params['text'] {string} — Source string. @required
+	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
+	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
+	 * 
+	 * @return {array}
+	 */
+	public static function getPlaceholdersFromText($params = []){
+		//Defaults
+		$params = (object) array_merge([
+			'text' => '',
+			'placeholderPrefix' => '[+',
+			'placeholderSuffix' => '+]'
+		], (array) $params);
+		
+		$params->placeholderPrefix = preg_quote($params->placeholderPrefix);
+		$params->placeholderSuffix = preg_quote($params->placeholderSuffix);
+		
+		$result = [];
+		
+		preg_match_all(
+			'/'.$params->placeholderPrefix.'(.*?)'.$params->placeholderSuffix.'/',
+			$params->text,
+			$result
+		);
+		
+		$result = array_unique($result[1]);
 		
 		return $result;
 	}
