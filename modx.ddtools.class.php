@@ -1,12 +1,12 @@
 <?php
 /**
  * MODXEvo.library.ddTools
- * @version 0.19 (2017-05-28)
+ * @version 0.20 (2017-07-06)
  * 
  * @uses PHP >= 5.4.
  * @uses MODXEvo >= 1.0.10.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.19
+ * @link http://code.divandesign.biz/modx/ddtools/0.20
  * 
  * @copyright 2012–2017 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -389,7 +389,6 @@ class ddTools {
 		return $string;
 	}
 	
-	
 	/**
 	 * screening
 	 * @deprecated Use ddTools::escapeForJS.
@@ -404,7 +403,7 @@ class ddTools {
 	
 	/**
 	 * escapingForJS
-	 * @version 1.1 (2017-05-24)
+	 * @version 1.1.1 (2017-07-06)
 	 * 
 	 * @desc Escaping chars in string for JS.
 	 * 
@@ -413,6 +412,8 @@ class ddTools {
 	 * @return {string}
 	 */
 	public static function escapeForJS($str){
+		//Backslach escaping (see issue #1)
+		$str = str_replace('\\', '\\\\', $str);
 		//Line breaks
 		$str = str_replace("\r\n", ' ', $str);
 		$str = str_replace("\n", ' ', $str);
@@ -426,8 +427,6 @@ class ddTools {
 		//Quotes
 		$str = str_replace("'", "\'", $str);
 		$str = str_replace('"', '\"', $str);
-		//Backslach escaping (see issue #1)
-		$str = str_replace('\\', '\\\\', $str);
 		
 		return $str;
 	}
@@ -472,6 +471,43 @@ class ddTools {
 				]);
 			}
 		}
+		
+		return $result;
+	}
+
+	/**
+	 * getPlaceholdersFromText
+	 * @version 1.0 (2017-07-06)
+	 * 
+	 * @desc Finds all placeholders' names and returns them as an array.
+	 * 
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params['text'] {string} — Source string. @required
+	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
+	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
+	 * 
+	 * @return {array}
+	 */
+	public static function getPlaceholdersFromText($params = []){
+		//Defaults
+		$params = (object) array_merge([
+			'text' => '',
+			'placeholderPrefix' => '[+',
+			'placeholderSuffix' => '+]'
+		], (array) $params);
+		
+		$params->placeholderPrefix = preg_quote($params->placeholderPrefix);
+		$params->placeholderSuffix = preg_quote($params->placeholderSuffix);
+		
+		$result = [];
+		
+		preg_match_all(
+			'/'.$params->placeholderPrefix.'(.*?)'.$params->placeholderSuffix.'/',
+			$params->text,
+			$result
+		);
+		
+		$result = array_unique($result[1]);
 		
 		return $result;
 	}
