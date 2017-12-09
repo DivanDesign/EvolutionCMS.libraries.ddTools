@@ -1,12 +1,12 @@
 <?php
 /**
  * MODXEvo.library.ddTools
- * @version 0.20 (2017-07-06)
+ * @version 0.21 (2017-12-09)
  * 
  * @uses PHP >= 5.4.
  * @uses MODXEvo >= 1.0.10.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.20
+ * @link http://code.divandesign.biz/modx/ddtools/0.21
  * 
  * @copyright 2012–2017 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -19,6 +19,8 @@ class ddTools {
 	
 	//Contains names of document fields (`site_content`)
 	public static $documentFields = [
+		//For MODX > 1.0.11
+		//alias_visible,
 		'id',
 		'type',
 		'contentType',
@@ -58,13 +60,54 @@ class ddTools {
 		'hidemenu'
 	];
 	
-	//Contains full names of some db tables
+	//Contains full names of db tables
 	public static $tables = [
+		//System
+		'categories' => '',
+		'event_log' => '',
+		'manager_log' => '',
+		'manager_users' => '',
+		'system_eventnames' => '',
+		'system_settings' => '',
+		//Documents
 		'site_content' => '',
+		'documentgroup_names' => '',
+		'document_groups' => '',
+		//Templates
+		'site_templates' => '',
+		//Chunks
+		'site_htmlsnippets' => '',
+		//TVs
 		'site_tmplvars' => '',
-		'site_tmplvar_templates' => '',
+		'site_tmplvar_access' => '',
 		'site_tmplvar_contentvalues' => '',
-		'document_groups' => ''
+		'site_tmplvar_templates' => '',
+		//Snippets
+		'site_snippets' => '',
+		//Plugins
+		'site_plugins' => '',
+		'site_plugin_events' => '',
+		//Modules
+		'site_modules' => '',
+		'site_module_access' => '',
+		'site_module_depobj' => '',
+		//Users
+		'membergroup_access' => '',
+		'membergroup_names' => '',
+		'member_groups' => '',
+		'active_users' => '',
+		'active_user_locks' => '',
+		'active_user_sessions' => '',
+		'user_attributes' => '',
+		'user_messages' => '',
+		'user_roles' => '',
+		'user_settings' => '',
+		'webgroup_access' => '',
+		'webgroup_names' => '',
+		'web_groups' => '',
+		'web_users' => '',
+		'web_user_attributes' => '',
+		'web_user_settings' => ''
 	];
 	
 	/**
@@ -153,7 +196,7 @@ class ddTools {
 	
 	/**
 	 * unfoldArray
-	 * @version 1.0.1 (2016-10-29)
+	 * @version 1.0.2 (2017-12-09)
 	 * 
 	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
 	 * For example, [
@@ -187,7 +230,10 @@ class ddTools {
 			//Если значение является массивом
 			if (is_array($val)){
 				//Запускаем рекурсию дальше
-				$output = array_merge($output, self::unfoldArray($val, $keyPrefix.$key.'.'));
+				$output = array_merge(
+					$output,
+					self::unfoldArray($val, $keyPrefix.$key.'.')
+				);
 			//Если значение — не массив
 			}else{
 				//Запоминаем (в соответствии с ключом родителя)
@@ -200,7 +246,7 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.1.2 (2016-10-29)
+	 * @version 1.1.3 (2017-12-09)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
@@ -232,7 +278,10 @@ class ddTools {
 				//Если они строки
 			}else{
 				//Сравниваем текущее значение со значением эталонного
-				$cmpRes = strcmp($val[$sortBy[$i]], $tek);
+				$cmpRes = strcmp(
+					$val[$sortBy[$i]],
+					$tek
+				);
 			}
 			
 			//Если меньше эталона, отбрасываем в массив меньших
@@ -254,12 +303,16 @@ class ddTools {
 		$arrCent = ((count($arrCent) > 1) && $sortBy[$i + 1]) ? self::sort2dArray($arrCent, $sortBy, $sortDir, $i + 1) : $arrCent;
 		
 		//Склеиваем отсортированные меньшие, средние и большие
-		return array_merge($arrLeft, $arrCent, $arrRight);
+		return array_merge(
+			$arrLeft,
+			$arrCent,
+			$arrRight
+		);
 	}
 	
 	/**
 	 * parseFileNameVersion
-	 * @version 1.1.1 (2016-10-29)
+	 * @version 1.1.2 (2017-12-09)
 	 * 
 	 * @desc Parses a file path and gets its name, version & extension.
 	 * 
@@ -291,7 +344,11 @@ class ddTools {
 		];
 		
 		//Try to get file version [0 — full name, 1 — script name, 2 — version, 3 — all chars after version]
-		preg_match('/(\D*?)-?(\d(?:\.\d+)*(?:-?[A-Za-z])*)(.*)/', $fileinfo['basename'], $match);
+		preg_match(
+			'/(\D*?)-?(\d(?:\.\d+)*(?:-?[A-Za-z])*)(.*)/',
+			$fileinfo['basename'],
+			$match
+		);
 		
 		//If not fail
 		if (count($match) >= 4){
@@ -304,7 +361,7 @@ class ddTools {
 	
 	/**
 	 * copyDir
-	 * @version 1.0.2 (2016-10-29)
+	 * @version 1.0.3 (2017-12-09)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
@@ -324,14 +381,23 @@ class ddTools {
 		if (!file_exists($destinationDir)){mkdir($destinationDir);}
 		
 		//Получаем файлы в директории
-		$files = array_diff(scandir($sourceDir), ['.', '..']);
+		$files = array_diff(
+			scandir($sourceDir),
+			['.', '..']
+		);
 		
 		foreach ($files as $file){
 			//Если это папка, обработаем её
 			if (is_dir($sourceDir.$file)){
-				self::copyDir($sourceDir.$file, $destinationDir.$file);
+				self::copyDir(
+					$sourceDir.$file,
+					$destinationDir.$file
+				);
 			}else{
-				copy($sourceDir.$file, $destinationDir.$file);
+				copy(
+					$sourceDir.$file,
+					$destinationDir.$file
+				);
 			}
 		}
 		
@@ -340,7 +406,7 @@ class ddTools {
 	
 	/**
 	 * removeDir
-	 * @version 1.0.2 (2016-10-29)
+	 * @version 1.0.3 (2017-12-09)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -353,7 +419,10 @@ class ddTools {
 		if (!file_exists($dir)){return true;}
 		
 		//Получаем файлы в директории
-		$files = array_diff(scandir($dir), ['.', '..']);
+		$files = array_diff(
+			scandir($dir),
+			['.', '..']
+		);
 		
 		foreach ($files as $file){
 			//Если это папка, обработаем её
@@ -369,7 +438,7 @@ class ddTools {
 	
 	/**
 	 * generateRandomString
-	 * @version 1.0.1 (2016-12-15)
+	 * @version 1.0.2 (2017-12-09)
 	 * 
 	 * @desc Generate random string with necessary length.
 	 * 
@@ -382,8 +451,16 @@ class ddTools {
 		$numChars = strlen($chars);
 		$string = '';
 		
-		for ($i = 0; $i < $length; $i++){
-			$string .= substr($chars, rand(1, $numChars) - 1, 1);
+		for (
+			$i = 0;
+			$i < $length;
+			$i++
+		){
+			$string .= substr(
+				$chars,
+				rand(1, $numChars) - 1,
+				1
+			);
 		}
 		
 		return $string;
@@ -433,7 +510,7 @@ class ddTools {
 	
 	/**
 	 * encodedStringToArray
-	 * @version 1.0 (2017-02-07)
+	 * @version 1.0.1 (2017-12-09)
 	 * 
 	 * @desc Converts encoded strings to arrays.
 	 * Supported formats:
@@ -448,7 +525,10 @@ class ddTools {
 		$result = [];
 		
 		//JSON
-		if (in_array(substr($inputString, 0, 1), ['{', '['])){
+		if (in_array(
+			substr($inputString, 0, 1),
+			['{', '[']
+		)){
 			try {
 				$result = json_decode($inputString, true);
 			}catch (\Exception $e){
@@ -461,7 +541,10 @@ class ddTools {
 		if (empty($result)){
 			//Query string
 			if (strpos($inputString, '=') !== false){
-				parse_str($inputString, $result);
+				parse_str(
+					$inputString,
+					$result
+				);
 			//The old deprecated format where string is separated by '||' and '::'
 			}else{
 				$result = self::explodeAssoc($inputString);
@@ -603,7 +686,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.4 (2017-01-10)
+	 * @version 1.4.1 (2017-12-09)
 	 * 
 	 * @desc Like $modx->parseChunk, but takes a text.
 	 * 
@@ -647,7 +730,11 @@ class ddTools {
 			$params->data = self::unfoldArray($params->data);
 			
 			foreach ($params->data as $key => $value){
-				$result = str_replace($params->placeholderPrefix.$key.$params->placeholderSuffix, $value, $result);
+				$result = str_replace(
+					$params->placeholderPrefix.$key.$params->placeholderSuffix,
+					$value,
+					$result
+				);
 			}
 		}
 		
@@ -658,7 +745,11 @@ class ddTools {
 		}
 		
 		if ($params->removeEmptyPlaceholders){
-			$result = preg_replace('/(\[\+\S+?\+\])/m', '', $result);
+			$result = preg_replace(
+				'/(\[\+\S+?\+\])/m',
+				'',
+				$result
+			);
 		}
 		
 		return $result;
@@ -680,7 +771,7 @@ class ddTools {
 	
 	/**
 	 * explodeFieldsArr
-	 * @version 1.0.2 (2016-10-29)
+	 * @version 1.0.3 (2017-12-09)
 	 * 
 	 * @desc Explode associative array of fields and TVs in two individual arrays.
 	 * 
@@ -693,7 +784,10 @@ class ddTools {
 		//Перебираем поля, раскидываем на поля документа и TV
 		foreach ($fields as $key => $val){
 			//Если это не поле документа
-			if (!in_array($key, self::$documentFields)){
+			if (!in_array(
+				$key,
+				self::$documentFields
+			)){
 				//Запоминаем как TV`шку
 				$tvs[$key] = ['val' => $val];
 				//Удаляем из полей
@@ -720,7 +814,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.1.5 (2016-10-29)
+	 * @version 1.1.6 (2017-12-09)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -749,7 +843,10 @@ class ddTools {
 		$fields = self::explodeFieldsArr($fields);
 		
 		//Вставляем новый документ в базу, получаем id, если что-то пошло не так, выкидываем
-		$id = self::$modx->db->insert($fields[0], self::$tables['site_content']);
+		$id = self::$modx->db->insert(
+			$fields[0],
+			self::$tables['site_content']
+		);
 		
 		if (!$id){return false;}
 		
@@ -829,7 +926,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.2.4 (2016-10-29)
+	 * @version 1.2.5 (2017-12-09)
 	 * 
 	 * @desc Update a document.
 	 * 
@@ -842,7 +939,12 @@ class ddTools {
 	 * @return {boolean} — true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
 	 */
 	public static function updateDocument($id = 0, $update = [], $where = ''){
-		if ($id == 0 && trim($where) == ''){return false;}
+		if (
+			$id == 0 &&
+			trim($where) == ''
+		){
+			return false;
+		}
 		
 		$where_sql = '';
 		
@@ -852,7 +954,10 @@ class ddTools {
 		){
 			//Обрабатываем массив id
 			$where_sql .= '`id` IN ("'.implode('","', $id).'")';
-		}else if (is_numeric($id) && $id != 0){
+		}else if (
+			is_numeric($id) &&
+			$id != 0
+		){
 			//Обрабатываем числовой id
 			$where_sql .= '`id`="'.$id.'"';
 		}
@@ -863,7 +968,11 @@ class ddTools {
 		}
 		
 		//Получаем id документов для обновления
-		$update_ids_res = self::$modx->db->select('id', self::$tables['site_content'], $where_sql);
+		$update_ids_res = self::$modx->db->select(
+			'id',
+			self::$tables['site_content'],
+			$where_sql
+		);
 		
 		if (self::$modx->db->getRecordCount($update_ids_res)){
 			//Разбиваем на поля документа и TV
@@ -871,7 +980,11 @@ class ddTools {
 			
 			//Обновляем информацию по документу
 			if (count($update[0])){
-				self::$modx->db->update($update[0], self::$tables['site_content'], $where_sql);
+				self::$modx->db->update(
+					$update[0],
+					self::$tables['site_content'],
+					$where_sql
+				);
 			}
 			
 			//Если есть хоть одна TV
@@ -892,10 +1005,18 @@ class ddTools {
 							//Проверяем сколько строк нашлось при обновлении
 							//Если используется mysqli
 							if(is_a(self::$modx->db->conn, 'mysqli')){
-								preg_match('/Rows matched: (\d+)/', mysqli_info(self::$modx->db->conn), $updatedRows);
+								preg_match(
+									'/Rows matched: (\d+)/',
+									mysqli_info(self::$modx->db->conn),
+									$updatedRows
+								);
 							}else{
 								//Если self::$modx->db->conn не является экземпляром mysqli, то пробуем через устаревший mysql_info
-								preg_match('/Rows matched: (\d+)/', mysql_info(), $updatedRows);
+								preg_match(
+									'/Rows matched: (\d+)/',
+									mysql_info(),
+									$updatedRows
+								);
 							}
 							
 							//Если ничего не обновилось (не нашлось)
@@ -923,7 +1044,7 @@ class ddTools {
 	
 	/**
 	 * getDocuments
-	 * @version 1.2.4 (2017-02-07)
+	 * @version 1.2.5 (2017-12-09)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
@@ -964,7 +1085,10 @@ class ddTools {
 		
 		if(is_string($ids)){
 			if(strpos($ids, ',') !== false){
-				$ids = array_filter(array_map('intval', explode(',', $ids)));
+				$ids = array_filter(array_map(
+					'intval',
+					explode(',', $ids)
+				));
 			}else{
 				$ids = [$ids];
 			}
@@ -974,8 +1098,20 @@ class ddTools {
 			return false;
 		}else{
 			// modify field names to use sc. table reference
-			$fields = 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-			$sort = ($sort == '') ? '' : 'sc.'.implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+			$fields = 'sc.'.implode(
+				',sc.',
+				array_filter(array_map(
+					'trim',
+					explode(',', $fields)
+				))
+			);
+			$sort = ($sort == '') ? '' : 'sc.'.implode(
+				',sc.',
+				array_filter(array_map(
+					'trim',
+					explode(',', $sort)
+				))
+			);
 			if ($where != ''){
 				$where = 'AND '.$where;
 			}
@@ -985,7 +1121,10 @@ class ddTools {
 			
 			$result = self::$modx->db->select(
 				'DISTINCT '.$fields,
-				self::$tables['site_content'].' sc LEFT JOIN '.self::$tables['document_groups'].' dg on dg.document = sc.id',
+				self::$tables['site_content'].' sc
+					LEFT JOIN '.self::$tables['document_groups'].' dg
+						ON dg.document = sc.id
+				',
 				'(sc.id IN ('.implode(',', $ids).') '.$published.' '.$deleted.' '.$where.') GROUP BY sc.id',
 				($sort ? $sort.' '.$dir : ''),
 				$limit
@@ -999,7 +1138,7 @@ class ddTools {
 	
 	/**
 	 * getDocument
-	 * @version 1.1.4 (2017-02-07)
+	 * @version 1.1.5 (2017-12-09)
 	 * 
 	 * @desc Returns required data of a document (document fields).
 	 * 
@@ -1037,7 +1176,16 @@ class ddTools {
 		if ($id == 0){
 			return false;
 		}else{
-			$docs = self::getDocuments([$id], $published, $deleted, $fields, '', '', '', 1);
+			$docs = self::getDocuments(
+				[$id],
+				$published,
+				$deleted,
+				$fields,
+				'',
+				'',
+				'',
+				1
+			);
 			
 			if ($docs != false){
 				return $docs[0];
@@ -1049,7 +1197,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.4 (2017-02-07)
+	 * @version 1.3.5 (2017-12-09)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -1077,7 +1225,10 @@ class ddTools {
 		}
 		
 		if (
-			($idnames != '*' && !is_array($idnames)) ||
+			(
+				$idnames != '*' &&
+				!is_array($idnames)
+			) ||
 			count($idnames) == 0
 		){
 			return false;
@@ -1087,7 +1238,12 @@ class ddTools {
 				$docid = self::$modx->documentIdentifier;
 				$docRow = self::$modx->documentObject;
 			}else{
-				$docRow = self::getDocument($docid, '*', $published, 'all');
+				$docRow = self::getDocument(
+					$docid,
+					'*',
+					$published,
+					'all'
+				);
 				
 				if (!$docRow){
 					return false;
@@ -1095,8 +1251,20 @@ class ddTools {
 			}
 			
 			// get user defined template variables
-			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $fields))));
-			$sort = ($sort == '') ? '' : 'tv.'.implode(',tv.', array_filter(array_map('trim', explode(',', $sort))));
+			$fields = ($fields == '') ? 'tv.*' : 'tv.'.implode(
+				',tv.',
+				array_filter(array_map(
+					'trim',
+					explode(',', $fields)
+				))
+			);
+			$sort = ($sort == '') ? '' : 'tv.'.implode(
+				',tv.',
+				array_filter(array_map(
+					'trim',
+					explode(',', $sort)
+				))
+			);
 			
 			if ($idnames == '*'){
 				$query = 'tv.id<>0';
@@ -1107,8 +1275,11 @@ class ddTools {
 			$rs = self::$modx->db->select(
 				$fields.', IF(tvc.value != "", tvc.value, tv.default_text) as value',
 				self::$tables['site_tmplvars'].' tv
-					INNER JOIN '.self::$tables['site_tmplvar_templates'].' tvtpl ON tvtpl.tmplvarid = tv.id
-					LEFT JOIN '.self::$tables['site_tmplvar_contentvalues'].' tvc ON tvc.tmplvarid=tv.id AND tvc.contentid = "'.$docid.'"',
+					INNER JOIN '.self::$tables['site_tmplvar_templates'].' tvtpl
+						ON tvtpl.tmplvarid = tv.id
+					LEFT JOIN '.self::$tables['site_tmplvar_contentvalues'].' tvc
+						ON tvc.tmplvarid=tv.id AND tvc.contentid = "'.$docid.'"
+				',
 				$query.' AND tvtpl.templateid = "'.$docRow['template'].'"',
 				($sort ? $sort.' '.$dir : '')
 			);
@@ -1119,11 +1290,17 @@ class ddTools {
 			ksort($docRow);
 			
 			foreach ($docRow as $key => $value){
-				if ($idnames == '*' || in_array($key, $idnames)){
-					array_push($result, [
-						'name' => $key,
-						'value' => $value
-					]);
+				if (
+					$idnames == '*' ||
+					in_array($key, $idnames)
+				){
+					array_push(
+						$result,
+						[
+							'name' => $key,
+							'value' => $value
+						]
+					);
 				}
 			}
 			
@@ -1133,7 +1310,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.4 (2017-02-07)
+	 * @version 1.1.5 (2017-12-09)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -1166,7 +1343,14 @@ class ddTools {
 			
 			$docid = intval($docid) ? intval($docid) : self::$modx->documentIdentifier;
 			// remove sort for speed
-			$result = self::getTemplateVars($vars, '*', $docid, $published, '', '');
+			$result = self::getTemplateVars(
+				$vars,
+				'*',
+				$docid,
+				$published,
+				'',
+				''
+			);
 			
 			if ($result == false){
 				return false;
@@ -1175,13 +1359,25 @@ class ddTools {
 				include_once $baspath.'/tmplvars.format.inc.php';
 				include_once $baspath.'/tmplvars.commands.inc.php';
 				
-				for ($i= 0; $i < count($result); $i++){
+				for (
+					$i= 0;
+					$i < count($result);
+					$i++
+				){
 					$row = $result[$i];
 					
 					if (!isset($row['id'])){
 						$output[$row['name']] = $row['value'];
 					}else{
-						$output[$row['name']] = getTVDisplayFormat($row['name'], $row['value'], $row['display'], $row['display_params'], $row['type'], $docid, $sep);
+						$output[$row['name']] = getTVDisplayFormat(
+							$row['name'],
+							$row['value'],
+							$row['display'],
+							$row['display_params'],
+							$row['type'],
+							$docid,
+							$sep
+						);
 					}
 				}
 				
@@ -1192,7 +1388,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.2.3 (2017-02-07)
+	 * @version 1.2.4 (2017-12-09)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
@@ -1239,8 +1435,20 @@ class ddTools {
 		}
 		
 		// modify field names to use sc. table reference
-		$fields = 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $fields))));
-		$sort = ($sort == '') ? '' : 'sc.' . implode(',sc.', array_filter(array_map('trim', explode(',', $sort))));
+		$fields = 'sc.' . implode(
+			',sc.',
+			array_filter(array_map(
+				'trim',
+				explode(',', $fields)
+			))
+		);
+		$sort = ($sort == '') ? '' : 'sc.' . implode(
+			',sc.',
+			array_filter(array_map(
+				'trim',
+				explode(',', $sort)
+			))
+		);
 		
 		// get document groups for current user
 		if ($docgrp = self::$modx->getUserDocGroups()){
@@ -1253,7 +1461,9 @@ class ddTools {
 		$result = self::$modx->db->select(
 			'DISTINCT '.$fields,
 			self::$tables['site_content'].' sc
-				LEFT JOIN '.self::$tables['document_groups'].' dg on dg.document = sc.id',
+				LEFT JOIN '.self::$tables['document_groups'].' dg
+					ON dg.document = sc.id
+			',
 			'sc.parent = "'.$parentid.'" '.$published.' '.$deleted.' '.$where.' AND ('.$access.') GROUP BY sc.id',
 			($sort ? $sort.' '.$dir : ''),
 			$limit
@@ -1266,7 +1476,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildrenTVarOutput
-	 * @version 1.3.2 (2016-10-29)
+	 * @version 1.3.3 (2017-12-09)
 	 * 
 	 * @desc Get necessary children of document.
 	 * 
@@ -1289,7 +1499,15 @@ class ddTools {
 	 */
 	public static function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = [], $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
 		//Получаем всех детей
-		$docs = self::getDocumentChildren($parentid, $published, 0, 'id', $where, $sortBy, $sortDir);
+		$docs = self::getDocumentChildren(
+			$parentid,
+			$published,
+			0,
+			'id',
+			$where,
+			$sortBy,
+			$sortDir
+		);
 		
 		//Если ничего не получили, выкидываем
 		if (!$docs){
@@ -1301,7 +1519,10 @@ class ddTools {
 			
 			if ($resultKey !== false){
 				if (is_array($tvidnames)){
-					if (count($tvidnames) != 0 && !in_array($resultKey, $tvidnames)){
+					if (
+						count($tvidnames) != 0 &&
+						!in_array($resultKey, $tvidnames)
+					){
 						$tvidnames[] = $resultKey;
 						$unsetResultKey = true;
 					}
@@ -1315,13 +1536,24 @@ class ddTools {
 			}
 			
 			//Перебираем все документы
-			for ($i = 0; $i < count($docs); $i++){
-				$tvs = self::getTemplateVarOutput($tvidnames, $docs[$i]['id'], $published);
+			for (
+				$i = 0;
+				$i < count($docs);
+				$i++
+			){
+				$tvs = self::getTemplateVarOutput(
+					$tvidnames,
+					$docs[$i]['id'],
+					$published
+				);
 				
 				//Если что-то есть
 				if ($tvs){
 					//Если нужно в качестве ключа использовать не индекс и такое поле есть
-					if ($resultKey !== false && array_key_exists($resultKey, $tvs)){
+					if (
+						$resultKey !== false &&
+						array_key_exists($resultKey, $tvs)
+					){
 						//Записываем результат с соответствующим ключом
 						$result[$tvs[$resultKey]] = $tvs;
 						
@@ -1341,7 +1573,7 @@ class ddTools {
 	
 	/**
 	 * regEmptyClientScript
-	 * @version 1.1 (2016-10-29)
+	 * @version 1.1.1 (2017-12-09)
 	 * 
 	 * @desc Adds a required JS-file into a required MODX inner list according to its version and name. The method is used to register the scripts, that has already been connected manually.
 	 * Be advised that the method does not add script code, but register its name and version to avoid future connections with $modx->regClientScript and $modx->regClientStartupScript, and the script code will be deleted if the script had been connected with $modx->regClientScript or $modx->regClientStartupScript.
@@ -1394,7 +1626,11 @@ class ddTools {
 			}
 			
 			//Сравниваем версию раннее подключённого скрипта с текущей: если старая меньше новой, надо юзать новую, иначе — старую
-			$useThisVer = version_compare(self::$modx->loadedjscripts[$name]['version'], $version, '<');
+			$useThisVer = version_compare(
+				self::$modx->loadedjscripts[$name]['version'],
+				$version,
+				'<'
+			);
 			
 			//Если надо юзать старую версию
 			if (!$useThisVer){
@@ -1403,7 +1639,10 @@ class ddTools {
 			}
 			
 			//Если новая версия должна подключаться в <header>, а старая подключалась перед </body>
-			if ($startup == true && self::$modx->loadedjscripts[$name]['startup'] == false){
+			if (
+				$startup == true &&
+				self::$modx->loadedjscripts[$name]['startup'] == false
+			){
 				//Снесём старый скрипт из массива подключения перед </body> (ведь новая подключится в <head>). Здесь нам пофиг на его код, ведь новый код будет подключен мануально.
 				unset(self::$modx->jscripts[self::$modx->loadedjscripts[$name]['pos']]);
 				//Если новая версия должна подключаться перед </body> или старая уже подключалась перед </head>. На самом деле, сработает только если обе перед </body> или обе перед </head>, т.к. если старая была перед </head>, то новая выставится также кодом выше.
@@ -1445,7 +1684,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentIdByUrl
-	 * @version 1.1.1 (2016-10-28)
+	 * @version 1.1.2 (2017-12-09)
 	 * 
 	 * @desc Gets id of a document by its url.
 	 * 
@@ -1463,10 +1702,16 @@ class ddTools {
 			$siteHost = parse_url(self::$modx->getConfig('site_url'));
 			
 			//На всякий случай вышережем host из адреса (а то вдруг url просто без http:// передали) + лишние слэши по краям
-			$path = trim($path, $siteHost['host'].'/');
+			$path = trim(
+				$path,
+				$siteHost['host'].'/'
+			);
 		}else{
 			//Просто убираем лишние слэши по краям
-			$path = trim($url['path'], '/');
+			$path = trim(
+				$url['path'],
+				'/'
+			);
 		}
 		
 		//Если путь пустой, то мы в корне
@@ -1484,7 +1729,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.1.4 (2017-02-07)
+	 * @version 1.1.5 (2017-12-09)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
@@ -1523,7 +1768,10 @@ class ddTools {
 				if (!is_array($oldNames)){$oldNames = [$oldNames];}
 				
 				//Находим все старые, которые используются
-				$oldNames = array_values(array_intersect($params_names, $oldNames));
+				$oldNames = array_values(array_intersect(
+					$params_names,
+					$oldNames
+				));
 				
 				//Если что-то нашлось
 				if (count($oldNames) > 0){
@@ -1545,7 +1793,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 2.1.1 (2017-04-16)
+	 * @version 2.1.2 (2017-12-09)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -1607,7 +1855,10 @@ class ddTools {
 						//Если нет ошибок
 						if ($_FILES[$value]['error'][$key] == 0){
 							//Добавляем в массив файлы
-							$attachFiles[$name] = fread(fopen($_FILES[$value]['tmp_name'][$key], 'r'), filesize($_FILES[$value]['tmp_name'][$key]));
+							$attachFiles[$name] = fread(
+								fopen($_FILES[$value]['tmp_name'][$key], 'r'),
+								filesize($_FILES[$value]['tmp_name'][$key])
+							);
 						}
 					}
 				}else{
@@ -1616,7 +1867,10 @@ class ddTools {
 					//Если нет ошибок
 					if ($_FILES[$value]['error'] == 0){
 						//Если не массив, то добавляем один файл
-						$attachFiles[$_FILES[$value]['name']] = fread(fopen($_FILES[$value]['tmp_name'], 'r'), filesize($_FILES[$value]['tmp_name']));
+						$attachFiles[$_FILES[$value]['name']] = fread(
+							fopen($_FILES[$value]['tmp_name'], 'r'),
+							filesize($_FILES[$value]['tmp_name'])
+						);
 					}
 				}
 			}
@@ -1639,9 +1893,17 @@ class ddTools {
 		
 		foreach ($params->to as $val){
 			//Если адрес валидный
-			if (filter_var($val, FILTER_VALIDATE_EMAIL)){
+			if (filter_var(
+				$val,
+				FILTER_VALIDATE_EMAIL
+			)){
 				//Отправляем письмо
-				if(mail($val, $params->subject, $message, $headers)){
+				if(mail(
+					$val,
+					$params->subject,
+					$message,
+					$headers
+				)){
 					$result[] = 1;
 				}else{
 					$result[] = 0;
@@ -1684,7 +1946,11 @@ if(isset($modx)){
 		$modxVersionData = $modx->getVersionData();
 		
 		//If version of MODX > 1.0.11
-		if (version_compare($modxVersionData['version'], '1.0.11', '>')){
+		if (version_compare(
+			$modxVersionData['version'],
+			'1.0.11',
+			'>'
+		)){
 			ddTools::$documentFields[] = 'alias_visible';
 		}
 	}
