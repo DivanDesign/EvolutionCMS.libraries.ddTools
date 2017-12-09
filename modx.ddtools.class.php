@@ -58,13 +58,54 @@ class ddTools {
 		'hidemenu'
 	];
 	
-	//Contains full names of some db tables
+	//Contains full names of db tables
 	public static $tables = [
+		//System
+		'categories' => '',
+		'event_log' => '',
+		'manager_log' => '',
+		'manager_users' => '',
+		'system_eventnames' => '',
+		'system_settings' => '',
+		//Documents
 		'site_content' => '',
+		'documentgroup_names' => '',
+		'document_groups' => '',
+		//Templates
+		'site_templates' => '',
+		//Chunks
+		'site_htmlsnippets' => '',
+		//TVs
 		'site_tmplvars' => '',
-		'site_tmplvar_templates' => '',
+		'site_tmplvar_access' => '',
 		'site_tmplvar_contentvalues' => '',
-		'document_groups' => ''
+		'site_tmplvar_templates' => '',
+		//Snippets
+		'site_snippets' => '',
+		//Plugins
+		'site_plugins' => '',
+		'site_plugin_events' => '',
+		//Modules
+		'site_modules' => '',
+		'site_module_access' => '',
+		'site_module_depobj' => '',
+		//Users
+		'membergroup_access' => '',
+		'membergroup_names' => '',
+		'member_groups' => '',
+		'active_users' => '',
+		'active_user_locks' => '',
+		'active_user_sessions' => '',
+		'user_attributes' => '',
+		'user_messages' => '',
+		'user_roles' => '',
+		'user_settings' => '',
+		'webgroup_access' => '',
+		'webgroup_names' => '',
+		'web_groups' => '',
+		'web_users' => '',
+		'web_user_attributes' => '',
+		'web_user_settings' => ''
 	];
 	
 	/**
