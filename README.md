@@ -1,4 +1,4 @@
-# ddTools
+# MODXEvo.libraries.ddTools
 
 A library with various tools facilitating your work.
 ___
