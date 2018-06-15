@@ -1793,7 +1793,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 2.1.2 (2017-12-09)
+	 * @version 3.0 (2018-06-15)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -1826,19 +1826,8 @@ class ddTools {
 			'fileInputNames' => []
 		], (array) $params);
 		
-		//Конвертируем тему в base64
-		$params->subject = "=?UTF-8?B?".base64_encode($params->subject)."?=";
-		//Заголовки сообщения
-		$headers = "From: ".$params->from.PHP_EOL."MIME-Version: 1.0".PHP_EOL;
-		
-		//Разделитель блоков в сообщении
-		$bound = 'bound'.md5(time());
-		$headers .= "Content-Type: multipart/mixed; boundary = \"".$bound."\"";
-		
-		$message = "--".$bound.PHP_EOL;
-		
 		//Добавлеям текст в сообщения
-		$message .= "Content-Type: text/html; charset=UTF-8 ".PHP_EOL.PHP_EOL.trim($params->text, PHP_EOL).PHP_EOL."--".$bound;
+		$message = trim($params->text);
 		
 		if(!empty($params->fileInputNames)){
 			$attachFiles = [];
@@ -1855,10 +1844,10 @@ class ddTools {
 						//Если нет ошибок
 						if ($_FILES[$value]['error'][$key] == 0){
 							//Добавляем в массив файлы
-							$attachFiles[$name] = fread(
-								fopen($_FILES[$value]['tmp_name'][$key], 'r'),
-								filesize($_FILES[$value]['tmp_name'][$key])
-							);
+							$attachFiles[] = [
+								'path' => $_FILES[$value]['tmp_name'][$key],
+								'name' => $_FILES[$value]['name'][$key],
+							];
 						}
 					}
 				}else{
@@ -1867,27 +1856,14 @@ class ddTools {
 					//Если нет ошибок
 					if ($_FILES[$value]['error'] == 0){
 						//Если не массив, то добавляем один файл
-						$attachFiles[$_FILES[$value]['name']] = fread(
-							fopen($_FILES[$value]['tmp_name'], 'r'),
-							filesize($_FILES[$value]['tmp_name'])
-						);
+						$attachFiles[] = [
+							'path' => $_FILES[$value]['tmp_name'],
+							'name' => $_FILES[$value]['name'],
+						];
 					}
 				}
 			}
-			
-			//Перебираем присоединяемые файлы
-			if(!empty($attachFiles)){
-				foreach($attachFiles as $name => $value){
-					$message .= PHP_EOL.
-						'Content-Type: application/octet-stream; name = "=?UTF-8?B?'.base64_encode($name)."?=\"".PHP_EOL.
-						"Content-Transfer-Encoding: base64".PHP_EOL.PHP_EOL.
-						base64_encode($value).PHP_EOL."--".$bound;
-				}
-			}
 		}
-		
-		//Добавляем разделитель окончания сообщения
-		$message .= "--";
 		
 		$result = [];
 		
@@ -1897,13 +1873,24 @@ class ddTools {
 				$val,
 				FILTER_VALIDATE_EMAIL
 			)){
+				self::$modx->loadExtension('MODxMailer');
+				
+				self::$modx->mail->AddAddress($val);
+				self::$modx->mail->From = $params->from;
+		        self::$modx->mail->FromName = self::$modx->config['site_name'];
+		        self::$modx->mail->Subject = $params->subject;
+		        self::$modx->mail->Body = $message;
+				
+				//Перебираем присоединяемые файлы
+				if(!empty($attachFiles)){
+					foreach($attachFiles as $value){
+						//добавить еще парамет name
+						self::$modx->mail->AddAttachment($value['path'], $value['name']);
+					}
+				}
+				
 				//Отправляем письмо
-				if(mail(
-					$val,
-					$params->subject,
-					$message,
-					$headers
-				)){
+				if(self::$modx->mail->send()){
 					$result[] = 1;
 				}else{
 					$result[] = 0;
