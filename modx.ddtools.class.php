@@ -961,57 +961,57 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.1.7 (2018-06-17)
+	 * @version 1.1.8 (2018-06-17)
 	 * 
 	 * @desc Create a new document.
 	 * 
-	 * @param $fields {array_associative} — Array of document fields or TVs. Key — name, value — value. @required
-	 * @param $fields['pagetitle'] {string} — Document pagetitle. @required
-	 * @param $groups {array} — Array of document groups id.
+	 * @param $docData {array_associative} — Array of document fields or TVs. Key — name, value — value. @required
+	 * @param $docData['pagetitle'] {string} — Document pagetitle. @required
+	 * @param $docGroups {array} — Array of document groups id.
 	 * 
 	 * @return {integer|false} — ID нового документа или false, если что-то не так.
 	 */
 	public static function createDocument(
-		$fields = [],
-		$groups = false
+		$docData = [],
+		$docGroups = false
 	){
 		//Если нет хотя бы заголовка, выкидываем
-		if (!$fields['pagetitle']){return false;}
+		if (!$docData['pagetitle']){return false;}
 		
 		//Если не передана дата создания документа, ставим текущую
-		if (!$fields['createdon']){$fields['createdon'] = time();}
+		if (!$docData['createdon']){$docData['createdon'] = time();}
 		
 		//Если не передано, кем документ создан, ставим 1
-		if (!$fields['createdby']){$fields['createdby'] = 1;}
+		if (!$docData['createdby']){$docData['createdby'] = 1;}
 		
 		//Если группы заданы, то это приватный документ
-		if ($groups){$fields['privatemgr'] = 1;}
+		if ($docGroups){$docData['privatemgr'] = 1;}
 		
 		//Если надо публиковать, поставим дату публикации текущей
-		if ($fields['published'] == 1){$fields['pub_date'] = $fields['createdon'];}
+		if ($docData['published'] == 1){$docData['pub_date'] = $docData['createdon'];}
 		
-		$fields = self::explodeFieldsArr($fields);
+		$docData = self::explodeFieldsArr($docData);
 		
 		//Вставляем новый документ в базу, получаем id, если что-то пошло не так, выкидываем
-		$id = self::$modx->db->insert(
-			$fields[0],
+		$docId = self::$modx->db->insert(
+			$docData[0],
 			self::$tables['site_content']
 		);
 		
-		if (!$id){return false;}
+		if (!$docId){return false;}
 		
 		//Если есть хоть одна TV
-		if (count($fields[1]) > 0){
+		if (count($docData[1]) > 0){
 			//Перебираем массив TV
-			foreach ($fields[1] as $key => $val){
+			foreach ($docData[1] as $tvData){
 				//Проверим, что id существует (а то ведь могли и именем ошибиться)
-				if (isset($val['id'])){
+				if (isset($tvData['id'])){
 					//Добавляем значение TV в базу
 					self::$modx->db->insert(
 						[
-							'value' => $val['val'],
-							'tmplvarid' => $val['id'],
-							'contentid' => $id
+							'value' => $tvData['val'],
+							'tmplvarid' => $tvData['id'],
+							'contentid' => $docId
 						],
 						self::$tables['site_tmplvar_contentvalues']
 					);
@@ -1020,13 +1020,13 @@ class ddTools {
 		}
 		
 		//Если заданы группы (и на всякий проверим ID)
-		if ($groups){
+		if ($docGroups){
 			//Перебираем все группы
-			foreach ($groups as $gr){
+			foreach ($docGroups as $docGroupId){
 				self::$modx->db->insert(
 					[
-						'document_group' => $gr,
-						'document' => $id
+						'document_group' => $docGroupId,
+						'document' => $docId
 					],
 					self::$tables['document_groups']
 				);
@@ -1034,125 +1034,126 @@ class ddTools {
 		}
 		
 		//Смотрим родителя нового документа, является ли он папкой и его псевдоним
-		$documentParent = isset($fields[0]['parent'])? $fields[0]['parent']: 0;
-		$documentIsFolder = isset($fields[0]['isfolder'])? $fields[0]['isfolder']: 0;
-		$documentAlias = isset($fields[0]['alias'])? $fields[0]['alias']: '';
+		$docParent = isset($docData[0]['parent']) ? $docData[0]['parent'] : 0;
+		$docIsFolder = isset($docData[0]['isfolder']) ? $docData[0]['isfolder'] : 0;
+		$docAlias = isset($docData[0]['alias']) ? $docData[0]['alias'] : '';
 		
 		//Пусть созданного документа
-		$documentPath = '';
+		$docPath = '';
 		
 		//Собираем путь в зависимости от пути родителя
-		if(isset(self::$modx->aliasListing[$documentParent]['path'])){
-			$documentPath = self::$modx->aliasListing[$documentParent]['path'];
+		if(isset(self::$modx->aliasListing[$docParent]['path'])){
+			$docPath = self::$modx->aliasListing[$docParent]['path'];
 			
-			if(self::$modx->aliasListing[$documentParent]['alias'] != ''){
-				$documentPath .= '/'.self::$modx->aliasListing[$documentParent]['alias'];
+			if(self::$modx->aliasListing[$docParent]['alias'] != ''){
+				$docPath .= '/'.self::$modx->aliasListing[$docParent]['alias'];
 			}else{
-				$documentPath .= '/'.self::$modx->aliasListing[$documentParent]['id'];
+				$docPath .= '/'.self::$modx->aliasListing[$docParent]['id'];
 			}
 		}
 		
 		//Добавляем в массивы documentMap и aliasListing информацию о новом документе
-		self::$modx->documentMap[] = [$documentParent => $id];
-		self::$modx->aliasListing[$id] = [
-			'id' => $id,
-			'alias' => $documentAlias,
-			'path' => $documentPath,
-			'parent' => $documentParent,
-			'isfolder' => $documentIsFolder
+		self::$modx->documentMap[] = [$docParent => $docId];
+		self::$modx->aliasListing[$docId] = [
+			'id' => $docId,
+			'alias' => $docAlias,
+			'path' => $docPath,
+			'parent' => $docParent,
+			'isfolder' => $docIsFolder
 		];
 		
 		//Добавляем в documentListing
-		if(self::$modx->aliasListing[$id]['path'] !== ''){
+		if(self::$modx->aliasListing[$docId]['path'] !== ''){
 			self::$modx->documentListing[
-				self::$modx->aliasListing[$id]['path'].'/'.
+				self::$modx->aliasListing[$docId]['path'].'/'.
 					(
-						self::$modx->aliasListing[$id]['alias'] != ''?
-						self::$modx->aliasListing[$id]['alias'] :
-						self::$modx->aliasListing[$id]['id']
+						self::$modx->aliasListing[$docId]['alias'] != ''?
+						self::$modx->aliasListing[$docId]['alias'] :
+						self::$modx->aliasListing[$docId]['id']
 					)
-			] = $id;
+			] = $docId;
 		}
 		
-		return $id;
+		return $docId;
 	}
 	
 	/**
 	 * updateDocument
-	 * @version 1.2.6 (2018-06-17)
+	 * @version 1.2.7 (2018-06-17)
 	 * 
 	 * @desc Update a document.
 	 * 
-	 * @note $id and/or $where are required.
+	 * @note $docId and/or $where are required.
 	 * 
-	 * @param $id {integer|array} — Document id to update. @required
-	 * @param $update {array_associative} — Array of document fields or TVs to update. Key — name, value — value. @required
+	 * @param $docId {integer|array} — Document id(s) to update. @required
+	 * @param $docData {array_associative} — Array of document fields or TVs to update. Key — name, value — value. @required
 	 * @param $where {string} — SQL WHERE string. Default: ''.
 	 * 
 	 * @return {boolean} — true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
 	 */
 	public static function updateDocument(
-		$id = 0,
-		$update = [],
+		$docId = 0,
+		$docData = [],
 		$where = ''
 	){
+		//Required parameters
 		if (
-			$id == 0 &&
+			$docId == 0 &&
 			trim($where) == ''
 		){
 			return false;
 		}
 		
-		$where_sql = '';
+		$whereSql = '';
 		
 		if (
-			is_array($id) &&
-			count($id)
+			is_array($docId) &&
+			count($docId)
 		){
 			//Обрабатываем массив id
-			$where_sql .= '`id` IN ("'.implode(
+			$whereSql .= '`id` IN ("'.implode(
 				'","',
-				$id
+				$docId
 			).'")';
 		}else if (
-			is_numeric($id) &&
-			$id != 0
+			is_numeric($docId) &&
+			$docId != 0
 		){
 			//Обрабатываем числовой id
-			$where_sql .= '`id`="'.$id.'"';
+			$whereSql .= '`id`="'.$docId.'"';
 		}
 		
 		//Добавляем дополнительное условие
 		if ($where != ''){
-			$where_sql .= ($where_sql != '' ? ' AND ' : '').$where;
+			$whereSql .= ($whereSql != '' ? ' AND ' : '').$where;
 		}
 		
 		//Получаем id документов для обновления
-		$update_ids_res = self::$modx->db->select(
+		$docIdsToUpdate_dbRes = self::$modx->db->select(
 			'id',
 			self::$tables['site_content'],
-			$where_sql
+			$whereSql
 		);
 		
-		if (self::$modx->db->getRecordCount($update_ids_res)){
+		if (self::$modx->db->getRecordCount($docIdsToUpdate_dbRes)){
 			//Разбиваем на поля документа и TV
-			$update = self::explodeFieldsArr($update);
+			$docData = self::explodeFieldsArr($docData);
 			
 			//Обновляем информацию по документу
-			if (count($update[0])){
+			if (count($docData[0])){
 				self::$modx->db->update(
-					$update[0],
+					$docData[0],
 					self::$tables['site_content'],
-					$where_sql
+					$whereSql
 				);
 			}
 			
 			//Если есть хоть одна TV
-			if (count($update[1]) > 0){
+			if (count($docData[1]) > 0){
 				//Обновляем TV всех найденых документов
-				while ($doc = self::$modx->db->getRow($update_ids_res)){
+				while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
 					//Перебираем массив TV
-					foreach ($update[1] as $val){
+					foreach ($docData[1] as $val){
 						//Проверим, что id существует (а то ведь могли и именем ошибиться)
 						if (isset($val['id'])){
 							//Пробуем обновить значение нужной TV
@@ -1195,11 +1196,12 @@ class ddTools {
 					}
 				}
 			}
+			
 			return true;
-		}else{
-			//Нечего обновлять
-			return false;
 		}
+		
+		//Нечего обновлять
+		return false;
 	}
 	
 	/**
