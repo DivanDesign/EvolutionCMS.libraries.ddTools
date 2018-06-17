@@ -166,7 +166,7 @@ class ddTools {
 	
 	/**
 	 * explodeAssoc
-	 * @version 1.1.2 (2016-10-29)
+	 * @version 1.1.3 (2018-06-17)
 	 * 
 	 * @desc Splits string on two separators in the associative array.
 	 * 
@@ -176,18 +176,28 @@ class ddTools {
 	 * 
 	 * @return {array_associative}
 	 */
-	public static function explodeAssoc($str, $splY = '||', $splX = '::'){
+	public static function explodeAssoc(
+		$str,
+		$splY = '||',
+		$splX = '::'
+	){
 		$result = [];
 		
 		//Если строка пустая, выкидываем сразу
 		if ($str == ''){return $result;}
 		
 		//Разбиваем по парам
-		$str = explode($splY, $str);
+		$str = explode(
+			$splY,
+			$str
+		);
 		
 		foreach ($str as $val){
 			//Разбиваем на ключ-значение
-			$val = explode($splX, $val);
+			$val = explode(
+				$splX,
+				$val
+			);
 			$result[$val[0]] = isset($val[1]) ? $val[1] : '';
 		}
 		
@@ -196,10 +206,10 @@ class ddTools {
 	
 	/**
 	 * unfoldArray
-	 * @version 1.0.2 (2017-12-09)
+	 * @version 1.0.3 (2018-06-17)
 	 * 
 	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
-	 * For example, [
+	 * @example [
 	 * 	'a': '',
 	 * 	'b': [
 	 * 		'b1': '',
@@ -222,7 +232,10 @@ class ddTools {
 	 * 
 	 * @return {array} — Unfolded array.
 	 */
-	public static function unfoldArray($arr, $keyPrefix = ''){
+	public static function unfoldArray(
+		$arr,
+		$keyPrefix = ''
+	){
 		$output = [];
 		
 		//Перебираем массив
@@ -232,7 +245,10 @@ class ddTools {
 				//Запускаем рекурсию дальше
 				$output = array_merge(
 					$output,
-					self::unfoldArray($val, $keyPrefix.$key.'.')
+					self::unfoldArray(
+						$val,
+						$keyPrefix.$key.'.'
+					)
 				);
 			//Если значение — не массив
 			}else{
@@ -246,7 +262,7 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.1.3 (2017-12-09)
+	 * @version 1.1.4 (2018-06-17)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
@@ -257,7 +273,12 @@ class ddTools {
 	 * 
 	 * @return {array} — Sorted array.
 	 */
-	public static function sort2dArray($array, $sortBy, $sortDir = 1, $i = 0){
+	public static function sort2dArray(
+		$array,
+		$sortBy,
+		$sortDir = 1,
+		$i = 0
+	){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
 		$tek = $array[0][$sortBy[$i]];
 		$tekIsNumeric = is_numeric($tek);
@@ -297,10 +318,25 @@ class ddTools {
 		}
 		
 		//Массивы меньших и массивы больших прогоняем по тому же алгоритму (если в них что-то есть)
-		$arrLeft = (count($arrLeft) > 1) ? self::sort2dArray($arrLeft, $sortBy, $sortDir, $i) : $arrLeft;
-		$arrRight = (count($arrRight) > 1) ? self::sort2dArray($arrRight, $sortBy, $sortDir, $i) : $arrRight;
+		$arrLeft = (count($arrLeft) > 1) ? self::sort2dArray(
+			$arrLeft,
+			$sortBy,
+			$sortDir,
+			$i
+		) : $arrLeft;
+		$arrRight = (count($arrRight) > 1) ? self::sort2dArray(
+			$arrRight,
+			$sortBy,
+			$sortDir,
+			$i
+		) : $arrRight;
 		//Массив одинаковых прогоняем по следующему условию сортировки (если есть условие и есть что сортировать)
-		$arrCent = ((count($arrCent) > 1) && $sortBy[$i + 1]) ? self::sort2dArray($arrCent, $sortBy, $sortDir, $i + 1) : $arrCent;
+		$arrCent = ((count($arrCent) > 1) && $sortBy[$i + 1]) ? self::sort2dArray(
+			$arrCent,
+			$sortBy,
+			$sortDir,
+			$i + 1
+		) : $arrCent;
 		
 		//Склеиваем отсортированные меньшие, средние и большие
 		return array_merge(
@@ -361,7 +397,7 @@ class ddTools {
 	
 	/**
 	 * copyDir
-	 * @version 1.0.3 (2017-12-09)
+	 * @version 1.0.4 (2018-06-17)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
@@ -370,7 +406,10 @@ class ddTools {
 	 * 
 	 * @return {boolean} — Returns true on success or false on failure.
 	 */
-	public static function copyDir($sourceDir, $destinationDir){
+	public static function copyDir(
+		$sourceDir,
+		$destinationDir
+	){
 		//Допишем папкам недостающие '/' при необходимости
 		if (substr($sourceDir, -1) != '/'){$sourceDir .= '/';}
 		if (substr($destinationDir, -1) != '/'){$destinationDir .= '/';}
@@ -383,7 +422,10 @@ class ddTools {
 		//Получаем файлы в директории
 		$files = array_diff(
 			scandir($sourceDir),
-			['.', '..']
+			[
+				'.',
+				'..'
+			]
 		);
 		
 		foreach ($files as $file){
@@ -406,7 +448,7 @@ class ddTools {
 	
 	/**
 	 * removeDir
-	 * @version 1.0.3 (2017-12-09)
+	 * @version 1.0.4 (2018-06-17)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -421,7 +463,10 @@ class ddTools {
 		//Получаем файлы в директории
 		$files = array_diff(
 			scandir($dir),
-			['.', '..']
+			[
+				'.',
+				'..'
+			]
 		);
 		
 		foreach ($files as $file){
@@ -438,7 +483,7 @@ class ddTools {
 	
 	/**
 	 * generateRandomString
-	 * @version 1.0.2 (2017-12-09)
+	 * @version 1.0.3 (2018-06-17)
 	 * 
 	 * @desc Generate random string with necessary length.
 	 * 
@@ -447,7 +492,10 @@ class ddTools {
 	 * 
 	 * @return {string}
 	 */
-	public static function generateRandomString($length = 8, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'){
+	public static function generateRandomString(
+		$length = 8,
+		$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'
+	){
 		$numChars = strlen($chars);
 		$string = '';
 		
@@ -458,7 +506,10 @@ class ddTools {
 		){
 			$string .= substr(
 				$chars,
-				rand(1, $numChars) - 1,
+				rand(
+					1,
+					$numChars
+				) - 1,
 				1
 			);
 		}
@@ -510,7 +561,7 @@ class ddTools {
 	
 	/**
 	 * encodedStringToArray
-	 * @version 1.0.1 (2017-12-09)
+	 * @version 1.0.2 (2018-06-17)
 	 * 
 	 * @desc Converts encoded strings to arrays.
 	 * Supported formats:
@@ -524,13 +575,23 @@ class ddTools {
 	public static function encodedStringToArray($inputString){
 		$result = [];
 		
-		//JSON
+		//JSON (first letter is “{” or “[”)
 		if (in_array(
-			substr($inputString, 0, 1),
-			['{', '[']
+			substr(
+				$inputString,
+				0,
+				1
+			),
+			[
+				'{',
+				'['
+			]
 		)){
 			try {
-				$result = json_decode($inputString, true);
+				$result = json_decode(
+					$inputString,
+					true
+				);
 			}catch (\Exception $e){
 				//Flag
 				$result = [];
@@ -539,8 +600,11 @@ class ddTools {
 		
 		//Not JSON
 		if (empty($result)){
-			//Query string
-			if (strpos($inputString, '=') !== false){
+			//Query string (has the “=” sign)
+			if (strpos(
+				$inputString,
+				'='
+			) !== false){
 				parse_str(
 					$inputString,
 					$result
@@ -597,7 +661,7 @@ class ddTools {
 	
 	/**
 	 * logEvent
-	 * @version 1.0 (2017-02-07)
+	 * @version 1.0.1 (2018-06-17)
 	 * 
 	 * @desc Add an alert message to the system event log with debug info (backtrace, snippet name, document id, etc).
 	 * 
@@ -658,7 +722,10 @@ class ddTools {
 		$params->message .= '<h3>Debug info</h3>';
 		
 		if (!empty($debugInfo)){
-			$params->message .= '<ul>'.implode('', $debugInfo).'</ul>';
+			$params->message .= '<ul>'.implode(
+				'',
+				$debugInfo
+			).'</ul>';
 		}
 		
 		//Add backtrace to message
@@ -666,7 +733,11 @@ class ddTools {
 		
 		
 		//Prepare event type
-		switch (substr($params->eventType, 0, 1)){
+		switch (substr(
+			$params->eventType,
+			0,
+			1
+		)){
 			//Information
 			case 'i': $params->eventType = 1; break;
 			//Warning
@@ -775,9 +846,16 @@ class ddTools {
 	 * 
 	 * @desc Explode associative array of fields and TVs in two individual arrays.
 	 * 
-	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs values. @required
+	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
+	 * @param $fields[item] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
 	 * 
-	 * @return {array} — Массив из двух элементов, где первый — поля документа, второй — TV. Элементами массива TV являются ассоциативные массивы, в которых хранятся 'id' и 'val'.
+	 * @return $result {array}
+	 * @return $result[0] {array_associative} — Document fields (like 'id', 'pagetitle', etc).
+	 * @return $result[0][item] {mixed} — Field value, when key is field name.
+	 * @return $result[1] {array} — TVs.
+	 * @return $result[1][item] {array_associative} — TV, when key is TV name.
+	 * @return $result[1][item]['id'] {integer} — TV id.
+	 * @return $result[1][item]['val'] {mixed} — TV value.
 	 */
 	public static function explodeFieldsArr($fields = []){
 		$tvs = [];
@@ -801,7 +879,10 @@ class ddTools {
 			$dbRes = self::$modx->db->select(
 				"`name`, `id`",
 				self::$tables['site_tmplvars'],
-				"`name` IN ('".implode("','", array_keys($tvs))."')"
+				"`name` IN ('".implode(
+					"','",
+					array_keys($tvs)
+				)."')"
 			);
 			
 			while ($row = self::$modx->db->getRow($dbRes)){
@@ -809,12 +890,15 @@ class ddTools {
 			}
 		}
 		
-		return [$fields, $tvs];
+		return [
+			$fields,
+			$tvs
+		];
 	}
 	
 	/**
 	 * createDocument
-	 * @version 1.1.6 (2017-12-09)
+	 * @version 1.1.7 (2018-06-17)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -824,7 +908,10 @@ class ddTools {
 	 * 
 	 * @return {integer|false} — ID нового документа или false, если что-то не так.
 	 */
-	public static function createDocument($fields = [], $groups = false){
+	public static function createDocument(
+		$fields = [],
+		$groups = false
+	){
 		//Если нет хотя бы заголовка, выкидываем
 		if (!$fields['pagetitle']){return false;}
 		
@@ -873,10 +960,13 @@ class ddTools {
 		if ($groups){
 			//Перебираем все группы
 			foreach ($groups as $gr){
-				self::$modx->db->insert([
-					'document_group' => $gr,
-					'document' => $id
-				], self::$tables['document_groups']);
+				self::$modx->db->insert(
+					[
+						'document_group' => $gr,
+						'document' => $id
+					],
+					self::$tables['document_groups']
+				);
 			}
 		}
 		
@@ -926,11 +1016,11 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.2.5 (2017-12-09)
+	 * @version 1.2.6 (2018-06-17)
 	 * 
 	 * @desc Update a document.
 	 * 
-	 * @note $id и/или $where должны быть переданы.
+	 * @note $id and/or $where are required.
 	 * 
 	 * @param $id {integer|array} — Document id to update. @required
 	 * @param $update {array_associative} — Array of document fields or TVs to update. Key — name, value — value. @required
@@ -938,7 +1028,11 @@ class ddTools {
 	 * 
 	 * @return {boolean} — true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
 	 */
-	public static function updateDocument($id = 0, $update = [], $where = ''){
+	public static function updateDocument(
+		$id = 0,
+		$update = [],
+		$where = ''
+	){
 		if (
 			$id == 0 &&
 			trim($where) == ''
@@ -953,7 +1047,10 @@ class ddTools {
 			count($id)
 		){
 			//Обрабатываем массив id
-			$where_sql .= '`id` IN ("'.implode('","', $id).'")';
+			$where_sql .= '`id` IN ("'.implode(
+				'","',
+				$id
+			).'")';
 		}else if (
 			is_numeric($id) &&
 			$id != 0
@@ -1044,7 +1141,7 @@ class ddTools {
 	
 	/**
 	 * getDocuments
-	 * @version 1.2.5 (2017-12-09)
+	 * @version 1.2.6 (2018-06-17)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
@@ -1064,7 +1161,16 @@ class ddTools {
 	 * 
 	 * @return {array|false}
 	 */
-	public static function getDocuments($ids = [], $published = 'all', $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+	public static function getDocuments(
+		$ids = [],
+		$published = 'all',
+		$deleted = 0,
+		$fields = '*',
+		$where = '',
+		$sort = 'menuindex',
+		$dir = 'ASC',
+		$limit = ''
+	){
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
@@ -1084,10 +1190,16 @@ class ddTools {
 		}
 		
 		if(is_string($ids)){
-			if(strpos($ids, ',') !== false){
+			if(strpos(
+				$ids,
+				','
+			) !== false){
 				$ids = array_filter(array_map(
 					'intval',
-					explode(',', $ids)
+					explode(
+						',',
+						$ids
+					)
 				));
 			}else{
 				$ids = [$ids];
@@ -1102,14 +1214,20 @@ class ddTools {
 				',sc.',
 				array_filter(array_map(
 					'trim',
-					explode(',', $fields)
+					explode(
+						',',
+						$fields
+					)
 				))
 			);
 			$sort = ($sort == '') ? '' : 'sc.'.implode(
 				',sc.',
 				array_filter(array_map(
 					'trim',
-					explode(',', $sort)
+					explode(
+						',',
+						$sort
+					)
 				))
 			);
 			if ($where != ''){
@@ -1138,7 +1256,7 @@ class ddTools {
 	
 	/**
 	 * getDocument
-	 * @version 1.1.5 (2017-12-09)
+	 * @version 1.1.6 (2018-06-17)
 	 * 
 	 * @desc Returns required data of a document (document fields).
 	 * 
@@ -1154,7 +1272,12 @@ class ddTools {
 	 * 
 	 * @return {array|false}
 	 */
-	public static function getDocument($id = 0, $fields = '*', $published = 'all', $deleted = 0){
+	public static function getDocument(
+		$id = 0,
+		$fields = '*',
+		$published = 'all',
+		$deleted = 0
+	){
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
@@ -1197,7 +1320,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.5 (2017-12-09)
+	 * @version 1.3.6 (2018-06-17)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -1214,7 +1337,14 @@ class ddTools {
 	 * 
 	 * @return {array|false}
 	 */
-	public static function getTemplateVars($idnames = [], $fields = '*', $docid = '', $published = 'all', $sort = 'rank', $dir = 'ASC'){
+	public static function getTemplateVars(
+		$idnames = [],
+		$fields = '*',
+		$docid = '',
+		$published = 'all',
+		$sort = 'rank',
+		$dir = 'ASC'
+	){
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
@@ -1255,21 +1385,30 @@ class ddTools {
 				',tv.',
 				array_filter(array_map(
 					'trim',
-					explode(',', $fields)
+					explode(
+						',',
+						$fields
+					)
 				))
 			);
 			$sort = ($sort == '') ? '' : 'tv.'.implode(
 				',tv.',
 				array_filter(array_map(
 					'trim',
-					explode(',', $sort)
+					explode(
+						',',
+						$sort
+					)
 				))
 			);
 			
 			if ($idnames == '*'){
 				$query = 'tv.id<>0';
 			}else{
-				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name').' IN ("'.implode('","', $idnames).'")';
+				$query = (is_numeric($idnames[0]) ? 'tv.id' : 'tv.name').' IN ("'.implode(
+					'","',
+					$idnames
+				).'")';
 			}
 			
 			$rs = self::$modx->db->select(
@@ -1292,7 +1431,10 @@ class ddTools {
 			foreach ($docRow as $key => $value){
 				if (
 					$idnames == '*' ||
-					in_array($key, $idnames)
+					in_array(
+						$key,
+						$idnames
+					)
 				){
 					array_push(
 						$result,
@@ -1310,7 +1452,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.5 (2017-12-09)
+	 * @version 1.1.6 (2018-06-17)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -1325,7 +1467,12 @@ class ddTools {
 	 * 
 	 * @return {array|false}
 	 */
-	public static function getTemplateVarOutput($idnames = [], $docid = '', $published = 'all', $sep = ''){
+	public static function getTemplateVarOutput(
+		$idnames = [],
+		$docid = '',
+		$published = 'all',
+		$sep = ''
+	){
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
@@ -1388,7 +1535,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.2.4 (2017-12-09)
+	 * @version 1.2.5 (2018-06-17)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
@@ -1408,7 +1555,16 @@ class ddTools {
 	 * 
 	 * @return {array|false} — Массив документов или false, если что-то не так.
 	 */
-	public static function getDocumentChildren($parentid = 0, $published = 1, $deleted = 0, $fields = '*', $where = '', $sort = 'menuindex', $dir = 'ASC', $limit = ''){
+	public static function getDocumentChildren(
+		$parentid = 0,
+		$published = 1,
+		$deleted = 0,
+		$fields = '*',
+		$where = '',
+		$sort = 'menuindex',
+		$dir = 'ASC',
+		$limit = ''
+	){
 		//Проверка на устаревшее значение $published
 		if($published === false){
 			$published = 'all';
@@ -1439,20 +1595,29 @@ class ddTools {
 			',sc.',
 			array_filter(array_map(
 				'trim',
-				explode(',', $fields)
+				explode(
+					',',
+					$fields
+				)
 			))
 		);
 		$sort = ($sort == '') ? '' : 'sc.' . implode(
 			',sc.',
 			array_filter(array_map(
 				'trim',
-				explode(',', $sort)
+				explode(
+					',',
+					$sort
+				)
 			))
 		);
 		
 		// get document groups for current user
 		if ($docgrp = self::$modx->getUserDocGroups()){
-			$docgrp = implode(',', $docgrp);
+			$docgrp = implode(
+				',',
+				$docgrp
+			);
 		}
 		
 		// build query
@@ -1476,7 +1641,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildrenTVarOutput
-	 * @version 1.3.3 (2017-12-09)
+	 * @version 1.3.4 (2018-06-17)
 	 * 
 	 * @desc Get necessary children of document.
 	 * 
@@ -1497,7 +1662,15 @@ class ddTools {
 	 * 
 	 * @return {array|false} — Массив документов или false, если что-то не так.
 	 */
-	public static function getDocumentChildrenTVarOutput($parentid = 0, $tvidnames = [], $published = 1, $sortBy = 'menuindex', $sortDir = 'ASC', $where = '', $resultKey = 'id'){
+	public static function getDocumentChildrenTVarOutput(
+		$parentid = 0,
+		$tvidnames = [],
+		$published = 1,
+		$sortBy = 'menuindex',
+		$sortDir = 'ASC',
+		$where = '',
+		$resultKey = 'id'
+	){
 		//Получаем всех детей
 		$docs = self::getDocumentChildren(
 			$parentid,
@@ -1521,7 +1694,10 @@ class ddTools {
 				if (is_array($tvidnames)){
 					if (
 						count($tvidnames) != 0 &&
-						!in_array($resultKey, $tvidnames)
+						!in_array(
+							$resultKey,
+							$tvidnames
+						)
 					){
 						$tvidnames[] = $resultKey;
 						$unsetResultKey = true;
@@ -1530,7 +1706,10 @@ class ddTools {
 					$tvidnames != '*' &&
 					$tvidnames != $resultKey
 				){
-					$tvidnames = [$tvidnames, $resultKey];
+					$tvidnames = [
+						$tvidnames,
+						$resultKey
+					];
 					$unsetResultKey = true;
 				}
 			}
@@ -1552,7 +1731,10 @@ class ddTools {
 					//Если нужно в качестве ключа использовать не индекс и такое поле есть
 					if (
 						$resultKey !== false &&
-						array_key_exists($resultKey, $tvs)
+						array_key_exists(
+							$resultKey,
+							$tvs
+						)
 					){
 						//Записываем результат с соответствующим ключом
 						$result[$tvs[$resultKey]] = $tvs;
@@ -1573,7 +1755,7 @@ class ddTools {
 	
 	/**
 	 * regEmptyClientScript
-	 * @version 1.1.1 (2017-12-09)
+	 * @version 1.1.2 (2018-06-17)
 	 * 
 	 * @desc Adds a required JS-file into a required MODX inner list according to its version and name. The method is used to register the scripts, that has already been connected manually.
 	 * Be advised that the method does not add script code, but register its name and version to avoid future connections with $modx->regClientScript and $modx->regClientStartupScript, and the script code will be deleted if the script had been connected with $modx->regClientScript or $modx->regClientStartupScript.
@@ -1655,14 +1837,20 @@ class ddTools {
 		//Если надо подключить перед </head>
 		if ($startup){
 			//Позиция такова: либо старая (уже вычислена), либо максимальное значение между нолём и одним из ключей массива подключённых скриптов + 1 (это, чтобы заполнить возможные дыры)
-			$pos = isset($overwritepos) ? $overwritepos : max(array_merge([0], array_keys(self::$modx->sjscripts))) + 1;
+			$pos = isset($overwritepos) ? $overwritepos : max(array_merge(
+				[0],
+				array_keys(self::$modx->sjscripts)
+			)) + 1;
 			if ($useThisVer){
 				//Запоминаем пустую строку подключения в нужный массив, т.к. подключаем мануально.
 				self::$modx->sjscripts[$pos] = '';
 			}
 		//Если надо подключить перед </body>, то всё по аналогии, только массив другой
 		}else{
-			$pos = isset($overwritepos) ? $overwritepos : max(array_merge([0], array_keys(self::$modx->jscripts))) + 1;
+			$pos = isset($overwritepos) ? $overwritepos : max(array_merge(
+				[0],
+				array_keys(self::$modx->jscripts)
+			)) + 1;
 			if ($useThisVer){
 				self::$modx->jscripts[$pos] = '';
 			}
@@ -1729,7 +1917,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.1.5 (2017-12-09)
+	 * @version 1.1.6 (2018-06-17)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
@@ -1754,7 +1942,10 @@ class ddTools {
 	 * 
 	 * @return {array_associative} — An array, in which the correct parameter names are the keys and the parameter values are the values.
 	 */
-	public static function verifyRenamedParams($params, $compliance){
+	public static function verifyRenamedParams(
+		$params,
+		$compliance
+	){
 		$result = [];
 		$message = [];
 		
@@ -1777,14 +1968,20 @@ class ddTools {
 				if (count($oldNames) > 0){
 					//Зададим (берём значение первого попавшегося)
 					$result[$newName] = $params[$oldNames[0]];
-					$message[] .= '<li>“'.implode('”, “', $oldNames).'” must be renamed as “'.$newName.'”;</li>';
+					$message[] .= '<li>“'.implode(
+						'”, “',
+						$oldNames
+					).'” must be renamed as “'.$newName.'”;</li>';
 				}
 			}
 		}
 		
 		if (count($result) > 0){
 			self::logEvent([
-				'message' => '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode('', $message).'</ul>'
+				'message' => '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'.implode(
+					'',
+					$message
+				).'</ul>'
 			]);
 		}
 		
@@ -1793,7 +1990,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 3.0 (2018-06-15)
+	 * @version 3.0.1 (2018-06-17)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -1885,7 +2082,10 @@ class ddTools {
 				if(!empty($attachFiles)){
 					foreach($attachFiles as $value){
 						//добавить еще парамет name
-						self::$modx->mail->AddAttachment($value['path'], $value['name']);
+						self::$modx->mail->AddAttachment(
+							$value['path'],
+							$value['name']
+						);
 					}
 				}
 				
@@ -1928,7 +2128,10 @@ if(isset($modx)){
 		ddTools::$tables[$key] = $modx->getFullTableName($key);
 	}
 	
-	if (method_exists($modx, 'getVersionData')){
+	if (method_exists(
+		$modx,
+		'getVersionData'
+	)){
 		//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
 		$modxVersionData = $modx->getVersionData();
 		
