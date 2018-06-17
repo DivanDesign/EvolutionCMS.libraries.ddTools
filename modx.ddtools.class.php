@@ -870,17 +870,17 @@ class ddTools {
 		//Prepare data
 		$docData = self::prepareDocData([
 			'data' => $fields,
-			'needToGetTvIds' => true
+			'tvAdditionalFieldsToGet' => ['id']
 		]);
 		
 		//Save fields
-		$result[0] = $docData->fieldValues;
+		$result[0] = $docData->fieldsData;
 		//And TVs
-		foreach ($docData->tvValues as $tvName => $tvValue){
+		foreach ($docData->tvsData as $tvName => $tvValue){
 			$result[1][$tvName] = ['val' => $tvValue];
 			
-			if (isset($docData->tvIds[$tvName])){
-				$result[1][$tvName]['id'] = $docData->tvIds[$tvName];
+			if (isset($docData->tvsAdditionalData[$tvName])){
+				$result[1][$tvName]['id'] = $docData->tvsAdditionalData[$tvName]['id'];
 			}
 		}
 		
@@ -889,33 +889,35 @@ class ddTools {
 	
 	/**
 	 * prepareDocData
-	 * @version 1.0 (2018-06-17)
+	 * @version 2.0 (2018-06-17)
 	 * 
 	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params['data'] {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
 	 * @param $params['data'][key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
-	 * @param $params['needToGetTvIds'] {boolean} — Get Ids of TVs. Default: false.
+	 * @param $params['tvAdditionalFieldsToGet'] {array} — Fields of TVs to get if needed (e. g. 'id', 'type'). Default: [].
+	 * @param $params['tvAdditionalFieldsToGet'][i] {string} — TV field.
 	 * 
 	 * @return $result {stdClass}
-	 * @return $result->fieldValues {array_associative} — Document fields (like 'id', 'pagetitle', etc). @required
-	 * @return $result->fieldValues[key] {mixed} — Field value, when key is field name.
-	 * @return $result->tvValues {array_associative} — TVs values. @required
-	 * @return $result->tvValues[key] {mixed} — TV value, when key is TV name.
-	 * @return $result->tvIds {array_associative} — TVs Ids, when key is TV name.
-	 * @return $result->tvIds[key] {integer} — TV id, when key is TV name.
+	 * @return $result->fieldsData {array_associative} — Document fields data (like 'id', 'pagetitle', etc). @required
+	 * @return $result->fieldsData[key] {mixed} — Field value, when key is field name.
+	 * @return $result->tvsData {array_associative} — TVs values. @required
+	 * @return $result->tvsData[key] {mixed} — TV value, when key is TV name.
+	 * @return $result->tvsAdditionalData {array_associative} — TVs additional data, when key is TV name. @required
+	 * @return $result->tvsAdditionalData[key] {array_associative} — TV data, when key is TV name.
+	 * @return $result->tvsAdditionalData[key][item] {string} — TV data.
 	 */
 	public static function prepareDocData($params){
 		//Defaults
 		$params = (object) array_merge([
-			'needToGetTvIds' => false
+			'tvAdditionalFieldsToGet' => []
 		], (array) $params);
 		
 		$result = (object) [
-			'fieldValues' => [],
-			'tvValues' => [],
-			'tvIds' => []
+			'fieldsData' => [],
+			'tvsData' => [],
+			'tvsAdditionalData' => []
 		];
 		
 		//Перебираем поля, раскидываем на поля документа и TV
@@ -926,33 +928,43 @@ class ddTools {
 				self::$documentFields
 			)){
 				//Запоминаем как TV`шку
-				$result->tvValues[$data_itemFieldName] = $data_itemFieldValue;
+				$result->tvsData[$data_itemFieldName] = $data_itemFieldValue;
 			}else{
 				//Save as document field
-				$result->fieldValues[$data_itemFieldName] = $data_itemFieldValue;
+				$result->fieldsData[$data_itemFieldName] = $data_itemFieldValue;
 			}
 		}
 		
 		if (
-			$params->needToGetTvIds &&
+			!empty($params->tvAdditionalFieldsToGet) &&
 			//Если есть хоть одна TV
-			count($result->tvValues) > 0
+			count($result->tvsData) > 0
 		){
+			if (!in_array(
+				'name',
+				$params->tvAdditionalFieldsToGet
+			)){
+				$params->tvAdditionalFieldsToGet[] = 'name';
+			}
+			
 			//Получаем id всех необходимых TV
 			$dbRes = self::$modx->db->select(
 				//Fields
-				"`name`, `id`",
+				'`'.implode(
+					'`, `',
+					$params->tvAdditionalFieldsToGet
+				).'`',
 				//From
 				self::$tables['site_tmplvars'],
 				//Where
 				"`name` IN ('".implode(
 					"','",
-					array_keys($result->tvValues)
+					array_keys($result->tvsData)
 				)."')"
 			);
 			
 			while ($row = self::$modx->db->getRow($dbRes)){
-				$result->tvIds[$row['name']] = $row['id'];
+				$result->tvsAdditionalData[$row['name']] = $row;
 			}
 		}
 		
@@ -961,7 +973,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.1.9 (2018-06-17)
+	 * @version 1.1.10 (2018-06-17)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -992,26 +1004,26 @@ class ddTools {
 		
 		$docData = self::prepareDocData([
 			'data' => $docData,
-			'needToGetTvIds' => true
+			'tvAdditionalFieldsToGet' => ['id']
 		]);
 		
 		//Вставляем новый документ в базу, получаем id, если что-то пошло не так, выкидываем
 		$docId = self::$modx->db->insert(
-			$docData->fieldValues,
+			$docData->fieldsData,
 			self::$tables['site_content']
 		);
 		
 		if (!$docId){return false;}
 		
-		//Если есть хоть одна TV
-		if (count($docData->tvIds) > 0){
+		//Если есть хоть одна существующая TV
+		if (count($docData->tvsAdditionalData) > 0){
 			//Перебираем массив TV с ID
-			foreach ($docData->tvIds as $tvName => $tvId){
+			foreach ($docData->tvsAdditionalData as $tvName => $tvData){
 				//Добавляем значение TV в базу
 				self::$modx->db->insert(
 					[
-						'value' => $docData->tvValues[$tvName],
-						'tmplvarid' => $tvId,
+						'value' => $docData->tvsData[$tvName],
+						'tmplvarid' => $tvData['id'],
 						'contentid' => $docId
 					],
 					self::$tables['site_tmplvar_contentvalues']
@@ -1034,9 +1046,9 @@ class ddTools {
 		}
 		
 		//Смотрим родителя нового документа, является ли он папкой и его псевдоним
-		$docParent = isset($docData->fieldValues['parent']) ? $docData->fieldValues['parent'] : 0;
-		$docIsFolder = isset($docData->fieldValues['isfolder']) ? $docData->fieldValues['isfolder'] : 0;
-		$docAlias = isset($docData->fieldValues['alias']) ? $docData->fieldValues['alias'] : '';
+		$docParent = isset($docData->fieldsData['parent']) ? $docData->fieldsData['parent'] : 0;
+		$docIsFolder = isset($docData->fieldsData['isfolder']) ? $docData->fieldsData['isfolder'] : 0;
+		$docAlias = isset($docData->fieldsData['alias']) ? $docData->fieldsData['alias'] : '';
 		
 		//Пусть созданного документа
 		$docPath = '';
@@ -1079,7 +1091,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.2.8 (2018-06-17)
+	 * @version 1.2.9 (2018-06-17)
 	 * 
 	 * @desc Update a document.
 	 * 
@@ -1139,29 +1151,29 @@ class ddTools {
 			//Разбиваем на поля документа и TV
 			$docData = self::prepareDocData([
 				'data' => $docData,
-				'needToGetTvIds' => true
+				'tvAdditionalFieldsToGet' => ['id']
 			]);
 			
 			//Обновляем информацию по документу
-			if (count($docData->fieldValues) > 0){
+			if (count($docData->fieldsData) > 0){
 				self::$modx->db->update(
-					$docData->fieldValues,
+					$docData->fieldsData,
 					self::$tables['site_content'],
 					$whereSql
 				);
 			}
 			
 			//Если есть хоть одна TV
-			if (count($docData->tvIds) > 0){
+			if (count($docData->tvsAdditionalData) > 0){
 				//Обновляем TV всех найденых документов
 				while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
 					//Перебираем массив существующих TV
-					foreach ($docData->tvIds as $tvName => $tvId){
+					foreach ($docData->tvsAdditionalData as $tvName => $tvData){
 						//Пробуем обновить значение нужной TV
 						self::$modx->db->update(
-							'`value` = "'.$docData->tvValues[$tvName].'"',
+							'`value` = "'.$docData->tvsData[$tvName].'"',
 							self::$tables['site_tmplvar_contentvalues'],
-							'`tmplvarid` = '.$tvId.' AND `contentid` = '.$doc['id']
+							'`tmplvarid` = '.$tvData['id'].' AND `contentid` = '.$doc['id']
 						);
 						
 						//Проверяем сколько строк нашлось при обновлении
@@ -1186,8 +1198,8 @@ class ddTools {
 							//Добавляем значение нужной TV в базу
 							self::$modx->db->insert(
 								[
-									'value' => $docData->tvValues[$tvName],
-									'tmplvarid' => $tvId,
+									'value' => $docData->tvsData[$tvName],
+									'tmplvarid' => $tvData['id'],
 									'contentid' => $doc['id']
 								],
 								self::$tables['site_tmplvar_contentvalues']
