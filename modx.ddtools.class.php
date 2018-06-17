@@ -973,7 +973,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.1.10 (2018-06-17)
+	 * @version 1.2 (2018-06-17)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1004,7 +1004,10 @@ class ddTools {
 		
 		$docData = self::prepareDocData([
 			'data' => $docData,
-			'tvAdditionalFieldsToGet' => ['id']
+			'tvAdditionalFieldsToGet' => [
+				'id',
+				'type'
+			]
 		]);
 		
 		//Вставляем новый документ в базу, получаем id, если что-то пошло не так, выкидываем
@@ -1019,6 +1022,16 @@ class ddTools {
 		if (count($docData->tvsAdditionalData) > 0){
 			//Перебираем массив TV с ID
 			foreach ($docData->tvsAdditionalData as $tvName => $tvData){
+				if (
+					//Если это дата
+					$tvData['type'] == 'date' &&
+					//И она задана как Unixtime
+					is_numeric($docData->tvsData[$tvName])
+				){
+					//Приведём её к формату системы
+					$docData->tvsData[$tvName] = self::$modx->toDateFormat($docData->tvsData[$tvName]);
+				}
+				
 				//Добавляем значение TV в базу
 				self::$modx->db->insert(
 					[
@@ -1091,7 +1104,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.2.9 (2018-06-17)
+	 * @version 1.3 (2018-06-17)
 	 * 
 	 * @desc Update a document.
 	 * 
@@ -1151,7 +1164,10 @@ class ddTools {
 			//Разбиваем на поля документа и TV
 			$docData = self::prepareDocData([
 				'data' => $docData,
-				'tvAdditionalFieldsToGet' => ['id']
+				'tvAdditionalFieldsToGet' => [
+					'id',
+					'type'
+				]
 			]);
 			
 			//Обновляем информацию по документу
@@ -1169,6 +1185,16 @@ class ddTools {
 				while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
 					//Перебираем массив существующих TV
 					foreach ($docData->tvsAdditionalData as $tvName => $tvData){
+						if (
+							//Если это дата
+							$tvData['type'] == 'date' &&
+							//И она задана как Unixtime
+							is_numeric($docData->tvsData[$tvName])
+						){
+							//Приведём её к формату системы
+							$docData->tvsData[$tvName] = self::$modx->toDateFormat($docData->tvsData[$tvName]);
+						}
+						
 						//Пробуем обновить значение нужной TV
 						self::$modx->db->update(
 							'`value` = "'.$docData->tvsData[$tvName].'"',
