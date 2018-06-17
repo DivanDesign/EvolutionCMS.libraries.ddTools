@@ -842,58 +842,121 @@ class ddTools {
 	
 	/**
 	 * explodeFieldsArr
-	 * @version 1.0.3 (2017-12-09)
+	 * @deprecated Use ddTools::prepareDocData.
 	 * 
 	 * @desc Explode associative array of fields and TVs in two individual arrays.
 	 * 
 	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
-	 * @param $fields[item] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
+	 * @param $fields[key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
 	 * 
 	 * @return $result {array}
 	 * @return $result[0] {array_associative} — Document fields (like 'id', 'pagetitle', etc).
-	 * @return $result[0][item] {mixed} — Field value, when key is field name.
-	 * @return $result[1] {array} — TVs.
-	 * @return $result[1][item] {array_associative} — TV, when key is TV name.
-	 * @return $result[1][item]['id'] {integer} — TV id.
-	 * @return $result[1][item]['val'] {mixed} — TV value.
+	 * @return $result[0][key] {mixed} — Field value, when key is field name.
+	 * @return $result[1] {array_associative} — TVs.
+	 * @return $result[1][key] {array_associative} — TV, when key is TV name.
+	 * @return $result[1][key]['id'] {integer} — TV id.
+	 * @return $result[1][key]['val'] {mixed} — TV value.
 	 */
 	public static function explodeFieldsArr($fields = []){
-		$tvs = [];
-		//Перебираем поля, раскидываем на поля документа и TV
-		foreach ($fields as $key => $val){
-			//Если это не поле документа
-			if (!in_array(
-				$key,
-				self::$documentFields
-			)){
-				//Запоминаем как TV`шку
-				$tvs[$key] = ['val' => $val];
-				//Удаляем из полей
-				unset($fields[$key]);
+		$result = [
+			[],
+			[]
+		];
+		
+		self::logEvent([
+			'message' => '<p>The “ddTools::explodeFieldsArr” method is deprecated, use “ddTools::prepareDocData” instead.</p>'
+		]);
+		
+		//Prepare data
+		$docData = self::prepareDocData([
+			'data' => $fields,
+			'needToGetTvIds' => true
+		]);
+		
+		//Save fields
+		$result[0] = $docData->fieldValues;
+		//And TVs
+		foreach ($docData->tvValues as $tvName => $tvValue){
+			$result[1][$tvName] = ['val' => $tvValue];
+			
+			if (isset($docData->tvIds[$tvName])){
+				$result[1][$tvName]['id'] = $docData->tvIds[$tvName];
 			}
 		}
 		
-		//Если есть хоть одна TV
-		if (count($tvs) > 0){
+		return $result;
+	}
+	
+	/**
+	 * prepareDocData
+	 * @version 1.0 (2018-06-17)
+	 * 
+	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
+	 * 
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params['data'] {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
+	 * @param $params['data'][key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
+	 * @param $params['needToGetTvIds'] {boolean} — Get Ids of TVs. Default: false.
+	 * 
+	 * @return $result {stdClass}
+	 * @return $result->fieldValues {array_associative} — Document fields (like 'id', 'pagetitle', etc). @required
+	 * @return $result->fieldValues[key] {mixed} — Field value, when key is field name.
+	 * @return $result->tvValues {array_associative} — TVs values. @required
+	 * @return $result->tvValues[key] {mixed} — TV value, when key is TV name.
+	 * @return $result->tvIds {array_associative} — TVs Ids, when key is TV name.
+	 * @return $result->tvIds[key] {integer} — TV id, when key is TV name.
+	 */
+	public static function prepareDocData($params){
+		//Defaults
+		$params = (object) array_merge([
+			'needToGetTvIds' => false
+		], (array) $params);
+		
+		$result = (object) [
+			'fieldValues' => [],
+			'tvValues' => [],
+			'tvIds' => []
+		];
+		
+		//Перебираем поля, раскидываем на поля документа и TV
+		foreach ($params->data as $data_itemFieldName => $data_itemFieldValue){
+			//Если это не поле документа
+			if (!in_array(
+				$data_itemFieldName,
+				self::$documentFields
+			)){
+				//Запоминаем как TV`шку
+				$result->tvValues[$data_itemFieldName] = $data_itemFieldValue;
+			}else{
+				//Save as document field
+				$result->fieldValues[$data_itemFieldName] = $data_itemFieldValue;
+			}
+		}
+		
+		if (
+			$params->needToGetTvIds &&
+			//Если есть хоть одна TV
+			count($result->tvValues) > 0
+		){
 			//Получаем id всех необходимых TV
 			$dbRes = self::$modx->db->select(
+				//Fields
 				"`name`, `id`",
+				//From
 				self::$tables['site_tmplvars'],
+				//Where
 				"`name` IN ('".implode(
 					"','",
-					array_keys($tvs)
+					array_keys($result->tvValues)
 				)."')"
 			);
 			
 			while ($row = self::$modx->db->getRow($dbRes)){
-				$tvs[$row['name']]['id'] = $row['id'];
+				$result->tvIds[$row['name']] = $row['id'];
 			}
 		}
 		
-		return [
-			$fields,
-			$tvs
-		];
+		return $result;
 	}
 	
 	/**
