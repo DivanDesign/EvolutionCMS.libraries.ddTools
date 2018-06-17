@@ -961,7 +961,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.1.8 (2018-06-17)
+	 * @version 1.1.9 (2018-06-17)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -990,32 +990,32 @@ class ddTools {
 		//Если надо публиковать, поставим дату публикации текущей
 		if ($docData['published'] == 1){$docData['pub_date'] = $docData['createdon'];}
 		
-		$docData = self::explodeFieldsArr($docData);
+		$docData = self::prepareDocData([
+			'data' => $docData,
+			'needToGetTvIds' => true
+		]);
 		
 		//Вставляем новый документ в базу, получаем id, если что-то пошло не так, выкидываем
 		$docId = self::$modx->db->insert(
-			$docData[0],
+			$docData->fieldValues,
 			self::$tables['site_content']
 		);
 		
 		if (!$docId){return false;}
 		
 		//Если есть хоть одна TV
-		if (count($docData[1]) > 0){
-			//Перебираем массив TV
-			foreach ($docData[1] as $tvData){
-				//Проверим, что id существует (а то ведь могли и именем ошибиться)
-				if (isset($tvData['id'])){
-					//Добавляем значение TV в базу
-					self::$modx->db->insert(
-						[
-							'value' => $tvData['val'],
-							'tmplvarid' => $tvData['id'],
-							'contentid' => $docId
-						],
-						self::$tables['site_tmplvar_contentvalues']
-					);
-				}
+		if (count($docData->tvIds) > 0){
+			//Перебираем массив TV с ID
+			foreach ($docData->tvIds as $tvName => $tvId){
+				//Добавляем значение TV в базу
+				self::$modx->db->insert(
+					[
+						'value' => $docData->tvValues[$tvName],
+						'tmplvarid' => $tvId,
+						'contentid' => $docId
+					],
+					self::$tables['site_tmplvar_contentvalues']
+				);
 			}
 		}
 		
@@ -1034,9 +1034,9 @@ class ddTools {
 		}
 		
 		//Смотрим родителя нового документа, является ли он папкой и его псевдоним
-		$docParent = isset($docData[0]['parent']) ? $docData[0]['parent'] : 0;
-		$docIsFolder = isset($docData[0]['isfolder']) ? $docData[0]['isfolder'] : 0;
-		$docAlias = isset($docData[0]['alias']) ? $docData[0]['alias'] : '';
+		$docParent = isset($docData->fieldValues['parent']) ? $docData->fieldValues['parent'] : 0;
+		$docIsFolder = isset($docData->fieldValues['isfolder']) ? $docData->fieldValues['isfolder'] : 0;
+		$docAlias = isset($docData->fieldValues['alias']) ? $docData->fieldValues['alias'] : '';
 		
 		//Пусть созданного документа
 		$docPath = '';
@@ -1079,7 +1079,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.2.7 (2018-06-17)
+	 * @version 1.2.8 (2018-06-17)
 	 * 
 	 * @desc Update a document.
 	 * 
@@ -1137,61 +1137,61 @@ class ddTools {
 		
 		if (self::$modx->db->getRecordCount($docIdsToUpdate_dbRes)){
 			//Разбиваем на поля документа и TV
-			$docData = self::explodeFieldsArr($docData);
+			$docData = self::prepareDocData([
+				'data' => $docData,
+				'needToGetTvIds' => true
+			]);
 			
 			//Обновляем информацию по документу
-			if (count($docData[0])){
+			if (count($docData->fieldValues) > 0){
 				self::$modx->db->update(
-					$docData[0],
+					$docData->fieldValues,
 					self::$tables['site_content'],
 					$whereSql
 				);
 			}
 			
 			//Если есть хоть одна TV
-			if (count($docData[1]) > 0){
+			if (count($docData->tvIds) > 0){
 				//Обновляем TV всех найденых документов
 				while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
-					//Перебираем массив TV
-					foreach ($docData[1] as $val){
-						//Проверим, что id существует (а то ведь могли и именем ошибиться)
-						if (isset($val['id'])){
-							//Пробуем обновить значение нужной TV
-							self::$modx->db->update(
-								'`value` = "'.$val['val'].'"',
-								self::$tables['site_tmplvar_contentvalues'],
-								'`tmplvarid` = '.$val['id'].' AND `contentid` = '.$doc['id']
+					//Перебираем массив существующих TV
+					foreach ($docData->tvIds as $tvName => $tvId){
+						//Пробуем обновить значение нужной TV
+						self::$modx->db->update(
+							'`value` = "'.$docData->tvValues[$tvName].'"',
+							self::$tables['site_tmplvar_contentvalues'],
+							'`tmplvarid` = '.$tvId.' AND `contentid` = '.$doc['id']
+						);
+						
+						//Проверяем сколько строк нашлось при обновлении
+						//Если используется mysqli
+						if(is_a(self::$modx->db->conn, 'mysqli')){
+							preg_match(
+								'/Rows matched: (\d+)/',
+								mysqli_info(self::$modx->db->conn),
+								$updatedRows
 							);
-							
-							//Проверяем сколько строк нашлось при обновлении
-							//Если используется mysqli
-							if(is_a(self::$modx->db->conn, 'mysqli')){
-								preg_match(
-									'/Rows matched: (\d+)/',
-									mysqli_info(self::$modx->db->conn),
-									$updatedRows
-								);
-							}else{
-								//Если self::$modx->db->conn не является экземпляром mysqli, то пробуем через устаревший mysql_info
-								preg_match(
-									'/Rows matched: (\d+)/',
-									mysql_info(),
-									$updatedRows
-								);
-							}
-							
-							//Если ничего не обновилось (не нашлось)
-							if ($updatedRows[1] == 0){
-								//Добавляем значение нужной TV в базу
-								self::$modx->db->insert(
-									[
-										'value' => $val['val'],
-										'tmplvarid' => $val['id'],
-										'contentid' => $doc['id']
-									],
-									self::$tables['site_tmplvar_contentvalues']
-								);
-							}
+						}else{
+							//Если self::$modx->db->conn не является экземпляром mysqli, то пробуем через устаревший mysql_info
+							preg_match(
+								'/Rows matched: (\d+)/',
+								mysql_info(),
+								$updatedRows
+							);
+						}
+						
+						//Если ничего не обновилось (не нашлось)
+						if ($updatedRows[1] == 0){
+							//Добавляем значение нужной TV в базу
+							self::$modx->db->insert(
+								[
+									'value' => $docData->tvValues[$tvName],
+									'tmplvarid' => $tvId,
+									'contentid' => $doc['id']
+								],
+								self::$tables['site_tmplvar_contentvalues']
+							);
 						}
 					}
 				}
