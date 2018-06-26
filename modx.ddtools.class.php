@@ -1,12 +1,12 @@
 <?php
 /**
  * MODXEvo.libraries.ddTools
- * @version 0.22 (2018-06-17)
+ * @version 0.23 (2018-06-26)
  * 
  * @uses PHP >= 5.4.
  * @uses MODXEvo >= 1.0.10.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.22
+ * @link http://code.divandesign.biz/modx/ddtools/0.23
  * 
  * @copyright 2012–2018 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -112,7 +112,7 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1.3b (2017-02-07)
+	 * @version 1.1.4 (2018-06-26)
 	 * 
 	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
@@ -130,7 +130,10 @@ class ddTools {
 		$message = [];
 		
 		//Перебираем массив соответствия
-		foreach ($params->compliance as $index => $name){
+		foreach (
+			$params->compliance as
+			$index => $name
+		){
 			//Если параметр задан
 			if (isset($params->paramsList[$index])){
 				//Сохраним его
@@ -149,10 +152,16 @@ class ddTools {
 		//General info with code example
 		$message = '<p>Deprecated ordered parameters.</p><p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
 		<pre><code>//Old style
-'.$caller.'($'.implode(', $', $params->compliance).');
+'.$caller.'($'.implode(
+	', $',
+	$params->compliance
+).');
 //Pass-by-name
 '.$caller.'([
-	'.implode(','.PHP_EOL."\t", $message).'
+	'.implode(
+	','.PHP_EOL."\t",
+	$message
+).'
 ]);
 		</code></pre>';
 		
@@ -206,7 +215,7 @@ class ddTools {
 	
 	/**
 	 * unfoldArray
-	 * @version 1.0.3 (2018-06-17)
+	 * @version 1.0.4 (2018-06-26)
 	 * 
 	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
 	 * @example [
@@ -227,24 +236,27 @@ class ddTools {
 	 * 	'c': ''
 	 * ].
 	 * 
-	 * @param $arr {array} — An array to convert. @required
+	 * @param $array {array} — An array to convert. @required
 	 * @param $keyPrefix {string} — Prefix of the keys of an array (it's an internal varible, can be used if required). Default: ''.
 	 * 
 	 * @return {array} — Unfolded array.
 	 */
 	public static function unfoldArray(
-		$arr,
+		$array,
 		$keyPrefix = ''
 	){
-		$output = [];
+		$result = [];
 		
 		//Перебираем массив
-		foreach ($arr as $key => $val){
+		foreach (
+			$array as
+			$key => $val
+		){
 			//Если значение является массивом
 			if (is_array($val)){
 				//Запускаем рекурсию дальше
-				$output = array_merge(
-					$output,
+				$result = array_merge(
+					$result,
 					self::unfoldArray(
 						$val,
 						$keyPrefix.$key.'.'
@@ -253,11 +265,11 @@ class ddTools {
 			//Если значение — не массив
 			}else{
 				//Запоминаем (в соответствии с ключом родителя)
-				$output[$keyPrefix.$key] = $val;
+				$result[$keyPrefix.$key] = $val;
 			}
 		}
 		
-		return $output;
+		return $result;
 	}
 	
 	/**
@@ -561,7 +573,7 @@ class ddTools {
 	
 	/**
 	 * encodedStringToArray
-	 * @version 1.0.2 (2018-06-17)
+	 * @version 1.0.3 (2018-06-26)
 	 * 
 	 * @desc Converts encoded strings to arrays.
 	 * Supported formats:
@@ -575,47 +587,49 @@ class ddTools {
 	public static function encodedStringToArray($inputString){
 		$result = [];
 		
-		//JSON (first letter is “{” or “[”)
-		if (in_array(
-			substr(
-				$inputString,
-				0,
-				1
-			),
-			[
-				'{',
-				'['
-			]
-		)){
-			try {
-				$result = json_decode(
+		if (!empty($inputString)){
+			//JSON (first letter is “{” or “[”)
+			if (in_array(
+				substr(
 					$inputString,
-					true
-				);
-			}catch (\Exception $e){
-				//Flag
-				$result = [];
+					0,
+					1
+				),
+				[
+					'{',
+					'['
+				]
+			)){
+				try {
+					$result = json_decode(
+						$inputString,
+						true
+					);
+				}catch (\Exception $e){
+					//Flag
+					$result = [];
+				}
 			}
-		}
-		
-		//Not JSON
-		if (empty($result)){
-			//Query string (has the “=” sign)
-			if (strpos(
-				$inputString,
-				'='
-			) !== false){
-				parse_str(
+			
+			//Not JSON
+			if (empty($result)){
+				//Query string (has the “=” sign)
+				if (strpos(
 					$inputString,
-					$result
-				);
-			//The old deprecated format where string is separated by '||' and '::'
-			}else{
-				$result = self::explodeAssoc($inputString);
-				
-				self::logEvent([
-					'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
-				]);
+					'='
+				) !== false){
+					parse_str(
+						$inputString,
+						$result
+					);
+				//The old deprecated format where string is separated by '||' and '::'
+				}else{
+					$result = self::explodeAssoc($inputString);
+					
+					self::logEvent([
+						'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+					]);
+				}
 			}
 		}
 		
@@ -757,13 +771,14 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.4.1 (2017-12-09)
+	 * @version 1.5.1 (2018-06-26)
 	 * 
-	 * @desc Like $modx->parseChunk, but takes a text.
+	 * @desc Similar to $modx->parseChunk, but takes a text.
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params['text'] {string} — String to parse. @required
-	 * @param $params['data'] {array_associative} — Array of values. Key — placeholder name, value — value. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”.
+	 * @param $params['data'] {array_associative|stdClass} — Array of values. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”. Default: [].
+	 * @param $params['data'][key] {string|array_associative|stdClass} — Key — placeholder name, value — value.
 	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
 	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
 	 * @param $params['removeEmptyPlaceholders'] {boolean} — Do you need to remove empty placeholders? Default: false.
@@ -784,6 +799,7 @@ class ddTools {
 		//Defaults
 		$params = (object) array_merge([
 			'text' => '',
+			'data' => [],
 			'placeholderPrefix' => '[+',
 			'placeholderSuffix' => '+]',
 			'removeEmptyPlaceholders' => false,
@@ -792,15 +808,20 @@ class ddTools {
 		
 		$result = $params->text;
 		
+		//Convert stdClass to array
+		if (!is_array($params->data)){
+			$params->data = (array) $params->data;
+		}
+		
 		//Если значения для парсинга переданы
-		if (
-			isset($params->data) &&
-			is_array($params->data)
-		){
+		if (!empty($params->data)){
 			//Unfold for arrays support (e. g. “some[a]=one&some[b]=two” => “[+some.a+]”, “[+some.b+]”; “some[]=one&some[]=two” => “[+some.0+]”, “[some.1]”)
 			$params->data = self::unfoldArray($params->data);
 			
-			foreach ($params->data as $key => $value){
+			foreach (
+				$params->data as
+				$key => $value
+			){
 				$result = str_replace(
 					$params->placeholderPrefix.$key.$params->placeholderSuffix,
 					$value,
@@ -876,7 +897,10 @@ class ddTools {
 		//Save fields
 		$result[0] = $docData->fieldsData;
 		//And TVs
-		foreach ($docData->tvsData as $tvName => $tvValue){
+		foreach (
+			$docData->tvsData as
+			$tvName => $tvValue
+		){
 			$result[1][$tvName] = ['val' => $tvValue];
 			
 			if (isset($docData->tvsAdditionalData[$tvName])){
@@ -889,7 +913,7 @@ class ddTools {
 	
 	/**
 	 * prepareDocData
-	 * @version 2.0 (2018-06-17)
+	 * @version 2.0.1 (2018-06-26)
 	 * 
 	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
 	 * 
@@ -921,7 +945,10 @@ class ddTools {
 		];
 		
 		//Перебираем поля, раскидываем на поля документа и TV
-		foreach ($params->data as $data_itemFieldName => $data_itemFieldValue){
+		foreach (
+			$params->data as
+			$data_itemFieldName => $data_itemFieldValue
+		){
 			//Если это не поле документа
 			if (!in_array(
 				$data_itemFieldName,
@@ -973,7 +1000,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.2 (2018-06-17)
+	 * @version 1.2.1 (2018-06-26)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1021,7 +1048,10 @@ class ddTools {
 		//Если есть хоть одна существующая TV
 		if (count($docData->tvsAdditionalData) > 0){
 			//Перебираем массив TV с ID
-			foreach ($docData->tvsAdditionalData as $tvName => $tvData){
+			foreach (
+				$docData->tvsAdditionalData as
+				$tvName => $tvData
+			){
 				if (
 					//Если это дата
 					$tvData['type'] == 'date' &&
@@ -1104,7 +1134,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.3 (2018-06-17)
+	 * @version 1.3.1 (2018-06-26)
 	 * 
 	 * @desc Update a document.
 	 * 
@@ -1184,7 +1214,10 @@ class ddTools {
 				//Обновляем TV всех найденых документов
 				while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
 					//Перебираем массив существующих TV
-					foreach ($docData->tvsAdditionalData as $tvName => $tvData){
+					foreach (
+						$docData->tvsAdditionalData as
+						$tvName => $tvData
+					){
 						if (
 							//Если это дата
 							$tvData['type'] == 'date' &&
@@ -1423,7 +1456,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.6 (2018-06-17)
+	 * @version 1.3.7 (2018-06-26)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -1531,7 +1564,10 @@ class ddTools {
 			// get default/built-in template variables
 			ksort($docRow);
 			
-			foreach ($docRow as $key => $value){
+			foreach (
+				$docRow as
+				$key => $value
+			){
 				if (
 					$idnames == '*' ||
 					in_array(
@@ -2020,7 +2056,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.1.6 (2018-06-17)
+	 * @version 1.1.7 (2018-06-26)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
@@ -2055,7 +2091,10 @@ class ddTools {
 		$params_names = array_keys($params);
 		
 		//Перебираем таблицу соответствия
-		foreach ($compliance as $newName => $oldNames){
+		foreach (
+			$compliance as
+			$newName => $oldNames
+		){
 			//Если параметр с новым именем не задан
 			if (!isset($params[$newName])){
 				//Если старое имя только одно, всё равно приведём к массиву для удобства
@@ -2093,7 +2132,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 3.0.1 (2018-06-17)
+	 * @version 3.0.2 (2018-06-26)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -2140,7 +2179,10 @@ class ddTools {
 					if(!$_FILES[$value]['tmp_name'][0]){break;}
 					
 					//Перебираем пост
-					foreach($_FILES[$value]['name'] as $key => $name){
+					foreach(
+						$_FILES[$value]['name'] as
+						$key => $name
+					){
 						//Если нет ошибок
 						if ($_FILES[$value]['error'][$key] == 0){
 							//Добавляем в массив файлы
@@ -2206,7 +2248,7 @@ class ddTools {
 	
 	/**
 	 * getResponse
-	 * @version 1.0.4 (2017-05-25)
+	 * @version 1.0.5 (2018-06-26)
 	 * 
 	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request.
 	 * 
@@ -2217,9 +2259,9 @@ class ddTools {
 	public static function getResponse($version = '0.2'){
 		$responseClass = \DDTools\Response::includeResponseByVersion($version);
 		
-		$output = new $responseClass;
+		$result = new $responseClass;
 		
-		return $output;
+		return $result;
 	}
 }
 
@@ -2227,7 +2269,10 @@ if(isset($modx)){
 	ddTools::$modx = $modx;
 	
 	//Решение спорное, но делать Синглтон очень не хотелось
-	foreach (ddTools::$tables as $key => $val){
+	foreach (
+		ddTools::$tables as
+		$key => $val
+	){
 		ddTools::$tables[$key] = $modx->getFullTableName($key);
 	}
 	
