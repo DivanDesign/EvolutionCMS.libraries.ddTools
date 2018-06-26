@@ -759,13 +759,14 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.4.1 (2017-12-09)
+	 * @version 1.5 (2018-06-26)
 	 * 
-	 * @desc Like $modx->parseChunk, but takes a text.
+	 * @desc Similar to $modx->parseChunk, but takes a text.
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params['text'] {string} — String to parse. @required
-	 * @param $params['data'] {array_associative} — Array of values. Key — placeholder name, value — value. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”.
+	 * @param $params['data'] {array_associative|stdClass} — Array of values. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”. Default: [].
+	 * @param $params['data'][key] {string|array_associative|stdClass} — Key — placeholder name, value — value.
 	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
 	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
 	 * @param $params['removeEmptyPlaceholders'] {boolean} — Do you need to remove empty placeholders? Default: false.
@@ -786,6 +787,7 @@ class ddTools {
 		//Defaults
 		$params = (object) array_merge([
 			'text' => '',
+			'data' => [],
 			'placeholderPrefix' => '[+',
 			'placeholderSuffix' => '+]',
 			'removeEmptyPlaceholders' => false,
@@ -794,11 +796,13 @@ class ddTools {
 		
 		$result = $params->text;
 		
+		//Convert stdClass to array
+		if (!is_array($params->data)){
+			$params->data = (array) $params->data;
+		}
+		
 		//Если значения для парсинга переданы
-		if (
-			isset($params->data) &&
-			is_array($params->data)
-		){
+		if (!empty($params->data)){
 			//Unfold for arrays support (e. g. “some[a]=one&some[b]=two” => “[+some.a+]”, “[+some.b+]”; “some[]=one&some[]=two” => “[+some.0+]”, “[some.1]”)
 			$params->data = self::unfoldArray($params->data);
 			
