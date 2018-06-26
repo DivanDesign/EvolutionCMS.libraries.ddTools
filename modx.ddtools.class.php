@@ -561,7 +561,7 @@ class ddTools {
 	
 	/**
 	 * encodedStringToArray
-	 * @version 1.0.2 (2018-06-17)
+	 * @version 1.0.3 (2018-06-26)
 	 * 
 	 * @desc Converts encoded strings to arrays.
 	 * Supported formats:
@@ -575,47 +575,49 @@ class ddTools {
 	public static function encodedStringToArray($inputString){
 		$result = [];
 		
-		//JSON (first letter is “{” or “[”)
-		if (in_array(
-			substr(
-				$inputString,
-				0,
-				1
-			),
-			[
-				'{',
-				'['
-			]
-		)){
-			try {
-				$result = json_decode(
+		if (!empty($inputString)){
+			//JSON (first letter is “{” or “[”)
+			if (in_array(
+				substr(
 					$inputString,
-					true
-				);
-			}catch (\Exception $e){
-				//Flag
-				$result = [];
+					0,
+					1
+				),
+				[
+					'{',
+					'['
+				]
+			)){
+				try {
+					$result = json_decode(
+						$inputString,
+						true
+					);
+				}catch (\Exception $e){
+					//Flag
+					$result = [];
+				}
 			}
-		}
-		
-		//Not JSON
-		if (empty($result)){
-			//Query string (has the “=” sign)
-			if (strpos(
-				$inputString,
-				'='
-			) !== false){
-				parse_str(
+			
+			//Not JSON
+			if (empty($result)){
+				//Query string (has the “=” sign)
+				if (strpos(
 					$inputString,
-					$result
-				);
-			//The old deprecated format where string is separated by '||' and '::'
-			}else{
-				$result = self::explodeAssoc($inputString);
-				
-				self::logEvent([
-					'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
-				]);
+					'='
+				) !== false){
+					parse_str(
+						$inputString,
+						$result
+					);
+				//The old deprecated format where string is separated by '||' and '::'
+				}else{
+					$result = self::explodeAssoc($inputString);
+					
+					self::logEvent([
+						'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+					]);
+				}
 			}
 		}
 		
