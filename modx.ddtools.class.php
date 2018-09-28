@@ -175,39 +175,40 @@ class ddTools {
 	
 	/**
 	 * explodeAssoc
-	 * @version 1.1.3 (2018-06-17)
+	 * @version 1.1.4 (2018-09-28)
 	 * 
 	 * @desc Splits string on two separators in the associative array.
 	 * 
-	 * @param $str {string_separated} — String to explode. @required
-	 * @param $splY {string} — Separator between pairs of key-value. Default: '||'.
-	 * @param $splX {string} — Separator between key and value. Default: '::'.
+	 * @param $inputString {string_separated} — String to explode. @required
+	 * @param $itemDelimiter {string} — Separator between pairs of key-value. Default: '||'.
+	 * @param $keyValDelimiter {string} — Separator between key and value. Default: '::'.
 	 * 
 	 * @return {array_associative}
 	 */
 	public static function explodeAssoc(
-		$str,
-		$splY = '||',
-		$splX = '::'
+		$inputString,
+		$itemDelimiter = '||',
+		$keyValDelimiter = '::'
 	){
 		$result = [];
 		
 		//Если строка пустая, выкидываем сразу
-		if ($str == ''){return $result;}
+		if ($inputString == ''){return $result;}
 		
 		//Разбиваем по парам
-		$str = explode(
-			$splY,
-			$str
+		$inputString = explode(
+			$itemDelimiter,
+			$inputString
 		);
 		
-		foreach ($str as $val){
+		foreach ($inputString as $item){
 			//Разбиваем на ключ-значение
-			$val = explode(
-				$splX,
-				$val
+			$item = explode(
+				$keyValDelimiter,
+				$item
 			);
-			$result[$val[0]] = isset($val[1]) ? $val[1] : '';
+			
+			$result[$item[0]] = isset($item[1]) ? $item[1] : '';
 		}
 		
 		return $result;
