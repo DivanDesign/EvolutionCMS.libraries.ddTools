@@ -112,7 +112,7 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1.4 (2018-06-26)
+	 * @version 1.1.5 (2018-09-28)
 	 * 
 	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
@@ -127,7 +127,10 @@ class ddTools {
 		
 		$result = [];
 		
-		$message = [];
+		$logData = (object) [
+			'message' => [],
+			'backtraceArray' => []
+		];
 		
 		//Перебираем массив соответствия
 		foreach (
@@ -140,17 +143,17 @@ class ddTools {
 				$result[$name] = $params->paramsList[$index];
 			}
 			
-			$message[] = "'".$name."' => $".$name;
+			$logData->message[] = "'".$name."' => $".$name;
 		}
 		
-		$backtrace = debug_backtrace();
+		$logData->backtraceArray = debug_backtrace();
 		//Remove this method
-		array_shift($backtrace);
-		$caller = $backtrace[0];
+		array_shift($logData->backtraceArray);
+		$caller = $logData->backtraceArray[0];
 		$caller = (isset($caller['class']) ? $caller['class'].'->' : '').$caller['function'];
 		
 		//General info with code example
-		$message = '<p>Deprecated ordered parameters.</p><p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
+		$logData->message = '<p>Deprecated ordered parameters.</p><p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
 		<pre><code>//Old style
 '.$caller.'($'.implode(
 	', $',
@@ -160,15 +163,12 @@ class ddTools {
 '.$caller.'([
 	'.implode(
 	','.PHP_EOL."\t",
-	$message
+	$logData->message
 ).'
 ]);
 		</code></pre>';
 		
-		self::logEvent([
-			'message' => $message,
-			'backtraceArray' => $backtrace
-		]);
+		self::logEvent($logData);
 		
 		return $result;
 	}
