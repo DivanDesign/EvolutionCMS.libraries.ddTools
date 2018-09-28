@@ -530,18 +530,6 @@ class ddTools {
 	}
 	
 	/**
-	 * screening
-	 * @deprecated Use ddTools::escapeForJS.
-	 */
-	public static function screening($str){
-		self::logEvent([
-			'message' => '<p>The “ddTools::screening” method is deprecated, use “ddTools::escapeForJS” instead.</p>'
-		]);
-		
-		return self::escapeForJS($str);
-	}
-	
-	/**
 	 * escapingForJS
 	 * @version 1.1.1 (2017-07-06)
 	 * 
@@ -859,56 +847,6 @@ class ddTools {
 	 */
 	public static function parseSource($source){
 		return self::$modx->rewriteUrls(self::$modx->parseDocumentSource($source));
-	}
-	
-	/**
-	 * explodeFieldsArr
-	 * @deprecated Use ddTools::prepareDocData.
-	 * 
-	 * @desc Explode associative array of fields and TVs in two individual arrays.
-	 * 
-	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
-	 * @param $fields[key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
-	 * 
-	 * @return $result {array}
-	 * @return $result[0] {array_associative} — Document fields (like 'id', 'pagetitle', etc).
-	 * @return $result[0][key] {mixed} — Field value, when key is field name.
-	 * @return $result[1] {array_associative} — TVs.
-	 * @return $result[1][key] {array_associative} — TV, when key is TV name.
-	 * @return $result[1][key]['id'] {integer} — TV id.
-	 * @return $result[1][key]['val'] {mixed} — TV value.
-	 */
-	public static function explodeFieldsArr($fields = []){
-		$result = [
-			[],
-			[]
-		];
-		
-		self::logEvent([
-			'message' => '<p>The “ddTools::explodeFieldsArr” method is deprecated, use “ddTools::prepareDocData” instead.</p>'
-		]);
-		
-		//Prepare data
-		$docData = self::prepareDocData([
-			'data' => $fields,
-			'tvAdditionalFieldsToGet' => ['id']
-		]);
-		
-		//Save fields
-		$result[0] = $docData->fieldsData;
-		//And TVs
-		foreach (
-			$docData->tvsData as
-			$tvName => $tvValue
-		){
-			$result[1][$tvName] = ['val' => $tvValue];
-			
-			if (isset($docData->tvsAdditionalData[$tvName])){
-				$result[1][$tvName]['id'] = $docData->tvsAdditionalData[$tvName]['id'];
-			}
-		}
-		
-		return $result;
 	}
 	
 	/**
@@ -2260,6 +2198,68 @@ class ddTools {
 		$responseClass = \DDTools\Response::includeResponseByVersion($version);
 		
 		$result = new $responseClass;
+		
+		return $result;
+	}
+	
+	/**
+	 * screening
+	 * @deprecated Use ddTools::escapeForJS.
+	 */
+	public static function screening($str){
+		self::logEvent([
+			'message' => '<p>The “ddTools::screening” method is deprecated, use “ddTools::escapeForJS” instead.</p>'
+		]);
+		
+		return self::escapeForJS($str);
+	}
+	
+	/**
+	 * explodeFieldsArr
+	 * @deprecated Use ddTools::prepareDocData.
+	 * 
+	 * @desc Explode associative array of fields and TVs in two individual arrays.
+	 * 
+	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
+	 * @param $fields[key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
+	 * 
+	 * @return $result {array}
+	 * @return $result[0] {array_associative} — Document fields (like 'id', 'pagetitle', etc).
+	 * @return $result[0][key] {mixed} — Field value, when key is field name.
+	 * @return $result[1] {array_associative} — TVs.
+	 * @return $result[1][key] {array_associative} — TV, when key is TV name.
+	 * @return $result[1][key]['id'] {integer} — TV id.
+	 * @return $result[1][key]['val'] {mixed} — TV value.
+	 */
+	public static function explodeFieldsArr($fields = []){
+		$result = [
+			[],
+			[]
+		];
+		
+		self::logEvent([
+			'message' => '<p>The “ddTools::explodeFieldsArr” method is deprecated, use “ddTools::prepareDocData” instead.</p>'
+		]);
+		
+		//Prepare data
+		$docData = self::prepareDocData([
+			'data' => $fields,
+			'tvAdditionalFieldsToGet' => ['id']
+		]);
+		
+		//Save fields
+		$result[0] = $docData->fieldsData;
+		//And TVs
+		foreach (
+			$docData->tvsData as
+			$tvName => $tvValue
+		){
+			$result[1][$tvName] = ['val' => $tvValue];
+			
+			if (isset($docData->tvsAdditionalData[$tvName])){
+				$result[1][$tvName]['id'] = $docData->tvsAdditionalData[$tvName]['id'];
+			}
+		}
 		
 		return $result;
 	}
