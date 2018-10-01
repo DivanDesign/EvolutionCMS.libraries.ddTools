@@ -410,48 +410,58 @@ class ddTools {
 	
 	/**
 	 * copyDir
-	 * @version 1.0.4 (2018-06-17)
+	 * @version 1.0.5 (2018-10-01)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
-	 * @param $sourceDir {string} — Path to the directory, that should copied. @required
-	 * @param $destinationDir {string} — The destination path. @required
+	 * @param $sourcePath {string} — Path to the directory, that should copied. @required
+	 * @param $destinationPath {string} — The destination path. @required
 	 * 
 	 * @return {boolean} — Returns true on success or false on failure.
 	 */
 	public static function copyDir(
-		$sourceDir,
-		$destinationDir
+		$sourcePath,
+		$destinationPath
 	){
 		//Допишем папкам недостающие '/' при необходимости
-		if (substr($sourceDir, -1) != '/'){$sourceDir .= '/';}
-		if (substr($destinationDir, -1) != '/'){$destinationDir .= '/';}
+		if (substr(
+			$sourcePath,
+			-1
+		) != '/'){
+			$sourcePath .= '/';
+		}
+		if (substr(
+			$destinationPath,
+			-1
+		) != '/'){
+			$destinationPath .= '/';
+		}
 		
 		//Проверяем существование
-		if (!file_exists($sourceDir)){return false;}
+		if (!file_exists($sourcePath)){return false;}
 		//Если папки назначения нет, создадим её
-		if (!file_exists($destinationDir)){mkdir($destinationDir);}
+		if (!file_exists($destinationPath)){mkdir($destinationPath);}
 		
 		//Получаем файлы в директории
-		$files = array_diff(
-			scandir($sourceDir),
+		$fileNames = array_diff(
+			scandir($sourcePath),
 			[
 				'.',
 				'..'
 			]
 		);
 		
-		foreach ($files as $file){
+		foreach ($fileNames as $fileName){
 			//Если это папка, обработаем её
-			if (is_dir($sourceDir.$file)){
+			if (is_dir($sourcePath.$fileName)){
 				self::copyDir(
-					$sourceDir.$file,
-					$destinationDir.$file
+					$sourcePath.$fileName,
+					$destinationPath.$fileName
 				);
 			}else{
 				copy(
-					$sourceDir.$file,
-					$destinationDir.$file
+					$sourcePath.$fileName,
+					$destinationPath.$fileName
 				);
 			}
 		}
@@ -461,37 +471,37 @@ class ddTools {
 	
 	/**
 	 * removeDir
-	 * @version 1.0.4 (2018-06-17)
+	 * @version 1.0.5 (2018-10-01)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
-	 * @param $dir {string} — Path to the directory, that should removed. @required
+	 * @param $path {string} — Path to the directory, that should removed. @required
 	 * 
 	 * @return {boolean}
 	 */
-	public static function removeDir($dir){
+	public static function removeDir($path){
 		//Если не существует, ок
-		if (!file_exists($dir)){return true;}
+		if (!file_exists($path)){return true;}
 		
 		//Получаем файлы в директории
-		$files = array_diff(
-			scandir($dir),
+		$fileNames = array_diff(
+			scandir($path),
 			[
 				'.',
 				'..'
 			]
 		);
 		
-		foreach ($files as $file){
+		foreach ($fileNames as $fileName){
 			//Если это папка, обработаем её
-			if (is_dir($dir.'/'.$file)){
-				self::removeDir($dir.'/'.$file);
+			if (is_dir($path.'/'.$fileName)){
+				self::removeDir($path.'/'.$fileName);
 			}else{
-				unlink($dir.'/'.$file);
+				unlink($path.'/'.$fileName);
 			}
 		}
 		
-		return rmdir($dir);
+		return rmdir($path);
 	}
 	
 	/**
