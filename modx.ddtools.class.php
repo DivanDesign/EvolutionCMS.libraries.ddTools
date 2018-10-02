@@ -114,7 +114,7 @@ class ddTools {
 	
 	/**
 	 * __construct
-	 * @version 1.0 (2018-10-01)
+	 * @version 1.0.1 (2018-10-02)
 	 */
 	private function __construct(){
 		global $modx;
@@ -147,7 +147,7 @@ class ddTools {
 		}
 		
 		//We need to include required files if Composer is not used
-		if(!class_exists('\DDTools\Response')){
+		if(!class_exists('\DDTools\FilesTools')){
 			require_once __DIR__.DIRECTORY_SEPARATOR.'require.php';
 		}
 	}
@@ -471,7 +471,7 @@ class ddTools {
 	
 	/**
 	 * copyDir
-	 * @version 1.0.5 (2018-10-01)
+	 * @version 1.1 (2018-10-02)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
@@ -484,55 +484,15 @@ class ddTools {
 		$sourcePath,
 		$destinationPath
 	){
-		//Допишем папкам недостающие '/' при необходимости
-		if (substr(
-			$sourcePath,
-			-1
-		) != '/'){
-			$sourcePath .= '/';
-		}
-		if (substr(
-			$destinationPath,
-			-1
-		) != '/'){
-			$destinationPath .= '/';
-		}
-		
-		//Проверяем существование
-		if (!file_exists($sourcePath)){return false;}
-		//Если папки назначения нет, создадим её
-		if (!file_exists($destinationPath)){mkdir($destinationPath);}
-		
-		//Получаем файлы в директории
-		$fileNames = array_diff(
-			scandir($sourcePath),
-			[
-				'.',
-				'..'
-			]
-		);
-		
-		foreach ($fileNames as $fileName){
-			//Если это папка, обработаем её
-			if (is_dir($sourcePath.$fileName)){
-				self::copyDir(
-					$sourcePath.$fileName,
-					$destinationPath.$fileName
-				);
-			}else{
-				copy(
-					$sourcePath.$fileName,
-					$destinationPath.$fileName
-				);
-			}
-		}
-		
-		return true;
+		return \DDTools\FilesTools::copyDir([
+			'sourcePath' => $sourcePath,
+			'destinationPath' => $destinationPath
+		]);
 	}
 	
 	/**
 	 * removeDir
-	 * @version 1.0.5 (2018-10-01)
+	 * @version 1.1 (2018-10-02)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -541,28 +501,7 @@ class ddTools {
 	 * @return {boolean}
 	 */
 	public static function removeDir($path){
-		//Если не существует, ок
-		if (!file_exists($path)){return true;}
-		
-		//Получаем файлы в директории
-		$fileNames = array_diff(
-			scandir($path),
-			[
-				'.',
-				'..'
-			]
-		);
-		
-		foreach ($fileNames as $fileName){
-			//Если это папка, обработаем её
-			if (is_dir($path.'/'.$fileName)){
-				self::removeDir($path.'/'.$fileName);
-			}else{
-				unlink($path.'/'.$fileName);
-			}
-		}
-		
-		return rmdir($path);
+		return \DDTools\FilesTools::removeDir($path);
 	}
 	
 	/**
