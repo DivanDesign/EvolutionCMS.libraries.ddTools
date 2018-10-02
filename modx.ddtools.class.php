@@ -110,6 +110,67 @@ class ddTools {
 		'web_user_settings' => ''
 	];
 	
+	private static $instance;
+	
+	/**
+	 * __construct
+	 * @version 1.0 (2018-10-01)
+	 */
+	private function __construct(){
+		global $modx;
+		
+		self::$modx = $modx;
+		
+		//Init full table names
+		foreach (
+			self::$tables as
+			$tableAlias => $tableFullName
+		){
+			self::$tables[$tableAlias] = self::$modx->getFullTableName($tableAlias);
+		}
+		
+		if (method_exists(
+			self::$modx,
+			'getVersionData'
+		)){
+			//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
+			$modxVersionData = self::$modx->getVersionData();
+			
+			//If version of MODX > 1.0.11
+			if (version_compare(
+				$modxVersionData['version'],
+				'1.0.11',
+				'>'
+			)){
+				self::$documentFields[] = 'alias_visible';
+			}
+		}
+		
+		//We need to include required files if Composer is not used
+		if(!class_exists('\DDTools\Response')){
+			require_once __DIR__.DIRECTORY_SEPARATOR.'require.php';
+		}
+	}
+	
+	private function __clone(){}
+	
+	/**
+	 * getInstance
+	 * @version 1.0 (2018-10-01)
+	 */
+	public static function getInstance(){
+		global $modx;
+		
+		if(
+			isset($modx) &&
+			!self::$instance
+		){
+			self::$instance = new ddTools();
+		}
+		
+		return self::$instance;
+	}
+	
 	/**
 	 * orderedParamsToNamed
 	 * @version 1.1.5 (2018-09-28)
@@ -2275,39 +2336,7 @@ class ddTools {
 		return $result;
 	}
 }
+}
 
-if(isset($modx)){
-	ddTools::$modx = $modx;
-	
-	//Решение спорное, но делать Синглтон очень не хотелось
-	foreach (
-		ddTools::$tables as
-		$key => $val
-	){
-		ddTools::$tables[$key] = $modx->getFullTableName($key);
-	}
-	
-	if (method_exists(
-		$modx,
-		'getVersionData'
-	)){
-		//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
-		$modxVersionData = $modx->getVersionData();
-		
-		//If version of MODX > 1.0.11
-		if (version_compare(
-			$modxVersionData['version'],
-			'1.0.11',
-			'>'
-		)){
-			ddTools::$documentFields[] = 'alias_visible';
-		}
-	}
-	
-	//If Composer is not used
-	if(!class_exists('\DDTools\Response')){
-		require_once __DIR__.DIRECTORY_SEPARATOR.'require.php';
-	}
-}
-}
+ddTools::getInstance();
 ?>
