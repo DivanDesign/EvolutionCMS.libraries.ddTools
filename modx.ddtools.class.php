@@ -849,15 +849,24 @@ class ddTools {
 	
 	/**
 	 * parseSource
-	 * @version 1.0.1 (2016-10-28)
+	 * @version 1.1 (2018-12-24)
 	 * 
 	 * @desc Parse the source (run $modx->parseDocumentSource and $modx->rewriteUrls);
 	 * 
-	 * @param $sourse {string} — Text to parse. @required
+	 * @param $source {string} — Text to parse. @required
 	 * 
 	 * @return {string}
 	 */
 	public static function parseSource($source){
+		//Uncashed snippets must be evaled too
+		$source = strtr(
+			$source,
+			[
+				'[!' => '[[',
+				'!]' => ']]'
+			]
+		);
+		
 		return self::$modx->rewriteUrls(self::$modx->parseDocumentSource($source));
 	}
 	
