@@ -1,12 +1,13 @@
 <?php
 /**
- * MODXEvo.libraries.ddTools
- * @version 0.23 (2018-06-26)
+ * EvolutionCMS.libraries.ddTools
+ * @version 0.24 (2018-12-25)
  * 
  * @uses PHP >= 5.4.
- * @uses MODXEvo >= 1.0.10.
+ * @uses (MODX)EvolutionCMS >= 1.0.10 {@link https://github.com/evolution-cms/evolution }.
+ * @uses phpThumb lib 1.7.13-201406261000 (included) {@link http://phpthumb.sourceforge.net }.
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.23
+ * @link http://code.divandesign.biz/modx/ddtools/0.24
  * 
  * @copyright 2012–2018 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -110,9 +111,70 @@ class ddTools {
 		'web_user_settings' => ''
 	];
 	
+	private static $instance;
+	
+	/**
+	 * __construct
+	 * @version 1.0.1 (2018-10-02)
+	 */
+	private function __construct(){
+		global $modx;
+		
+		self::$modx = $modx;
+		
+		//Init full table names
+		foreach (
+			self::$tables as
+			$tableAlias => $tableFullName
+		){
+			self::$tables[$tableAlias] = self::$modx->getFullTableName($tableAlias);
+		}
+		
+		if (method_exists(
+			self::$modx,
+			'getVersionData'
+		)){
+			//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
+			$modxVersionData = self::$modx->getVersionData();
+			
+			//If version of MODX > 1.0.11
+			if (version_compare(
+				$modxVersionData['version'],
+				'1.0.11',
+				'>'
+			)){
+				self::$documentFields[] = 'alias_visible';
+			}
+		}
+		
+		//We need to include required files if Composer is not used
+		if(!class_exists('\DDTools\FilesTools')){
+			require_once __DIR__.DIRECTORY_SEPARATOR.'require.php';
+		}
+	}
+	
+	private function __clone(){}
+	
+	/**
+	 * getInstance
+	 * @version 1.0 (2018-10-01)
+	 */
+	public static function getInstance(){
+		global $modx;
+		
+		if(
+			isset($modx) &&
+			!self::$instance
+		){
+			self::$instance = new ddTools();
+		}
+		
+		return self::$instance;
+	}
+	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1.4 (2018-06-26)
+	 * @version 1.1.5 (2018-09-28)
 	 * 
 	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
@@ -127,7 +189,10 @@ class ddTools {
 		
 		$result = [];
 		
-		$message = [];
+		$logData = (object) [
+			'message' => [],
+			'backtraceArray' => []
+		];
 		
 		//Перебираем массив соответствия
 		foreach (
@@ -140,17 +205,17 @@ class ddTools {
 				$result[$name] = $params->paramsList[$index];
 			}
 			
-			$message[] = "'".$name."' => $".$name;
+			$logData->message[] = "'".$name."' => $".$name;
 		}
 		
-		$backtrace = debug_backtrace();
+		$logData->backtraceArray = debug_backtrace();
 		//Remove this method
-		array_shift($backtrace);
-		$caller = $backtrace[0];
+		array_shift($logData->backtraceArray);
+		$caller = $logData->backtraceArray[0];
 		$caller = (isset($caller['class']) ? $caller['class'].'->' : '').$caller['function'];
 		
 		//General info with code example
-		$message = '<p>Deprecated ordered parameters.</p><p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
+		$logData->message = '<p>Deprecated ordered parameters.</p><p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>
 		<pre><code>//Old style
 '.$caller.'($'.implode(
 	', $',
@@ -160,54 +225,52 @@ class ddTools {
 '.$caller.'([
 	'.implode(
 	','.PHP_EOL."\t",
-	$message
+	$logData->message
 ).'
 ]);
 		</code></pre>';
 		
-		self::logEvent([
-			'message' => $message,
-			'backtraceArray' => $backtrace
-		]);
+		self::logEvent($logData);
 		
 		return $result;
 	}
 	
 	/**
 	 * explodeAssoc
-	 * @version 1.1.3 (2018-06-17)
+	 * @version 1.1.4 (2018-09-28)
 	 * 
 	 * @desc Splits string on two separators in the associative array.
 	 * 
-	 * @param $str {string_separated} — String to explode. @required
-	 * @param $splY {string} — Separator between pairs of key-value. Default: '||'.
-	 * @param $splX {string} — Separator between key and value. Default: '::'.
+	 * @param $inputString {string_separated} — String to explode. @required
+	 * @param $itemDelimiter {string} — Separator between pairs of key-value. Default: '||'.
+	 * @param $keyValDelimiter {string} — Separator between key and value. Default: '::'.
 	 * 
 	 * @return {array_associative}
 	 */
 	public static function explodeAssoc(
-		$str,
-		$splY = '||',
-		$splX = '::'
+		$inputString,
+		$itemDelimiter = '||',
+		$keyValDelimiter = '::'
 	){
 		$result = [];
 		
 		//Если строка пустая, выкидываем сразу
-		if ($str == ''){return $result;}
+		if ($inputString == ''){return $result;}
 		
 		//Разбиваем по парам
-		$str = explode(
-			$splY,
-			$str
+		$inputString = explode(
+			$itemDelimiter,
+			$inputString
 		);
 		
-		foreach ($str as $val){
+		foreach ($inputString as $item){
 			//Разбиваем на ключ-значение
-			$val = explode(
-				$splX,
-				$val
+			$item = explode(
+				$keyValDelimiter,
+				$item
 			);
-			$result[$val[0]] = isset($val[1]) ? $val[1] : '';
+			
+			$result[$item[0]] = isset($item[1]) ? $item[1] : '';
 		}
 		
 		return $result;
@@ -409,88 +472,37 @@ class ddTools {
 	
 	/**
 	 * copyDir
-	 * @version 1.0.4 (2018-06-17)
+	 * @version 1.1 (2018-10-02)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
-	 * @param $sourceDir {string} — Path to the directory, that should copied. @required
-	 * @param $destinationDir {string} — The destination path. @required
+	 * @param $sourcePath {string} — Path to the directory, that should copied. @required
+	 * @param $destinationPath {string} — The destination path. @required
 	 * 
 	 * @return {boolean} — Returns true on success or false on failure.
 	 */
 	public static function copyDir(
-		$sourceDir,
-		$destinationDir
+		$sourcePath,
+		$destinationPath
 	){
-		//Допишем папкам недостающие '/' при необходимости
-		if (substr($sourceDir, -1) != '/'){$sourceDir .= '/';}
-		if (substr($destinationDir, -1) != '/'){$destinationDir .= '/';}
-		
-		//Проверяем существование
-		if (!file_exists($sourceDir)){return false;}
-		//Если папки назначения нет, создадим её
-		if (!file_exists($destinationDir)){mkdir($destinationDir);}
-		
-		//Получаем файлы в директории
-		$files = array_diff(
-			scandir($sourceDir),
-			[
-				'.',
-				'..'
-			]
-		);
-		
-		foreach ($files as $file){
-			//Если это папка, обработаем её
-			if (is_dir($sourceDir.$file)){
-				self::copyDir(
-					$sourceDir.$file,
-					$destinationDir.$file
-				);
-			}else{
-				copy(
-					$sourceDir.$file,
-					$destinationDir.$file
-				);
-			}
-		}
-		
-		return true;
+		return \DDTools\FilesTools::copyDir([
+			'sourcePath' => $sourcePath,
+			'destinationPath' => $destinationPath
+		]);
 	}
 	
 	/**
 	 * removeDir
-	 * @version 1.0.4 (2018-06-17)
+	 * @version 1.1 (2018-10-02)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
-	 * @param $dir {string} — Path to the directory, that should removed. @required
+	 * @param $path {string} — Path to the directory, that should removed. @required
 	 * 
 	 * @return {boolean}
 	 */
-	public static function removeDir($dir){
-		//Если не существует, ок
-		if (!file_exists($dir)){return true;}
-		
-		//Получаем файлы в директории
-		$files = array_diff(
-			scandir($dir),
-			[
-				'.',
-				'..'
-			]
-		);
-		
-		foreach ($files as $file){
-			//Если это папка, обработаем её
-			if (is_dir($dir.'/'.$file)){
-				self::removeDir($dir.'/'.$file);
-			}else{
-				unlink($dir.'/'.$file);
-			}
-		}
-		
-		return rmdir($dir);
+	public static function removeDir($path){
+		return \DDTools\FilesTools::removeDir($path);
 	}
 	
 	/**
@@ -527,18 +539,6 @@ class ddTools {
 		}
 		
 		return $string;
-	}
-	
-	/**
-	 * screening
-	 * @deprecated Use ddTools::escapeForJS.
-	 */
-	public static function screening($str){
-		self::logEvent([
-			'message' => '<p>The “ddTools::screening” method is deprecated, use “ddTools::escapeForJS” instead.</p>'
-		]);
-		
-		return self::escapeForJS($str);
 	}
 	
 	/**
@@ -849,66 +849,25 @@ class ddTools {
 	
 	/**
 	 * parseSource
-	 * @version 1.0.1 (2016-10-28)
+	 * @version 1.1 (2018-12-24)
 	 * 
 	 * @desc Parse the source (run $modx->parseDocumentSource and $modx->rewriteUrls);
 	 * 
-	 * @param $sourse {string} — Text to parse. @required
+	 * @param $source {string} — Text to parse. @required
 	 * 
 	 * @return {string}
 	 */
 	public static function parseSource($source){
+		//Uncashed snippets must be evaled too
+		$source = strtr(
+			$source,
+			[
+				'[!' => '[[',
+				'!]' => ']]'
+			]
+		);
+		
 		return self::$modx->rewriteUrls(self::$modx->parseDocumentSource($source));
-	}
-	
-	/**
-	 * explodeFieldsArr
-	 * @deprecated Use ddTools::prepareDocData.
-	 * 
-	 * @desc Explode associative array of fields and TVs in two individual arrays.
-	 * 
-	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
-	 * @param $fields[key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
-	 * 
-	 * @return $result {array}
-	 * @return $result[0] {array_associative} — Document fields (like 'id', 'pagetitle', etc).
-	 * @return $result[0][key] {mixed} — Field value, when key is field name.
-	 * @return $result[1] {array_associative} — TVs.
-	 * @return $result[1][key] {array_associative} — TV, when key is TV name.
-	 * @return $result[1][key]['id'] {integer} — TV id.
-	 * @return $result[1][key]['val'] {mixed} — TV value.
-	 */
-	public static function explodeFieldsArr($fields = []){
-		$result = [
-			[],
-			[]
-		];
-		
-		self::logEvent([
-			'message' => '<p>The “ddTools::explodeFieldsArr” method is deprecated, use “ddTools::prepareDocData” instead.</p>'
-		]);
-		
-		//Prepare data
-		$docData = self::prepareDocData([
-			'data' => $fields,
-			'tvAdditionalFieldsToGet' => ['id']
-		]);
-		
-		//Save fields
-		$result[0] = $docData->fieldsData;
-		//And TVs
-		foreach (
-			$docData->tvsData as
-			$tvName => $tvValue
-		){
-			$result[1][$tvName] = ['val' => $tvValue];
-			
-			if (isset($docData->tvsAdditionalData[$tvName])){
-				$result[1][$tvName]['id'] = $docData->tvsAdditionalData[$tvName]['id'];
-			}
-		}
-		
-		return $result;
 	}
 	
 	/**
@@ -2263,40 +2222,70 @@ class ddTools {
 		
 		return $result;
 	}
+	
+	/**
+	 * screening
+	 * @deprecated Use ddTools::escapeForJS.
+	 */
+	public static function screening($str){
+		self::logEvent([
+			'message' => '<p>The “ddTools::screening” method is deprecated, use “ddTools::escapeForJS” instead.</p>'
+		]);
+		
+		return self::escapeForJS($str);
+	}
+	
+	/**
+	 * explodeFieldsArr
+	 * @deprecated Use ddTools::prepareDocData.
+	 * 
+	 * @desc Explode associative array of fields and TVs in two individual arrays.
+	 * 
+	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
+	 * @param $fields[key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
+	 * 
+	 * @return $result {array}
+	 * @return $result[0] {array_associative} — Document fields (like 'id', 'pagetitle', etc).
+	 * @return $result[0][key] {mixed} — Field value, when key is field name.
+	 * @return $result[1] {array_associative} — TVs.
+	 * @return $result[1][key] {array_associative} — TV, when key is TV name.
+	 * @return $result[1][key]['id'] {integer} — TV id.
+	 * @return $result[1][key]['val'] {mixed} — TV value.
+	 */
+	public static function explodeFieldsArr($fields = []){
+		$result = [
+			[],
+			[]
+		];
+		
+		self::logEvent([
+			'message' => '<p>The “ddTools::explodeFieldsArr” method is deprecated, use “ddTools::prepareDocData” instead.</p>'
+		]);
+		
+		//Prepare data
+		$docData = self::prepareDocData([
+			'data' => $fields,
+			'tvAdditionalFieldsToGet' => ['id']
+		]);
+		
+		//Save fields
+		$result[0] = $docData->fieldsData;
+		//And TVs
+		foreach (
+			$docData->tvsData as
+			$tvName => $tvValue
+		){
+			$result[1][$tvName] = ['val' => $tvValue];
+			
+			if (isset($docData->tvsAdditionalData[$tvName])){
+				$result[1][$tvName]['id'] = $docData->tvsAdditionalData[$tvName]['id'];
+			}
+		}
+		
+		return $result;
+	}
+}
 }
 
-if(isset($modx)){
-	ddTools::$modx = $modx;
-	
-	//Решение спорное, но делать Синглтон очень не хотелось
-	foreach (
-		ddTools::$tables as
-		$key => $val
-	){
-		ddTools::$tables[$key] = $modx->getFullTableName($key);
-	}
-	
-	if (method_exists(
-		$modx,
-		'getVersionData'
-	)){
-		//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
-		$modxVersionData = $modx->getVersionData();
-		
-		//If version of MODX > 1.0.11
-		if (version_compare(
-			$modxVersionData['version'],
-			'1.0.11',
-			'>'
-		)){
-			ddTools::$documentFields[] = 'alias_visible';
-		}
-	}
-	
-	//If Composer is not used
-	if(!class_exists('\DDTools\Response')){
-		require_once __DIR__.DIRECTORY_SEPARATOR.'require.php';
-	}
-}
-}
+ddTools::getInstance();
 ?>
