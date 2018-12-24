@@ -4,7 +4,8 @@
  * @version 0.23 (2018-06-26)
  * 
  * @uses PHP >= 5.4.
- * @uses MODXEvo >= 1.0.10.
+ * @uses MODXEvo >= 1.0.10 {@link https://evo.im }.
+ * @uses phpThumb lib 1.7.13-201406261000 (included) {@link http://phpthumb.sourceforge.net }.
  * 
  * @link http://code.divandesign.biz/modx/ddtools/0.23
  * 
