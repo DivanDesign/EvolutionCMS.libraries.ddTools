@@ -1,4 +1,4 @@
-# MODXEvo.libraries.ddTools
+# (MODX)EvolutionCMS.libraries.ddTools
 
 A library with various tools facilitating your work.
 ___
