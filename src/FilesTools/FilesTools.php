@@ -6,7 +6,7 @@ class FilesTools
 {
 	/**
 	 * copyDir
-	 * @version 2.0 (2018-10-01)
+	 * @version 2.0.1 (2019-01-24)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
@@ -50,10 +50,10 @@ class FilesTools
 		foreach ($fileNames as $fileName){
 			//Если это папка, обработаем её
 			if (is_dir($params->sourcePath.$fileName)){
-				self::copyDir(
-					$params->sourcePath.$fileName,
-					$params->destinationPath.$fileName
-				);
+				self::copyDir([
+					'sourcePath' => $params->sourcePath.$fileName,
+					'destinationPath' => $params->destinationPath.$fileName
+				]);
 			}else{
 				copy(
 					$params->sourcePath.$fileName,
