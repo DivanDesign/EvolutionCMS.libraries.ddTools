@@ -1,7 +1,7 @@
 {
 	"name": "dd/modxevo-library-ddtools",
 	"type": "modxevo-library-ddtools",
-	"version": "0.24",
+	"version": "0.24.1",
 	"description": "A library with various tools facilitating your work.",
 	"keywords": [
 		"modx",
