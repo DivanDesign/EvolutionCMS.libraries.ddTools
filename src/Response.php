@@ -1,9 +1,7 @@
 <?php
 namespace DDTools;
 
-
-abstract class Response
-{
+abstract class Response {
 	protected
 		$meta,
 		$data

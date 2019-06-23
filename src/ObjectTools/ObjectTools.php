@@ -1,13 +1,14 @@
 <?php
 namespace DDTools;
 
-class ObjectTools
-{
+class ObjectTools {
 	/**
 	 * setExistingProps
 	 * @version 1.0 (2019-06-22)
 	 * 
 	 * @desc Sets existing object properties.
+	 * 
+	 * @todo It can't set private and protected properties. Can we do something with it?
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params->object {object} — The object. @required

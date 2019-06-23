@@ -1,9 +1,7 @@
 <?php
 namespace DDTools;
 
-
-class FilesTools
-{
+class FilesTools {
 	/**
 	 * copyDir
 	 * @version 2.0.2 (2019-06-22)
