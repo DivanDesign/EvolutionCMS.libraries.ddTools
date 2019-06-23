@@ -36,7 +36,7 @@ class ObjectTools
 	
 	/**
 	 * createChildInstance
-	 * @version 1.0 (2019-06-22)
+	 * @version 1.0.1 (2019-06-23)
 	 * 
 	 * @desc Creates an instance of the needed child class (e. g. \ddSendFeedback\Sender\Telegram\Sender).
 	 * 
@@ -75,7 +75,7 @@ class ObjectTools
 		$parentNamespace = substr(
 			$params->parentFullClassName,
 			0,
-			$namespaceDelimiter
+			$parentNamespaceDelimiter
 		);
 		
 		//Capitalize child name if needed
