@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.24.1 (2019-01-23)
+ * @version 0.25 (2019-06-27)
  * 
  * @uses PHP >= 5.4.
  * @uses (MODX)EvolutionCMS >= 1.0.10 {@link https://github.com/evolution-cms/evolution }.
