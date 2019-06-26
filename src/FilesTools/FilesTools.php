@@ -1,12 +1,10 @@
 <?php
 namespace DDTools;
 
-
-class FilesTools
-{
+class FilesTools {
 	/**
 	 * copyDir
-	 * @version 2.0.1 (2019-01-24)
+	 * @version 2.0.2 (2019-06-22)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
@@ -47,17 +45,20 @@ class FilesTools
 			]
 		);
 		
-		foreach ($fileNames as $fileName){
+		foreach (
+			$fileNames as
+			$fileName
+		){
 			//Если это папка, обработаем её
 			if (is_dir($params->sourcePath.$fileName)){
 				self::copyDir([
-					'sourcePath' => $params->sourcePath.$fileName,
-					'destinationPath' => $params->destinationPath.$fileName
+					'sourcePath' => $params->sourcePath . $fileName,
+					'destinationPath' => $params->destinationPath . $fileName
 				]);
 			}else{
 				copy(
-					$params->sourcePath.$fileName,
-					$params->destinationPath.$fileName
+					$params->sourcePath . $fileName,
+					$params->destinationPath . $fileName
 				);
 			}
 		}
@@ -67,7 +68,7 @@ class FilesTools
 	
 	/**
 	 * removeDir
-	 * @version 1.0.5 (2018-10-01)
+	 * @version 1.0.6 (2019-06-22)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -88,12 +89,15 @@ class FilesTools
 			]
 		);
 		
-		foreach ($fileNames as $fileName){
+		foreach (
+			$fileNames as
+			$fileName
+		){
 			//Если это папка, обработаем её
-			if (is_dir($path.'/'.$fileName)){
-				self::removeDir($path.'/'.$fileName);
+			if (is_dir($path . '/' . $fileName)){
+				self::removeDir($path . '/' . $fileName);
 			}else{
-				unlink($path.'/'.$fileName);
+				unlink($path . '/' . $fileName);
 			}
 		}
 		
@@ -102,7 +106,7 @@ class FilesTools
 	
 	/**
 	 * modifyImage
-	 * @version 2.0a (2018-07-16)
+	 * @version 2.0.1a (2019-06-22)
 	 * 
 	 * @desc Делает превьюшку.
 	 * 
@@ -162,7 +166,8 @@ class FilesTools
 		}
 		
 		//Если превьюшка уже есть и имеет нужный размер, ничего делать не нужно
-		if ($originalImg->width == $params->width &&
+		if (
+			$originalImg->width == $params->width &&
 			$originalImg->height == $params->height &&
 			file_exists($params->outputFullPathName)
 		){
