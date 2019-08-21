@@ -4,7 +4,7 @@ namespace DDTools;
 class BaseClass {
 	/**
 	 * setExistingProps
-	 * @version 1.1 (2019-08-16)
+	 * @version 1.2 (2019-08-21)
 	 * 
 	 * @desc Sets existing object properties.
 	 * 
@@ -24,7 +24,19 @@ class BaseClass {
 				$this,
 				$propName
 			)){
-				$this->{$propName} = $propValue;
+				$setProp = function(
+					$propName,
+					$propValue
+				){
+					$this->{$propName} = $propValue;
+				};
+				
+				//Access to private properties too
+				$setProp->call(
+					$this,
+					$propName,
+					$propValue
+				);
 			}
 		}
 	}
