@@ -43,7 +43,7 @@ class BaseClass {
 	
 	/**
 	 * createChildInstance
-	 * @version 1.1 (2019-08-16)
+	 * @version 1.1.1 (2019-08-22)
 	 * 
 	 * @throws \Exception
 	 * 
@@ -60,16 +60,27 @@ class BaseClass {
 		$params = (object) array_merge(
 			[
 				'params' => [],
-				'capitalizeChildName' => true
+				'capitalizeName' => true
 			],
 			(array) $params
 		);
 		
+		$thisClassName = get_called_class();
+		
+		$thisNameSpace = substr(
+			$thisClassName,
+			0,
+			strrpos(
+				$thisClassName,
+				'\\'
+			)
+		);
+		
 		//Current classname without namespace
 		$thisClassName = substr(
-			__CLASS__,
+			$thisClassName,
 			strrpos(
-				__CLASS__,
+				$thisClassName,
 				'\\'
 			) + 1
 		);
@@ -80,17 +91,20 @@ class BaseClass {
 		}
 		
 		$filePath =
+			$params->parentDir .
+			DIRECTORY_SEPARATOR .
 			$params->name .
 			DIRECTORY_SEPARATOR .
 			$thisClassName .
 			'.php'
 		;
 		
-		if(is_file($params->parentDir . DIRECTORY_SEPARATOR . $filePath)){
+		if(is_file($filePath)){
 			require_once($filePath);
 			
 			$objectClass =
-				__NAMESPACE__ .
+				'\\' .
+				$thisNameSpace .
 				'\\' .
 				$params->name .
 				'\\' .
