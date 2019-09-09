@@ -1,13 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.25 (2019-06-27)
+ * @version 0.26 (2019-09-09)
  * 
- * @uses PHP >= 5.4.
- * @uses (MODX)EvolutionCMS >= 1.0.10 {@link https://github.com/evolution-cms/evolution }.
- * @uses phpThumb lib 1.7.13-201406261000 (included) {@link http://phpthumb.sourceforge.net }.
+ * @see README.md
  * 
- * @link http://code.divandesign.biz/modx/ddtools/0.24.1
+ * @link http://code.divandesign.biz/modx/ddtools
  * 
  * @copyright 2012–2019 DivanDesign {@link http://www.DivanDesign.biz }
  */
