@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.26 (2019-09-09)
+ * @version 0.27 (2019-09-19)
  * 
  * @see README.md
  * 
@@ -667,62 +667,67 @@ class ddTools {
 	
 	/**
 	 * encodedStringToArray
-	 * @version 1.0.3 (2018-06-26)
+	 * @version 1.1 (2019-09-19)
 	 * 
 	 * @desc Converts encoded strings to arrays.
 	 * Supported formats:
 	 * — JSON (https://en.wikipedia.org/wiki/JSON);
 	 * — Query string (https://en.wikipedia.org/wiki/Query_string).
 	 * 
-	 * @param $inputString {string} — Input string. @required
+	 * @param $inputString {string_json|string_queryFormated} — Input string. @required
 	 * 
 	 * @return {array}
 	 */
 	public static function encodedStringToArray($inputString){
 		$result = [];
 		
-		if (!empty($inputString)){
-			//JSON (first letter is “{” or “[”)
-			if (in_array(
-				substr(
-					$inputString,
-					0,
-					1
-				),
-				[
-					'{',
-					'['
-				]
-			)){
-				try {
-					$result = json_decode(
+		//If array is passed, just return it (sometimes it's convenient to not think about it)
+		if (is_array($inputString)){
+			$result = $inputString;
+		}else{
+			if (!empty($inputString)){
+				//JSON (first letter is “{” or “[”)
+				if (in_array(
+					substr(
 						$inputString,
-						true
-					);
-				}catch (\Exception $e){
-					//Flag
-					$result = [];
+						0,
+						1
+					),
+					[
+						'{',
+						'['
+					]
+				)){
+					try {
+						$result = json_decode(
+							$inputString,
+							true
+						);
+					}catch (\Exception $e){
+						//Flag
+						$result = [];
+					}
 				}
-			}
-			
-			//Not JSON
-			if (empty($result)){
-				//Query string (has the “=” sign)
-				if (strpos(
-					$inputString,
-					'='
-				) !== false){
-					parse_str(
+				
+				//Not JSON
+				if (empty($result)){
+					//Query string (has the “=” sign)
+					if (strpos(
 						$inputString,
-						$result
-					);
-				//The old deprecated format where string is separated by '||' and '::'
-				}else{
-					$result = self::explodeAssoc($inputString);
-					
-					self::logEvent([
-						'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
-					]);
+						'='
+					) !== false){
+						parse_str(
+							$inputString,
+							$result
+						);
+					//The old deprecated format where string is separated by '||' and '::'
+					}else{
+						$result = self::explodeAssoc($inputString);
+						
+						self::logEvent([
+							'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+						]);
+					}
 				}
 			}
 		}
