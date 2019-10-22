@@ -9,5 +9,22 @@ A library with various tools facilitating your work.
 * [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.13-201406261000 (included)
 
 
-___
-Visit the following [link](http://code.divandesign.biz/modx/ddtools) to read the documentation, instructions & changelog.
+## # Documentation
+
+
+### ## Installation
+
+
+#### ### Manual
+
+1. Create a new folder `assets/libs/ddTools/`.
+2. Extract the archive to the folder.
+
+
+#### ### Using [Composer](https://getcomposer.org/)
+
+Just add `dd/modxevo-library-ddtools` to your `composer.json`.
+_ddTools version must be 0.14 or higher to use this method. If you use it, the compatibility with all your snippets, modules, etc. that use ddTools versions under 0.14 will be maintained._
+
+
+## # [Home page →](https://code.divandesign.biz/modx/ddtools)

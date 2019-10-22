@@ -1,11 +1,9 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.27 (2019-09-19)
+ * @version 0.28 (2019-10-22)
  * 
  * @see README.md
- * 
- * @link http://code.divandesign.biz/modx/ddtools
  * 
  * @copyright 2012–2019 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -522,6 +520,21 @@ class ddTools {
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * createDir
+	 * @version 1.0 (2019-10-22)
+	 * 
+	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
+	 * 
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params->path {string} — The directory path. @required
+	 * 
+	 * @return {boolean} — Success status.
+	 */
+	public static function createDir($params){
+		return \DDTools\FilesTools::createDir($params);
 	}
 	
 	/**

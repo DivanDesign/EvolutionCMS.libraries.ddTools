@@ -3,6 +3,38 @@ namespace DDTools;
 
 class FilesTools {
 	/**
+	 * createDir
+	 * @version 1.3.1 (2019-09-03)
+	 * 
+	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
+	 * 
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params->path {string} — The directory path. @required
+	 * 
+	 * @return {boolean} — Success status.
+	 */
+	public static function createDir($params){
+		$params = (object) $params;
+		
+		//True by default
+		$result = true;
+		
+		//На всякий случай проверим, что необходимой папки ещё нет
+		if (!file_exists($params->path)){
+			$result = mkdir(
+				$params->path,
+				intval(
+					\ddTools::$modx->getConfig('new_folder_permissions'),
+					8
+				),
+				true
+			);
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * copyDir
 	 * @version 2.0.2 (2019-06-22)
 	 * 
