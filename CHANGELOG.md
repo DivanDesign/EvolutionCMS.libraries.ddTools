@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.28 (2019-10-22)
+* \+ `\DDTools\FilesTools::createDir` (and `\ddTools::createDir` as alias): Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
+
+
 ## Version 0.27 (2019-09-19)
 * \+ `\ddTools::encodedStringToArray`: Can take an array too (sometimes it's convenient to not think about it).
 
