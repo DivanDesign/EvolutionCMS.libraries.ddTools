@@ -5,8 +5,6 @@
  * 
  * @see README.md
  * 
- * @link http://code.divandesign.biz/modx/ddtools
- * 
  * @copyright 2012–2019 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
