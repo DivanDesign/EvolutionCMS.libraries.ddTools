@@ -4,7 +4,7 @@ namespace DDTools;
 class BaseClass {
 	/**
 	 * setExistingProps
-	 * @version 1.2 (2019-08-21)
+	 * @version 1.3 (2019-12-14)
 	 * 
 	 * @desc Sets existing object properties.
 	 * 
@@ -20,23 +20,67 @@ class BaseClass {
 			$propName =>
 			$propValue
 		){
-			if (property_exists(
-				$this,
-				$propName
-			)){
-				$setProp = function(
-					$propName,
-					$propValue
-				){
-					$this->{$propName} = $propValue;
-				};
-				
-				//Access to private properties too
-				$setProp->call(
-					$this,
-					$propName,
-					$propValue
-				);
+			$this->setProp([
+				'object' => $this,
+				'propName' => $propName,
+				'propValue' => $propValue
+			]);
+		}
+	}
+	
+	/**
+	 * setProp
+	 * @version 1.0 (2019-09-23)
+	 * 
+	 * @throws \ReflectionException
+	 * @throws \Exception
+	 * 
+	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params->object {object} — Объект для модификации. @required
+	 * @param $params->propName {string} — Имя поля. @required
+	 * @param $params->propValue {mixed} — Значение. @required
+	 * @param $params->class {string|object|null} — Класс или объект. Default: null.
+	 * 
+	 * @return {void}
+	 */
+	private function setProp($params){
+		//Defaults
+		$params = (object) array_merge(
+			[
+				'class' => null
+			],
+			(array) $params
+		);
+		
+		if ($params->class === null){
+			$params->class = get_class($params->object);
+		}
+		
+		$classReflection = new \ReflectionClass($params->class);
+		
+		if ($classReflection->hasProperty($params->propName)){
+			$reflectionProperty = $classReflection->getProperty($params->propName);
+			
+			if (!$reflectionProperty->isPublic()){
+				$reflectionProperty->setAccessible(true);
+			}
+			
+			$reflectionProperty->setValue(
+				$params->object,
+				$params->propValue
+			);
+		}else{
+			$parent = $classReflection->getParentClass();
+			
+			if ($parent !== false){
+				$this->setProp([
+					'object' => $params->object,
+					'propName' => $params->propName,
+					'propValue' => $params->propValue,
+					'class' => $parent->getName()
+				]);
+			}else{
+				throw new \Exception('Property “' . $params->propName . '” not found');
 			}
 		}
 	}
