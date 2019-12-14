@@ -30,10 +30,9 @@ class BaseClass {
 	
 	/**
 	 * setProp
-	 * @version 1.0 (2019-09-23)
+	 * @version 1.0.1 (2019-12-14)
 	 * 
 	 * @throws \ReflectionException
-	 * @throws \Exception
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params->object {object} — Объект для модификации. @required
@@ -79,8 +78,6 @@ class BaseClass {
 					'propValue' => $params->propValue,
 					'class' => $parent->getName()
 				]);
-			}else{
-				throw new \Exception('Property “' . $params->propName . '” not found');
 			}
 		}
 	}
