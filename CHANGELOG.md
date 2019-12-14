@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.29 (2019-12-14)
+* \+ `\DDTools\BaseClass::setExistingProps`: Can set properties of all parent and child classes.
+
+
 ## Version 0.28 (2019-10-22)
 * \+ `\DDTools\FilesTools::createDir` (and `\ddTools::createDir` as alias): Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
 
