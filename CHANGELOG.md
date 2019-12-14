@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.29.1 (2019-12-15)
+* \* `\DDTools\BaseClass::setProp`: Do nothing if property is not exist.
+
+
 ## Version 0.29 (2019-12-14)
 * \+ `\DDTools\BaseClass::setExistingProps`: Can set properties of all parent and child classes.
 
