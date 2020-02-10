@@ -177,13 +177,13 @@ class ddTools {
 	 * 
 	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params['paramsList'] {array} — Parameters in ordered list (func_get_args). @required
 	 * @param $params['paramsList'][i] {mixed} — Parameter value. @required
 	 * @param $params['compliance'] {array} — The order of parameters. @required
 	 * @param $params['compliance'][i] {string} — Parameter name. @required
 	 * 
-	 * @return {array_associative}
+	 * @return {arrayAssociative}
 	 */
 	public static function orderedParamsToNamed($params){
 		$params = (object) $params;
@@ -260,7 +260,7 @@ class ddTools {
 	 * @param $itemDelimiter {string} — Separator between pairs of key-value. Default: '||'.
 	 * @param $keyValDelimiter {string} — Separator between key and value. Default: '::'.
 	 * 
-	 * @return {array_associative}
+	 * @return {arrayAssociative}
 	 */
 	public static function explodeAssoc(
 		$inputString,
@@ -478,7 +478,7 @@ class ddTools {
 	 * 
 	 * @param $file {string|array} — String of file path or result array of pathinfo() function. @required
 	 * 
-	 * @return $result {array_associative} — File data.
+	 * @return $result {arrayAssociative} — File data.
 	 * @return $result['name'] {string} — File name.
 	 * @return $result['version'] {string} — File version.
 	 * @return $result['extension'] {string} — File extension.
@@ -528,7 +528,7 @@ class ddTools {
 	 * 
 	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->path {string} — The directory path. @required
 	 * 
 	 * @return {boolean} — Success status.
@@ -754,7 +754,7 @@ class ddTools {
 	 * 
 	 * @desc Finds all placeholders' names and returns them as an array.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params['text'] {string} — Source string. @required
 	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
 	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
@@ -794,7 +794,7 @@ class ddTools {
 	 * 
 	 * @desc Add an alert message to the system event log with debug info (backtrace, snippet name, document id, etc).
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params['message'] {string} — Message to be logged. Default: ''.
 	 * @param $params['source'] {string} — Source of the event (module, snippet name, etc). Default: $modx->currentSnippet || caller.
 	 * @param $params['eventId'] {integer} — Event ID. Default: 1.
@@ -900,10 +900,10 @@ class ddTools {
 	 * 
 	 * @desc Similar to $modx->parseChunk, but takes a text.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params['text'] {string} — String to parse. @required
-	 * @param $params['data'] {array_associative|stdClass} — Array of values. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”. Default: [].
-	 * @param $params['data'][key] {string|array_associative|stdClass} — Key — placeholder name, value — value.
+	 * @param $params['data'] {arrayAssociative|stdClass} — Array of values. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”. Default: [].
+	 * @param $params['data'][key] {string|arrayAssociative|stdClass} — Key — placeholder name, value — value.
 	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
 	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
 	 * @param $params['removeEmptyPlaceholders'] {boolean} — Do you need to remove empty placeholders? Default: false.
@@ -1011,19 +1011,19 @@ class ddTools {
 	 * 
 	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
-	 * @param $params['data'] {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
+	 * @param $params['data'] {arrayAssociative} — Array of document fields (from table `site_content`) or TVs with values. @required
 	 * @param $params['data'][key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
 	 * @param $params['tvAdditionalFieldsToGet'] {array} — Fields of TVs to get if needed (e. g. 'id', 'type'). Default: [].
 	 * @param $params['tvAdditionalFieldsToGet'][i] {string} — TV field.
 	 * 
 	 * @return $result {stdClass}
-	 * @return $result->fieldsData {array_associative} — Document fields data (like 'id', 'pagetitle', etc). @required
+	 * @return $result->fieldsData {arrayAssociative} — Document fields data (like 'id', 'pagetitle', etc). @required
 	 * @return $result->fieldsData[key] {mixed} — Field value, when key is field name.
-	 * @return $result->tvsData {array_associative} — TVs values. @required
+	 * @return $result->tvsData {arrayAssociative} — TVs values. @required
 	 * @return $result->tvsData[key] {mixed} — TV value, when key is TV name.
-	 * @return $result->tvsAdditionalData {array_associative} — TVs additional data, when key is TV name. @required
-	 * @return $result->tvsAdditionalData[key] {array_associative} — TV data, when key is TV name.
+	 * @return $result->tvsAdditionalData {arrayAssociative} — TVs additional data, when key is TV name. @required
+	 * @return $result->tvsAdditionalData[key] {arrayAssociative} — TV data, when key is TV name.
 	 * @return $result->tvsAdditionalData[key][item] {string} — TV data.
 	 */
 	public static function prepareDocData($params){
@@ -1102,7 +1102,7 @@ class ddTools {
 	 * 
 	 * @desc Create a new document.
 	 * 
-	 * @param $docData {array_associative} — Array of document fields or TVs. Key — name, value — value. @required
+	 * @param $docData {arrayAssociative} — Array of document fields or TVs. Key — name, value — value. @required
 	 * @param $docData['pagetitle'] {string} — Document pagetitle. @required
 	 * @param $docGroups {array} — Array of document groups id.
 	 * 
@@ -1248,14 +1248,14 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.3.2 (2019-06-22)
+	 * @version 1.3.3 (2020-02-10)
 	 * 
 	 * @desc Update a document.
 	 * 
 	 * @note $docId and/or $where are required.
 	 * 
 	 * @param $docId {integer|array} — Document id(s) to update. @required
-	 * @param $docData {array_associative} — Array of document fields or TVs to update. Key — name, value — value. @required
+	 * @param $docData {arrayAssociative} — Array of document fields or TVs to update. Key — name, value — value. @required
 	 * @param $where {string} — SQL WHERE string. Default: ''.
 	 * 
 	 * @return {boolean} — true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
@@ -1280,10 +1280,14 @@ class ddTools {
 			count($docId)
 		){
 			//Обрабатываем массив id
-			$whereSql .= '`id` IN ("' . implode(
-				'","',
-				$docId
-			) . '")';
+			$whereSql .=
+				'`id` IN ("' .
+				implode(
+					'","',
+					$docId
+				) .
+				'")'
+			;
 		}else if (
 			is_numeric($docId) &&
 			$docId != 0
@@ -2105,12 +2109,12 @@ class ddTools {
 	 * 
 	 * @see ddRegJsCssLinks snippet (http://code.divandesign.biz/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params['name'] {string} — Script name. @required
 	 * @param $params['version'] {string} — Script version. Default: '0'.
 	 * @param $params['startup'] {boolean} — Is the script connected in the <head>? Default: false.
 	 * 
-	 * @return $result {array_associative|''} — empty string if $name is not set or an array of:
+	 * @return $result {arrayAssociative|''} — empty string if $name is not set or an array of:
 	 * @return $result['name'] {string} — Script name.
 	 * @return $result['version'] {string} — Script version (если был ранее подключен более поздняя версия, вернётся она).
 	 * @return $result['useThisVer'] {boolean} — Использовалась ли та версия, что передали.
@@ -2302,7 +2306,7 @@ class ddTools {
 	 * //After extraction we can safaly use the variables “$docId” and “docField”
 	 * ```
 	 * 
-	 * @return {array_associative} — An array, in which the correct parameter names are the keys and the parameter values are the values.
+	 * @return {arrayAssociative} — An array, in which the correct parameter names are the keys and the parameter values are the values.
 	 */
 	public static function verifyRenamedParams(
 		$params,
@@ -2360,7 +2364,7 @@ class ddTools {
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params['to'] {array} — Addresses to mail. @required
 	 * @param $params['to'][i] {string_email} — An address. @required
 	 * @param $params['text'] {string} — E-mail text. @required
@@ -2525,14 +2529,14 @@ class ddTools {
 	 * 
 	 * @desc Explode associative array of fields and TVs in two individual arrays.
 	 * 
-	 * @param $fields {array_associative} — Array of document fields (from table `site_content`) or TVs with values. @required
+	 * @param $fields {arrayAssociative} — Array of document fields (from table `site_content`) or TVs with values. @required
 	 * @param $fields[key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
 	 * 
 	 * @return $result {array}
-	 * @return $result[0] {array_associative} — Document fields (like 'id', 'pagetitle', etc).
+	 * @return $result[0] {arrayAssociative} — Document fields (like 'id', 'pagetitle', etc).
 	 * @return $result[0][key] {mixed} — Field value, when key is field name.
-	 * @return $result[1] {array_associative} — TVs.
-	 * @return $result[1][key] {array_associative} — TV, when key is TV name.
+	 * @return $result[1] {arrayAssociative} — TVs.
+	 * @return $result[1][key] {arrayAssociative} — TV, when key is TV name.
 	 * @return $result[1][key]['id'] {integer} — TV id.
 	 * @return $result[1][key]['val'] {mixed} — TV value.
 	 */

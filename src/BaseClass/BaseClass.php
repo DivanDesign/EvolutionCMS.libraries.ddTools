@@ -8,7 +8,7 @@ class BaseClass {
 	 * 
 	 * @desc Sets existing object properties.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object properties. @required
+	 * @param $params {arrayAssociative|stdClass} — The object properties. @required
 	 * 
 	 * @return {void}
 	 */
@@ -34,7 +34,7 @@ class BaseClass {
 	 * 
 	 * @throws \ReflectionException
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->object {object} — Объект для модификации. @required
 	 * @param $params->propName {string} — Имя поля. @required
 	 * @param $params->propValue {mixed} — Значение. @required
@@ -88,10 +88,10 @@ class BaseClass {
 	 * 
 	 * @throws \Exception
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->parentDir {string} — Directory of the parent file (e. g. __DIR__). @required
 	 * @param $params->name {string} — Class name. @required
-	 * @param $params->params {array_associative|stdClass} — Params to be passed to object constructor. Default: [].
+	 * @param $params->params {arrayAssociative|stdClass} — Params to be passed to object constructor. Default: [].
 	 * @param $params->capitalizeName {boolean} — Need to capitalize child name? Default: true.
 	 * 
 	 * @return {object}
