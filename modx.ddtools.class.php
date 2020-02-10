@@ -1007,7 +1007,7 @@ class ddTools {
 	
 	/**
 	 * prepareDocData
-	 * @version 2.0.2 (2019-06-22)
+	 * @version 2.0.3 (2020-02-10)
 	 * 
 	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
 	 * 
@@ -1082,10 +1082,14 @@ class ddTools {
 				//From
 				self::$tables['site_tmplvars'],
 				//Where
-				"`name` IN ('" . implode(
-					"','",
-					array_keys($result->tvsData)
-				) . "')"
+				(
+					"`name` IN ('" .
+					implode(
+						"','",
+						array_keys($result->tvsData)
+					) .
+					"')"
+				)
 			);
 			
 			while ($row = self::$modx->db->getRow($dbRes)){
@@ -1098,7 +1102,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.2.2 (2019-06-22)
+	 * @version 1.2.3 (2020-02-10)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1113,19 +1117,29 @@ class ddTools {
 		$docGroups = false
 	){
 		//Если нет хотя бы заголовка, выкидываем
-		if (!$docData['pagetitle']){return false;}
+		if (!$docData['pagetitle']){
+			return false;
+		}
 		
 		//Если не передана дата создания документа, ставим текущую
-		if (!$docData['createdon']){$docData['createdon'] = time();}
+		if (!$docData['createdon']){
+			$docData['createdon'] = time();
+		}
 		
 		//Если не передано, кем документ создан, ставим 1
-		if (!$docData['createdby']){$docData['createdby'] = 1;}
+		if (!$docData['createdby']){
+			$docData['createdby'] = 1;
+		}
 		
 		//Если группы заданы, то это приватный документ
-		if ($docGroups){$docData['privatemgr'] = 1;}
+		if ($docGroups){
+			$docData['privatemgr'] = 1;
+		}
 		
 		//Если надо публиковать, поставим дату публикации текущей
-		if ($docData['published'] == 1){$docData['pub_date'] = $docData['createdon'];}
+		if ($docData['published'] == 1){
+			$docData['pub_date'] = $docData['createdon'];
+		}
 		
 		$docData = self::prepareDocData([
 			'data' => $docData,
@@ -1141,7 +1155,9 @@ class ddTools {
 			self::$tables['site_content']
 		);
 		
-		if (!$docId){return false;}
+		if (!$docId){
+			return false;
+		}
 		
 		//Если есть хоть одна существующая TV
 		if (count($docData->tvsAdditionalData) > 0){
@@ -1163,11 +1179,13 @@ class ddTools {
 				
 				//Добавляем значение TV в базу
 				self::$modx->db->insert(
+					//Fields
 					[
 						'value' => $docData->tvsData[$tvName],
 						'tmplvarid' => $tvData['id'],
 						'contentid' => $docId
 					],
+					//Table
 					self::$tables['site_tmplvar_contentvalues']
 				);
 			}
@@ -1181,10 +1199,12 @@ class ddTools {
 				$docGroupId
 			){
 				self::$modx->db->insert(
+					//Field
 					[
 						'document_group' => $docGroupId,
 						'document' => $docId
 					],
+					//Table
 					self::$tables['document_groups']
 				);
 			}
