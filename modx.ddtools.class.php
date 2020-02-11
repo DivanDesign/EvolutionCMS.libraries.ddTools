@@ -1025,18 +1025,25 @@ class ddTools {
 	
 	/**
 	 * clearCache
-	 * @version 1.0 (2020-02-11)
+	 * @version 1.1 (2020-02-11)
 	 * 
-	 * @desc Clears cache of required document(s).
+	 * @desc Clears cache of required document(s) and their parents.
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->docIds {arrayAssociative|stringCommaSeparated} — Document ID(s). @required
 	 * @param $params->docIds[i] {integer} — Document ID. @required
+	 * @param $params->clearParentsCache {boolean} — Is need to clear parents cache? Default: true.
 	 * 
 	 * @return {void}
 	 */
 	public static function clearCache($params){
-		$params = (object) $params;
+		//Defaults
+		$params = (object) array_merge(
+			[
+				'clearParentsCache' => true,
+			],
+			(array) $params
+		);
 		
 		//Comma separated strings support
 		if (!is_array($params->docIds)){
@@ -1081,6 +1088,17 @@ class ddTools {
 				}
 				
 				unlink($cacheFiles_item);
+			}
+			
+			//IF need to clear parents cache too
+			if ($params->clearParentsCache){
+				self::clearCache([
+					//Get all parents
+					'docIds' => self::getDocumentParentIds([
+						'docId' => $docId
+					]),
+					'clearParentsCache' => false
+				]);
 			}
 		}
 	}
