@@ -5,7 +5,7 @@ A library with various tools facilitating your work.
 
 ## # Requires
 * PHP >= 5.4
-* [(MODX)EvolutionCMS](https://github.com/evolution-cms/evolution) >= 1.0.10
+* [(MODX)EvolutionCMS](https://github.com/evolution-cms/evolution) >= 1.1
 * [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.13-201406261000 (included)
 
 

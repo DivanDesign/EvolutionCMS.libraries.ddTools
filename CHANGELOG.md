@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.30 (2020-02-11)
+* \* Attention! (MODX)EvolutionCMS >= 1.1 is required.
+* \+ `\ddTools::getDocumentParentIds`. Gets the parent ID(s) of the required level.
+* \+ `\ddTools::clearCache`. Clears cache of required document(s) and their parents.
+* \+ `\ddTools::updateDocument`: Cache of the updated docs and their parents will be cleared.
+
+
 ## Version 0.29.1 (2019-12-15)
 * \* `\DDTools\BaseClass::setProp`: Do nothing if property is not exist.
 
