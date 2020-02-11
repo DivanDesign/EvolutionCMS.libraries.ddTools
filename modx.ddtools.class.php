@@ -16,8 +16,6 @@ class ddTools {
 		$modx,
 		//Contains names of document fields (`site_content`)
 		$documentFields = [
-			//For MODX > 1.0.11
-			//alias_visible,
 			'id',
 			'type',
 			'contentType',
@@ -25,6 +23,7 @@ class ddTools {
 			'longtitle',
 			'description',
 			'alias',
+			'alias_visible',
 			'link_attributes',
 			'published',
 			'pub_date',
@@ -113,7 +112,7 @@ class ddTools {
 	
 	/**
 	 * __construct
-	 * @version 1.0.2 (2019-06-22)
+	 * @version 1.0.3 (2020-02-11)
 	 */
 	private function __construct(){
 		global $modx;
@@ -127,23 +126,6 @@ class ddTools {
 			$tableFullName
 		){
 			self::$tables[$tableAlias] = self::$modx->getFullTableName($tableAlias);
-		}
-		
-		if (method_exists(
-			self::$modx,
-			'getVersionData'
-		)){
-			//В новом MODX в метод можно просто передать 'version' и сразу получить нужный элемент, но не в старом
-			$modxVersionData = self::$modx->getVersionData();
-			
-			//If version of MODX > 1.0.11
-			if (version_compare(
-				$modxVersionData['version'],
-				'1.0.11',
-				'>'
-			)){
-				self::$documentFields[] = 'alias_visible';
-			}
 		}
 		
 		//We need to include required files if Composer is not used
