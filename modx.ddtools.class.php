@@ -2413,6 +2413,74 @@ class ddTools {
 	}
 	
 	/**
+	 * getDocumentParentIds
+	 * @version 1.0 (2020-02-11)
+	 * 
+	 * @desc Gets the parent ID(s) of the required level.
+	 * 
+	 * @param $params {arrayAssociative|stdClass} — The object of params. Default: —.
+	 * @param $params->docId {integer} — Document Id. Default: $modx->documentIdentifier.
+	 * @param $params->level {integer} — Parent level (1 — the immediate parent; 2 — the parent of the immediate parent; -1 — the last parent; -2 — the parent before the last; etc). Default: 1.
+	 * @param $params->totalResults {integer|'all'} — The number of parents that will be returned. Default: 'all'.
+	 * 
+	 * @return $result {array} — Document parent IDs.
+	 * @return $result[i] {integer} — A parent ID.
+	 */
+	public static function getDocumentParentIds($params){
+		//Defaults
+		$params = (object) array_merge(
+			[
+				'docId' => self::$modx->documentIdentifier,
+				'level' => 1,
+				'totalResults' => 'all'
+			],
+			(array) $params
+		);
+		
+		//Получаем всех родителей (на самом деле максимум 10, но да ладно)
+		$result = self::$modx->getParentIds($params->docId);
+		$resultLen = count($result);
+		
+		//Если родители вообще есть
+		if ($resultLen > 0){
+			//Если уровень задали больше, чем в принципе есть родителей, считаем, что нужен последний
+			if ($params->level > $resultLen){
+				$params->level = -1;
+			}
+			
+			//Если уровень задаётся от начала (не от конца), то его надо бы декриминировать (т.к. самого себя в массиве $result не будет)
+			if ($params->level > 0){
+				$params->level--;
+			}
+			
+			//Количество возвращаемых родителей
+			if ($params->totalResults == 'all'){
+				//All parents
+				$params->totalResults = $resultLen;
+			}else if (isset($params->totalResults)){
+				//Needed number
+				$params->totalResults = intval($params->totalResults);
+			}else{
+				//Immediate
+				$params->totalResults = 1;
+			}
+			
+			//Получаем необходимых родителей
+			$result = array_slice(
+				$result,
+				$params->level,
+				$params->totalResults
+			);
+			
+			$result = array_reverse($result);
+		}else{
+			$result = [$params->docId];
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * getDocumentIdByUrl
 	 * @version 1.1.3 (2019-06-22)
 	 * 
