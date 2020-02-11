@@ -1438,7 +1438,7 @@ class ddTools {
 	 * @param $ids {array} — Documents Ids to get. @required
 	 * @param $published {'all'|0|1} — Documents publication status which does not matter if published === 'all'. Default: 'all'.
 	 * @param $deleted {'all'|0|1} — Documents removal status which does not matter if deleted === 'all'. Default: 0.
-	 * @param $fields {string_commaSeparated|'*'} — Documents fields to get. Default: '*'.
+	 * @param $fields {stringCommaSeparated|'*'} — Documents fields to get. Default: '*'.
 	 * @param $where {string} — SQL WHERE clause. Default: ''.
 	 * @param $sort {string} — A field to sort by. Default: 'menuindex'.
 	 * @param $dir {'ASC'|'DESC'} — Sorting direction. Default: 'ASC'.
@@ -1570,7 +1570,7 @@ class ddTools {
 	 * 	— $deleted parameter can be set as === 'all' to retrieve the documents regardless of their removal status.
 	 * 
 	 * @param $id {integer} — Id of a document which data is being got. @required
-	 * @param $fields {string_commaSeparated|'*'} — Documents fields to get. Default: '*'.
+	 * @param $fields {stringCommaSeparated|'*'} — Documents fields to get. Default: '*'.
 	 * @param $published {'all'|0|1} — Document publication status which does not matter if published === 'all'. Default: 'all'.
 	 * @param $deleted {'all'|0|1} — Document removal status which does not matter if published === 'all'. Default: 0.
 	 * 
@@ -1633,10 +1633,10 @@ class ddTools {
 	 * 	— $published parameter can be set as ==='all' to retrieve the documents regardless of their publication status.
 	 * 
 	 * @param $idnames {array|'*'} — Id, TVs names, or documents fields to get. @required
-	 * @param $fields {string_commaSeparated|'*'} — Fields names in the TV table of MODx database. Default: '*'.
+	 * @param $fields {stringCommaSeparated|'*'} — Fields names in the TV table of MODx database. Default: '*'.
 	 * @param $docid {integer|''} — Id of a document to get. Default: Current document.
 	 * @param $published {'all'|0|1} — Document publication status which does not matter if published === 'all'. Default: 'all'.
-	 * @param $sort {string_commaSeparated} — Fields of the TV table to sort by. Default: 'rank'.
+	 * @param $sort {stringCommaSeparated} — Fields of the TV table to sort by. Default: 'rank'.
 	 * @param $dir {'ASC'|'DESC'} — Sorting direction. Default: 'ASC'.
 	 * 
 	 * @return {array|false}
@@ -1887,9 +1887,9 @@ class ddTools {
 	 * @param $parentid {integer} — Id of parent document. Default: 0.
 	 * @param $published {'all'|0|1} — Documents publication status which does not matter if published === 'all'. Default: 1.
 	 * @param $deleted {'all'|0|1} — Documents removal status which does not matter if deleted === 'all'. Default: 0.
-	 * @param $fields {string_commaSeparated} — Documents fields to get. Default: '*'.
+	 * @param $fields {stringCommaSeparated} — Documents fields to get. Default: '*'.
 	 * @param $where {string} — SQL WHERE clause. Default: ''.
-	 * @param $sort {string|string_commaSeparated} — Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
+	 * @param $sort {string|stringCommaSeparated} — Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
 	 * @param $dir {'ASC'|'DESC'|''} — Direction for sort. Default: 'ASC'.
 	 * @param $limit {string} — SQL LIMIT (without 'LIMIT'). Default: ''.
 	 * 
@@ -2022,7 +2022,7 @@ class ddTools {
 	 * @param $parentid {integer} — Id of parent document. Default: 0.
 	 * @param $tvidnames {array} — Array of document fields or TVs to get. Default: [$resultKey].
 	 * @param $published {'all'|0|1} — Documents publication status which does not matter if published === 'all'. Default: 1.
-	 * @param $sortBy {string|string_commaSeparated} — Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
+	 * @param $sortBy {string|stringCommaSeparated} — Transfer a few conditions separated with comma (like SQL) to multiple sort, but param “sortDir” must be '' in this case. Default: 'menuindex'.
 	 * @param $sortDir {'ASC'|'DESC'|''} — Direction for sort. Default: 'ASC'.
 	 * @param $where {string} — SQL WHERE condition (use only document fields, not TV). Default: ''.
 	 * @param $resultKey {string|false} — Field, which values are keys into result array. Use the “false”, that result array keys just will be numbered. Default: 'id'.
