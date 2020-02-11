@@ -1006,6 +1006,68 @@ class ddTools {
 	}
 	
 	/**
+	 * clearCache
+	 * @version 1.0 (2020-02-11)
+	 * 
+	 * @desc Clears cache of required document(s).
+	 * 
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
+	 * @param $params->docIds {arrayAssociative|stringCommaSeparated} — Document ID(s). @required
+	 * @param $params->docIds[i] {integer} — Document ID. @required
+	 * 
+	 * @return {void}
+	 */
+	public static function clearCache($params){
+		$params = (object) $params;
+		
+		//Comma separated strings support
+		if (!is_array($params->docIds)){
+			$params->docIds = explode(
+				',',
+				$params->docIds
+			);
+		}
+		
+		$cacheFilePrefix =
+			self::$modx->getConfig('base_path') .
+			self::$modx->getCacheFolder() .
+			'docid_'
+		;
+		
+		$cacheFileSuffix = '.pageCache.php';
+		
+		foreach (
+			$params->docIds as
+			$docId
+		){
+			//$_GET cache
+			$cacheFiles = glob(
+				$cacheFilePrefix .
+				$docId .
+				'_*' .
+				$cacheFileSuffix
+			);
+			//Without $_GET
+			$cacheFiles[] =
+				$cacheFilePrefix .
+				$docId .
+				$cacheFileSuffix
+			;
+			
+			foreach (
+				$cacheFiles as
+				$cacheFiles_item
+			){
+				if (!is_file($cacheFiles_item)){
+					continue;
+				}
+				
+				unlink($cacheFiles_item);
+			}
+		}
+	}
+	
+	/**
 	 * prepareDocData
 	 * @version 2.0.3 (2020-02-10)
 	 * 
