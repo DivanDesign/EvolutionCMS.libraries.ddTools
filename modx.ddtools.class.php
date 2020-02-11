@@ -112,7 +112,7 @@ class ddTools {
 	
 	/**
 	 * __construct
-	 * @version 1.0.3 (2020-02-11)
+	 * @version 1.0.4 (2020-02-11)
 	 */
 	private function __construct(){
 		global $modx;
@@ -130,7 +130,11 @@ class ddTools {
 		
 		//We need to include required files if Composer is not used
 		if(!class_exists('\DDTools\FilesTools')){
-			require_once __DIR__.DIRECTORY_SEPARATOR . 'require.php';
+			require_once(
+				__DIR__ .
+				DIRECTORY_SEPARATOR .
+				'require.php'
+			);
 		}
 	}
 	
@@ -454,7 +458,7 @@ class ddTools {
 	
 	/**
 	 * parseFileNameVersion
-	 * @version 1.1.3 (2019-06-22)
+	 * @version 1.1.4 (2020-02-11)
 	 * 
 	 * @desc Parses a file path and gets its name, version & extension.
 	 * 
@@ -471,7 +475,11 @@ class ddTools {
 			//Просто запоминаем его
 			$fileinfo = $file;
 			//А также запоминаем строку
-			$file = $fileinfo['dirname'] . '/' . $fileinfo['basename'];
+			$file =
+				$fileinfo['dirname'] .
+				'/' .
+				$fileinfo['basename']
+			;
 			//Если передали строку
 		}else{
 			//Получаем необходимые данные
@@ -732,7 +740,7 @@ class ddTools {
 
 	/**
 	 * getPlaceholdersFromText
-	 * @version 1.0.1 (2019-06-22)
+	 * @version 1.0.2 (2020-02-11)
 	 * 
 	 * @desc Finds all placeholders' names and returns them as an array.
 	 * 
@@ -760,7 +768,13 @@ class ddTools {
 		$result = [];
 		
 		preg_match_all(
-			'/' . $params->placeholderPrefix . '(.*?)' . $params->placeholderSuffix . '/',
+			(
+				'/' .
+				$params->placeholderPrefix .
+				'(.*?)' .
+				$params->placeholderSuffix .
+				'/'
+			),
 			$params->text,
 			$result
 		);
@@ -772,7 +786,7 @@ class ddTools {
 	
 	/**
 	 * logEvent
-	 * @version 1.0.2 (2019-06-22)
+	 * @version 1.0.3 (2020-02-11)
 	 * 
 	 * @desc Add an alert message to the system event log with debug info (backtrace, snippet name, document id, etc).
 	 * 
@@ -821,7 +835,11 @@ class ddTools {
 		
 		//Add current document Id to debug info
 		if (!empty(self::$modx->documentIdentifier)){
-			$debugInfo[] = '<li>Document id: “' . self::$modx->documentIdentifier . '”;</li>';
+			$debugInfo[] =
+				'<li>Document id: “' .
+				self::$modx->documentIdentifier .
+				'”;</li>'
+			;
 		}
 		
 		//Is the code being run in the snippet?
@@ -832,21 +850,31 @@ class ddTools {
 				$params->source = self::$modx->currentSnippet;
 			}else{
 				//Add to debug info
-				$debugInfo[] = '<li>Snippet: “' . self::$modx->currentSnippet . '”;</li>';
+				$debugInfo[] =
+					'<li>Snippet: “' .
+					self::$modx->currentSnippet .
+					'”;</li>'
+				;
 			}
 		}
 		
-		if ($params->source == ''){$params->source = $caller;}
+		if ($params->source == ''){
+			$params->source = $caller;
+		}
 		
 		
 		//Add debug info to the message
 		$params->message .= '<h3>Debug info</h3>';
 		
 		if (!empty($debugInfo)){
-			$params->message .= '<ul>' . implode(
-				'',
-				$debugInfo
-			) . '</ul>';
+			$params->message .=
+				'<ul>' .
+				implode(
+					'',
+					$debugInfo
+				) .
+				'</ul>'
+			;
 		}
 		
 		//Add backtrace to message
@@ -860,11 +888,19 @@ class ddTools {
 			1
 		)){
 			//Information
-			case 'i': $params->eventType = 1; break;
+			case 'i':
+				$params->eventType = 1;
+			break;
+			
 			//Warning
-			case 'w': $params->eventType = 2; break;
+			case 'w':
+				$params->eventType = 2;
+			break;
+			
 			//Error
-			case 'e': $params->eventType = 3; break;
+			case 'e':
+				$params->eventType = 3;
+			break;
 		}
 		
 		
@@ -1051,7 +1087,7 @@ class ddTools {
 	
 	/**
 	 * prepareDocData
-	 * @version 2.0.3 (2020-02-10)
+	 * @version 2.0.4 (2020-02-11)
 	 * 
 	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
 	 * 
@@ -1119,10 +1155,14 @@ class ddTools {
 			//Получаем id всех необходимых TV
 			$dbRes = self::$modx->db->select(
 				//Fields
-				'`' . implode(
-					'`, `',
-					$params->tvAdditionalFieldsToGet
-				) . '`',
+				(
+					'`' .
+					implode(
+						'`, `',
+						$params->tvAdditionalFieldsToGet
+					) .
+					'`'
+				),
 				//From
 				self::$tables['site_tmplvars'],
 				//Where
@@ -1470,7 +1510,7 @@ class ddTools {
 	
 	/**
 	 * getDocuments
-	 * @version 1.2.7 (2019-06-22)
+	 * @version 1.2.8 (2020-02-11)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
@@ -1539,28 +1579,34 @@ class ddTools {
 			return false;
 		}else{
 			// modify field names to use sc. table reference
-			$fields = 'sc.' . implode(
-				',sc.',
-				array_filter(array_map(
-					'trim',
-					explode(
-						',',
-						$fields
-					)
-				))
-			);
-			$sort =
-				$sort == '' ?
-				'' :
-				'sc.'.implode(
+			$fields =
+				'sc.' .
+				implode(
 					',sc.',
 					array_filter(array_map(
 						'trim',
 						explode(
 							',',
-							$sort
+							$fields
 						)
 					))
+				)
+			;
+			$sort =
+				$sort == '' ?
+				'' :
+				(
+					'sc.' .
+					implode(
+						',sc.',
+						array_filter(array_map(
+							'trim',
+							explode(
+								',',
+								$sort
+							)
+						))
+					)
 				)
 			;
 			if ($where != ''){
@@ -1579,20 +1625,35 @@ class ddTools {
 			;
 			
 			$result = self::$modx->db->select(
+				//Fields
 				'DISTINCT ' . $fields,
+				//From
 				self::$tables['site_content'] . ' sc
 					LEFT JOIN ' . self::$tables['document_groups'] . ' dg
 						ON dg.document = sc.id
 				',
-				'(sc.id IN (' . implode(
-					',',
-					$ids
-				) . ') ' . $published . ' ' . $deleted . ' ' . $where . ') GROUP BY sc.id',
+				//Where
+				(
+					'(sc.id IN (' .
+					implode(
+						',',
+						$ids
+					) .
+					') ' .
+					$published .
+					' ' .
+					$deleted .
+					' ' .
+					$where .
+					') GROUP BY sc.id'
+				),
+				//Order
 				(
 					$sort ?
 					$sort . ' ' . $dir :
 					''
 				),
+				//Limit
 				$limit
 			);
 			
@@ -1668,7 +1729,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.8 (2019-06-22)
+	 * @version 1.3.9 (2020-02-11)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -1732,29 +1793,35 @@ class ddTools {
 			$fields =
 				$fields == '' ?
 				'tv.*' :
-				'tv.' . implode(
-					',tv.',
-					array_filter(array_map(
-						'trim',
-						explode(
-							',',
-							$fields
-						)
-					))
+				(
+					'tv.' .
+					implode(
+						',tv.',
+						array_filter(array_map(
+							'trim',
+							explode(
+								',',
+								$fields
+							)
+						))
+					)
 				)
 			;
 			$sort =
 				$sort == '' ?
 				'' :
-				'tv.' . implode(
-					',tv.',
-					array_filter(array_map(
-						'trim',
-						explode(
-							',',
-							$sort
-						)
-					))
+				(
+					'tv.' .
+					implode(
+						',tv.',
+						array_filter(array_map(
+							'trim',
+							explode(
+								',',
+								$sort
+							)
+						))
+					)
 				)
 			;
 			
@@ -1777,14 +1844,26 @@ class ddTools {
 			}
 			
 			$rs = self::$modx->db->select(
-				$fields . ', IF(tvc.value != "", tvc.value, tv.default_text) as value',
+				//Fields
+				(
+					$fields .
+					', IF(tvc.value != "", tvc.value, tv.default_text) as value'
+				),
+				//From
 				self::$tables['site_tmplvars'] . ' tv
 					INNER JOIN ' . self::$tables['site_tmplvar_templates'] . ' tvtpl
 						ON tvtpl.tmplvarid = tv.id
 					LEFT JOIN ' . self::$tables['site_tmplvar_contentvalues'] . ' tvc
 						ON tvc.tmplvarid=tv.id AND tvc.contentid = "' . $docid . '"
 				',
-				$query . ' AND tvtpl.templateid = "' . $docRow['template'] . '"',
+				//Where
+				(
+					$query .
+					' AND tvtpl.templateid = "' .
+					$docRow['template'] .
+					'"'
+				),
+				//Order
 				(
 					$sort ?
 					$sort . ' ' . $dir :
@@ -1825,7 +1904,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.7 (2019-06-22)
+	 * @version 1.1.8 (2020-02-11)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -1886,9 +1965,19 @@ class ddTools {
 			if ($result == false){
 				return false;
 			}else{
-				$baspath = MODX_MANAGER_PATH . 'includes';
-				include_once $baspath . '/tmplvars.format.inc.php';
-				include_once $baspath . '/tmplvars.commands.inc.php';
+				$baspath =
+					MODX_MANAGER_PATH .
+					'includes'
+				;
+				
+				include_once(
+					$baspath .
+					'/tmplvars.format.inc.php'
+				);
+				include_once(
+					$baspath .
+					'/tmplvars.commands.inc.php'
+				);
 				
 				for (
 					$i= 0;
@@ -1919,7 +2008,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.2.6 (2019-06-22)
+	 * @version 1.2.7 (2020-02-11)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
@@ -1983,28 +2072,34 @@ class ddTools {
 		}
 		
 		// modify field names to use sc. table reference
-		$fields = 'sc.' . implode(
-			',sc.',
-			array_filter(array_map(
-				'trim',
-				explode(
-					',',
-					$fields
-				)
-			))
-		);
-		$sort =
-			$sort == '' ?
-			'' :
-			'sc.' . implode(
+		$fields =
+			'sc.' .
+			implode(
 				',sc.',
 				array_filter(array_map(
 					'trim',
 					explode(
 						',',
-						$sort
+						$fields
 					)
 				))
+			)
+		;
+		$sort =
+			$sort == '' ?
+			'' :
+			(
+				'sc.' .
+				implode(
+					',sc.',
+					array_filter(array_map(
+						'trim',
+						explode(
+							',',
+							$sort
+						)
+					))
+				)
 			)
 		;
 		
@@ -2031,17 +2126,34 @@ class ddTools {
 		;
 		
 		$result = self::$modx->db->select(
+			//Fields
 			'DISTINCT ' . $fields,
+			//From
 			self::$tables['site_content'] . ' sc
 				LEFT JOIN '.self::$tables['document_groups'] . ' dg
 					ON dg.document = sc.id
 			',
-			'sc.parent = "' . $parentid . '" ' . $published . ' ' . $deleted . ' ' . $where . ' AND (' . $access . ') GROUP BY sc.id',
+			//Where
+			(
+				'sc.parent = "' .
+				$parentid .
+				'" ' .
+				$published .
+				' ' .
+				$deleted .
+				' ' .
+				$where .
+				' AND (' .
+				$access .
+				') GROUP BY sc.id'
+			),
+			//Order
 			(
 				$sort ?
 				$sort . ' ' . $dir :
 				''
 			),
+			//Limit
 			$limit
 		);
 		
