@@ -1370,9 +1370,9 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.3.3 (2020-02-10)
+	 * @version 1.4 (2020-02-11)
 	 * 
-	 * @desc Update a document.
+	 * @desc Update document(s). Cache of the updated docs and their parents will be cleared.
 	 * 
 	 * @note $docId and/or $where are required.
 	 * 
@@ -1438,6 +1438,11 @@ class ddTools {
 		);
 		
 		if (self::$modx->db->getRecordCount($docIdsToUpdate_dbRes)){
+			$docIdsToUpdate = [];
+			while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
+				$docIdsToUpdate[] = $doc['id'];
+			}
+			
 			//Разбиваем на поля документа и TV
 			$docData = self::prepareDocData([
 				'data' => $docData,
@@ -1459,7 +1464,10 @@ class ddTools {
 			//Если есть хоть одна TV
 			if (count($docData->tvsAdditionalData) > 0){
 				//Обновляем TV всех найденых документов
-				while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
+				foreach (
+					$docIdsToUpdate as
+					$docId
+				){
 					//Перебираем массив существующих TV
 					foreach (
 						$docData->tvsAdditionalData as
@@ -1480,7 +1488,7 @@ class ddTools {
 						self::$modx->db->update(
 							'`value` = "' . $docData->tvsData[$tvName] . '"',
 							self::$tables['site_tmplvar_contentvalues'],
-							'`tmplvarid` = ' . $tvData['id'] . ' AND `contentid` = ' . $doc['id']
+							'`tmplvarid` = ' . $tvData['id'] . ' AND `contentid` = ' . $docId
 						);
 						
 						//Проверяем сколько строк нашлось при обновлении
@@ -1510,7 +1518,7 @@ class ddTools {
 								[
 									'value' => $docData->tvsData[$tvName],
 									'tmplvarid' => $tvData['id'],
-									'contentid' => $doc['id']
+									'contentid' => $docId
 								],
 								self::$tables['site_tmplvar_contentvalues']
 							);
@@ -1518,6 +1526,11 @@ class ddTools {
 					}
 				}
 			}
+			
+			//Clear cache of updated docs
+			self::clearCache([
+				'docIds' => $docIdsToUpdate
+			]);
 			
 			return true;
 		}
