@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.31 (2020-04-23)
+* \+ `\DDTools\ObjectTools::extend`. Merge the contents of two or more objects together into the first object (see README.md).
+* \* README: Style improvements.
+
+
 ## Version 0.30 (2020-02-11)
 * \* Attention! (MODX)EvolutionCMS >= 1.1 is required.
 * \+ `\ddTools::getDocumentParentIds`. Gets the parent ID(s) of the required level.

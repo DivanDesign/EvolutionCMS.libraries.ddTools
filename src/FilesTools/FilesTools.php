@@ -8,7 +8,7 @@ class FilesTools {
 	 * 
 	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
 	 * @param $params->path {string} — The directory path. @required
 	 * 
 	 * @return {boolean} — Success status.
@@ -40,9 +40,9 @@ class FilesTools {
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['sourcePath'] {string} — Path to the directory, that should copied. @required
-	 * @param $params['destinationPath'] {string} — The destination path. @required
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->sourcePath {string} — Path to the directory, that should copied. @required
+	 * @param $params->destinationPath {string} — The destination path. @required
 	 * 
 	 * @return {boolean} — Returns true on success or false on failure.
 	 */
@@ -142,15 +142,15 @@ class FilesTools {
 	 * 
 	 * @desc Делает превьюшку.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['sourceFullPathName'] {string} — Адрес оригинального изображения. @required
-	 * @param $params['outputFullPathName'] {string} — Адрес результирующего изображения. @required
-	 * @param $params['transformMode'] {'resize'|'crop'|'resizeAndCrop'|'resizeAndFill'} — Режим преобразования. @required
-	 * @param $params['width'] {integer} — Ширина результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
-	 * @param $params['height'] {integer} — Высота результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
-	 * @param $params['backgroundColor'] {string} — Фон результирующего изображения (может понадобиться для заливки пустых мест). @required
-	 * @param $params['allowEnlargement'] {0|1} — Разрешить ли увеличение изображения? @required
-	 * @param $params['quality'] {integer} — Output image quality level. @required
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->sourceFullPathName {string} — Адрес оригинального изображения. @required
+	 * @param $params->outputFullPathName {string} — Адрес результирующего изображения. @required
+	 * @param $params->transformMode {'resize'|'crop'|'resizeAndCrop'|'resizeAndFill'} — Режим преобразования. @required
+	 * @param $params->width {integer} — Ширина результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
+	 * @param $params->height {integer} — Высота результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
+	 * @param $params->backgroundColor {string} — Фон результирующего изображения (может понадобиться для заливки пустых мест). @required
+	 * @param $params->allowEnlargement {0|1} — Разрешить ли увеличение изображения? @required
+	 * @param $params->quality {integer} — Output image quality level. @required
 	 * 
 	 * @return {void}
 	 */
