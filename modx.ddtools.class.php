@@ -163,11 +163,11 @@ class ddTools {
 	 * 
 	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['paramsList'] {array} — Parameters in ordered list (func_get_args). @required
-	 * @param $params['paramsList'][i] {mixed} — Parameter value. @required
-	 * @param $params['compliance'] {array} — The order of parameters. @required
-	 * @param $params['compliance'][i] {string} — Parameter name. @required
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->paramsList {array} — Parameters in ordered list (func_get_args). @required
+	 * @param $params->paramsList[i] {mixed} — Parameter value. @required
+	 * @param $params->compliance {array} — The order of parameters. @required
+	 * @param $params->compliance[i] {string} — Parameter name. @required
 	 * 
 	 * @return {arrayAssociative}
 	 */
@@ -518,7 +518,7 @@ class ddTools {
 	 * 
 	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
 	 * @param $params->path {string} — The directory path. @required
 	 * 
 	 * @return {boolean} — Success status.
@@ -744,10 +744,10 @@ class ddTools {
 	 * 
 	 * @desc Finds all placeholders' names and returns them as an array.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['text'] {string} — Source string. @required
-	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
-	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->text {string} — Source string. @required
+	 * @param $params->placeholderPrefix {string} — Placeholders prefix. Default: '[+'.
+	 * @param $params->placeholderSuffix {string} — Placeholders suffix. Default: '+]'.
 	 * 
 	 * @return {array}
 	 */
@@ -790,12 +790,12 @@ class ddTools {
 	 * 
 	 * @desc Add an alert message to the system event log with debug info (backtrace, snippet name, document id, etc).
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['message'] {string} — Message to be logged. Default: ''.
-	 * @param $params['source'] {string} — Source of the event (module, snippet name, etc). Default: $modx->currentSnippet || caller.
-	 * @param $params['eventId'] {integer} — Event ID. Default: 1.
-	 * @param $params['eventType'] {'information'|'warning'|'error'} — Event type. Default: 'warning'.
-	 * @param $params['backtraceArray'] {array} — Backtrace (if default is not suitable). See http://php.net/manual/en/function.debug-backtrace.php. Default: debug_backtrace().
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->message {string} — Message to be logged. Default: ''.
+	 * @param $params->source {string} — Source of the event (module, snippet name, etc). Default: $modx->currentSnippet || caller.
+	 * @param $params->eventId {integer} — Event ID. Default: 1.
+	 * @param $params->eventType {'information'|'warning'|'error'} — Event type. Default: 'warning'.
+	 * @param $params->backtraceArray {array} — Backtrace (if default is not suitable). See http://php.net/manual/en/function.debug-backtrace.php. Default: debug_backtrace().
 	 * 
 	 * @return {void}
 	 */
@@ -918,14 +918,14 @@ class ddTools {
 	 * 
 	 * @desc Similar to $modx->parseChunk, but takes a text.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['text'] {string} — String to parse. @required
-	 * @param $params['data'] {arrayAssociative|stdClass} — Array of values. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”. Default: [].
-	 * @param $params['data'][key] {string|arrayAssociative|stdClass} — Key — placeholder name, value — value.
-	 * @param $params['placeholderPrefix'] {string} — Placeholders prefix. Default: '[+'.
-	 * @param $params['placeholderSuffix'] {string} — Placeholders suffix. Default: '+]'.
-	 * @param $params['removeEmptyPlaceholders'] {boolean} — Do you need to remove empty placeholders? Default: false.
-	 * @param $params['mergeAll'] {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->text {string} — String to parse. @required
+	 * @param $params->data {stdClass|arrayAssociative} — Array of values. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”. Default: [].
+	 * @param $params->data->{$key} {string|stdClass|arrayAssociative} — Key — placeholder name, value — value.
+	 * @param $params->placeholderPrefix {string} — Placeholders prefix. Default: '[+'.
+	 * @param $params->placeholderSuffix {string} — Placeholders suffix. Default: '+]'.
+	 * @param $params->removeEmptyPlaceholders {boolean} — Do you need to remove empty placeholders? Default: false.
+	 * @param $params->mergeAll {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
 	 * 
 	 * @return {string}
 	 */
@@ -1029,7 +1029,7 @@ class ddTools {
 	 * 
 	 * @desc Clears cache of required document(s) and their parents.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
 	 * @param $params->docIds {arrayAssociative|stringCommaSeparated} — Document ID(s). @required
 	 * @param $params->docIds[i] {integer} — Document ID. @required
 	 * @param $params->clearParentsCache {boolean} — Is need to clear parents cache? Default: true.
@@ -1109,11 +1109,11 @@ class ddTools {
 	 * 
 	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['data'] {arrayAssociative} — Array of document fields (from table `site_content`) or TVs with values. @required
-	 * @param $params['data'][key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
-	 * @param $params['tvAdditionalFieldsToGet'] {array} — Fields of TVs to get if needed (e. g. 'id', 'type'). Default: [].
-	 * @param $params['tvAdditionalFieldsToGet'][i] {string} — TV field.
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->data {arrayAssociative} — Array of document fields (from table `site_content`) or TVs with values. @required
+	 * @param $params->data[key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
+	 * @param $params->tvAdditionalFieldsToGet {array} — Fields of TVs to get if needed (e. g. 'id', 'type'). Default: [].
+	 * @param $params->tvAdditionalFieldsToGet[i] {string} — TV field.
 	 * 
 	 * @return $result {stdClass}
 	 * @return $result->fieldsData {arrayAssociative} — Document fields data (like 'id', 'pagetitle', etc). @required
@@ -2316,10 +2316,10 @@ class ddTools {
 	 * 
 	 * @see ddRegJsCssLinks snippet (http://code.divandesign.biz/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['name'] {string} — Script name. @required
-	 * @param $params['version'] {string} — Script version. Default: '0'.
-	 * @param $params['startup'] {boolean} — Is the script connected in the <head>? Default: false.
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->name {string} — Script name. @required
+	 * @param $params->version {string} — Script version. Default: '0'.
+	 * @param $params->startup {boolean} — Is the script connected in the <head>? Default: false.
 	 * 
 	 * @return $result {arrayAssociative|''} — empty string if $name is not set or an array of:
 	 * @return $result['name'] {string} — Script name.
@@ -2449,7 +2449,7 @@ class ddTools {
 	 * 
 	 * @desc Gets the parent ID(s) of the required level.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. Default: —.
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. Default: —.
 	 * @param $params->docId {integer} — Document Id. Default: $modx->documentIdentifier.
 	 * @param $params->level {integer} — Parent level (1 — the immediate parent; 2 — the parent of the immediate parent; -1 — the last parent; -2 — the parent before the last; etc). Default: 1.
 	 * @param $params->totalResults {integer|'all'} — The number of parents that will be returned. Default: 'all'.
@@ -2639,14 +2639,14 @@ class ddTools {
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params['to'] {array} — Addresses to mail. @required
-	 * @param $params['to'][i] {string_email} — An address. @required
-	 * @param $params['text'] {string} — E-mail text. @required
-	 * @param $params['from'] {string} — Mailer address. Default: $modx->getConfig('emailsender').
-	 * @param $params['subject'] {string} — E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
-	 * @param $params['fileInputNames'] {array} — “input” tags names from which accepted files are taken. Default: [].
-	 * @param $params['fileInputNames'][i] {string} — Input name. @required
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->to {array} — Addresses to mail. @required
+	 * @param $params->to[i] {string_email} — An address. @required
+	 * @param $params->text {string} — E-mail text. @required
+	 * @param $params->from {string} — Mailer address. Default: $modx->getConfig('emailsender').
+	 * @param $params->subject {string} — E-mail subject. Default: 'Mail from '.$modx->config['site_url'].
+	 * @param $params->fileInputNames {array} — “input” tags names from which accepted files are taken. Default: [].
+	 * @param $params->fileInputNames[i] {string} — Input name. @required
 	 * 
 	 * @return $result {array} — Returns the array of email statuses.
 	 * @return $result[i] {0|1} — Status.
