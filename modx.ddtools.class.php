@@ -2558,7 +2558,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.5.1 (2020-04-24)
+	 * @version 1.6 (2020-04-24)
 	 * 
 	 * @see README.md
 	 */
@@ -2578,7 +2578,8 @@ class ddTools {
 		//Defaults
 		$params = (object) array_merge(
 			[
-				'writeToLog' => true,
+				'returnCorrectedOnly' => true,
+				'writeToLog' => true
 			],
 			(array) $params
 		);
@@ -2627,7 +2628,22 @@ class ddTools {
 						;
 					}
 				}
+			//If we must return all parameters
+			}else if (!$params->returnCorrectedOnly){
+				$result[$newName] = $params->params[$newName];
 			}
+		}
+		
+		//If we must return all parameters
+		if (!$params->returnCorrectedOnly){
+			$result = array_merge(
+				//Get input params which are absent in compliance
+				array_diff_key(
+					$params->params,
+					$params->compliance
+				),
+				$result
+			);
 		}
 		
 		//If there is something to write to the CMS event log

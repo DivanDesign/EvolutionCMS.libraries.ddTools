@@ -71,6 +71,11 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* Valid values: `string`
 	* **Required**
 	
+* `$params->returnCorrectedOnly`
+	* Desctription: Need to return only corrected parameters?
+	* Valid values: `boolean`
+	* Default value: `true`
+	
 * `$params->writeToLog`
 	* Desctription: Write a warning message about deprecated parameters to the CMS event log.
 	* Valid values: `boolean`
@@ -80,7 +85,8 @@ You can use the `exctract` function to turn the array into variables of the curr
 ##### Returns
 
 * `$result`
-	* Desctription: Corrected parameters names and values.
+	* Desctription: An array, in which the correct parameter names are the keys and the parameter values are the values.  
+		Can contains all parameters or only corrected (see `$params->returnCorrectedOnly`).
 	* Valid values: `arrayAssociative`
 	
 * `$result[$newName]`
