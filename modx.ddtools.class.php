@@ -2558,7 +2558,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.3 (2020-04-24)
+	 * @version 1.3.1 (2020-04-24)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
@@ -2616,7 +2616,9 @@ class ddTools {
 			//Если параметр с новым именем не задан
 			if (!isset($params->params[$newName])){
 				//Если старое имя только одно, всё равно приведём к массиву для удобства
-				if (!is_array($oldNames)){$oldNames = [$oldNames];}
+				if (!is_array($oldNames)){
+					$oldNames = [$oldNames];
+				}
 				
 				//Находим все старые, которые используются
 				$oldNames = array_values(array_intersect(
@@ -2628,20 +2630,29 @@ class ddTools {
 				if (count($oldNames) > 0){
 					//Зададим (берём значение первого попавшегося)
 					$result[$newName] = $params->params[$oldNames[0]];
-					$message[] .= '<li>“' . implode(
-						'”, “',
-						$oldNames
-					) . '” must be renamed as “' . $newName . '”;</li>';
+					$message[] .=
+						'<li>“' .
+						implode(
+							'”, “',
+							$oldNames
+						) .
+						'” must be renamed as “' .
+						$newName .
+						'”;</li>'
+					;
 				}
 			}
 		}
 		
 		if (count($result) > 0){
 			self::logEvent([
-				'message' => '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>' . implode(
-					'',
-					$message
-				) . '</ul>'
+				'message' =>
+					'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>' .
+					implode(
+						'',
+						$message
+					) .
+					'</ul>'
 			]);
 		}
 		
