@@ -2558,7 +2558,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.4 (2020-04-24)
+	 * @version 1.5 (2020-04-24)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
@@ -2567,6 +2567,7 @@ class ddTools {
 	 * @param $params->compliance {stdClass|arrayAssociative} — An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
 	 * @param $params->compliance->{$newName} {string|array} — The old name(s). Use a string for a single name or an array for multiple. @required
 	 * @param $params->compliance->{$newName}[i] {string} — One of the old name.
+	 * @param $params->writeToLog {boolean} — Write a warning message about deprecated parameters to the CMS event log. Default: true.
 	 * 
 	 * @example ```php
 	 * exctract(ddTools::verifyRenamedParams(
@@ -2598,7 +2599,13 @@ class ddTools {
 			]);
 		}
 		
-		$params = (object) $params;
+		//Defaults
+		$params = (object) array_merge(
+			[
+				'writeToLog' => true,
+			],
+			(array) $params
+		);
 		
 		$params->params = (array) $params->params;
 		
@@ -2630,21 +2637,29 @@ class ddTools {
 				if (count($oldNames) > 0){
 					//Зададим (берём значение первого попавшегося)
 					$result[$newName] = $params->params[$oldNames[0]];
-					$message[] .=
-						'<li><code>' .
-						implode(
-							'</code>, <code>',
-							$oldNames
-						) .
-						'</code> must be renamed as <code>' .
-						$newName .
-						'</code>;</li>'
-					;
+					//If need to write to the CMS event log
+					if ($params->writeToLog){
+						$message[] .=
+							'<li><code>' .
+							implode(
+								'</code>, <code>',
+								$oldNames
+							) .
+							'</code> must be renamed as <code>' .
+							$newName .
+							'</code>;</li>'
+						;
+					}
 				}
 			}
 		}
 		
-		if (count($result) > 0){
+		if (
+			//If need to write to the CMS event log
+			$params->writeToLog &&
+			//And there is something to write
+			count($result) > 0
+		){
 			self::logEvent([
 				'message' =>
 					'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>' .
