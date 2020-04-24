@@ -2560,31 +2560,7 @@ class ddTools {
 	 * verifyRenamedParams
 	 * @version 1.5 (2020-04-24)
 	 * 
-	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->params {stdClass|arrayAssociative} — The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
-	 * @param $params->compliance {stdClass|arrayAssociative} — An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
-	 * @param $params->compliance->{$newName} {string|array} — The old name(s). Use a string for a single name or an array for multiple. @required
-	 * @param $params->compliance->{$newName}[i] {string} — One of the old name.
-	 * @param $params->writeToLog {boolean} — Write a warning message about deprecated parameters to the CMS event log. Default: true.
-	 * 
-	 * @example ```php
-	 * exctract(ddTools::verifyRenamedParams(
-	 * 	//We called the method inside of a snippet, so its parameters are contained in the “$params” variable (MODX feature)
-	 * 	$params,
-	 * 	//Complience
-	 * 	[
-	 * 		//“docId” is the new name, “param1Name” — the old name
-	 * 		'docId' => 'param1Name',
-	 * 		//Multiple old names are supported too
-	 * 		'docField' => ['param2Name', 'getId']
-	 * 	]
-	 * ));
-	 * //After extraction we can safaly use the variables “$docId” and “docField”
-	 * ```
-	 * 
-	 * @return {arrayAssociative} — An array, in which the correct parameter names are the keys and the parameter values are the values.
+	 * @see README.md
 	 */
 	public static function verifyRenamedParams($params){
 		//Backward compatibility
