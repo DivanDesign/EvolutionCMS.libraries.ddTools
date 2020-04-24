@@ -2558,13 +2558,14 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.1.8 (2019-06-22)
+	 * @version 1.2 (2020-04-24)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
-	 * @param $params {array} — The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
-	 * @param $compliance {array} — An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
-	 * @param $compliance[i] {string|array} — The old name(s). Use a string for a single name or an array for multiple. @required
+	 * @param $params {stdClass|arrayAssociative} — The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
+	 * @param $compliance {stdClass|arrayAssociative} — An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
+	 * @param $compliance->{$newName} {string|array} — The old name(s). Use a string for a single name or an array for multiple. @required
+	 * @param $compliance->{$newName}[i] {string} — One of the old name.
 	 * 
 	 * @example ```php
 	 * exctract(ddTools::verifyRenamedParams(
@@ -2587,6 +2588,8 @@ class ddTools {
 		$params,
 		$compliance
 	){
+		$params = (array) $params;
+		
 		$result = [];
 		$message = [];
 		
