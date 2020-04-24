@@ -2558,7 +2558,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.5 (2020-04-24)
+	 * @version 1.5.1 (2020-04-24)
 	 * 
 	 * @see README.md
 	 */
@@ -2586,7 +2586,7 @@ class ddTools {
 		$params->params = (array) $params->params;
 		
 		$result = [];
-		$message = [];
+		$logMessageItems = [];
 		
 		$params_names = array_keys($params->params);
 		
@@ -2615,7 +2615,7 @@ class ddTools {
 					$result[$newName] = $params->params[$oldNames[0]];
 					//If need to write to the CMS event log
 					if ($params->writeToLog){
-						$message[] .=
+						$logMessageItems[] .=
 							'<li><code>' .
 							implode(
 								'</code>, <code>',
@@ -2630,18 +2630,14 @@ class ddTools {
 			}
 		}
 		
-		if (
-			//If need to write to the CMS event log
-			$params->writeToLog &&
-			//And there is something to write
-			count($result) > 0
-		){
+		//If there is something to write to the CMS event log
+		if (count($logMessageItems) > 0){
 			self::logEvent([
 				'message' =>
 					'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>' .
 					implode(
 						'',
-						$message
+						$logMessageItems
 					) .
 					'</ul>'
 			]);
