@@ -2558,14 +2558,15 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.2 (2020-04-24)
+	 * @version 1.3 (2020-04-24)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
-	 * @param $compliance {stdClass|arrayAssociative} — An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
-	 * @param $compliance->{$newName} {string|array} — The old name(s). Use a string for a single name or an array for multiple. @required
-	 * @param $compliance->{$newName}[i] {string} — One of the old name.
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->params {stdClass|arrayAssociative} — The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
+	 * @param $params->compliance {stdClass|arrayAssociative} — An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
+	 * @param $params->compliance->{$newName} {string|array} — The old name(s). Use a string for a single name or an array for multiple. @required
+	 * @param $params->compliance->{$newName}[i] {string} — One of the old name.
 	 * 
 	 * @example ```php
 	 * exctract(ddTools::verifyRenamedParams(
@@ -2584,25 +2585,36 @@ class ddTools {
 	 * 
 	 * @return {arrayAssociative} — An array, in which the correct parameter names are the keys and the parameter values are the values.
 	 */
-	public static function verifyRenamedParams(
-		$params,
-		$compliance
-	){
-		$params = (array) $params;
+	public static function verifyRenamedParams($params){
+		//Backward compatibility
+		if (func_num_args() > 1){
+			//Convert ordered list of params to named
+			$params = self::orderedParamsToNamed([
+				'paramsList' => func_get_args(),
+				'compliance' => [
+					'params',
+					'compliance'
+				]
+			]);
+		}
+		
+		$params = (object) $params;
+		
+		$params->params = (array) $params->params;
 		
 		$result = [];
 		$message = [];
 		
-		$params_names = array_keys($params);
+		$params_names = array_keys($params->params);
 		
 		//Перебираем таблицу соответствия
 		foreach (
-			$compliance as
+			$params->compliance as
 			$newName =>
 			$oldNames
 		){
 			//Если параметр с новым именем не задан
-			if (!isset($params[$newName])){
+			if (!isset($params->params[$newName])){
 				//Если старое имя только одно, всё равно приведём к массиву для удобства
 				if (!is_array($oldNames)){$oldNames = [$oldNames];}
 				
@@ -2615,7 +2627,7 @@ class ddTools {
 				//Если что-то нашлось
 				if (count($oldNames) > 0){
 					//Зададим (берём значение первого попавшегося)
-					$result[$newName] = $params[$oldNames[0]];
+					$result[$newName] = $params->params[$oldNames[0]];
 					$message[] .= '<li>“' . implode(
 						'”, “',
 						$oldNames
