@@ -2558,7 +2558,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.3.1 (2020-04-24)
+	 * @version 1.4 (2020-04-24)
 	 * 
 	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
 	 * 
@@ -2631,14 +2631,14 @@ class ddTools {
 					//Зададим (берём значение первого попавшегося)
 					$result[$newName] = $params->params[$oldNames[0]];
 					$message[] .=
-						'<li>“' .
+						'<li><code>' .
 						implode(
-							'”, “',
+							'</code>, <code>',
 							$oldNames
 						) .
-						'” must be renamed as “' .
+						'</code> must be renamed as <code>' .
 						$newName .
-						'”;</li>'
+						'</code>;</li>'
 					;
 				}
 			}
