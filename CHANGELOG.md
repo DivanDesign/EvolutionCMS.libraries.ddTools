@@ -1,6 +1,19 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.32 (2020-04-25)
+* \* `\ddTools::verifyRenamedParams`:
+	* \* Pass-by-name style is used (with backward compatibility).
+	* \+ Added an ability to prevent writing to the CMS event log (see `$params->writeToLog`).
+	* \+ Added an ability to return all parameters, not only corrected (see `$params->returnCorrectedOnly`).
+	* \+ `$params->params` can be set as `stdClass` too.
+	* \+ Improved message style in the CMS log event.
+	* \* Small refactoring.
+* \+ README → Documentation:
+	* \+ Parameters description → `\ddTools::verifyRenamedParams($params)`.
+	* \+ Examples → Verify renamed snippet params (`\ddTools::verifyRenamedParams($params)`).
+
+
 ## Version 0.31 (2020-04-23)
 * \+ `\DDTools\ObjectTools::extend`. Merge the contents of two or more objects together into the first object (see README.md).
 * \* README: Style improvements.

@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.31 (2020-04-23)
+ * @version 0.32 (2020-04-25)
  * 
  * @see README.md
  * 
@@ -2558,50 +2558,51 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.1.8 (2019-06-22)
+	 * @version 1.6 (2020-04-24)
 	 * 
-	 * @desc The method checks an array for deprecated parameters and writes warning messages into the MODX event log. It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values. You can use the “exctract” function to turn the array into variables of the current symbol table.
-	 * 
-	 * @param $params {array} — The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values. You can directly pass here the “$params” variable if you call the method inside of a snippet. @required
-	 * @param $compliance {array} — An array of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values. @required
-	 * @param $compliance[i] {string|array} — The old name(s). Use a string for a single name or an array for multiple. @required
-	 * 
-	 * @example ```php
-	 * exctract(ddTools::verifyRenamedParams(
-	 * 	//We called the method inside of a snippet, so its parameters are contained in the “$params” variable (MODX feature)
-	 * 	$params,
-	 * 	//Complience
-	 * 	[
-	 * 		//“docId” is the new name, “param1Name” — the old name
-	 * 		'docId' => 'param1Name',
-	 * 		//Multiple old names are supported too
-	 * 		'docField' => ['param2Name', 'getId']
-	 * 	]
-	 * ));
-	 * //After extraction we can safaly use the variables “$docId” and “docField”
-	 * ```
-	 * 
-	 * @return {arrayAssociative} — An array, in which the correct parameter names are the keys and the parameter values are the values.
+	 * @see README.md
 	 */
-	public static function verifyRenamedParams(
-		$params,
-		$compliance
-	){
-		$result = [];
-		$message = [];
+	public static function verifyRenamedParams($params){
+		//Backward compatibility
+		if (func_num_args() > 1){
+			//Convert ordered list of params to named
+			$params = self::orderedParamsToNamed([
+				'paramsList' => func_get_args(),
+				'compliance' => [
+					'params',
+					'compliance'
+				]
+			]);
+		}
 		
-		$params_names = array_keys($params);
+		//Defaults
+		$params = (object) array_merge(
+			[
+				'returnCorrectedOnly' => true,
+				'writeToLog' => true
+			],
+			(array) $params
+		);
+		
+		$params->params = (array) $params->params;
+		
+		$result = [];
+		$logMessageItems = [];
+		
+		$params_names = array_keys($params->params);
 		
 		//Перебираем таблицу соответствия
 		foreach (
-			$compliance as
+			$params->compliance as
 			$newName =>
 			$oldNames
 		){
 			//Если параметр с новым именем не задан
-			if (!isset($params[$newName])){
+			if (!isset($params->params[$newName])){
 				//Если старое имя только одно, всё равно приведём к массиву для удобства
-				if (!is_array($oldNames)){$oldNames = [$oldNames];}
+				if (!is_array($oldNames)){
+					$oldNames = [$oldNames];
+				}
 				
 				//Находим все старые, которые используются
 				$oldNames = array_values(array_intersect(
@@ -2612,21 +2613,49 @@ class ddTools {
 				//Если что-то нашлось
 				if (count($oldNames) > 0){
 					//Зададим (берём значение первого попавшегося)
-					$result[$newName] = $params[$oldNames[0]];
-					$message[] .= '<li>“' . implode(
-						'”, “',
-						$oldNames
-					) . '” must be renamed as “' . $newName . '”;</li>';
+					$result[$newName] = $params->params[$oldNames[0]];
+					//If need to write to the CMS event log
+					if ($params->writeToLog){
+						$logMessageItems[] .=
+							'<li><code>' .
+							implode(
+								'</code>, <code>',
+								$oldNames
+							) .
+							'</code> must be renamed as <code>' .
+							$newName .
+							'</code>;</li>'
+						;
+					}
 				}
+			//If we must return all parameters
+			}else if (!$params->returnCorrectedOnly){
+				$result[$newName] = $params->params[$newName];
 			}
 		}
 		
-		if (count($result) > 0){
+		//If we must return all parameters
+		if (!$params->returnCorrectedOnly){
+			$result = array_merge(
+				//Get input params which are absent in compliance
+				array_diff_key(
+					$params->params,
+					$params->compliance
+				),
+				$result
+			);
+		}
+		
+		//If there is something to write to the CMS event log
+		if (count($logMessageItems) > 0){
 			self::logEvent([
-				'message' => '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>' . implode(
-					'',
-					$message
-				) . '</ul>'
+				'message' =>
+					'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>' .
+					implode(
+						'',
+						$logMessageItems
+					) .
+					'</ul>'
 			]);
 		}
 		
