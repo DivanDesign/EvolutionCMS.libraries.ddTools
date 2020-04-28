@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.33 (2020-04-28)
+* \+ `\DDTools\ObjectTools::extend`: Arrays can also be extended.
+* \* CHANGELOG: Fixed misprints.
+
+
 ## Version 0.32 (2020-04-25)
 * \* `\ddTools::verifyRenamedParams`:
 	* \* Pass-by-name style is used (with backward compatibility).
