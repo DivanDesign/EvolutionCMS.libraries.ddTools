@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.33 (2020-04-28)
+* \+ `\DDTools\ObjectTools::extend`: Arrays can also be extended.
+* \* CHANGELOG: Fixed misprints.
+
+
 ## Version 0.32 (2020-04-25)
 * \* `\ddTools::verifyRenamedParams`:
 	* \* Pass-by-name style is used (with backward compatibility).
@@ -122,7 +127,7 @@
 ## Version 0.15.4 (2016-06-17)
 * \* `\ddTools::verifyRenamedParams`: Updated to 1.1.1:
 	* \+ An ability to use multiple old names was added (see the `$compliance` parameter).
-	* \* Minor refactoring, code style and decsription changes.
+	* \* Minor refactoring, code style and description changes.
 
 
 ## Version 0.15.3 (2016-01-12)
@@ -179,7 +184,7 @@
 
 ## Version 0.13.1 (2015-08-17)
 * \* `\ddTools::sendMail`: The method was slightly changed to eliminate errors in PHP 5.4−5.6 during headers validation:
-	* \* All double `\r\n` and singe `\r\n` were replaced with single `PHP_EO`L.
+	* \* All double `\r\n` and singe `\r\n` were replaced with single `PHP_EOL`.
 	* \* Leading or trailing `PHP_EOL`'s are now trimmed in email content.
 
 

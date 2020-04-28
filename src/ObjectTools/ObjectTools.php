@@ -4,11 +4,11 @@ namespace DDTools;
 class ObjectTools {
 	/**
 	 * extend
-	 * @version 1.0 (2020-04-23)
+	 * @version 1.1 (2020-04-28)
 	 * 
 	 * @see README.md
 	 * 
-	 * @return {object}
+	 * @return {object|array}
 	 */
 	public static function extend($params){
 		//Defaults
@@ -19,19 +19,29 @@ class ObjectTools {
 			(array) $params
 		);
 		
-		//The first object is the target
+		//The first item is the target
 		$result = array_shift($params->objects);
 		//Empty or invalid target
-		if (!is_object($result)){
+		if (
+			!is_object($result) &&
+			!is_array($result)
+		){
 			$result = new \stdClass();
 		}
+		
+		$isResultObject = is_object($result);
+		$checkFunction =
+			$isResultObject ?
+			'is_object' :
+			'is_array'
+		;
 		
 		foreach (
 			$params->objects as
 			$additionalProps
 		){
 			//Invalid objects will not be used
-			if (is_object($additionalProps)){
+			if ($checkFunction($additionalProps)){
 				foreach (
 					$additionalProps as
 					$additionalPropName =>
@@ -41,19 +51,27 @@ class ObjectTools {
 						//If recursive merging is needed
 						$params->deep &&
 						//And the value is an object
-						is_object($additionalPropValue)
+						$checkFunction($additionalPropValue)
 					){
 						//Start recursion
-						$result->{$additionalPropName} = self::extend([
+						$additionalPropValue = self::extend([
 							'objects' => [
-								$result->{$additionalPropName},
+								(
+									$isResultObject ?
+									$result->{$additionalPropName} :
+									$result[$additionalPropName]
+								),
 								$additionalPropValue
 							],
 							'deep' => true
 						]);
-					}else{
-						//Save the new value (replace preverious or create the new property)
+					}
+					
+					//Save the new value (replace preverious or create the new property)
+					if ($isResultObject){
 						$result->{$additionalPropName} = $additionalPropValue;
+					}else{
+						$result[$additionalPropName] = $additionalPropValue;
 					}
 				}
 			}
