@@ -106,20 +106,23 @@ Merge the contents of two or more objects together into the first object.
 	* **Required**
 	
 * `$params->objects`
-	* Desctription: Objects to merge.
+	* Desctription: Objects or arrays to merge.
 	* Valid values: `array`
 	* **Required**
 	
 * `$params->objects[0]`
-	* Desctription: The object to extend. It will receive the new properties.
+	* Desctription: The object or array to extend. It will receive the new properties.
 	* Valid values:
 		* `object`
+		* `array`
 		* `NULL` — pass `NULL` to create the new StdClass.
 	* **Required**
 	
 * `$params->objects[i]`
-	* Desctription: An object containing additional properties to merge in.
-	* Valid values: `object`
+	* Desctription: An object or array containing additional properties to merge in.
+	* Valid values:
+		* `object`
+		* `array`
 	* **Required**
 	
 * `$params->deep`
@@ -183,7 +186,8 @@ extract(\ddTools::verifyRenamedParams([
 
 #### `\DDTools\ObjectTools::extend($params)`
 
-Merge two objects, modifying the first.
+
+##### Merge two objects, modifying the first
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -208,7 +212,7 @@ var_export(\DDTools\ObjectTools::extend([
 
 Returns:
 
-```
+```php
 stdClass::__set_state(array(
 	'cat' => 'mew',
 	'dog' => stdClass::__set_state(array(
@@ -218,6 +222,44 @@ stdClass::__set_state(array(
 	'rabbit' => 42,
 	'bird' => 0,
 ))
+```
+
+
+##### Also you can extend arrays
+
+```php
+var_export(\DDTools\ObjectTools::extend([
+	'objects' => [
+		[
+			'cat' => 'mew',
+			'dog' => [
+				'name' => 'Floyd',
+				'weight' => 6
+			],
+			'rabbit' => 42
+		],
+		[
+			'dog' => (object) [
+				'weight' => 10
+			],
+			'bird' => 0
+		]
+	]
+]));
+```
+
+Returns:
+
+```php
+array(
+	'cat' => 'mew',
+	'dog' => array(
+		'name' => 'Floyd',
+		'weight' => 10,
+	),
+	'rabbit' => 42,
+	'bird' => 0,
+)
 ```
 
 
