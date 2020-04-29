@@ -131,6 +131,36 @@ Merge the contents of two or more objects together into the first object.
 	* Default value: `true`
 
 
+#### `\DDTools\ObjectTools::isPropExists($params)`
+
+Checks if the object, class or array has a property / element.
+This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
+
+The first reason for creating this method is convenience to not thinking about type of “object” variables.
+Second, the different order of parameters in the native PHP functions makes us crazy.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->object`
+	* Desctription: Source object or array.
+	* Valid values:
+		* `stdClass`
+		* `array`
+	* **Required**
+	
+* `$params->propName`
+	* Desctription: Object property name or array key.
+	* Valid values:
+		* `string`
+		* `integer`
+	* **Required**
+
+
 #### `\DDTools\ObjectTools::getPropValue($params)`
 
 Get the value of an object property or an array element.
@@ -296,6 +326,37 @@ array(
 	'bird' => 0,
 )
 ```
+
+
+#### `\DDTools\ObjectTools::isPropExists($params)`
+
+Checks if the object, class or array has a property / element using the same syntax.
+
+You can pass an object:
+
+```php
+var_export(\DDTools\ObjectTools::isPropExists([
+	'object' => (object) [
+		'firstName' => 'John',
+		'lastName' => 'Lennon'
+	],
+	'propName' => 'firstName'
+]));
+```
+
+Or an array:
+
+```php
+var_export(\DDTools\ObjectTools::isPropExists([
+	'object' => [
+		'firstName' => 'Paul',
+		'lastName' => 'McCartney'
+	],
+	'propName' => 'firstName'
+]));
+```
+
+Both calls return `true`.
 
 
 #### `\DDTools\ObjectTools::getPropValue($params)`

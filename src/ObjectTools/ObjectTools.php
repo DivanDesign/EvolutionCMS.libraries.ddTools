@@ -89,8 +89,34 @@ class ObjectTools {
 	}
 	
 	/**
-	 * getPropValue
+	 * isPropExists
 	 * @version 1.0 (2020-04-30)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {mixed}
+	 */
+	public static function isPropExists($params){
+		$params = (object) $params;
+		
+		return
+			is_object($params->object) ?
+			//Objects
+			property_exists(
+				$params->object,
+				$params->propName
+			) :
+			//Arrays
+			array_key_exists(
+				$params->propName,
+				$params->object
+			)
+		;
+	}
+	
+	/**
+	 * getPropValue
+	 * @version 1.0.1 (2020-04-30)
 	 * 
 	 * @see README.md
 	 * 
@@ -100,24 +126,16 @@ class ObjectTools {
 		$params = (object) $params;
 		
 		return
-			is_object($params->object) ?
-			//Objects
+			!self::isPropExists($params) ?
+			//Non-existing properties
+			NULL :
+			//Existing properties
 			(
-				property_exists(
-					$params->object,
-					$params->propName
-				) ?
+				is_object($params->object) ?
+				//Objects
 				$params->object->{$params->propName} :
-				NULL
-			) :
-			//Arrays
-			(
-				array_key_exists(
-					$params->propName,
-					$params->object
-				) ?
-				$params->object[$params->propName] :
-				NULL
+				//Arrays
+				$params->object[$params->propName]
 			)
 		;
 	}
