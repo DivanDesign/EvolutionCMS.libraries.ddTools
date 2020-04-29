@@ -131,6 +131,41 @@ Merge the contents of two or more objects together into the first object.
 	* Default value: `true`
 
 
+#### `\DDTools\ObjectTools::getPropValue($params)`
+
+Get the value of an object property or an array element.
+This is a “syntactic sugar” for getting an element in one way regardless of the “object” type.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->object`
+	* Desctription: Source object or array.
+	* Valid values:
+		* `stdClass`
+		* `array`
+	* **Required**
+	
+* `$params->propName`
+	* Desctription: Object property name or array key.
+	* Valid values:
+		* `string`
+		* `integer`
+	* **Required**
+
+##### Returns
+
+* `$result`
+	* Desctription: Value of an object property or an array element.
+	* Valid values:
+		* `mixed`
+		* `NULL` — if property not exists
+
+
 ### Examples
 
 
@@ -261,6 +296,37 @@ array(
 	'bird' => 0,
 )
 ```
+
+
+#### `\DDTools\ObjectTools::getPropValue($params)`
+
+Get the value of an object property or an array element using the same syntax.
+
+You can pass an object:
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => (object) [
+		'name' => 'Floyd',
+		'weight' => 7
+	],
+	'propName' => 'name'
+]));
+```
+
+Or an array:
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => [
+		'name' => 'Floyd',
+		'weight' => 7
+	],
+	'propName' => 'name'
+]));
+```
+
+Both calls return `'Floyd'`.
 
 
 ## [Home page →](https://code.divandesign.biz/modx/ddtools)

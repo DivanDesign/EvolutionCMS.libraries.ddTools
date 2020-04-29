@@ -87,4 +87,38 @@ class ObjectTools {
 		
 		return $result;
 	}
+	
+	/**
+	 * getPropValue
+	 * @version 1.0 (2020-04-30)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {mixed}
+	 */
+	public static function getPropValue($params){
+		$params = (object) $params;
+		
+		return
+			is_object($params->object) ?
+			//Objects
+			(
+				property_exists(
+					$params->object,
+					$params->propName
+				) ?
+				$params->object->{$params->propName} :
+				NULL
+			) :
+			//Arrays
+			(
+				array_key_exists(
+					$params->propName,
+					$params->object
+				) ?
+				$params->object[$params->propName] :
+				NULL
+			)
+		;
+	}
 }
