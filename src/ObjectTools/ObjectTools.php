@@ -4,7 +4,7 @@ namespace DDTools;
 class ObjectTools {
 	/**
 	 * extend
-	 * @version 1.1 (2020-04-28)
+	 * @version 1.1.1 (2020-04-29)
 	 * 
 	 * @see README.md
 	 * 
@@ -58,8 +58,16 @@ class ObjectTools {
 							'objects' => [
 								(
 									$isResultObject ?
-									$result->{$additionalPropName} :
-									$result[$additionalPropName]
+									(
+										isset($result->{$additionalPropName}) ?
+										$result->{$additionalPropName} :
+										new \stdClass()
+									) :
+									(
+										isset($result[$additionalPropName]) ?
+										$result[$additionalPropName] :
+										[]
+									)
 								),
 								$additionalPropValue
 							],

@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.33.1 (2020-04-29)
+* \* `\DDTools\ObjectTools::extend`: Fixed array deep extending error if an original array item is not exist.
+
+
 ## Version 0.33 (2020-04-28)
 * \+ `\DDTools\ObjectTools::extend`: Arrays can also be extended.
 * \* CHANGELOG: Fixed misprints.
