@@ -96,7 +96,7 @@ You can use the `exctract` function to turn the array into variables of the curr
 
 #### `\DDTools\ObjectTools::extend($params)`
 
-Merge the contents of two or more objects together into the first object.
+Merge the contents of two or more objects or arrays together into the first one.
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.
@@ -106,7 +106,7 @@ Merge the contents of two or more objects together into the first object.
 	* **Required**
 	
 * `$params->objects`
-	* Desctription: Objects or arrays to merge.
+	* Desctription: Objects or arrays to merge. Moreover, objects can extend arrays and vice versa.
 	* Valid values: `array`
 	* **Required**
 	
@@ -115,7 +115,7 @@ Merge the contents of two or more objects together into the first object.
 	* Valid values:
 		* `object`
 		* `array`
-		* `NULL` — pass `NULL` to create the new StdClass.
+		* `mixed` — if passed something else, the new `stdClass` object will be created instead
 	* **Required**
 	
 * `$params->objects[i]`
@@ -334,6 +334,42 @@ array(
 	),
 	'rabbit' => 42,
 	'bird' => 0,
+)
+```
+
+
+##### Moreover, objects can extend arrays and vice versa
+
+```php
+var_export(\DDTools\ObjectTools::extend([
+	'objects' => [
+		[
+			'name' => 'jokes',
+			'countries' => (object) [
+				'usa' => 'democracy',
+				'china' => 'chinese democracy'
+			],
+		],
+		(object) [
+			'countries' => [
+				'china' => 'democracy too'
+			]
+		]
+	]
+]));
+```
+
+Returns:
+
+```php
+//The object expanded the source array
+array(
+	name' => 'jokes',
+	//The array expanded the source object
+	'countries' => stdClass::__set_state(
+		'usa' => 'democracy',
+		'china' => 'democracy too',
+	)),
 )
 ```
 

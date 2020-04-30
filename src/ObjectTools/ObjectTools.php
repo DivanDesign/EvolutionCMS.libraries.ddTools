@@ -4,7 +4,7 @@ namespace DDTools;
 class ObjectTools {
 	/**
 	 * extend
-	 * @version 1.2 (2020-04-30)
+	 * @version 1.3 (2020-04-30)
 	 * 
 	 * @see README.md
 	 * 
@@ -23,26 +23,18 @@ class ObjectTools {
 		//The first item is the target
 		$result = array_shift($params->objects);
 		//Empty or invalid target
-		if (
-			!is_object($result) &&
-			!is_array($result)
-		){
+		if (!self::isObjectOrArray($result)){
 			$result = new \stdClass();
 		}
 		
 		$isResultObject = is_object($result);
-		$checkFunction =
-			$isResultObject ?
-			'is_object' :
-			'is_array'
-		;
 		
 		foreach (
 			$params->objects as
 			$additionalProps
 		){
 			//Invalid objects will not be used
-			if ($checkFunction($additionalProps)){
+			if (self::isObjectOrArray($additionalProps)){
 				foreach (
 					$additionalProps as
 					$additionalPropName =>
@@ -80,7 +72,7 @@ class ObjectTools {
 								is_null($additionalPropValue) ||
 								//Empty object or array
 								(
-									$checkFunction($additionalPropValue) &&
+									self::isObjectOrArray($additionalPropValue) &&
 									count((array) $additionalPropValue) == 0
 								)
 							) ?
@@ -104,7 +96,7 @@ class ObjectTools {
 								is_null($originalPropValue) ||
 								//Empty object or array
 								(
-									$checkFunction($originalPropValue) &&
+									self::isObjectOrArray($originalPropValue) &&
 									count((array) $originalPropValue) == 0
 								)
 							) &&
@@ -122,12 +114,12 @@ class ObjectTools {
 							//If recursive merging is needed
 							$params->deep &&
 							//And the value is an object or array
-							$checkFunction($additionalPropValue)
+							self::isObjectOrArray($additionalPropValue)
 						){
 							//Init initial property value to extend
 							if (!$isOriginalPropExists){
 								$originalPropValue =
-									$isResultObject ?
+									gettype($additionalPropValue) == 'object' ?
 									new \stdClass() :
 									[]
 								;
@@ -156,6 +148,22 @@ class ObjectTools {
 		}
 		
 		return $result;
+	}
+	
+	
+	/**
+	 * isObjectOrArray
+	 * @version 0.1 (2020-04-30)
+	 * 
+	 * @todo Should it get $object directly or as $params->object?
+	 * 
+	 * @return {boolean}
+	 */
+	private static function isObjectOrArray($object){
+		return
+			is_object($object) ||
+			is_array($object)
+		;
 	}
 	
 	/**
