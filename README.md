@@ -129,6 +129,16 @@ Merge the contents of two or more objects together into the first object.
 	* Desctription: If true, the merge becomes recursive (aka. deep copy).
 	* Valid values: `boolean`
 	* Default value: `true`
+	
+* `$params->overwriteWithEmpty`
+	* Desctription: Overwrite fields with empty values (see examples below).  
+		The following values are considered to be empty:
+		* `''` — an empty string
+		* `[]` — an empty array
+		* `(object) []` — an empty object
+		* `NULL`
+	* Valid values: `boolean`
+	* Default value: `true`
 
 
 #### `\DDTools\ObjectTools::isPropExists($params)`
@@ -325,6 +335,68 @@ array(
 	'rabbit' => 42,
 	'bird' => 0,
 )
+```
+
+
+##### Don't overwrite fields with empty values (`$params->overwriteWithEmpty` == `false`)
+
+By default, empty field values (e. g. `''`) are treated as other values and will replace non-empty ones.
+
+```php
+var_export(\DDTools\ObjectTools::extend([
+	'objects' => [
+		(object) [
+			'firstName' => 'John',
+			'lastName' => 'Tesla',
+			'discipline' => 'Electrical engineering'
+		],
+		(object) [
+			'firstName' => 'Nikola',
+			'lastName' => ''
+		]
+	]
+]));
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array(
+	'firstName' => 'Nikola',
+	'lastName' => '',
+	'discipline' => 'Electrical engineering'
+))
+```
+
+Empty `lastName` from the second object replaced non-empty `lastName` from the first.
+
+If you want to ignore empty values, just use `$params->overwriteWithEmpty` == `false`:
+
+```php
+var_export(\DDTools\ObjectTools::extend([
+	'objects' => [
+		(object) [
+			'firstName' => 'John',
+			'lastName' => 'Tesla',
+			'discipline' => 'Electrical engineering'
+		],
+		(object) [
+			'firstName' => 'Nikola',
+			'lastName' => ''
+		]
+	],
+	'overwriteWithEmpty' => false
+]));
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array(
+	'firstName' => 'Nikola',
+	'lastName' => 'Tesla',
+	'discipline' => 'Electrical engineering'
+))
 ```
 
 
