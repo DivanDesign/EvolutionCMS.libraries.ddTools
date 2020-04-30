@@ -96,7 +96,7 @@ You can use the `exctract` function to turn the array into variables of the curr
 
 #### `\DDTools\ObjectTools::extend($params)`
 
-Merge the contents of two or more objects together into the first object.
+Merge the contents of two or more objects or arrays together into the first one.
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.
@@ -106,7 +106,7 @@ Merge the contents of two or more objects together into the first object.
 	* **Required**
 	
 * `$params->objects`
-	* Desctription: Objects or arrays to merge.
+	* Desctription: Objects or arrays to merge. Moreover, objects can extend arrays and vice versa.
 	* Valid values: `array`
 	* **Required**
 	
@@ -115,7 +115,7 @@ Merge the contents of two or more objects together into the first object.
 	* Valid values:
 		* `object`
 		* `array`
-		* `NULL` — pass `NULL` to create the new StdClass.
+		* `mixed` — if passed something else, the new `stdClass` object will be created instead
 	* **Required**
 	
 * `$params->objects[i]`
@@ -129,6 +129,81 @@ Merge the contents of two or more objects together into the first object.
 	* Desctription: If true, the merge becomes recursive (aka. deep copy).
 	* Valid values: `boolean`
 	* Default value: `true`
+	
+* `$params->overwriteWithEmpty`
+	* Desctription: Overwrite fields with empty values (see examples below).  
+		The following values are considered to be empty:
+		* `''` — an empty string
+		* `[]` — an empty array
+		* `(object) []` — an empty object
+		* `NULL`
+	* Valid values: `boolean`
+	* Default value: `true`
+
+
+#### `\DDTools\ObjectTools::isPropExists($params)`
+
+Checks if the object, class or array has a property / element.
+This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
+
+The first reason for creating this method is convenience to not thinking about type of “object” variables.
+Second, the different order of parameters in the native PHP functions makes us crazy.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->object`
+	* Desctription: Source object or array.
+	* Valid values:
+		* `stdClass`
+		* `array`
+	* **Required**
+	
+* `$params->propName`
+	* Desctription: Object property name or array key.
+	* Valid values:
+		* `string`
+		* `integer`
+	* **Required**
+
+
+#### `\DDTools\ObjectTools::getPropValue($params)`
+
+Get the value of an object property or an array element.
+This is a “syntactic sugar” for getting an element in one way regardless of the “object” type.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->object`
+	* Desctription: Source object or array.
+	* Valid values:
+		* `stdClass`
+		* `array`
+	* **Required**
+	
+* `$params->propName`
+	* Desctription: Object property name or array key.
+	* Valid values:
+		* `string`
+		* `integer`
+	* **Required**
+
+##### Returns
+
+* `$result`
+	* Desctription: Value of an object property or an array element.
+	* Valid values:
+		* `mixed`
+		* `NULL` — if property not exists
 
 
 ### Examples
@@ -261,6 +336,166 @@ array(
 	'bird' => 0,
 )
 ```
+
+
+##### Moreover, objects can extend arrays and vice versa
+
+```php
+var_export(\DDTools\ObjectTools::extend([
+	'objects' => [
+		[
+			'name' => 'jokes',
+			'countries' => (object) [
+				'usa' => 'democracy',
+				'china' => 'chinese democracy'
+			],
+		],
+		(object) [
+			'countries' => [
+				'china' => 'democracy too'
+			]
+		]
+	]
+]));
+```
+
+Returns:
+
+```php
+//The object expanded the source array
+array(
+	name' => 'jokes',
+	//The array expanded the source object
+	'countries' => stdClass::__set_state(
+		'usa' => 'democracy',
+		'china' => 'democracy too',
+	)),
+)
+```
+
+
+##### Don't overwrite fields with empty values (`$params->overwriteWithEmpty` == `false`)
+
+By default, empty field values (e. g. `''`) are treated as other values and will replace non-empty ones.
+
+```php
+var_export(\DDTools\ObjectTools::extend([
+	'objects' => [
+		(object) [
+			'firstName' => 'John',
+			'lastName' => 'Tesla',
+			'discipline' => 'Electrical engineering'
+		],
+		(object) [
+			'firstName' => 'Nikola',
+			'lastName' => ''
+		]
+	]
+]));
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array(
+	'firstName' => 'Nikola',
+	'lastName' => '',
+	'discipline' => 'Electrical engineering'
+))
+```
+
+Empty `lastName` from the second object replaced non-empty `lastName` from the first.
+
+If you want to ignore empty values, just use `$params->overwriteWithEmpty` == `false`:
+
+```php
+var_export(\DDTools\ObjectTools::extend([
+	'objects' => [
+		(object) [
+			'firstName' => 'John',
+			'lastName' => 'Tesla',
+			'discipline' => 'Electrical engineering'
+		],
+		(object) [
+			'firstName' => 'Nikola',
+			'lastName' => ''
+		]
+	],
+	'overwriteWithEmpty' => false
+]));
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array(
+	'firstName' => 'Nikola',
+	'lastName' => 'Tesla',
+	'discipline' => 'Electrical engineering'
+))
+```
+
+
+#### `\DDTools\ObjectTools::isPropExists($params)`
+
+Checks if the object, class or array has a property / element using the same syntax.
+
+You can pass an object:
+
+```php
+var_export(\DDTools\ObjectTools::isPropExists([
+	'object' => (object) [
+		'firstName' => 'John',
+		'lastName' => 'Lennon'
+	],
+	'propName' => 'firstName'
+]));
+```
+
+Or an array:
+
+```php
+var_export(\DDTools\ObjectTools::isPropExists([
+	'object' => [
+		'firstName' => 'Paul',
+		'lastName' => 'McCartney'
+	],
+	'propName' => 'firstName'
+]));
+```
+
+Both calls return `true`.
+
+
+#### `\DDTools\ObjectTools::getPropValue($params)`
+
+Get the value of an object property or an array element using the same syntax.
+
+You can pass an object:
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => (object) [
+		'name' => 'Floyd',
+		'weight' => 7
+	],
+	'propName' => 'name'
+]));
+```
+
+Or an array:
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => [
+		'name' => 'Floyd',
+		'weight' => 7
+	],
+	'propName' => 'name'
+]));
+```
+
+Both calls return `'Floyd'`.
 
 
 ## [Home page →](https://code.divandesign.biz/modx/ddtools)

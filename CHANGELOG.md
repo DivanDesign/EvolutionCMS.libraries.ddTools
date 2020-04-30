@@ -1,6 +1,16 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.34 (2020-04-30)
+* \+ `\DDTools\ObjectTools::extend`:
+	* \+ Added the ability to prevent fields overwriting with empty values (`$params->overwriteWithEmpty`).
+	* \+ Objects can extend arrays and vice versa.
+	* \+ Types of nested objects are independent on types of their parents.
+* \+ `\DDTools\ObjectTools::isPropExists`. Checks if the object, class or array has a property / element (see README).
+* \+ `\DDTools\ObjectTools::getPropValue`. Get the value of an object property or an array element (see README).
+* \+ `\DDTools\ObjectTools::isObjectOrArray`. Finds whether a variable is an array or an object. The method is private for now, because we will need to think more about the parameters.
+
+
 ## Version 0.33.1 (2020-04-29)
 * \* `\DDTools\ObjectTools::extend`: Fixed array deep extending error if an original array item is not exist.
 
