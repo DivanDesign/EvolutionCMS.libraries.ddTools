@@ -94,7 +94,10 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* Valid values: `mixed`
 
 
-#### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\ObjectTools`
+
+
+##### `\DDTools\ObjectTools::extend($params)`
 
 Merge the contents of two or more objects or arrays together into the first one.
 
@@ -141,7 +144,7 @@ Merge the contents of two or more objects or arrays together into the first one.
 	* Default value: `true`
 
 
-#### `\DDTools\ObjectTools::isPropExists($params)`
+##### `\DDTools\ObjectTools::isPropExists($params)`
 
 Checks if the object, class or array has a property / element.
 This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
@@ -171,7 +174,7 @@ Second, the different order of parameters in the native PHP functions makes us c
 	* **Required**
 
 
-#### `\DDTools\ObjectTools::getPropValue($params)`
+##### `\DDTools\ObjectTools::getPropValue($params)`
 
 Get the value of an object property or an array element.
 This is a “syntactic sugar” for getting an element in one way regardless of the “object” type.
@@ -197,7 +200,8 @@ This is a “syntactic sugar” for getting an element in one way regardless of 
 		* `integer`
 	* **Required**
 
-##### Returns
+
+###### Returns
 
 * `$result`
 	* Desctription: Value of an object property or an array element.
