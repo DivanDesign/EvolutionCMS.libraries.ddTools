@@ -4,7 +4,7 @@ namespace DDTools;
 class BaseClass {
 	/**
 	 * setExistingProps
-	 * @version 1.3 (2019-12-14)
+	 * @version 1.3.1 (2020-05-06)
 	 * 
 	 * @desc Sets existing object properties.
 	 * 
@@ -20,7 +20,7 @@ class BaseClass {
 			$propName =>
 			$propValue
 		){
-			$this->setProp([
+			$this->ddSetProp([
 				'object' => $this,
 				'propName' => $propName,
 				'propValue' => $propValue
@@ -29,8 +29,8 @@ class BaseClass {
 	}
 	
 	/**
-	 * setProp
-	 * @version 1.0.1 (2019-12-14)
+	 * ddSetProp
+	 * @version 1.0.2 (2020-05-06)
 	 * 
 	 * @throws \ReflectionException
 	 * 
@@ -42,7 +42,7 @@ class BaseClass {
 	 * 
 	 * @return {void}
 	 */
-	private function setProp($params){
+	private function ddSetProp($params){
 		//Defaults
 		$params = (object) array_merge(
 			[
@@ -72,7 +72,7 @@ class BaseClass {
 			$parent = $classReflection->getParentClass();
 			
 			if ($parent !== false){
-				$this->setProp([
+				$this->ddSetProp([
 					'object' => $params->object,
 					'propName' => $params->propName,
 					'propValue' => $params->propValue,
