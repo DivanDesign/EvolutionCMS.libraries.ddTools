@@ -210,6 +210,72 @@ This is a “syntactic sugar” for getting an element in one way regardless of 
 		* `NULL` — if property not exists
 
 
+#### `\DDTools\BaseClass`
+
+Simple class with some small methods facilitating your work.
+It is convenient to inherit your classes from this.
+
+You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
+
+
+##### `\DDTools\BaseClass::setExistingProps($props)`
+
+Sets existing object properties.
+
+* `$props`
+	* Desctription: The object properties.
+		* The method sets all existing properties: public, private or protected — it doesn't matter, exactly what you pass will be set.
+		* No problem if If some properties are not exist, the method just skip them without errors.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$props->{$propName}`
+	* Desctription: Key is the property name, value is the property value.
+	* Valid values: `mixed`
+	* **Required**
+
+
+##### `\DDTools\BaseClass::createChildInstance($params)`
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->parentDir`
+	* Desctription: Directory of the parent file (e. g. `__DIR__`).
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->name`
+	* Desctription: Class name.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->params`
+	* Desctription: Params to be passed to object constructor.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: `[]`
+	
+* `$params->capitalizeName`
+	* Desctription: Need to capitalize child name?
+	* Valid values: `boolean`
+	* Default value: `true`
+
+
+###### Returns
+
+* `$result`
+	* Desctription: The new object instance.
+	* Valid values: `object`
+
+
 ### Examples
 
 

@@ -6,9 +6,7 @@ class BaseClass {
 	 * setExistingProps
 	 * @version 1.3.1 (2020-05-06)
 	 * 
-	 * @desc Sets existing object properties.
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object properties. @required
+	 * @see README.md
 	 * 
 	 * @return {void}
 	 */
@@ -86,15 +84,9 @@ class BaseClass {
 	 * createChildInstance
 	 * @version 1.1.1 (2019-08-22)
 	 * 
+	 * @see README.md
+	 * 
 	 * @throws \Exception
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->parentDir {string} — Directory of the parent file (e. g. __DIR__). @required
-	 * @param $params->name {string} — Class name. @required
-	 * @param $params->params {stdClass|arrayAssociative} — Params to be passed to object constructor. Default: [].
-	 * @param $params->capitalizeName {boolean} — Need to capitalize child name? Default: true.
-	 * 
-	 * @return {object}
 	 */
 	public static final function createChildInstance($params){
 		//Defaults
