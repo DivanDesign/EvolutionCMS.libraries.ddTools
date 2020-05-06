@@ -208,4 +208,28 @@ class BaseClass {
 	public function toArray(){
 		return $this->ddGetPropValues();
 	}
+	
+	/**
+	 * toJSON
+	 * @version 1.0 (2020-05-06)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {stringJsonObject}
+	 */
+	public function toJSON(){
+		return json_encode($this->toArray());
+	}
+	
+	/**
+	 * __toString
+	 * @version 1.0 (2020-05-06)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {stringJsonObject}
+	 */
+	public function __toString(){
+		return $this->toJSON();
+	}
 }

@@ -254,6 +254,28 @@ Returns all properties of this object as an associative array independent of the
 	* Valid values: `mixed`
 
 
+##### `\DDTools\BaseClass::toJSON()`
+
+Returns all properties of this object as an JSON string independent of their visibility.
+
+
+###### Returns
+
+* `$result`
+	* Desctription: An JSON string representation of this object.  
+		The method returns all existing properties: public, private and protected.
+	* Valid values: `stringJsonObject`
+	
+* `$result->{$propName}`
+	* Desctription: The key is the object field name and the value is the object field value.
+	* Valid values: `mixed`
+
+
+##### `\DDTools\BaseClass::__toString()`
+
+The same as `\DDTools\BaseClass::toJSON()`.
+
+
 ##### `\DDTools\BaseClass::createChildInstance($params)`
 
 * `$params`
