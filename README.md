@@ -237,6 +237,23 @@ Sets existing object properties.
 	* **Required**
 
 
+##### `\DDTools\BaseClass::toArray()`
+
+Returns all properties of this object as an associative array independent of their visibility.
+
+
+###### Returns
+
+* `$result`
+	* Desctription: An associative array representation of this object.  
+		The method returns all existing properties: public, private and protected.
+	* Valid values: `arrayAssociative`
+	
+* `$result[$propName]`
+	* Desctription: The key is the object field name and the value is the object field value.
+	* Valid values: `mixed`
+
+
 ##### `\DDTools\BaseClass::createChildInstance($params)`
 
 * `$params`

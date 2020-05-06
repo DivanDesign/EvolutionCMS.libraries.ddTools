@@ -81,6 +81,52 @@ class BaseClass {
 	}
 	
 	/**
+	 * ddGetPropValues
+	 * @version 1.0 (2020-05-06)
+	 * 
+	 * @throws \ReflectionException
+	 * 
+	 * @param $class {string|object|null} — Класс или объект. Default: null.
+	 * 
+	 * @return $result {arrayAssociative}
+	 * @return $result[$propName] {mixed}
+	 */
+	private function ddGetPropValues($class = null){
+		$result = [];
+		
+		if ($class === null){
+			$class = get_class($this);
+		}
+		
+		$classReflection = new \ReflectionClass($class);
+		$reflectionProperties = $classReflection->getProperties();
+		
+		if (!empty($reflectionProperties)){
+			foreach(
+				$reflectionProperties as
+				$reflectionProperty
+			){
+				if (!$reflectionProperty->isPublic()){
+					$reflectionProperty->setAccessible(true);
+				}
+				
+				$result[$reflectionProperty->getName()] = $reflectionProperty->getValue($this);
+			}
+		}else{
+			$parent = $classReflection->getParentClass();
+			
+			if ($parent !== false){
+				$result = array_merge(
+					$result,
+					$this->ddGetPropValues($parent->getName())
+				);
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * createChildInstance
 	 * @version 1.1.1 (2019-08-22)
 	 * 
@@ -151,5 +197,15 @@ class BaseClass {
 				500
 			);
 		}
+	}
+	
+	/**
+	 * toArray
+	 * @version 1.0 (2020-05-06)
+	 * 
+	 * @see README.md
+	 */
+	public function toArray(){
+		return $this->ddGetPropValues();
 	}
 }
