@@ -94,7 +94,10 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* Valid values: `mixed`
 
 
-#### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\ObjectTools`
+
+
+##### `\DDTools\ObjectTools::extend($params)`
 
 Merge the contents of two or more objects or arrays together into the first one.
 
@@ -141,7 +144,7 @@ Merge the contents of two or more objects or arrays together into the first one.
 	* Default value: `true`
 
 
-#### `\DDTools\ObjectTools::isPropExists($params)`
+##### `\DDTools\ObjectTools::isPropExists($params)`
 
 Checks if the object, class or array has a property / element.
 This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
@@ -171,7 +174,7 @@ Second, the different order of parameters in the native PHP functions makes us c
 	* **Required**
 
 
-#### `\DDTools\ObjectTools::getPropValue($params)`
+##### `\DDTools\ObjectTools::getPropValue($params)`
 
 Get the value of an object property or an array element.
 This is a “syntactic sugar” for getting an element in one way regardless of the “object” type.
@@ -197,13 +200,119 @@ This is a “syntactic sugar” for getting an element in one way regardless of 
 		* `integer`
 	* **Required**
 
-##### Returns
+
+###### Returns
 
 * `$result`
 	* Desctription: Value of an object property or an array element.
 	* Valid values:
 		* `mixed`
 		* `NULL` — if property not exists
+
+
+#### `\DDTools\BaseClass`
+
+Simple class with some small methods facilitating your work.
+It is convenient to inherit your classes from this.
+
+You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
+
+
+##### `\DDTools\BaseClass::setExistingProps($props)`
+
+Sets existing object properties.
+
+* `$props`
+	* Desctription: The object properties.
+		* The method sets all existing properties: public, private or protected — it doesn't matter, exactly what you pass will be set.
+		* No problem if If some properties are not exist, the method just skip them without errors.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$props->{$propName}`
+	* Desctription: Key is the property name, value is the property value.
+	* Valid values: `mixed`
+	* **Required**
+
+
+##### `\DDTools\BaseClass::toArray()`
+
+Returns all properties of this object as an associative array independent of their visibility.
+
+
+###### Returns
+
+* `$result`
+	* Desctription: An associative array representation of this object.  
+		The method returns all existing properties: public, private and protected.
+	* Valid values: `arrayAssociative`
+	
+* `$result[$propName]`
+	* Desctription: The key is the object field name and the value is the object field value.
+	* Valid values: `mixed`
+
+
+##### `\DDTools\BaseClass::toJSON()`
+
+Returns all properties of this object as an JSON string independent of their visibility.
+
+
+###### Returns
+
+* `$result`
+	* Desctription: An JSON string representation of this object.  
+		The method returns all existing properties: public, private and protected.
+	* Valid values: `stringJsonObject`
+	
+* `$result->{$propName}`
+	* Desctription: The key is the object field name and the value is the object field value.
+	* Valid values: `mixed`
+
+
+##### `\DDTools\BaseClass::__toString()`
+
+The same as `\DDTools\BaseClass::toJSON()`.
+
+
+##### `\DDTools\BaseClass::createChildInstance($params)`
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->parentDir`
+	* Desctription: Directory of the parent file (e. g. `__DIR__`).
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->name`
+	* Desctription: Class name.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->params`
+	* Desctription: Params to be passed to object constructor.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: `[]`
+	
+* `$params->capitalizeName`
+	* Desctription: Need to capitalize child name?
+	* Valid values: `boolean`
+	* Default value: `true`
+
+
+###### Returns
+
+* `$result`
+	* Desctription: The new object instance.
+	* Valid values: `object`
 
 
 ### Examples

@@ -4,11 +4,9 @@ namespace DDTools;
 class BaseClass {
 	/**
 	 * setExistingProps
-	 * @version 1.3 (2019-12-14)
+	 * @version 1.3.1 (2020-05-06)
 	 * 
-	 * @desc Sets existing object properties.
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object properties. @required
+	 * @see README.md
 	 * 
 	 * @return {void}
 	 */
@@ -20,7 +18,7 @@ class BaseClass {
 			$propName =>
 			$propValue
 		){
-			$this->setProp([
+			$this->ddSetProp([
 				'object' => $this,
 				'propName' => $propName,
 				'propValue' => $propValue
@@ -29,8 +27,8 @@ class BaseClass {
 	}
 	
 	/**
-	 * setProp
-	 * @version 1.0.1 (2019-12-14)
+	 * ddSetProp
+	 * @version 1.0.2 (2020-05-06)
 	 * 
 	 * @throws \ReflectionException
 	 * 
@@ -42,7 +40,7 @@ class BaseClass {
 	 * 
 	 * @return {void}
 	 */
-	private function setProp($params){
+	private function ddSetProp($params){
 		//Defaults
 		$params = (object) array_merge(
 			[
@@ -72,7 +70,7 @@ class BaseClass {
 			$parent = $classReflection->getParentClass();
 			
 			if ($parent !== false){
-				$this->setProp([
+				$this->ddSetProp([
 					'object' => $params->object,
 					'propName' => $params->propName,
 					'propValue' => $params->propValue,
@@ -83,18 +81,58 @@ class BaseClass {
 	}
 	
 	/**
+	 * ddGetPropValues
+	 * @version 1.0 (2020-05-06)
+	 * 
+	 * @throws \ReflectionException
+	 * 
+	 * @param $class {string|object|null} — Класс или объект. Default: null.
+	 * 
+	 * @return $result {arrayAssociative}
+	 * @return $result[$propName] {mixed}
+	 */
+	private function ddGetPropValues($class = null){
+		$result = [];
+		
+		if ($class === null){
+			$class = get_class($this);
+		}
+		
+		$classReflection = new \ReflectionClass($class);
+		$reflectionProperties = $classReflection->getProperties();
+		
+		if (!empty($reflectionProperties)){
+			foreach(
+				$reflectionProperties as
+				$reflectionProperty
+			){
+				if (!$reflectionProperty->isPublic()){
+					$reflectionProperty->setAccessible(true);
+				}
+				
+				$result[$reflectionProperty->getName()] = $reflectionProperty->getValue($this);
+			}
+		}else{
+			$parent = $classReflection->getParentClass();
+			
+			if ($parent !== false){
+				$result = array_merge(
+					$result,
+					$this->ddGetPropValues($parent->getName())
+				);
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * createChildInstance
 	 * @version 1.1.1 (2019-08-22)
 	 * 
+	 * @see README.md
+	 * 
 	 * @throws \Exception
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->parentDir {string} — Directory of the parent file (e. g. __DIR__). @required
-	 * @param $params->name {string} — Class name. @required
-	 * @param $params->params {stdClass|arrayAssociative} — Params to be passed to object constructor. Default: [].
-	 * @param $params->capitalizeName {boolean} — Need to capitalize child name? Default: true.
-	 * 
-	 * @return {object}
 	 */
 	public static final function createChildInstance($params){
 		//Defaults
@@ -159,5 +197,39 @@ class BaseClass {
 				500
 			);
 		}
+	}
+	
+	/**
+	 * toArray
+	 * @version 1.0 (2020-05-06)
+	 * 
+	 * @see README.md
+	 */
+	public function toArray(){
+		return $this->ddGetPropValues();
+	}
+	
+	/**
+	 * toJSON
+	 * @version 1.0 (2020-05-06)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {stringJsonObject}
+	 */
+	public function toJSON(){
+		return json_encode($this->toArray());
+	}
+	
+	/**
+	 * __toString
+	 * @version 1.0 (2020-05-06)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {stringJsonObject}
+	 */
+	public function __toString(){
+		return $this->toJSON();
 	}
 }

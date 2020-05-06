@@ -1,6 +1,15 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.35 (2020-05-06)
+* \+ `\DDTools\BaseClass::toArray`. Returns all properties of this object as an associative array independent of their visibility.
+* \+ `\DDTools\BaseClass::toJSON`. Returns all properties of this object as an JSON string independent of their visibility.
+* \+ `\DDTools\BaseClass::__toString()`. The same as `\DDTools\BaseClass::toJSON()`.
+* \+ README → Parameters description:
+	* \+ `\DDTools\BaseClass`.
+	* \+ Small improvements.
+
+
 ## Version 0.34 (2020-04-30)
 * \+ `\DDTools\ObjectTools::extend`:
 	* \+ Added the ability to prevent fields overwriting with empty values (`$params->overwriteWithEmpty`).
