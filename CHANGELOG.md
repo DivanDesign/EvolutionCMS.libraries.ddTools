@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.35.1 (2020-05-08)
+* \* Composer.json:
+	* \+ `authors`.
+	* \* `name`: Changed from `dd/modxevo-library-ddtools` to `dd/evolutioncms-libraries-ddtools`.
+	* \* `homepage`: Link changed to HTTPS.
+
+
 ## Version 0.35 (2020-05-06)
 * \+ `\DDTools\BaseClass::toArray`. Returns all properties of this object as an associative array independent of their visibility.
 * \+ `\DDTools\BaseClass::toJSON`. Returns all properties of this object as an JSON string independent of their visibility.
