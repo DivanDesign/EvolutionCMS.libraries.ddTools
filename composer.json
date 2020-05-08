@@ -9,7 +9,7 @@
 		"modx evolution",
 		"ddtools"
 	],
-	"homepage": "http://code.divandesign.biz/modx/ddtools",
+	"homepage": "https://code.divandesign.biz/modx/ddtools",
 	"license": "MIT",
 	"require": {
 		"php": ">=5.4.0",
