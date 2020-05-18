@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.36 (2020-05-18)
+* \+ `\ddTools::prepareDocData`, `\ddTools::createDocument`, `\ddTools::updateDocument`: Also can take document fields as stdClass, not only as an associative array.
+
+
 ## Version 0.35.1 (2020-05-08)
 * \* Composer.json:
 	* \+ `authors`.
