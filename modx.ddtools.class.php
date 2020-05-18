@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.35.1 (2020-05-08)
+ * @version 0.36 (2020-05-18)
  * 
  * @see README.md
  * 
@@ -1110,8 +1110,8 @@ class ddTools {
 	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->data {arrayAssociative} — Array of document fields (from table `site_content`) or TVs with values. @required
-	 * @param $params->data[key] {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
+	 * @param $params->data {stdClass|arrayAssociative} — Array of document fields (from table `site_content`) or TVs with values. @required
+	 * @param $params->data->{$key} {mixed} — Field value (optional), when key is field name. The method use only keys, values just will be returned without changes. @required
 	 * @param $params->tvAdditionalFieldsToGet {array} — Fields of TVs to get if needed (e. g. 'id', 'type'). Default: [].
 	 * @param $params->tvAdditionalFieldsToGet[i] {string} — TV field.
 	 * 
@@ -1204,12 +1204,12 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.2.3 (2020-02-10)
+	 * @version 1.3 (2020-05-18)
 	 * 
 	 * @desc Create a new document.
 	 * 
-	 * @param $docData {arrayAssociative} — Array of document fields or TVs. Key — name, value — value. @required
-	 * @param $docData['pagetitle'] {string} — Document pagetitle. @required
+	 * @param $docData {stdClass|arrayAssociative} — Array of document fields or TVs. Key — name, value — value. @required
+	 * @param $docData->pagetitle {string} — Document pagetitle. @required
 	 * @param $docGroups {array} — Array of document groups id.
 	 * 
 	 * @return {integer|false} — ID нового документа или false, если что-то не так.
@@ -1218,29 +1218,31 @@ class ddTools {
 		$docData = [],
 		$docGroups = false
 	){
+		$docData = (object) $docData;
+		
 		//Если нет хотя бы заголовка, выкидываем
-		if (!$docData['pagetitle']){
+		if (!$docData->pagetitle){
 			return false;
 		}
 		
 		//Если не передана дата создания документа, ставим текущую
-		if (!$docData['createdon']){
-			$docData['createdon'] = time();
+		if (!$docData->createdon){
+			$docData->createdon = time();
 		}
 		
 		//Если не передано, кем документ создан, ставим 1
-		if (!$docData['createdby']){
-			$docData['createdby'] = 1;
+		if (!$docData->createdby){
+			$docData->createdby = 1;
 		}
 		
 		//Если группы заданы, то это приватный документ
 		if ($docGroups){
-			$docData['privatemgr'] = 1;
+			$docData->privatemgr = 1;
 		}
 		
 		//Если надо публиковать, поставим дату публикации текущей
-		if ($docData['published'] == 1){
-			$docData['pub_date'] = $docData['createdon'];
+		if ($docData->published == 1){
+			$docData->pub_date = $docData->createdon;
 		}
 		
 		$docData = self::prepareDocData([
@@ -1377,7 +1379,7 @@ class ddTools {
 	 * @note $docId and/or $where are required.
 	 * 
 	 * @param $docId {integer|array} — Document id(s) to update. @required
-	 * @param $docData {arrayAssociative} — Array of document fields or TVs to update. Key — name, value — value. @required
+	 * @param $docData {stdClass|arrayAssociative} — Array of document fields or TVs to update. Key — name, value — value. @required
 	 * @param $where {string} — SQL WHERE string. Default: ''.
 	 * 
 	 * @return {boolean} — true — если всё хорошо, или false — если такого документа нет, или ещё что-то пошло не так.
