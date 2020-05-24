@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.37 (2020-05-24)
+* \* `\ddTools::sort2dArray`:
+	* \+ Ассоциативные массивы также поддерживаются.
+	* \* Небольшой рефакторинг.
+
+
 ## Версия 0.36 (2020-05-18)
 * \+ `\ddTools::prepareDocData`, `\ddTools::createDocument`, `\ddTools::updateDocument`: Также могут принимать поля документа как `stdClass`, не только в виде ассоциативного массива.
 

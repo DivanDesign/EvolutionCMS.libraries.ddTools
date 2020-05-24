@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.37 (2020-05-24)
+* \* `\ddTools::sort2dArray`:
+	* \+ Associative arrays are also supported.
+	* \* Small refactoring.
+
+
 ## Version 0.36 (2020-05-18)
 * \+ `\ddTools::prepareDocData`, `\ddTools::createDocument`, `\ddTools::updateDocument`: Also can take document fields as stdClass, not only as an associative array.
 
