@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.36 (2020-05-18)
+ * @version 0.37 (2020-05-24)
  * 
  * @see README.md
  * 
@@ -346,11 +346,11 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.1.5 (2019-06-22)
+	 * @version 1.2 (2020-05-24)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
-	 * @param $array {array} — Array to sort. @required
+	 * @param $array {array} — Array to sort. Associative arrays are also supported. @required
 	 * @param $sortBy {array} — Columns (second level keys) by which the array is sorted. @required
 	 * @param $sortDir {1|-1} — Sort direction (1 == ASC; -1 == DESC). Default: 1.
 	 * @param $i {integer} — Count, an internal variable used during recursive calls. Default: 0.
@@ -364,95 +364,110 @@ class ddTools {
 		$i = 0
 	){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
-		$tek = $array[0][$sortBy[$i]];
-		$tekIsNumeric = is_numeric($tek);
+		$currentRow = array_values($array)[0][$sortBy[$i]];
+		$isCurrentRowNumeric = is_numeric($currentRow);
 		
-		$arrLeft = [];
-		$arrRight = [];
-		$arrCent = [];
+		$isArrayAssociative =
+			count(array_filter(
+				array_keys($array),
+				'is_string'
+			)) >
+			0
+		;
+		
+		$resultArrayLeft = [];
+		$resultArrayRight = [];
+		$resultArrayCenter = [];
 		
 		//Перебираем массив
 		foreach (
 			$array as
-			$val
+			$rowKey =>
+			$rowValue
 		){
 			//Если эталон и текущее значение — числа
 			if (
-				$tekIsNumeric &&
-				is_numeric($val[$sortBy[$i]])
+				$isCurrentRowNumeric &&
+				is_numeric($rowValue[$sortBy[$i]])
 			){
 				//Получаем нужную циферку
 				$cmpRes =
-					$val[$sortBy[$i]] == $tek ?
+					$rowValue[$sortBy[$i]] == $currentRow ?
 					0 :
 					(
-						$val[$sortBy[$i]] > $tek ?
+						$rowValue[$sortBy[$i]] > $currentRow ?
 						1 :
 						-1
 					)
 				;
-				//Если они строки
+			//Если они строки
 			}else{
 				//Сравниваем текущее значение со значением эталонного
 				$cmpRes = strcmp(
-					$val[$sortBy[$i]],
-					$tek
+					$rowValue[$sortBy[$i]],
+					$currentRow
 				);
 			}
 			
 			//Если меньше эталона, отбрасываем в массив меньших
 			if ($cmpRes * $sortDir < 0){
-				$arrLeft[] = $val;
+				$resultArray = &$resultArrayLeft;
 			//Если больше — в массив больших
 			}else if ($cmpRes * $sortDir > 0){
-				$arrRight[] = $val;
-			//Если раво — в центральный
+				$resultArray = &$resultArrayRight;
+			//Если равно — в центральный
 			}else{
-				$arrCent[] = $val;
+				$resultArray = &$resultArrayCenter;
+			}
+			
+			if ($isArrayAssociative){
+				$resultArray[$rowKey] = $rowValue;
+			}else{
+				$resultArray[] = $rowValue;
 			}
 		}
 		
 		//Массивы меньших и массивы больших прогоняем по тому же алгоритму (если в них что-то есть)
-		$arrLeft =
-			count($arrLeft) > 1 ?
+		$resultArrayLeft =
+			count($resultArrayLeft) > 1 ?
 			self::sort2dArray(
-				$arrLeft,
+				$resultArrayLeft,
 				$sortBy,
 				$sortDir,
 				$i
 			) :
-			$arrLeft
+			$resultArrayLeft
 		;
-		$arrRight =
-			count($arrRight) > 1 ?
+		$resultArrayRight =
+			count($resultArrayRight) > 1 ?
 			self::sort2dArray(
-				$arrRight,
+				$resultArrayRight,
 				$sortBy,
 				$sortDir,
 				$i
 			) :
-			$arrRight
+			$resultArrayRight
 		;
 		//Массив одинаковых прогоняем по следующему условию сортировки (если есть условие и есть что сортировать)
-		$arrCent =
+		$resultArrayCenter =
 			(
-				count($arrCent) > 1 &&
+				count($resultArrayCenter) > 1 &&
 				$sortBy[$i + 1]
 			) ?
 			self::sort2dArray(
-				$arrCent,
+				$resultArrayCenter,
 				$sortBy,
 				$sortDir,
 				$i + 1
 			) :
-			$arrCent
+			$resultArrayCenter
 		;
 		
 		//Склеиваем отсортированные меньшие, средние и большие
 		return array_merge(
-			$arrLeft,
-			$arrCent,
-			$arrRight
+			$resultArrayLeft,
+			$resultArrayCenter,
+			$resultArrayRight
 		);
 	}
 	
