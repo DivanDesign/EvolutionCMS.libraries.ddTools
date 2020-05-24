@@ -346,7 +346,7 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.1.5 (2019-06-22)
+	 * @version 1.1.6 (2020-05-24)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
@@ -364,95 +364,95 @@ class ddTools {
 		$i = 0
 	){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
-		$tek = $array[0][$sortBy[$i]];
-		$tekIsNumeric = is_numeric($tek);
+		$currentRow = $array[0][$sortBy[$i]];
+		$isCurrentRowNumeric = is_numeric($currentRow);
 		
-		$arrLeft = [];
-		$arrRight = [];
-		$arrCent = [];
+		$resultArrayLeft = [];
+		$resultArrayRight = [];
+		$resultArrayCenter = [];
 		
 		//Перебираем массив
 		foreach (
 			$array as
-			$val
+			$rowValue
 		){
 			//Если эталон и текущее значение — числа
 			if (
-				$tekIsNumeric &&
-				is_numeric($val[$sortBy[$i]])
+				$isCurrentRowNumeric &&
+				is_numeric($rowValue[$sortBy[$i]])
 			){
 				//Получаем нужную циферку
 				$cmpRes =
-					$val[$sortBy[$i]] == $tek ?
+					$rowValue[$sortBy[$i]] == $currentRow ?
 					0 :
 					(
-						$val[$sortBy[$i]] > $tek ?
+						$rowValue[$sortBy[$i]] > $currentRow ?
 						1 :
 						-1
 					)
 				;
-				//Если они строки
+			//Если они строки
 			}else{
 				//Сравниваем текущее значение со значением эталонного
 				$cmpRes = strcmp(
-					$val[$sortBy[$i]],
-					$tek
+					$rowValue[$sortBy[$i]],
+					$currentRow
 				);
 			}
 			
 			//Если меньше эталона, отбрасываем в массив меньших
 			if ($cmpRes * $sortDir < 0){
-				$arrLeft[] = $val;
+				$resultArrayLeft[] = $rowValue;
 			//Если больше — в массив больших
 			}else if ($cmpRes * $sortDir > 0){
-				$arrRight[] = $val;
+				$resultArrayRight[] = $rowValue;
 			//Если раво — в центральный
 			}else{
-				$arrCent[] = $val;
+				$resultArrayCenter[] = $rowValue;
 			}
 		}
 		
 		//Массивы меньших и массивы больших прогоняем по тому же алгоритму (если в них что-то есть)
-		$arrLeft =
-			count($arrLeft) > 1 ?
+		$resultArrayLeft =
+			count($resultArrayLeft) > 1 ?
 			self::sort2dArray(
-				$arrLeft,
+				$resultArrayLeft,
 				$sortBy,
 				$sortDir,
 				$i
 			) :
-			$arrLeft
+			$resultArrayLeft
 		;
-		$arrRight =
-			count($arrRight) > 1 ?
+		$resultArrayRight =
+			count($resultArrayRight) > 1 ?
 			self::sort2dArray(
-				$arrRight,
+				$resultArrayRight,
 				$sortBy,
 				$sortDir,
 				$i
 			) :
-			$arrRight
+			$resultArrayRight
 		;
 		//Массив одинаковых прогоняем по следующему условию сортировки (если есть условие и есть что сортировать)
-		$arrCent =
+		$resultArrayCenter =
 			(
-				count($arrCent) > 1 &&
+				count($resultArrayCenter) > 1 &&
 				$sortBy[$i + 1]
 			) ?
 			self::sort2dArray(
-				$arrCent,
+				$resultArrayCenter,
 				$sortBy,
 				$sortDir,
 				$i + 1
 			) :
-			$arrCent
+			$resultArrayCenter
 		;
 		
 		//Склеиваем отсортированные меньшие, средние и большие
 		return array_merge(
-			$arrLeft,
-			$arrCent,
-			$arrRight
+			$resultArrayLeft,
+			$resultArrayCenter,
+			$resultArrayRight
 		);
 	}
 	
