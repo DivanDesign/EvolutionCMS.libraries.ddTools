@@ -346,11 +346,11 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.1.6 (2020-05-24)
+	 * @version 1.2 (2020-05-24)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
-	 * @param $array {array} — Array to sort. @required
+	 * @param $array {array} — Array to sort. Associative arrays are also supported. @required
 	 * @param $sortBy {array} — Columns (second level keys) by which the array is sorted. @required
 	 * @param $sortDir {1|-1} — Sort direction (1 == ASC; -1 == DESC). Default: 1.
 	 * @param $i {integer} — Count, an internal variable used during recursive calls. Default: 0.
@@ -364,8 +364,16 @@ class ddTools {
 		$i = 0
 	){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
-		$currentRow = $array[0][$sortBy[$i]];
+		$currentRow = array_values($array)[0][$sortBy[$i]];
 		$isCurrentRowNumeric = is_numeric($currentRow);
+		
+		$isArrayAssociative =
+			count(array_filter(
+				array_keys($array),
+				'is_string'
+			)) >
+			0
+		;
 		
 		$resultArrayLeft = [];
 		$resultArrayRight = [];
@@ -374,6 +382,7 @@ class ddTools {
 		//Перебираем массив
 		foreach (
 			$array as
+			$rowKey =>
 			$rowValue
 		){
 			//Если эталон и текущее значение — числа
@@ -402,13 +411,19 @@ class ddTools {
 			
 			//Если меньше эталона, отбрасываем в массив меньших
 			if ($cmpRes * $sortDir < 0){
-				$resultArrayLeft[] = $rowValue;
+				$resultArray = &$resultArrayLeft;
 			//Если больше — в массив больших
 			}else if ($cmpRes * $sortDir > 0){
-				$resultArrayRight[] = $rowValue;
-			//Если раво — в центральный
+				$resultArray = &$resultArrayRight;
+			//Если равно — в центральный
 			}else{
-				$resultArrayCenter[] = $rowValue;
+				$resultArray = &$resultArrayCenter;
+			}
+			
+			if ($isArrayAssociative){
+				$resultArray[$rowKey] = $rowValue;
+			}else{
+				$resultArray[] = $rowValue;
 			}
 		}
 		
