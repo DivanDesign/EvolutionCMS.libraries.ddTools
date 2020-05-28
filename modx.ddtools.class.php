@@ -1219,7 +1219,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.3.1 (2020-05-28)
+	 * @version 1.3.2 (2020-05-28)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1236,20 +1236,14 @@ class ddTools {
 		//Defaults
 		$docData = (object) array_merge(
 			[
-				'pagetitle' => 'New resource'
+				'pagetitle' => 'New resource',
+				//Если не передана дата создания документа, ставим текущую
+				'createdon' => time(),
+				//Если не передано, кем документ создан, ставим 1
+				'createdby' => 1
 			],
 			(array) $docData
 		);
-		
-		//Если не передана дата создания документа, ставим текущую
-		if (!$docData->createdon){
-			$docData->createdon = time();
-		}
-		
-		//Если не передано, кем документ создан, ставим 1
-		if (!$docData->createdby){
-			$docData->createdby = 1;
-		}
 		
 		//Если группы заданы, то это приватный документ
 		if ($docGroups){
