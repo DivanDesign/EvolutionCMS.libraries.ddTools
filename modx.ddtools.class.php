@@ -1,11 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.37 (2020-05-24)
+ * @version 0.37.1 (2020-05-28)
  * 
  * @see README.md
  * 
- * @copyright 2012–2020 DivanDesign {@link http://www.DivanDesign.biz }
+ * @copyright 2012–2020 DD Group {@link https://DivanDesign.biz }
  */
 
 global $modx;
@@ -1219,12 +1219,12 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.3 (2020-05-18)
+	 * @version 1.3.2 (2020-05-28)
 	 * 
 	 * @desc Create a new document.
 	 * 
 	 * @param $docData {stdClass|arrayAssociative} — Array of document fields or TVs. Key — name, value — value. @required
-	 * @param $docData->pagetitle {string} — Document pagetitle. @required
+	 * @param $docData->pagetitle {string} — Document pagetitle. Default: 'New resource'.
 	 * @param $docGroups {array} — Array of document groups id.
 	 * 
 	 * @return {integer|false} — ID нового документа или false, если что-то не так.
@@ -1233,22 +1233,17 @@ class ddTools {
 		$docData = [],
 		$docGroups = false
 	){
-		$docData = (object) $docData;
-		
-		//Если нет хотя бы заголовка, выкидываем
-		if (!$docData->pagetitle){
-			return false;
-		}
-		
-		//Если не передана дата создания документа, ставим текущую
-		if (!$docData->createdon){
-			$docData->createdon = time();
-		}
-		
-		//Если не передано, кем документ создан, ставим 1
-		if (!$docData->createdby){
-			$docData->createdby = 1;
-		}
+		//Defaults
+		$docData = (object) array_merge(
+			[
+				'pagetitle' => 'New resource',
+				//Если не передана дата создания документа, ставим текущую
+				'createdon' => time(),
+				//Если не передано, кем документ создан, ставим 1
+				'createdby' => 1
+			],
+			(array) $docData
+		);
 		
 		//Если группы заданы, то это приватный документ
 		if ($docGroups){

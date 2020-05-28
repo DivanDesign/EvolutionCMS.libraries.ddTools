@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.37.1 (2020-05-28)
+* \* `ddTools::createDocument`:
+	* \* Parameters → `$docData->pagetitle`: Is not required anymore and by default will be equal to `'New resource'`.
+	* \* Small refactoring.
+
+
 ## Version 0.37 (2020-05-24)
 * \* `\ddTools::sort2dArray`:
 	* \+ Associative arrays are also supported.
