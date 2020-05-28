@@ -1219,12 +1219,12 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.3 (2020-05-18)
+	 * @version 1.3.1 (2020-05-28)
 	 * 
 	 * @desc Create a new document.
 	 * 
 	 * @param $docData {stdClass|arrayAssociative} — Array of document fields or TVs. Key — name, value — value. @required
-	 * @param $docData->pagetitle {string} — Document pagetitle. @required
+	 * @param $docData->pagetitle {string} — Document pagetitle. Default: 'New resource'.
 	 * @param $docGroups {array} — Array of document groups id.
 	 * 
 	 * @return {integer|false} — ID нового документа или false, если что-то не так.
@@ -1233,12 +1233,13 @@ class ddTools {
 		$docData = [],
 		$docGroups = false
 	){
-		$docData = (object) $docData;
-		
-		//Если нет хотя бы заголовка, выкидываем
-		if (!$docData->pagetitle){
-			return false;
-		}
+		//Defaults
+		$docData = (object) array_merge(
+			[
+				'pagetitle' => 'New resource'
+			],
+			(array) $docData
+		);
 		
 		//Если не передана дата создания документа, ставим текущую
 		if (!$docData->createdon){
