@@ -3,6 +3,163 @@ namespace DDTools;
 
 class ObjectTools {
 	/**
+	 * isObjectOrArray
+	 * @version 0.1 (2020-04-30)
+	 * 
+	 * @todo Should it get $object directly or as $params->object?
+	 * 
+	 * @return {boolean}
+	 */
+	private static function isObjectOrArray($object){
+		return
+			is_object($object) ||
+			is_array($object)
+		;
+	}
+	
+	/**
+	 * isPropExists
+	 * @version 1.0 (2020-04-30)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {mixed}
+	 */
+	public static function isPropExists($params){
+		$params = (object) $params;
+		
+		return
+			is_object($params->object) ?
+			//Objects
+			property_exists(
+				$params->object,
+				$params->propName
+			) :
+			//Arrays
+			array_key_exists(
+				$params->propName,
+				$params->object
+			)
+		;
+	}
+	
+	/**
+	 * getPropValue
+	 * @version 1.0.1 (2020-04-30)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {mixed}
+	 */
+	public static function getPropValue($params){
+		$params = (object) $params;
+		
+		return
+			!self::isPropExists($params) ?
+			//Non-existing properties
+			NULL :
+			//Existing properties
+			(
+				is_object($params->object) ?
+				//Objects
+				$params->object->{$params->propName} :
+				//Arrays
+				$params->object[$params->propName]
+			)
+		;
+	}
+	
+	/**
+	 * convertType
+	 * @version 1.0 (2020-06-02)
+	 * 
+	 * @see README.md
+	 */
+	public static function convertType($params){
+		//Defaults
+		$params = (object) array_merge(
+			[
+				'type' => 'objectAuto'
+			],
+			(array) $params
+		);
+		
+		//Case insensitive parameter value
+		$params->type = strtolower($params->type);
+		
+		$result = $params->object;
+		
+		//If string is passed, we need to parse it first
+		if (!self::isObjectOrArray($params->object)){
+			if (empty($params->object)){
+				$result = new \stdClass();
+			}else{
+				$isObjectJson =
+					//JSON first letter is `{` or `[`
+					in_array(
+						substr(
+							ltrim($params->object),
+							0,
+							1
+						),
+						[
+							'{',
+							'['
+						]
+					)
+				;
+				
+				if ($isObjectJson){
+					try {
+						$result = json_decode($params->object);
+					}catch (\Exception $e){
+						//Flag
+						$isObjectJson = false;
+					}
+				}
+				
+				//Not JSON
+				if (!$isObjectJson){
+					//Query string
+					parse_str(
+						$params->object,
+						$result
+					);
+				}
+			}
+		}
+		
+		//stdClass
+		if ($params->type == 'objectstdclass'){
+			$result = (object) $result;
+		//array
+		}else if ($params->type == 'objectarray'){
+			$result = (array) $result;
+		//stringJson
+		}else if(
+			substr(
+				$params->type,
+				0,
+				10
+			) == 'stringjson'
+		){
+			if ($params->type == 'stringjsonobject'){
+				$result = (object) $result;
+			}else if ($params->type == 'stringjsonarray'){
+				$result = array_values((array) $result);
+			}
+			
+			$result = json_encode(
+				$result,
+				//JSON_UNESCAPED_UNICODE — Не кодировать многобайтные символы Unicode | JSON_UNESCAPED_SLASHES — Не экранировать /
+				JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+			);
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * extend
 	 * @version 1.3 (2020-04-30)
 	 * 
@@ -148,73 +305,5 @@ class ObjectTools {
 		}
 		
 		return $result;
-	}
-	
-	
-	/**
-	 * isObjectOrArray
-	 * @version 0.1 (2020-04-30)
-	 * 
-	 * @todo Should it get $object directly or as $params->object?
-	 * 
-	 * @return {boolean}
-	 */
-	private static function isObjectOrArray($object){
-		return
-			is_object($object) ||
-			is_array($object)
-		;
-	}
-	
-	/**
-	 * isPropExists
-	 * @version 1.0 (2020-04-30)
-	 * 
-	 * @see README.md
-	 * 
-	 * @return {mixed}
-	 */
-	public static function isPropExists($params){
-		$params = (object) $params;
-		
-		return
-			is_object($params->object) ?
-			//Objects
-			property_exists(
-				$params->object,
-				$params->propName
-			) :
-			//Arrays
-			array_key_exists(
-				$params->propName,
-				$params->object
-			)
-		;
-	}
-	
-	/**
-	 * getPropValue
-	 * @version 1.0.1 (2020-04-30)
-	 * 
-	 * @see README.md
-	 * 
-	 * @return {mixed}
-	 */
-	public static function getPropValue($params){
-		$params = (object) $params;
-		
-		return
-			!self::isPropExists($params) ?
-			//Non-existing properties
-			NULL :
-			//Existing properties
-			(
-				is_object($params->object) ?
-				//Objects
-				$params->object->{$params->propName} :
-				//Arrays
-				$params->object[$params->propName]
-			)
-		;
 	}
 }

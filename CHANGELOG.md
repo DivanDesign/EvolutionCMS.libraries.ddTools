@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.38 (2020-06-02)
+* \+ `\DDTools\ObjectTools::convertType`: The new method. Converts an object type. Arrays, JSON and Query string objects are also supported.
+* \* `\ddTools::encodedStringToArray`:
+	* \* Now uses `\DDTools\ObjectTools::convertType`.
+	* \* Style of CMS log message was improved.
+
+
 ## Version 0.37.1 (2020-05-28)
 * \* `ddTools::createDocument`:
 	* \* Parameters → `$docData->pagetitle`: Is not required anymore and by default will be equal to `'New resource'`.
