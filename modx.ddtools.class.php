@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.37.1 (2020-05-28)
+ * @version 0.38 (2020-06-02)
  * 
  * @see README.md
  * 
