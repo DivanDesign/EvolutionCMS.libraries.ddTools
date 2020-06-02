@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.38 (2020-06-02)
+ * @version 0.38.1 (2020-06-02)
  * 
  * @see README.md
  * 
@@ -290,21 +290,21 @@ class ddTools {
 	 * 
 	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
 	 * @example [
-	 * 	'a': '',
-	 * 	'b': [
-	 * 		'b1': '',
-	 * 		'b2': [
-	 * 			'b21': '',
-	 * 			'b22': ''
+	 * 	'a' => 'a val',
+	 * 	'b' => [
+	 * 		'b1' => 'b1 val',
+	 * 		'b2' => [
+	 * 			'b21' => 'b2.1 val',
+	 * 			'b22' => 'b2.2 val'
 	 * 		]
 	 * 	],
-	 * 	'c': ''
+	 * 	'c' => 'c val'
 	 * ] turns into [
-	 * 	'a': '',
-	 * 	'b.b1': '',
-	 * 	'b.b2.b21': '',
-	 * 	'b.b2.b22': '',
-	 * 	'c': ''
+	 * 	'a' => 'a val',
+	 * 	'b.b1' => 'b1 val',
+	 * 	'b.b2.b21' => 'b2.1 val',
+	 * 	'b.b2.b22' => 'b2.2 val',
+	 * 	'c' => 'c val'
 	 * ].
 	 * 
 	 * @param $array {array} — An array to convert. @required

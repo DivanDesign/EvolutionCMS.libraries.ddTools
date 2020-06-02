@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.38.1 (2020-06-02)
+* \* `\DDTools\ObjectTools::convertType`: Fixed type of deep objects when `$params->type` == `'objectarray'`.
+* \* README:
+	* \- Home page.
+	* \+ Links.
+
+
 ## Version 0.38 (2020-06-02)
 * \+ `\DDTools\ObjectTools::convertType`: The new method. Converts an object type. Arrays, JSON and Query string objects are also supported.
 * \* `\ddTools::encodedStringToArray`:
