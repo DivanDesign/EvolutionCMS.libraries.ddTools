@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.38.1 (2020-06-02)
+* \* `\DDTools\ObjectTools::convertType`: Исправлен тип вложенных объектов при `$params->type` == `'objectarray'`.
+* \* README:
+	* \- Home page.
+	* \+ Ссылки.
+
+
 ## Версия 0.38 (2020-06-02)
 * \+ `\DDTools\ObjectTools::convertType`: Новый метод. Преобразует тип объекта. Массивы, JSON и Query string объекты также поддерживаются.
 * \* `\ddTools::encodedStringToArray`:
