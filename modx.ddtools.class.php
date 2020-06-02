@@ -685,7 +685,7 @@ class ddTools {
 	
 	/**
 	 * encodedStringToArray
-	 * @version 1.1.1 (2020-06-02)
+	 * @version 1.2 (2020-06-02)
 	 * 
 	 * @desc Converts encoded strings to arrays.
 	 * Supported formats:
@@ -710,7 +710,9 @@ class ddTools {
 			$result = self::explodeAssoc($inputString);
 			
 			self::logEvent([
-				'message' => '<p>Strings separated by “::” && “||” in parameters are deprecated. Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+				'message' =>
+					'<p>Strings separated by <code>::</code> && <code>||</code> in parameters are deprecated.</p>' .
+					'<p>Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
 			]);
 		}
 		
