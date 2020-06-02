@@ -97,6 +97,52 @@ You can use the `exctract` function to turn the array into variables of the curr
 #### `\DDTools\ObjectTools`
 
 
+##### `\DDTools\ObjectTools::convertType($params)`
+
+Converts an object type.
+Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en.wikipedia.org/wiki/Query_string) objects are also supported.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->object`
+	* Desctription: Input object | array | encoded string.
+	* Valid values:
+		* `stdClass`
+		* `array`
+		* `stringJsonObject`
+		* `stringJsonArray`
+		* `stringQueryFormated`
+	* **Required**
+	
+* `$params->type`
+	* Desctription: Type of resulting object.  
+		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
+	* Valid values:
+		* `'objectAuto'` — `stdClass` or `array` depends on input string
+		* `'objectStdClass'`
+		* `'objectArray'`
+		* `'stringJsonAuto'` — `stringJsonObject` or `stringJsonArray` depends on input object
+		* `'stringJsonObject'`
+		* `'stringJsonArray'`
+	* Default value: `'objectAuto'`
+
+
+###### Returns
+
+* `$result`
+	* Desctription: Result type depends on `$params->type`.
+	* Valid values:
+		* `stdClass`
+		* `array`
+		* `stringJsonObject`
+		* `stringJsonArray`
+
+
 ##### `\DDTools\ObjectTools::extend($params)`
 
 Merge the contents of two or more objects or arrays together into the first one.
@@ -365,6 +411,83 @@ extract(\ddTools::verifyRenamedParams([
 	//Also you can prevent writing to the CMS event log if you want
 	'writeToLog' => false
 ]));
+```
+
+
+#### `\DDTools\ObjectTools::convertType($params)`
+
+
+##### Convert a JSON or Query encoded string to an array
+
+For example, some snippet supports 2 formats in one of parameters: JSON or Query string.
+Users use the format that is convenient to them and we support both.
+Just call this method and don't care about it.
+
+```php
+//We can pass string in JSON format
+\DDTools\ObjectTools::convertType([
+	'object' => '{
+		"pagetitle": "Test title",
+		"published": "0"
+	}',
+	'type' => 'objectArray'
+]);
+
+//Or Query string
+\DDTools\ObjectTools::convertType([
+	'object' => 'pagetitle=Test title&published=0',
+	'type' => 'objectArray'
+]);
+```
+
+Both calls return:
+
+```php
+[
+	'pagetitle' => 'Test title',
+	'published' => '0'
+];
+```
+
+
+##### Convert a Query encoded string to a JSON object string
+
+```php
+\DDTools\ObjectTools::convertType([
+	'object' => 'firstName=Hans&lastName=Zimmer',
+	'type' => 'stringJsonAuto'
+]);
+```
+
+Returns:
+
+```json
+{
+	"firstName": "Hans",
+	"lastName": "Zimmer"
+}
+```
+
+
+##### Convert a JSON object to a JSON array
+
+```php
+\DDTools\ObjectTools::convertType([
+	'object' => '{
+		"firstName": "Ramin",
+		"lastName": "Djawadi"
+	}',
+	'type' => 'stringJsonArray'
+]);
+```
+
+Returns:
+
+```json
+[
+	"Ramin",
+	"Djawadi"
+]
 ```
 
 
