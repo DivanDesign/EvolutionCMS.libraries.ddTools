@@ -97,6 +97,72 @@ You can use the `exctract` function to turn the array into variables of the curr
 #### `\DDTools\ObjectTools`
 
 
+##### `\DDTools\ObjectTools::isPropExists($params)`
+
+Checks if the object, class or array has a property / element.
+This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
+
+The first reason for creating this method is convenience to not thinking about type of “object” variables.
+Second, the different order of parameters in the native PHP functions makes us crazy.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->object`
+	* Desctription: Source object or array.
+	* Valid values:
+		* `stdClass`
+		* `array`
+	* **Required**
+	
+* `$params->propName`
+	* Desctription: Object property name or array key.
+	* Valid values:
+		* `string`
+		* `integer`
+	* **Required**
+
+
+##### `\DDTools\ObjectTools::getPropValue($params)`
+
+Get the value of an object property or an array element.
+This is a “syntactic sugar” for getting an element in one way regardless of the “object” type.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->object`
+	* Desctription: Source object or array.
+	* Valid values:
+		* `stdClass`
+		* `array`
+	* **Required**
+	
+* `$params->propName`
+	* Desctription: Object property name or array key.
+	* Valid values:
+		* `string`
+		* `integer`
+	* **Required**
+
+
+###### Returns
+
+* `$result`
+	* Desctription: Value of an object property or an array element.
+	* Valid values:
+		* `mixed`
+		* `NULL` — if property not exists
+
+
 ##### `\DDTools\ObjectTools::convertType($params)`
 
 Converts an object type.
@@ -188,72 +254,6 @@ Merge the contents of two or more objects or arrays together into the first one.
 		* `NULL`
 	* Valid values: `boolean`
 	* Default value: `true`
-
-
-##### `\DDTools\ObjectTools::isPropExists($params)`
-
-Checks if the object, class or array has a property / element.
-This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
-
-The first reason for creating this method is convenience to not thinking about type of “object” variables.
-Second, the different order of parameters in the native PHP functions makes us crazy.
-
-* `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
-	* Valid values:
-		* `stdClass`
-		* `arrayAssociative`
-	* **Required**
-	
-* `$params->object`
-	* Desctription: Source object or array.
-	* Valid values:
-		* `stdClass`
-		* `array`
-	* **Required**
-	
-* `$params->propName`
-	* Desctription: Object property name or array key.
-	* Valid values:
-		* `string`
-		* `integer`
-	* **Required**
-
-
-##### `\DDTools\ObjectTools::getPropValue($params)`
-
-Get the value of an object property or an array element.
-This is a “syntactic sugar” for getting an element in one way regardless of the “object” type.
-
-* `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
-	* Valid values:
-		* `stdClass`
-		* `arrayAssociative`
-	* **Required**
-	
-* `$params->object`
-	* Desctription: Source object or array.
-	* Valid values:
-		* `stdClass`
-		* `array`
-	* **Required**
-	
-* `$params->propName`
-	* Desctription: Object property name or array key.
-	* Valid values:
-		* `string`
-		* `integer`
-	* **Required**
-
-
-###### Returns
-
-* `$result`
-	* Desctription: Value of an object property or an array element.
-	* Valid values:
-		* `mixed`
-		* `NULL` — if property not exists
 
 
 #### `\DDTools\BaseClass`

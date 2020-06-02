@@ -3,6 +3,73 @@ namespace DDTools;
 
 class ObjectTools {
 	/**
+	 * isObjectOrArray
+	 * @version 0.1 (2020-04-30)
+	 * 
+	 * @todo Should it get $object directly or as $params->object?
+	 * 
+	 * @return {boolean}
+	 */
+	private static function isObjectOrArray($object){
+		return
+			is_object($object) ||
+			is_array($object)
+		;
+	}
+	
+	/**
+	 * isPropExists
+	 * @version 1.0 (2020-04-30)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {mixed}
+	 */
+	public static function isPropExists($params){
+		$params = (object) $params;
+		
+		return
+			is_object($params->object) ?
+			//Objects
+			property_exists(
+				$params->object,
+				$params->propName
+			) :
+			//Arrays
+			array_key_exists(
+				$params->propName,
+				$params->object
+			)
+		;
+	}
+	
+	/**
+	 * getPropValue
+	 * @version 1.0.1 (2020-04-30)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {mixed}
+	 */
+	public static function getPropValue($params){
+		$params = (object) $params;
+		
+		return
+			!self::isPropExists($params) ?
+			//Non-existing properties
+			NULL :
+			//Existing properties
+			(
+				is_object($params->object) ?
+				//Objects
+				$params->object->{$params->propName} :
+				//Arrays
+				$params->object[$params->propName]
+			)
+		;
+	}
+	
+	/**
 	 * convertType
 	 * @version 1.0 (2020-06-02)
 	 * 
@@ -238,72 +305,5 @@ class ObjectTools {
 		}
 		
 		return $result;
-	}
-	
-	/**
-	 * isObjectOrArray
-	 * @version 0.1 (2020-04-30)
-	 * 
-	 * @todo Should it get $object directly or as $params->object?
-	 * 
-	 * @return {boolean}
-	 */
-	private static function isObjectOrArray($object){
-		return
-			is_object($object) ||
-			is_array($object)
-		;
-	}
-	
-	/**
-	 * isPropExists
-	 * @version 1.0 (2020-04-30)
-	 * 
-	 * @see README.md
-	 * 
-	 * @return {mixed}
-	 */
-	public static function isPropExists($params){
-		$params = (object) $params;
-		
-		return
-			is_object($params->object) ?
-			//Objects
-			property_exists(
-				$params->object,
-				$params->propName
-			) :
-			//Arrays
-			array_key_exists(
-				$params->propName,
-				$params->object
-			)
-		;
-	}
-	
-	/**
-	 * getPropValue
-	 * @version 1.0.1 (2020-04-30)
-	 * 
-	 * @see README.md
-	 * 
-	 * @return {mixed}
-	 */
-	public static function getPropValue($params){
-		$params = (object) $params;
-		
-		return
-			!self::isPropExists($params) ?
-			//Non-existing properties
-			NULL :
-			//Existing properties
-			(
-				is_object($params->object) ?
-				//Objects
-				$params->object->{$params->propName} :
-				//Arrays
-				$params->object[$params->propName]
-			)
-		;
 	}
 }
