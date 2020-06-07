@@ -1184,13 +1184,47 @@ class ddTools {
 	}
 	
 	/**
+	 * createDocument_prepareAlias
+	 * @version 0.1 (2020-06-07)
+	 * 
+	 * @desc Translate strings.
+	 * 
+	 * @param $sourceString {string} — Document pagetitle. @required
+	 * 
+	 * @return {string} — Translated string.
+	 */
+	private static function createDocument_prepareAlias($sourceString){
+		$result = $sourceString;
+		
+		$result = transliterator_transliterate(
+			'Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC; [:Punctuation:] Remove; Lower();',
+			$result
+		);
+		
+		$result = str_replace(
+			' ',
+			'-',
+			$result
+		);
+		
+		$result = preg_replace(
+			'/[^A-Za-zА-Яа-я0-9\-_]/',
+			'',
+			$result
+		);
+		
+		return $result;
+	}
+	
+	/**
 	 * createDocument
-	 * @version 1.3.2 (2020-05-28)
+	 * @version 1.4 (2020-06-07)
 	 * 
 	 * @desc Create a new document.
 	 * 
 	 * @param $docData {stdClass|arrayAssociative} — Array of document fields or TVs. Key — name, value — value. @required
 	 * @param $docData->pagetitle {string} — Document pagetitle. Default: 'New resource'.
+	 * @param $docData->alias {string} — Document alias. If empty, will be transliterated from `$docData->pagetitle`. Default: ''.
 	 * @param $docGroups {array} — Array of document groups id.
 	 * 
 	 * @return {integer|false} — ID нового документа или false, если что-то не так.
@@ -1203,6 +1237,8 @@ class ddTools {
 		$docData = (object) array_merge(
 			[
 				'pagetitle' => 'New resource',
+				//Autotransliterate from pagetitle
+				'alias' => '',
 				//Если не передана дата создания документа, ставим текущую
 				'createdon' => time(),
 				//Если не передано, кем документ создан, ставим 1
@@ -1220,6 +1256,12 @@ class ddTools {
 		if ($docData->published == 1){
 			$docData->pub_date = $docData->createdon;
 		}
+		
+		if (trim($docData->alias) == ''){
+			$docData->alias = self::createDocument_prepareAlias($docData->pagetitle);
+		}
+		
+		$docAlias = $docData->alias;
 		
 		$docData = self::prepareDocData([
 			'data' => $docData,
@@ -1300,11 +1342,6 @@ class ddTools {
 			isset($docData->fieldsData['isfolder']) ?
 			$docData->fieldsData['isfolder'] :
 			0
-		;
-		$docAlias =
-			isset($docData->fieldsData['alias']) ?
-			$docData->fieldsData['alias'] :
-			''
 		;
 		
 		//Пусть созданного документа
