@@ -24,7 +24,8 @@ A library with various tools facilitating your work.
 
 #### Using [Composer](https://getcomposer.org/)
 
-Just add `dd/modxevo-library-ddtools` to your `composer.json`.
+Just add `dd/evolutioncms-libraries-ddtools` to your `composer.json`.
+
 _ddTools version must be 0.14 or higher to use this method. If you use it, the compatibility with all your snippets, modules, etc. that use ddTools versions under 0.14 will be maintained._
 
 

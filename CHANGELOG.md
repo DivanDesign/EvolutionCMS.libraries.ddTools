@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.39 (2020-06-07)
+* \+ `\ddTools::createDocument` → Parameters → `$docData->alias`: Will be transliterated from `$docData->pagetitle` if empty or not set.
+* \* README → Documentation → Installation → Using Composer: Fixed the library name.
+
+
 ## Version 0.38.1 (2020-06-02)
 * \* `\DDTools\ObjectTools::convertType`: Fixed type of deep objects when `$params->type` == `'objectarray'`.
 * \* README:
