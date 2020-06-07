@@ -238,11 +238,11 @@ class ddTools {
 	
 	/**
 	 * explodeAssoc
-	 * @version 1.1.5 (2019-06-22)
+	 * @version 1.1.6 (2020-06-07)
 	 * 
 	 * @desc Splits string on two separators in the associative array.
 	 * 
-	 * @param $inputString {string_separated} — String to explode. @required
+	 * @param $inputString {stringSeparated} — String to explode. @required
 	 * @param $itemDelimiter {string} — Separator between pairs of key-value. Default: '||'.
 	 * @param $keyValDelimiter {string} — Separator between key and value. Default: '::'.
 	 * 
@@ -256,7 +256,9 @@ class ddTools {
 		$result = [];
 		
 		//Если строка пустая, выкидываем сразу
-		if ($inputString == ''){return $result;}
+		if ($inputString == ''){
+			return $result;
+		}
 		
 		//Разбиваем по парам
 		$inputString = explode(
