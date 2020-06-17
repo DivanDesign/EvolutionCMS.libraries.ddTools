@@ -148,7 +148,7 @@ class FilesTools {
 	
 	/**
 	 * modifyImage
-	 * @version 2.5a (2020-06-17)
+	 * @version 2.6 (2020-06-17)
 	 * 
 	 * @desc Делает превьюшку.
 	 * 
@@ -161,6 +161,7 @@ class FilesTools {
 	 * @param $params->allowEnlargement {0|1} — Разрешить ли увеличение изображения? Default: 0.
 	 * @param $params->backgroundColor {string} — Фон результирующего изображения (может понадобиться для заливки пустых мест при `$params->transformMode` == `'resizeAndFill'`). Default: 'FFFFFF'.
 	 * @param $params->quality {integer} — Output image quality level. Default: 100.
+	 * @param $params->watermarkImageFullPathName {string} — Specify if you want to overlay your image with watermark. Default: —
 	 * 
 	 * @return {void}
 	 */
@@ -186,18 +187,29 @@ class FilesTools {
 		}
 		
 		
-		require_once('src/FilesTools/phpthumb.class.php');
+		//Include PHP.libraries.phpThumb
+		require_once(
+			'phpThumb' .
+			DIRECTORY_SEPARATOR .
+			'phpthumb.class.php'
+		);
 		
 		//Prepare source image addresses
 		foreach (
 			[
 				'sourceFullPathName',
-				'outputFullPathName'
+				'outputFullPathName',
+				'watermarkImageFullPathName'
 			] as
 			$paramName
 		){
-			//Convert relative path to absolute if needed
 			if (
+				//If the parameter is set
+				\DDTools\ObjectTools::isPropExists([
+					'object' => $params,
+					'propName' => $paramName
+				]) &&
+				//And set as relative path
 				substr(
 					$params->{$paramName},
 					0,
@@ -205,11 +217,18 @@ class FilesTools {
 				) !=
 				\ddTools::$modx->getConfig('base_path')
 			){
+				//Convert relative path to absolute if needed
 				$params->{$paramName} =
 					\ddTools::$modx->getConfig('base_path') .
 					$params->{$paramName}
 				;
 			}
+		}
+		
+		
+		//If source image is not exists
+		if (!file_exists($params->sourceFullPathName)){
+			return;
 		}
 		
 		$originalImg = (object) [
@@ -363,6 +382,31 @@ class FilesTools {
 				);
 			}
 		}
+		
+		
+		//If need to overlay image with watermark
+		if (\DDTools\ObjectTools::isPropExists([
+			'object' => $params,
+			'propName' => 'watermarkImageFullPathName'
+		])){
+			$thumb->setParameter(
+				'fltr',
+				implode(
+					'|',
+					[
+						//WaterMarkImage
+						'wmi',
+						//Src
+						$params->watermarkImageFullPathName,
+						//Alignment — center
+						'C',
+						//Opacity — 100
+						'100'
+					]
+				)
+			);
+		}
+		
 		
 		//Создаём превьюшку
 		$thumb->GenerateThumbnail();
