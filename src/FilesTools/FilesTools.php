@@ -36,7 +36,7 @@ class FilesTools {
 	
 	/**
 	 * copyDir
-	 * @version 2.0.2 (2019-06-22)
+	 * @version 2.0.3 (2020-06-17)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
@@ -50,23 +50,31 @@ class FilesTools {
 		$params = (object) $params;
 		
 		//Допишем папкам недостающие '/' при необходимости
-		if (substr(
-			$params->sourcePath,
-			-1
-		) != '/'){
+		if (
+			substr(
+				$params->sourcePath,
+				-1
+			) != '/'
+		){
 			$params->sourcePath .= '/';
 		}
-		if (substr(
-			$params->destinationPath,
-			-1
-		) != '/'){
+		if (
+			substr(
+				$params->destinationPath,
+				-1
+			) != '/'
+		){
 			$params->destinationPath .= '/';
 		}
 		
 		//Проверяем существование
-		if (!file_exists($params->sourcePath)){return false;}
+		if (!file_exists($params->sourcePath)){
+			return false;
+		}
 		//Если папки назначения нет, создадим её
-		if (!file_exists($params->destinationPath)){mkdir($params->destinationPath);}
+		if (!file_exists($params->destinationPath)){
+			mkdir($params->destinationPath);
+		}
 		
 		//Получаем файлы в директории
 		$fileNames = array_diff(
@@ -82,7 +90,7 @@ class FilesTools {
 			$fileName
 		){
 			//Если это папка, обработаем её
-			if (is_dir($params->sourcePath.$fileName)){
+			if (is_dir($params->sourcePath . $fileName)){
 				self::copyDir([
 					'sourcePath' => $params->sourcePath . $fileName,
 					'destinationPath' => $params->destinationPath . $fileName
@@ -100,7 +108,7 @@ class FilesTools {
 	
 	/**
 	 * removeDir
-	 * @version 1.0.6 (2019-06-22)
+	 * @version 1.0.7 (2020-06-17)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -110,7 +118,9 @@ class FilesTools {
 	 */
 	public static function removeDir($path){
 		//Если не существует, ок
-		if (!file_exists($path)){return true;}
+		if (!file_exists($path)){
+			return true;
+		}
 		
 		//Получаем файлы в директории
 		$fileNames = array_diff(
@@ -138,7 +148,7 @@ class FilesTools {
 	
 	/**
 	 * modifyImage
-	 * @version 2.0.1a (2019-06-22)
+	 * @version 2.0.2a (2020-06-17)
 	 * 
 	 * @desc Делает превьюшку.
 	 * 
@@ -157,13 +167,13 @@ class FilesTools {
 	public static function modifyImage($params){
 		$params = (object) $params;
 		
+		require_once('src/FilesTools/phpthumb.class.php');
+		
 		$originalImg = (object) [
 			'width' => 0,
 			'height' => 0,
 			'ratio' => 1
 		];
-		
-		require_once('src/FilesTools/phpthumb.class.php');
 		
 		//Вычислим размеры оригинаольного изображения
 		list(
@@ -175,10 +185,15 @@ class FilesTools {
 		if (
 			$originalImg->width == 0 ||
 			$originalImg->height == 0
-		){return;}
+		){
+			return;
+		}
 		
 		//Пропрорции реального изображения
-		$originalImg->ratio = $originalImg->width / $originalImg->height;
+		$originalImg->ratio =
+			$originalImg->width /
+			$originalImg->height
+		;
 		
 		//Если по каким-то причинам высота не задана
 		if (
@@ -186,7 +201,10 @@ class FilesTools {
 			$params->height == 0
 		){
 			//Вычислим соответственно пропорциям
-			$params->height = $params->width / $originalImg->ratio;
+			$params->height =
+				$params->width /
+				$originalImg->ratio
+			;
 		}
 		//Если по каким-то причинам ширина не задана
 		if (
@@ -194,7 +212,10 @@ class FilesTools {
 			$params->width == 0
 		){
 			//Вычислим соответственно пропорциям
-			$params->width = $params->height * $originalImg->ratio;
+			$params->width =
+				$params->height *
+				$originalImg->ratio
+			;
 		}
 		
 		//Если превьюшка уже есть и имеет нужный размер, ничего делать не нужно
@@ -243,7 +264,11 @@ class FilesTools {
 				//Позиция по оси x оригинального изображения (чтобы было по центру)
 				$thumb->setParameter(
 					'sx',
-					($originalImg->width - $params->width) / 2
+					(
+						$originalImg->width -
+						$params->width
+					) /
+					2
 				);
 			}
 			
@@ -252,7 +277,11 @@ class FilesTools {
 				//Позиция по оси y оригинального изображения (чтобы было по центру)
 				$thumb->setParameter(
 					'sy',
-					($originalImg->height - $params->height) / 2
+					(
+						$originalImg->height -
+						$params->height
+					) /
+					2
 				);
 			}
 		}else{
