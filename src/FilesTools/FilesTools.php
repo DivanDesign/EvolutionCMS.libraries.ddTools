@@ -148,7 +148,7 @@ class FilesTools {
 	
 	/**
 	 * modifyImage
-	 * @version 2.2.1a (2020-06-17)
+	 * @version 2.3a (2020-06-17)
 	 * 
 	 * @desc Делает превьюшку.
 	 * 
@@ -159,7 +159,7 @@ class FilesTools {
 	 * @param $params->width {integer} — Ширина результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
 	 * @param $params->height {integer} — Высота результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
 	 * @param $params->backgroundColor {string} — Фон результирующего изображения (может понадобиться для заливки пустых мест). @required
-	 * @param $params->allowEnlargement {0|1} — Разрешить ли увеличение изображения? @required
+	 * @param $params->allowEnlargement {0|1} — Разрешить ли увеличение изображения? Default: 0.
 	 * @param $params->quality {integer} — Output image quality level. @required
 	 * 
 	 * @return {void}
@@ -169,7 +169,8 @@ class FilesTools {
 		$params = \DDTools\ObjectTools::extend([
 			'objects' => [
 				(object) [
-					'transformMode' => 'resize'
+					'transformMode' => 'resize',
+					'allowEnlargement' => 0
 				],
 				$params
 			]
