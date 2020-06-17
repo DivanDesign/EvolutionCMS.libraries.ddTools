@@ -148,14 +148,14 @@ class FilesTools {
 	
 	/**
 	 * modifyImage
-	 * @version 2.2a (2020-06-17)
+	 * @version 2.2.1a (2020-06-17)
 	 * 
 	 * @desc Делает превьюшку.
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
 	 * @param $params->sourceFullPathName {string} — Адрес оригинального изображения (абсолютный или относительный). @required
 	 * @param $params->outputFullPathName {string} — Адрес результирующего изображения (абсолютный или относительный). Default: == $params->sourceFullPathName.
-	 * @param $params->transformMode {'resize'|'crop'|'resizeAndCrop'|'resizeAndFill'} — Режим преобразования. @required
+	 * @param $params->transformMode {'resize'|'crop'|'resizeAndCrop'|'resizeAndFill'} — Режим преобразования. Default: 'resize'.
 	 * @param $params->width {integer} — Ширина результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
 	 * @param $params->height {integer} — Высота результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
 	 * @param $params->backgroundColor {string} — Фон результирующего изображения (может понадобиться для заливки пустых мест). @required
@@ -165,7 +165,15 @@ class FilesTools {
 	 * @return {void}
 	 */
 	public static function modifyImage($params){
-		$params = (object) $params;
+		//Defaults
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				(object) [
+					'transformMode' => 'resize'
+				],
+				$params
+			]
+		]);
 		
 		if (!\DDTools\ObjectTools::isPropExists([
 			'object' => $params,
@@ -173,6 +181,7 @@ class FilesTools {
 		])){
 			$params->outputFullPathName = $params->sourceFullPathName;
 		}
+		
 		
 		require_once('src/FilesTools/phpthumb.class.php');
 		
