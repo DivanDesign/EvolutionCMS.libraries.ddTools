@@ -7,7 +7,7 @@ A library with various tools facilitating your work.
 
 * PHP >= 5.4
 * [(MODX)EvolutionCMS](https://github.com/evolution-cms/evolution) >= 1.1
-* [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.13-201406261000 (included)
+* [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.15-202004301145 (included)
 
 
 ## Documentation
@@ -93,6 +93,81 @@ You can use the `exctract` function to turn the array into variables of the curr
 * `$result[$newName]`
 	* Desctription: A parameter value, in which the correct parameter name is the key and the parameter value is the value.
 	* Valid values: `mixed`
+
+
+#### `\DDTools\FilesTools`
+
+
+##### `\DDTools\FilesTools::modifyImage($params)`
+
+Modify your images: create thumbnails, crop, resize, fill background color or add watermark.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->sourceFullPathName`
+	* Desctription: Full file path of source image.  
+		You can pass a relative path too (e. g. `assets/images/some.jpg`), the method will automatically add `base_path` if needed.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->outputFullPathName`
+	* Desctription: Full file path of result image.
+		* You can pass a relative path too (e. g. `assets/images/some.jpg`), the method will automatically add `base_path` if needed.
+		* The original image will be overwritten if this parameter is omitted.
+	* Valid values: `string`
+	* Default value: == `$params->sourceFullPathName`
+	
+* `$params->transformMode`
+	* Desctription: Transform mode.
+	* Valid values:
+		* `'resize'` — resize only, the image will be inscribed into the specified sizes with the same proportions
+		* `'crop'` — crop only
+		* `'resizeAndCrop'` — resize small side then crop big side to the specified value
+		* `'resizeAndFill'` — inscribe image into the specified sizes and fill empty space with the specified background (see `$params->backgroundColor`)
+	* Default value: `'resize'`
+	
+* `$params->width`
+	* Desctription: Result image width.  
+		In pair width / height only one is required, omitted size will be calculated according to the image proportions.
+	* Valid values: `integer`
+	* **Required**
+	
+* `$params->height`
+	* Desctription: Result image height.  
+		In pair width / height only one is required, omitted size will be calculated according to the image proportions.
+	* Valid values: `integer`
+	* **Required**
+	
+* `$params->allowEnlargement`
+	* Desctription: Allow image enlargement when resizing.
+	* Valid values: `boolean`
+	* Default value: `false`
+	
+* `$params->backgroundColor`
+	* Desctription: Result image background color in HEX (used only for `$params->transformMode` == `'resizeAndFill'`).
+	* Valid values: `string`
+	* Default value: `FFFFFF`
+	
+* `$params->allowEnlargement`
+	* Desctription: Allow image enlargement when resizing.
+	* Valid values: `boolean`
+	* Default value: `false`
+	
+* `$params->quality`
+	* Desctription: JPEG compression level.
+	* Valid values: `integer`
+	* Default value: `100`
+	
+* `$params->watermarkImageFullPathName`
+	* Desctription: Specify if you want to overlay your image with watermark.  
+		You can pass a relative path too (e. g. `assets/images/some.jpg`), the method will automatically add `base_path` if needed.
+	* Valid values: `string`
+	* Default value: —
 
 
 #### `\DDTools\ObjectTools`
