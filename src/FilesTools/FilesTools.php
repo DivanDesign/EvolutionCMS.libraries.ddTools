@@ -148,20 +148,9 @@ class FilesTools {
 	
 	/**
 	 * modifyImage
-	 * @version 2.6 (2020-06-17)
+	 * @version 2.6.1 (2020-06-19)
 	 * 
-	 * @desc Делает превьюшку.
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->sourceFullPathName {string} — Адрес оригинального изображения (абсолютный или относительный). @required
-	 * @param $params->outputFullPathName {string} — Адрес результирующего изображения (абсолютный или относительный). Default: == $params->sourceFullPathName.
-	 * @param $params->transformMode {'resize'|'crop'|'resizeAndCrop'|'resizeAndFill'} — Режим преобразования. Default: 'resize'.
-	 * @param $params->width {integer} — Ширина результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
-	 * @param $params->height {integer} — Высота результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
-	 * @param $params->allowEnlargement {0|1} — Разрешить ли увеличение изображения? Default: 0.
-	 * @param $params->backgroundColor {string} — Фон результирующего изображения (может понадобиться для заливки пустых мест при `$params->transformMode` == `'resizeAndFill'`). Default: 'FFFFFF'.
-	 * @param $params->quality {integer} — Output image quality level. Default: 100.
-	 * @param $params->watermarkImageFullPathName {string} — Specify if you want to overlay your image with watermark. Default: —
+	 * @see README.md
 	 * 
 	 * @return {void}
 	 */
@@ -171,7 +160,7 @@ class FilesTools {
 			'objects' => [
 				(object) [
 					'transformMode' => 'resize',
-					'allowEnlargement' => 0,
+					'allowEnlargement' => false,
 					'backgroundColor' => 'FFFFFF',
 					'quality' => 100
 				],
@@ -305,7 +294,7 @@ class FilesTools {
 		//Разрешить ли увеличивать изображение
 		$thumb->setParameter(
 			'aoe',
-			$params->allowEnlargement
+			intval($params->allowEnlargement)
 		);
 		
 		//Если нужно просто обрезать
