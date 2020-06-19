@@ -1,6 +1,21 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.40 (2020-06-19)
+* \* `\DDTools\FilesTools::modifyImage`:
+	* \+ Поддерживает `.ico` и `.bmp`.
+	* \+ `$params->watermarkImageFullPathName`: Новый параметр. Вы можете накладывать на ваши изображения водяные знаки (изображение в формате PNG).
+	* \+ `$params->sourceFullPathName`, `$params->outputFullPathName`: Теперь также поддерживаются относительные пути, метод автоматически добавит `base_path`, если нужно.
+	* \+ `$params->outputFullPathName`: Параметр больше не обязателен и по умолчанию равен `$params->sourceFullPathName`.
+	* \+ `$params->allowEnlargement`: Параметр больше не обязателен и по умолчанию равен `0`.
+	* \+ `$params->backgroundColor`: Параметр больше не обязателен и по умолчанию равен `FFFFFF`.
+	* \+ `$params->quality`: Параметр больше не обязателен и по умолчанию равен `100`.
+	* \* `$params->allowEnlargement`: Тип параметра изменён на булевый (с обратной совместимостью).
+	* \* PHP.libraries.phpThumb: Обновлена с 1.7.13-201406261000 до 1.7.15-202004301145.
+	* \* Refactoring.
+* \+ README → Документация → Описание параметров → `\DDTools\FilesTools` → `\DDTools\FilesTools::modifyImage($params)`.
+
+
 ## Version 0.39 (2020-06-07)
 * \+ `\ddTools::createDocument` → Параметры → `$docData->alias`: Будет транлитерирован из `$docData->pagetitle` если пуст или не задан.
 * \* README → Документация → Установка → Используя Composer: Исправлено имя библиотеки.

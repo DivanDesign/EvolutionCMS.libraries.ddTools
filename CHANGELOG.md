@@ -1,6 +1,21 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.40 (2020-06-19)
+* \* `\DDTools\FilesTools::modifyImage`:
+	* \+ Supports `.ico` and `.bmp`.
+	* \+ `$params->watermarkImageFullPathName`: The new parameter. You can overlay your image with needed watermark image.
+	* \+ `$params->sourceFullPathName`, `$params->outputFullPathName`: Can be equal to relative paths too, the method will automatically add `base_path` if needed.
+	* \+ `$params->outputFullPathName`: Is not required anymore and by default is be equal to `$params->sourceFullPathName`.
+	* \+ `$params->allowEnlargement`: Is not required anymore and by default is equal to `0`.
+	* \+ `$params->backgroundColor`: Is not required anymore and by default is equal to `FFFFFF`.
+	* \+ `$params->quality`: Is not required anymore and by default is equal to `100`.
+	* \* `$params->allowEnlargement`: Type changed to boolean (with backward compatibility).
+	* \* PHP.libraries.phpThumb: Updated from 1.7.13-201406261000 to 1.7.15-202004301145.
+	* \* Refactoring.
+* \+ README → Documentation → Parameters description → `\DDTools\FilesTools` → `\DDTools\FilesTools::modifyImage($params)`.
+
+
 ## Version 0.39 (2020-06-07)
 * \+ `\ddTools::createDocument` → Parameters → `$docData->alias`: Will be transliterated from `$docData->pagetitle` if empty or not set.
 * \* README → Documentation → Installation → Using Composer: Fixed the library name.
