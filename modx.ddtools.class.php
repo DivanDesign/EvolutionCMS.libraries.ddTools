@@ -1220,7 +1220,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.4 (2020-06-07)
+	 * @version 1.4.1 (2020-06-20)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1264,6 +1264,14 @@ class ddTools {
 		}
 		
 		$docAlias = $docData->alias;
+		
+		foreach (
+			$docData as
+			$fieldName =>
+			$fieldValue
+		){
+			$docData->{$fieldName} = self::$modx->db->escape($fieldValue);
+		}
 		
 		$docData = self::prepareDocData([
 			'data' => $docData,
@@ -1387,7 +1395,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.4 (2020-02-11)
+	 * @version 1.4.1 (2020-06-20)
 	 * 
 	 * @desc Update document(s). Cache of the updated docs and their parents will be cleared.
 	 * 
@@ -1458,6 +1466,16 @@ class ddTools {
 			$docIdsToUpdate = [];
 			while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
 				$docIdsToUpdate[] = $doc['id'];
+			}
+			
+			$docData = (object) $docData;
+			
+			foreach (
+				$docData as
+				$fieldName =>
+				$fieldValue
+			){
+				$docData->{$fieldName} = self::$modx->db->escape($fieldValue);
 			}
 			
 			//Разбиваем на поля документа и TV
