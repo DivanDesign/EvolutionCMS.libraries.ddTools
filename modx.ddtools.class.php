@@ -1220,7 +1220,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.4.1 (2020-06-20)
+	 * @version 1.5 (2020-06-21)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1236,18 +1236,21 @@ class ddTools {
 		$docGroups = false
 	){
 		//Defaults
-		$docData = (object) array_merge(
-			[
-				'pagetitle' => 'New resource',
-				//Autotransliterate from pagetitle
-				'alias' => '',
-				//Если не передана дата создания документа, ставим текущую
-				'createdon' => time(),
-				//Если не передано, кем документ создан, ставим 1
-				'createdby' => 1
+		$docData = \DDTools\ObjectTools::extend([
+			'objects' => [
+				(object) [
+					'pagetitle' => 'New resource',
+					//Autotransliterate from pagetitle
+					'alias' => '',
+					//Если не передана дата создания документа, ставим текущую
+					'createdon' => time(),
+					//Если не передано, кем документ создан, ставим 1
+					'createdby' => 1
+				],
+				$docData
 			],
-			(array) $docData
-		);
+			'overwriteWithEmpty' => false
+		]);
 		
 		//Если группы заданы, то это приватный документ
 		if ($docGroups){
