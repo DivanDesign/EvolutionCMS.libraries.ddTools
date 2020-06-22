@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.40 (2020-06-19)
+ * @version 0.40.1 (2020-06-22)
  * 
  * @see README.md
  * 
@@ -1220,7 +1220,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.4 (2020-06-07)
+	 * @version 1.5 (2020-06-21)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1236,18 +1236,21 @@ class ddTools {
 		$docGroups = false
 	){
 		//Defaults
-		$docData = (object) array_merge(
-			[
-				'pagetitle' => 'New resource',
-				//Autotransliterate from pagetitle
-				'alias' => '',
-				//Если не передана дата создания документа, ставим текущую
-				'createdon' => time(),
-				//Если не передано, кем документ создан, ставим 1
-				'createdby' => 1
+		$docData = \DDTools\ObjectTools::extend([
+			'objects' => [
+				(object) [
+					'pagetitle' => 'New resource',
+					//Autotransliterate from pagetitle
+					'alias' => '',
+					//Если не передана дата создания документа, ставим текущую
+					'createdon' => time(),
+					//Если не передано, кем документ создан, ставим 1
+					'createdby' => 1
+				],
+				$docData
 			],
-			(array) $docData
-		);
+			'overwriteWithEmpty' => false
+		]);
 		
 		//Если группы заданы, то это приватный документ
 		if ($docGroups){
@@ -1264,6 +1267,14 @@ class ddTools {
 		}
 		
 		$docAlias = $docData->alias;
+		
+		foreach (
+			$docData as
+			$fieldName =>
+			$fieldValue
+		){
+			$docData->{$fieldName} = self::$modx->db->escape($fieldValue);
+		}
 		
 		$docData = self::prepareDocData([
 			'data' => $docData,
@@ -1387,7 +1398,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.4 (2020-02-11)
+	 * @version 1.4.1 (2020-06-20)
 	 * 
 	 * @desc Update document(s). Cache of the updated docs and their parents will be cleared.
 	 * 
@@ -1458,6 +1469,16 @@ class ddTools {
 			$docIdsToUpdate = [];
 			while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
 				$docIdsToUpdate[] = $doc['id'];
+			}
+			
+			$docData = (object) $docData;
+			
+			foreach (
+				$docData as
+				$fieldName =>
+				$fieldValue
+			){
+				$docData->{$fieldName} = self::$modx->db->escape($fieldValue);
 			}
 			
 			//Разбиваем на поля документа и TV

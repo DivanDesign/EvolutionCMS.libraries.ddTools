@@ -1,7 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
-## Version 0.40 (2020-06-19)
+## Версия 0.40.1 (2020-06-22)
+* `\ddTools::createDocument`, `\ddTools::updateDocument`: Значения полей документов перед записью обрабатываются `$modx->db->escape()`.
++ `\ddTools::createDocument` → Параметры → `$docData->pagetitle`: Не может быть равен `''`, так что будет равен `'New resource'` в этом случае.
+
+
+## Версия 0.40 (2020-06-19)
 * \* `\DDTools\FilesTools::modifyImage`:
 	* \+ Поддерживает `.ico` и `.bmp`.
 	* \+ `$params->watermarkImageFullPathName`: Новый параметр. Вы можете накладывать на ваши изображения водяные знаки (изображение в формате PNG).
@@ -16,7 +21,7 @@
 * \+ README → Документация → Описание параметров → `\DDTools\FilesTools` → `\DDTools\FilesTools::modifyImage($params)`.
 
 
-## Version 0.39 (2020-06-07)
+## Версия 0.39 (2020-06-07)
 * \+ `\ddTools::createDocument` → Параметры → `$docData->alias`: Будет транлитерирован из `$docData->pagetitle` если пуст или не задан.
 * \* README → Документация → Установка → Используя Composer: Исправлено имя библиотеки.
 
