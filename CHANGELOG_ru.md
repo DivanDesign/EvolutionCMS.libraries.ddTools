@@ -2,8 +2,8 @@
 
 
 ## Версия 0.40.1 (2020-06-22)
-* `\ddTools::createDocument`, `\ddTools::updateDocument`: Значения полей документов перед записью обрабатываются `$modx->db->escape()`.
-+ `\ddTools::createDocument` → Параметры → `$docData->pagetitle`: Не может быть равен `''`, так что будет равен `'New resource'` в этом случае.
+* \* `\ddTools::createDocument`, `\ddTools::updateDocument`: Значения полей документов перед записью обрабатываются `$modx->db->escape()`.
+* \+ `\ddTools::createDocument` → Параметры → `$docData->pagetitle`: Не может быть равен `''`, так что будет равен `'New resource'` в этом случае.
 
 
 ## Версия 0.40 (2020-06-19)

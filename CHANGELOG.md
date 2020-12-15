@@ -2,8 +2,8 @@
 
 
 ## Version 0.40.1 (2020-06-22)
-* `\ddTools::createDocument`, `\ddTools::updateDocument`: Document field values will be prepared by `$modx->db->escape()`.
-+ `\ddTools::createDocument` → Parameters → `$docData->pagetitle`: Can't be equal to `''`, so will be equal to `'New resource'` in this case.
+* \* `\ddTools::createDocument`, `\ddTools::updateDocument`: Document field values will be prepared by `$modx->db->escape()`.
+* \+ `\ddTools::createDocument` → Parameters → `$docData->pagetitle`: Can't be equal to `''`, so will be equal to `'New resource'` in this case.
 
 
 ## Version 0.40 (2020-06-19)
