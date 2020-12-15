@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.40.1 (2020-06-22)
+ * @version 0.41 (2020-12-15)
  * 
  * @see README.md
  * 
@@ -2551,7 +2551,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentIdByUrl
-	 * @version 1.1.3 (2019-06-22)
+	 * @version 1.2 (2020-12-15)
 	 * 
 	 * @desc Gets id of a document by its url.
 	 * 
@@ -2567,6 +2567,13 @@ class ddTools {
 		if (empty($url['host'])){
 			//Получаем хост из конфига
 			$siteHost = parse_url(self::$modx->getConfig('site_url'));
+			
+			//For domains in IDNA ASCII-compatible format
+			$siteHost['host'] =
+				function_exists('idn_to_utf8') ?
+				idn_to_utf8($siteHost['host']) :
+				$siteHost['host']
+			;
 			
 			//На всякий случай вышережем host из адреса (а то вдруг url просто без http:// передали) + лишние слэши по краям
 			$path = trim(
