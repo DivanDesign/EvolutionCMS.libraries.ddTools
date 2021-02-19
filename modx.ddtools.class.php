@@ -2603,7 +2603,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.6 (2020-04-24)
+	 * @version 1.6.1 (2021-02-19)
 	 * 
 	 * @see README.md
 	 */
@@ -2620,14 +2620,16 @@ class ddTools {
 			]);
 		}
 		
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'returnCorrectedOnly' => true,
-				'writeToLog' => true
-			],
-			(array) $params
-		);
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'returnCorrectedOnly' => true,
+					'writeToLog' => true
+				],
+				$params
+			]
+		]);
 		
 		$params->params = (array) $params->params;
 		
