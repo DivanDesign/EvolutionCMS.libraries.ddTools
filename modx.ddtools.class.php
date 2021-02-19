@@ -2603,7 +2603,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.6.1 (2021-02-19)
+	 * @version 1.7 (2021-02-19)
 	 * 
 	 * @see README.md
 	 */
@@ -2630,6 +2630,8 @@ class ddTools {
 				$params
 			]
 		]);
+		
+		$isParamsObject = is_object($params->params);
 		
 		$params->params = (array) $params->params;
 		
@@ -2704,6 +2706,10 @@ class ddTools {
 					) .
 					'</ul>'
 			]);
+		}
+		
+		if ($isParamsObject){
+			$result = (object) $result;
 		}
 		
 		return $result;

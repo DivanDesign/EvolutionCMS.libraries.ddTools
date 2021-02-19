@@ -86,9 +86,11 @@ You can use the `exctract` function to turn the array into variables of the curr
 ##### Returns
 
 * `$result`
-	* Desctription: An array, in which the correct parameter names are the keys and the parameter values are the values.  
+	* Desctription: An array or object, in which the correct parameter names are the keys and the parameter values are the values.  
 		Can contains all parameters or only corrected (see `$params->returnCorrectedOnly`).
-	* Valid values: `arrayAssociative`
+	* Valid values:
+		* `arrayAssociative` — if `$params->params` set as an array
+		* `stdClass` — if `$params->params` set as an object
 	
 * `$result[$newName]`
 	* Desctription: A parameter value, in which the correct parameter name is the key and the parameter value is the value.
