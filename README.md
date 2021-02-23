@@ -439,6 +439,109 @@ The same as `\DDTools\BaseClass::toJSON()`.
 	* Valid values: `object`
 
 
+#### `\DDTools\Snippet`
+
+Abstract class for snippets.
+
+
+##### Properties
+
+* `\DDTools\Snippet::$name`
+	* Desctription: Snippet name (e. g. `ddGetDocuments`).  
+		Will be set from namespace in `\DDTools\Snippet::__construct($params)`.  
+		You can use it inside child classes: `$this->name`.
+	* Valid values: `string`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$version`
+	* Desctription: Snippet version.  
+		You **must** define it in your child class declaration.
+	* Valid values: `string`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$paths`
+	* Desctription: Snippet paths.  
+		Will be set in `\DDTools\Snippet::__construct($params)`.
+	* Valid values: `stdClass`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$paths->snippet`
+	* Desctription: Full path to the snippet folder.
+	* Valid values: `string`
+	
+* `\DDTools\Snippet::$paths->src`
+	* Desctription: Ful path to the `src` folder.
+	* Valid values: `string`
+	
+* `\DDTools\Snippet::$params`
+	* Desctription: Snippet params.  
+		Will be set in `\DDTools\Snippet::__construct($params)`.  
+		You can define default values of parameters as associative array in this field of your child class (e. g. `protected $params = ['someParameter' => 'valueByDefault'];`);.
+	* Valid values: `stdClass`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+
+
+##### `\DDTools\Snippet::__construct($params)`
+
+* `$params`
+	* Desctription: Snippet parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* Default value: `[]`
+	
+* `$params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+	* **Required**
+
+
+##### `\DDTools\Snippet::run()`
+
+Abstract method for main snippet action.
+
+You **must** define it in your child class declaration.
+
+
+##### `\DDTools\Snippet::runSnippet($params)`
+
+Static method for easy running needed snippet using only it's name and parameters (if needed).
+
+* `$params`
+	* Desctription: Snippet parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* **Required**
+	
+* `$params->name`
+	* Desctription: The name of the snippet you want to run (e. g. `ddGetDocuments`).
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->params`
+	* Desctription: Parameters that will be passed to the snippet constructor.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* Default value: —
+	
+* `$params->params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+	* **Required**
+
+
 ### Examples
 
 
