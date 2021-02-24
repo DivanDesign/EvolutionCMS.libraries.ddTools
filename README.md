@@ -86,9 +86,11 @@ You can use the `exctract` function to turn the array into variables of the curr
 ##### Returns
 
 * `$result`
-	* Desctription: An array, in which the correct parameter names are the keys and the parameter values are the values.  
+	* Desctription: An array or object, in which the correct parameter names are the keys and the parameter values are the values.  
 		Can contains all parameters or only corrected (see `$params->returnCorrectedOnly`).
-	* Valid values: `arrayAssociative`
+	* Valid values:
+		* `arrayAssociative` — if `$params->params` set as an array
+		* `stdClass` — if `$params->params` set as an object
 	
 * `$result[$newName]`
 	* Desctription: A parameter value, in which the correct parameter name is the key and the parameter value is the value.
@@ -435,6 +437,114 @@ The same as `\DDTools\BaseClass::toJSON()`.
 * `$result`
 	* Desctription: The new object instance.
 	* Valid values: `object`
+
+
+#### `\DDTools\Snippet`
+
+Abstract class for snippets.
+
+
+##### Properties
+
+* `\DDTools\Snippet::$name`
+	* Desctription: Snippet name (e. g. `ddGetDocuments`).  
+		Will be set from namespace in `\DDTools\Snippet::__construct($params)`.  
+		You can use it inside child classes: `$this->name`.
+	* Valid values: `string`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$version`
+	* Desctription: Snippet version.  
+		You **must** define it in your child class declaration.
+	* Valid values: `string`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$paths`
+	* Desctription: Snippet paths.  
+		Will be set in `\DDTools\Snippet::__construct($params)`.
+	* Valid values: `stdClass`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$paths->snippet`
+	* Desctription: Full path to the snippet folder.
+	* Valid values: `string`
+	
+* `\DDTools\Snippet::$paths->src`
+	* Desctription: Ful path to the `src` folder.
+	* Valid values: `string`
+	
+* `\DDTools\Snippet::$params`
+	* Desctription: Snippet params.  
+		Will be set in `\DDTools\Snippet::__construct($params)`.  
+		You can define default values of parameters as associative array in this field of your child class (e. g. `protected $params = ['someParameter' => 'valueByDefault'];`);.
+	* Valid values: `stdClass`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+	
+* `\DDTools\Snippet::$renamedParamsCompliance`
+	* Desctription: Overwrite in child classes if you want to rename some parameters with backward compatibility (see `$params->compliance` of `\ddTools::verifyRenamedParams`).
+	* Valid values: `arrayAssociative`
+	* Visibility: `protected`
+
+
+##### `\DDTools\Snippet::__construct($params)`
+
+* `$params`
+	* Desctription: Snippet parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* Default value: `[]`
+	
+* `$params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+	* **Required**
+
+
+##### `\DDTools\Snippet::run()`
+
+Abstract method for main snippet action.
+
+You **must** define it in your child class declaration.
+
+
+##### `\DDTools\Snippet::runSnippet($params)`
+
+Static method for easy running needed snippet using only it's name and parameters (if needed).
+
+* `$params`
+	* Desctription: Snippet parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* **Required**
+	
+* `$params->name`
+	* Desctription: The name of the snippet you want to run (e. g. `ddGetDocuments`).
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->params`
+	* Desctription: Parameters that will be passed to the snippet constructor.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* Default value: —
+	
+* `$params->params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+	* **Required**
 
 
 ### Examples
@@ -810,6 +920,7 @@ Both calls return `'Floyd'`.
 
 * [Home page](https://code.divandesign.biz/modx/ddtools)
 * [Telegram chat](https://t.me/dd_code)
+* [Packagist](https://packagist.org/packages/dd/evolutioncms-libraries-ddtools)
 
 
 <link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />

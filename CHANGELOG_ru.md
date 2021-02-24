@@ -1,6 +1,15 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.42 (2021-02-24)
+* \* `\ddTools::verifyRenamedParams`:
+	* \+ Если `$params->params` задан, как объект — метод вернёт экземпляр stdClass.
+	* \* `\DDTools\ObjectTools::extend` исползуется вместо `array_merge`.
+* \+ `\DDTools\Snippet`: Новый абстрактный класс для сниппетов.
+* \* `\ddTools::getTemplateVars`, `\ddTools::getTemplateVarOutput` → Параметры → `$idnames`: Менее хрупко работают, когда параметр является строкой.
+* \+ README → Ссылки → Packagist.
+
+
 ## Версия 0.41 (2020-12-15)
 * \+ `\ddTools::getDocumentIdByUrl`: Поддерживает домены в формате IDNA ASCII.
 

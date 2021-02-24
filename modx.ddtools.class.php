@@ -1,11 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.41 (2020-12-15)
+ * @version 0.42 (2021-02-24)
  * 
  * @see README.md
  * 
- * @copyright 2012–2020 DD Group {@link https://DivanDesign.biz }
+ * @copyright 2012–2021 DD Group {@link https://DivanDesign.biz }
  */
 
 global $modx;
@@ -1798,7 +1798,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.9 (2020-02-11)
+	 * @version 1.3.10 (2021-02-24)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -1833,11 +1833,11 @@ class ddTools {
 		}
 		
 		if (
+			empty($idnames) ||
 			(
-				$idnames != '*' &&
-				!is_array($idnames)
-			) ||
-			count($idnames) == 0
+				!is_array($idnames) &&
+				$idnames != '*'
+			)
 		){
 			return false;
 		}else{
@@ -1973,7 +1973,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.8 (2020-02-11)
+	 * @version 1.1.9 (2021-02-24)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -2003,7 +2003,13 @@ class ddTools {
 			]);
 		}
 		
-		if (count($idnames) == 0){
+		if (
+			empty($idnames) ||
+			(
+				!is_array($idnames) &&
+				$idnames != '*'
+			)
+		){
 			return false;
 		}else{
 			$output = [];
@@ -2603,7 +2609,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.6 (2020-04-24)
+	 * @version 1.7 (2021-02-19)
 	 * 
 	 * @see README.md
 	 */
@@ -2620,14 +2626,18 @@ class ddTools {
 			]);
 		}
 		
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'returnCorrectedOnly' => true,
-				'writeToLog' => true
-			],
-			(array) $params
-		);
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'returnCorrectedOnly' => true,
+					'writeToLog' => true
+				],
+				$params
+			]
+		]);
+		
+		$isParamsObject = is_object($params->params);
 		
 		$params->params = (array) $params->params;
 		
@@ -2702,6 +2712,10 @@ class ddTools {
 					) .
 					'</ul>'
 			]);
+		}
+		
+		if ($isParamsObject){
+			$result = (object) $result;
 		}
 		
 		return $result;
