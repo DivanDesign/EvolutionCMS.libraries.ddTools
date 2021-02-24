@@ -1798,7 +1798,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.9 (2020-02-11)
+	 * @version 1.3.10 (2021-02-24)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -1833,11 +1833,11 @@ class ddTools {
 		}
 		
 		if (
+			empty($idnames) ||
 			(
-				$idnames != '*' &&
-				!is_array($idnames)
-			) ||
-			count($idnames) == 0
+				!is_array($idnames) &&
+				$idnames != '*'
+			)
 		){
 			return false;
 		}else{
@@ -1973,7 +1973,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.8 (2020-02-11)
+	 * @version 1.1.9 (2021-02-24)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -2003,7 +2003,13 @@ class ddTools {
 			]);
 		}
 		
-		if (count($idnames) == 0){
+		if (
+			empty($idnames) ||
+			(
+				!is_array($idnames) &&
+				$idnames != '*'
+			)
+		){
 			return false;
 		}else{
 			$output = [];
