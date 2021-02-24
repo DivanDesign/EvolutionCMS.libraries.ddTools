@@ -483,6 +483,11 @@ Abstract class for snippets.
 * `\DDTools\Snippet::$params->{$paramName}`
 	* Desctription: Key is parameter name, value is value.
 	* Valid values: `mixed`
+	
+* `\DDTools\Snippet::$renamedParamsCompliance`
+	* Desctription: Overwrite in child classes if you want to rename some parameters with backward compatibility (see `$params->compliance` of `\ddTools::verifyRenamedParams`).
+	* Valid values: `arrayAssociative`
+	* Visibility: `protected`
 
 
 ##### `\DDTools\Snippet::__construct($params)`

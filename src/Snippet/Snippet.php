@@ -26,12 +26,17 @@ abstract class Snippet {
 		/**
 		 * @property $params {stdClass} — Overwrite with defaults in children classes.
 		 */
-		$params = []
+		$params = [],
+		
+		/**
+		 * @property $renamedParamsCompliance {arrayAssociative} — Overwrite in child classes if you want to rename some parameters with backward compatibility (see \ddTools::verifyRenamedParams).
+		 */
+		$renamedParamsCompliance = []
 	;
 	
 	/**
 	 * __construct
-	 * @version 1.0 (2021-02-18)
+	 * @version 1.1 (2021-02-24)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 */
@@ -71,15 +76,26 @@ abstract class Snippet {
 		
 		
 		//# Prepare params
+		$params = \DDTools\ObjectTools::convertType([
+			'object' => $params,
+			'type' => 'objectStdClass'
+		]);
+		
+		//Renaming params with backward compatibility
+		if (!empty($this->renamedParamsCompliance)){
+			$params = \ddTools::verifyRenamedParams([
+				'params' => $params,
+				'compliance' => $this->renamedParamsCompliance,
+				'returnCorrectedOnly' => false
+			]);
+		}
+		
 		$this->params = \DDTools\ObjectTools::extend([
 			'objects' => [
 				//Defaults
 				(object) $this->params,
 				//Given parameters
-				\DDTools\ObjectTools::convertType([
-					'object' => $params,
-					'type' => 'objectStdClass'
-				])
+				$params
 			]
 		]);
 	}
