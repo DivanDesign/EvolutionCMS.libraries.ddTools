@@ -348,7 +348,7 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.2 (2020-05-24)
+	 * @version 1.2.1 (2021-03-09)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
@@ -415,7 +415,7 @@ class ddTools {
 			if ($cmpRes * $sortDir < 0){
 				$resultArray = &$resultArrayLeft;
 			//Если больше — в массив больших
-			}else if ($cmpRes * $sortDir > 0){
+			}elseif ($cmpRes * $sortDir > 0){
 				$resultArray = &$resultArrayRight;
 			//Если равно — в центральный
 			}else{
@@ -1398,7 +1398,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.4.1 (2020-06-20)
+	 * @version 1.4.2 (2021-03-09)
 	 * 
 	 * @desc Update document(s). Cache of the updated docs and their parents will be cleared.
 	 * 
@@ -1438,7 +1438,7 @@ class ddTools {
 				) .
 				'")'
 			;
-		}else if (
+		}elseif (
 			is_numeric($docId) &&
 			$docId != 0
 		){
@@ -2239,7 +2239,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildrenTVarOutput
-	 * @version 1.3.4 (2018-06-17)
+	 * @version 1.3.5 (2021-03-09)
 	 * 
 	 * @desc Get necessary children of document.
 	 * 
@@ -2300,7 +2300,7 @@ class ddTools {
 						$tvidnames[] = $resultKey;
 						$unsetResultKey = true;
 					}
-				}else if (
+				}elseif (
 					$tvidnames != '*' &&
 					$tvidnames != $resultKey
 				){
@@ -2489,7 +2489,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentParentIds
-	 * @version 1.0 (2020-02-11)
+	 * @version 1.0.1 (2021-03-09)
 	 * 
 	 * @desc Gets the parent ID(s) of the required level.
 	 * 
@@ -2532,7 +2532,7 @@ class ddTools {
 			if ($params->totalResults == 'all'){
 				//All parents
 				$params->totalResults = $resultLen;
-			}else if (isset($params->totalResults)){
+			}elseif (isset($params->totalResults)){
 				//Needed number
 				$params->totalResults = intval($params->totalResults);
 			}else{
@@ -2557,7 +2557,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentIdByUrl
-	 * @version 1.2 (2020-12-15)
+	 * @version 1.2.1 (2021-03-09)
 	 * 
 	 * @desc Gets id of a document by its url.
 	 * 
@@ -2598,7 +2598,7 @@ class ddTools {
 		if ($path == ''){
 			return self::$modx->getConfig('site_start');
 		//Если документ с таким путём есть
-		}else if (!empty(self::$modx->documentListing[$path])){
+		}elseif (!empty(self::$modx->documentListing[$path])){
 			//Возвращаем его id
 			return self::$modx->documentListing[$path];
 		//В противном случае возвращаем 0
@@ -2609,7 +2609,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.7 (2021-02-19)
+	 * @version 1.7.1 (2021-03-09)
 	 * 
 	 * @see README.md
 	 */
@@ -2684,7 +2684,7 @@ class ddTools {
 					}
 				}
 			//If we must return all parameters
-			}else if (!$params->returnCorrectedOnly){
+			}elseif (!$params->returnCorrectedOnly){
 				$result[$newName] = $params->params[$newName];
 			}
 		}
