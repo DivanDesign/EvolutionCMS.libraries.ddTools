@@ -36,7 +36,7 @@ class Response {
 	
 	/**
 	 * validateMeta
-	 * @version 1.0.1 (2021-03-10)
+	 * @version 1.0.2 (2021-03-10)
 	 * 
 	 * @param array $meta - is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
@@ -72,6 +72,11 @@ class Response {
 			//success is set and bool
 			isset($meta['success']) &&
 			is_bool($meta['success']) &&
+			//there is no diff between meta keys and allowed meta keys
+			!count(array_diff(
+				array_keys($meta),
+				static::$allowedMetaKeys
+			)) &&
 			(
 				//message is not set
 				!isset($meta['message']) ||
@@ -83,11 +88,6 @@ class Response {
 			)
 		){
 			if(
-				//there is no diff between meta keys and allowed meta keys
-				!count(array_diff(
-					array_keys($meta),
-					static::$allowedMetaKeys
-				)) &&
 				(
 					//message is not set
 					!isset($meta['message']) ||
