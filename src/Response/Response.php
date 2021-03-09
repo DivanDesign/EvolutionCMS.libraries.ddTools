@@ -36,6 +36,7 @@ class Response {
 	
 	/**
 	 * validateMeta
+	 * @version 1.0.1 (2021-03-10)
 	 * 
 	 * @param array $meta - is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
@@ -62,7 +63,7 @@ class Response {
 	 * @return {boolean}
 	 */
 	public function validateMeta(array $meta){
-		$output = false;
+		$result = false;
 		
 		if(
 			//code is set and int
@@ -97,11 +98,11 @@ class Response {
 					))
 				)
 			){
-				$output = true;
+				$result = true;
 			}
 		}
 		
-		return $output;
+		return $result;
 	}
 	
 	/**
