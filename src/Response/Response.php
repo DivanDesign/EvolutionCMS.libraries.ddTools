@@ -36,7 +36,7 @@ class Response {
 	
 	/**
 	 * validateMeta
-	 * @version 1.0.3 (2021-03-10)
+	 * @version 1.0.4 (2021-03-10)
 	 * 
 	 * @param array $meta - is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
@@ -80,17 +80,38 @@ class Response {
 			(
 				//message is not set
 				!isset($meta['message']) ||
-				(
-					//message is set and contains content
-					is_array($meta['message']) &&
-					isset($meta['message']['content']) &&
-					//there is no diff between meta message keys and allowed meta message keys
-					!count(array_diff(
-						array_keys($meta['message']),
-						static::$allowedMetaMessageKeys
-					))
-				)
+				//Or is valid
+				$this->validateMetaMessage($meta['message'])
 			)
+		){
+			$result = true;
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * validateMetaMessage
+	 * @version 1.0 (2021-03-10)
+	 * 
+	 * @param $message {arrayAssociative} — @reuired
+	 * @param $message['content'] {string} — @required
+	 * @param $message['title'] {string}
+	 * 
+	 * @return {boolean}
+	 */
+	public function validateMetaMessage($message){
+		$result = false;
+		
+		if (
+			//message is set and contains content
+			is_array($message) &&
+			isset($message['content']) &&
+			//there is no diff between meta message keys and allowed meta message keys
+			!count(array_diff(
+				array_keys($message),
+				static::$allowedMetaMessageKeys
+			))
 		){
 			$result = true;
 		}
