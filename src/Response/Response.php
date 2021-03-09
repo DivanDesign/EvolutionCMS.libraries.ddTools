@@ -41,9 +41,9 @@ class Response {
 	
 	/**
 	 * validateMeta
-	 * @version 1.0.5 (2021-03-10)
+	 * @version 1.1 (2021-03-10)
 	 * 
-	 * @param array $meta - is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
+	 * @param $meta {arrayAssociative} — Is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
 	 * and, optionally, with a title.
 	 * 
@@ -67,34 +67,37 @@ class Response {
 	 * 
 	 * @return {boolean}
 	 */
-	public function validateMeta(array $meta){
+	public function validateMeta($meta){
 		$result = false;
 		
-		$paramKeys = array_keys($meta);
-		
-		if(
-			//All required meta keys are set
-			!count(array_diff(
-				static::$requiredMetaKeys,
-				$paramKeys
-			)) &&
-			//code is int
-			is_int($meta['code']) &&
-			//success is sbool
-			is_bool($meta['success']) &&
-			//there is no diff between meta keys and allowed meta keys
-			!count(array_diff(
-				$paramKeys,
-				static::$allowedMetaKeys
-			)) &&
-			(
-				//message is not set
-				!isset($meta['message']) ||
-				//Or is valid
-				$this->validateMetaMessage($meta['message'])
-			)
-		){
-			$result = true;
+		//Param is valid
+		if (is_array($meta)){
+			$paramKeys = array_keys($meta);
+			
+			if(
+				//All required meta keys are set
+				!count(array_diff(
+					static::$requiredMetaKeys,
+					$paramKeys
+				)) &&
+				//code is int
+				is_int($meta['code']) &&
+				//success is sbool
+				is_bool($meta['success']) &&
+				//there is no diff between meta keys and allowed meta keys
+				!count(array_diff(
+					$paramKeys,
+					static::$allowedMetaKeys
+				)) &&
+				(
+					//message is not set
+					!isset($meta['message']) ||
+					//Or is valid
+					$this->validateMetaMessage($meta['message'])
+				)
+			){
+				$result = true;
+			}
 		}
 		
 		return $result;
