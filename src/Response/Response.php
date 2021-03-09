@@ -100,6 +100,7 @@ class Response {
 	
 	/**
 	 * setMeta
+	 * @version 1.0.1 (2021-03-10)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -108,14 +109,14 @@ class Response {
 	 * @return {boolean}
 	 */
 	public function setMeta($meta){
-		$output = false;
+		$result = false;
 		
 		if($this->validateMeta($meta)){
 			$this->meta = $meta;
-			$output = true;
+			$result = true;
 		}
 		
-		return $output;
+		return $result;
 	}
 	
 	/**
