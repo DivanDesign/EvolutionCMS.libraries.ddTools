@@ -174,13 +174,17 @@ class Response {
 	
 	/**
 	 * toJSON
+	 * @version 1.0.1 (2021-03-10)
 	 * 
 	 * @desc Converts this object to JSON string.
 	 * 
 	 * @return string
 	 */
 	public function toJSON(){
-		return json_encode($this->toArray());
+		return \DDTools\ObjectTools::convertType([
+			'object' => $this->toArray(),
+			'type' => 'stringJsonObject'
+		]);
 	}
 	
 	public function __toString(){
