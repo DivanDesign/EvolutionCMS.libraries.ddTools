@@ -104,15 +104,16 @@ abstract class Response {
 	
 	/**
 	 * toArray
+	 * @version 1.0.1 (2021-03-09)
 	 * 
 	 * @desc Converts this object to array.
 	 * 
 	 * @return {array}
 	 */
 	public function toArray(){
-		$output = array(
+		$output = [
 			'meta' => $this->meta
-		);
+		];
 		
 		if(isset($this->data)){
 			$output['data'] = $this->data;

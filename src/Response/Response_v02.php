@@ -17,12 +17,12 @@ class Response_v02 extends Response {
 		 * 
 		 * @var array
 		 */
-		$allowedMetaKeys = array(
+		$allowedMetaKeys = [
 			'code',
 			'eTag',
 			'success',
 			'message'
-		),
+		],
 		/**
 		 * allowedMetaMessageKeys
 		 * 
@@ -30,10 +30,10 @@ class Response_v02 extends Response {
 		 * 
 		 * @var array
 		 */
-		$allowedMetaMessageKeys = array(
+		$allowedMetaMessageKeys = [
 			'content',
 			'title'
-		);
+		];
 	
 	/**
 	 * validateMeta
@@ -45,19 +45,19 @@ class Response_v02 extends Response {
 	 * Examples:
 	 * 
 	 * ```php
-	 * $meta = array(
+	 * $meta = [
 	 * 		"code" => 200, // REQUIRED
 	 * 		"success" => true // REQUIRED
-	 * );
+	 * ];
 	 * 
-	 * $meta = array(
+	 * $meta = [
 	 * 		"code" => 201, // REQUIRED
 	 * 		"success" => true, // REQUIRED
-	 * 		"message" => array(
+	 * 		"message" => [
 	 * 			"content" => "You have successfully signed up. You will be redirected to your account in a moment.", // REQUIRED
 	 * 			"title" => "Success!"
-	 * 		)
-	 * );
+	 * 		]
+	 * ];
 	 * ```
 	 * 
 	 * @return bool
