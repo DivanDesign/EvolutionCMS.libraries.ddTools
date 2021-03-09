@@ -4,11 +4,7 @@ namespace DDTools;
 class Response {
 	protected static
 		/**
-		 * allowedMetaKeys
-		 * 
-		 * Allowed keys in $this->meta.
-		 * 
-		 * @var array
+		 * @property $allowedMetaKeys {array} — Allowed keys in $this->meta.
 		 */
 		$allowedMetaKeys = [
 			'code',
@@ -17,11 +13,7 @@ class Response {
 			'message'
 		],
 		/**
-		 * allowedMetaMessageKeys
-		 * 
-		 * Allowed keys in $this->meta['message'].
-		 * 
-		 * @var array
+		 * @property $allowedMetaMessageKeys {array} — Allowed keys in $this->meta['message'].
 		 */
 		$allowedMetaMessageKeys = [
 			'content',
