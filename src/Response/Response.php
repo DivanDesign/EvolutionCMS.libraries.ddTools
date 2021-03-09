@@ -18,6 +18,19 @@ class Response {
 		$allowedMetaMessageKeys = [
 			'content',
 			'title'
+		],
+		/**
+		 * @property $requiredMetaKeys {array} — Required keys in $this->meta.
+		 */
+		$requiredMetaKeys = [
+			'code',
+			'success'
+		],
+		/**
+		 * @property $requiredMetaMessageKeys {array} — Required keys in $this->meta['message'].
+		 */
+		$requiredMetaMessageKeys = [
+			'content'
 		]
 	;
 	
@@ -28,7 +41,7 @@ class Response {
 	
 	/**
 	 * validateMeta
-	 * @version 1.0.4 (2021-03-10)
+	 * @version 1.0.5 (2021-03-10)
 	 * 
 	 * @param array $meta - is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
@@ -57,16 +70,21 @@ class Response {
 	public function validateMeta(array $meta){
 		$result = false;
 		
+		$paramKeys = array_keys($meta);
+		
 		if(
-			//code is set and int
-			isset($meta['code']) &&
+			//All required meta keys are set
+			!count(array_diff(
+				static::$requiredMetaKeys,
+				$paramKeys
+			)) &&
+			//code is int
 			is_int($meta['code']) &&
-			//success is set and bool
-			isset($meta['success']) &&
+			//success is sbool
 			is_bool($meta['success']) &&
 			//there is no diff between meta keys and allowed meta keys
 			!count(array_diff(
-				array_keys($meta),
+				$paramKeys,
 				static::$allowedMetaKeys
 			)) &&
 			(
@@ -84,7 +102,7 @@ class Response {
 	
 	/**
 	 * validateMetaMessage
-	 * @version 1.0 (2021-03-10)
+	 * @version 1.0.1 (2021-03-10)
 	 * 
 	 * @param $message {arrayAssociative} — @reuired
 	 * @param $message['content'] {string} — @required
@@ -95,17 +113,24 @@ class Response {
 	public function validateMetaMessage($message){
 		$result = false;
 		
-		if (
-			//message is set and contains content
-			is_array($message) &&
-			isset($message['content']) &&
-			//there is no diff between meta message keys and allowed meta message keys
-			!count(array_diff(
-				array_keys($message),
-				static::$allowedMetaMessageKeys
-			))
-		){
-			$result = true;
+		//Param is valid
+		if (is_array($message)){
+			$paramKeys = array_keys($message);
+			
+			if (
+				//All required items are set
+				!count(array_diff(
+					static::$requiredMetaMessageKeys,
+					$paramKeys
+				)) &&
+				//And only allowed items are set
+				!count(array_diff(
+					$paramKeys,
+					static::$allowedMetaMessageKeys
+				))
+			){
+				$result = true;
+			}
 		}
 		
 		return $result;
