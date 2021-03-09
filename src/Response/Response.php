@@ -161,6 +161,32 @@ class Response {
 	}
 	
 	/**
+	 * setMetaMessage
+	 * @version 1.0 (2021-03-10)
+	 * 
+	 * @desc Setter for $this->meta['message'].
+	 * 
+	 * @param $message
+	 * 
+	 * @return {boolean}
+	 */
+	public function setMetaMessage($message){
+		$result = false;
+		
+		if(
+			//This meta is set
+			is_array($this->meta) &&
+			//Parameter is valid
+			$this->validateMetaMessage($message)
+		){
+			$this->meta['message'] = $message;
+			$result = true;
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * getMeta
 	 * 
 	 * @desc Getter for $this->meta
