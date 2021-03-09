@@ -2858,20 +2858,14 @@ class ddTools {
 	
 	/**
 	 * getResponse
-	 * @version 1.0.5 (2018-06-26)
+	 * @version 2.0 (2021-03-09)
 	 * 
 	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request.
 	 * 
-	 * @param $version {string} — The required version of Response. Default: '0.2'.
-	 * 
 	 * @return {DDTools\Response}
 	 */
-	public static function getResponse($version = '0.2'){
-		$responseClass = \DDTools\Response::includeResponseByVersion($version);
-		
-		$result = new $responseClass;
-		
-		return $result;
+	public static function getResponse(){
+		return new \DDTools\Response();
 	}
 	
 	/**

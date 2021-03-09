@@ -1,71 +1,108 @@
 <?php
 namespace DDTools;
 
-abstract class Response {
+class Response {
+	protected static
+		/**
+		 * allowedMetaKeys
+		 * 
+		 * Allowed keys in $this->meta.
+		 * 
+		 * @var array
+		 */
+		$allowedMetaKeys = [
+			'code',
+			'eTag',
+			'success',
+			'message'
+		],
+		/**
+		 * allowedMetaMessageKeys
+		 * 
+		 * Allowed keys in $this->meta['message'].
+		 * 
+		 * @var array
+		 */
+		$allowedMetaMessageKeys = [
+			'content',
+			'title'
+		]
+	;
+	
 	protected
 		$meta,
 		$data
 	;
 	
 	/**
-	 * includeResponseByVersion
-	 * @version 1.0.2 (2021-03-09)
-	 * 
-	 * @param $version {string} — Response version.
-	 * 
-	 * @return {string}
-	 * @throws \Exception
-	 */
-	public final static function includeResponseByVersion($version){
-		//Only digits
-		$className =
-			'Response_v' .
-			preg_replace(
-				'/\D/',
-				'',
-				$version
-			)
-		;
-		
-		$versionPath =
-			__DIR__ .
-			DIRECTORY_SEPARATOR .
-			'Response' .
-			DIRECTORY_SEPARATOR .
-			$className .
-			'.php'
-		;
-		
-		if(is_file($versionPath)){
-			require_once($versionPath);
-			
-			return (
-				__NAMESPACE__ .
-				'\\Response\\' .
-				$className
-			);
-		}else{
-			throw new \Exception(
-				(
-					'ddTools Response ' .
-					$version .
-					' is not found.'
-				),
-				500
-			);
-		}
-	}
-	
-	/**
 	 * validateMeta
 	 * 
-	 * @desc Validates the “meta” part of a response.
+	 * @param array $meta - is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
+	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
+	 * and, optionally, with a title.
 	 * 
-	 * @param $meta
+	 * Examples:
+	 *
+	 * ```php
+	 * $meta = [
+	 * 		"code" => 200, // REQUIRED
+	 * 		"success" => true // REQUIRED
+	 * ];
+	 * 
+	 * $meta = [
+	 * 		"code" => 201, // REQUIRED
+	 * 		"success" => true, // REQUIRED
+	 * 		"message" => [
+	 * 			"content" => "You have successfully signed up. You will be redirected to your account in a moment.", // REQUIRED
+	 * 			"title" => "Success!"
+	 * 		]
+	 * ];
+	 * ```
 	 * 
 	 * @return {boolean}
 	 */
-	abstract public function validateMeta(array $meta);
+	public function validateMeta(array $meta){
+		$output = false;
+		
+		if(
+			//code is set and int
+			isset($meta['code']) &&
+			is_int($meta['code']) &&
+			//success is set and bool
+			isset($meta['success']) &&
+			is_bool($meta['success']) &&
+			(
+				//message is not set
+				!isset($meta['message']) ||
+				(
+					//message is set and contains content
+					is_array($meta['message']) &&
+					isset($meta['message']['content'])
+				)
+			)
+		){
+			if(
+				//there is no diff between meta keys and allowed meta keys
+				!count(array_diff(
+					array_keys($meta),
+					static::$allowedMetaKeys
+				)) &&
+				(
+					//message is not set
+					!isset($meta['message']) ||
+					//there is no diff between meta message keys and allowed meta message keys
+					!count(array_diff(
+						array_keys($meta['message']),
+						static::$allowedMetaMessageKeys
+					))
+				)
+			){
+				$output = true;
+			}
+		}
+		
+		return $output;
+	}
 	
 	/**
 	 * setMeta
