@@ -187,17 +187,6 @@ class Response {
 	}
 	
 	/**
-	 * getMeta
-	 * 
-	 * @desc Getter for $this->meta
-	 * 
-	 * @return {null|array}
-	 */
-	public function getMeta(){
-		return $this->meta;
-	}
-	
-	/**
 	 * setData
 	 * 
 	 * @desc Setter for $this->data.
@@ -206,6 +195,17 @@ class Response {
 	 */
 	public function setData($data){
 		$this->data = $data;
+	}
+	
+	/**s
+	 * getMeta
+	 * 
+	 * @desc Getter for $this->meta
+	 * 
+	 * @return {null|array}
+	 */
+	public function getMeta(){
+		return $this->meta;
 	}
 	
 	/**
