@@ -9,7 +9,7 @@ abstract class Response {
 	
 	/**
 	 * includeResponseByVersion
-	 * @version 1.0.1 (2019-06-22)
+	 * @version 1.0.2 (2021-03-09)
 	 * 
 	 * @param $version {string} — Response version.
 	 * 
@@ -18,21 +18,39 @@ abstract class Response {
 	 */
 	public final static function includeResponseByVersion($version){
 		//Only digits
-		$className = 'Response_v' . preg_replace(
-			'/\D/',
-			'',
-			$version
-		);
+		$className =
+			'Response_v' .
+			preg_replace(
+				'/\D/',
+				'',
+				$version
+			)
+		;
 		
-		$versionPath = __DIR__.DIRECTORY_SEPARATOR . 'Response' . DIRECTORY_SEPARATOR . $className . '.php';
+		$versionPath =
+			__DIR__ .
+			DIRECTORY_SEPARATOR .
+			'Response' .
+			DIRECTORY_SEPARATOR .
+			$className .
+			'.php'
+		;
 		
 		if(is_file($versionPath)){
-			require_once $versionPath;
+			require_once($versionPath);
 			
-			return __NAMESPACE__ . '\\Response\\' . $className;
+			return (
+				__NAMESPACE__ .
+				'\\Response\\' .
+				$className
+			);
 		}else{
 			throw new \Exception(
-				'ddTools Response ' . $version . ' is not found.',
+				(
+					'ddTools Response ' .
+					$version .
+					' is not found.'
+				),
 				500
 			);
 		}
