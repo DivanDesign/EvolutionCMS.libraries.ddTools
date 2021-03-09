@@ -41,7 +41,7 @@ class Response {
 	
 	/**
 	 * validateMeta
-	 * @version 1.1 (2021-03-10)
+	 * @version 1.1.1 (2021-03-10)
 	 * 
 	 * @param $meta {arrayAssociative} — Is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
@@ -70,25 +70,25 @@ class Response {
 	public function validateMeta($meta){
 		$result = false;
 		
-		//Param is valid
+		//Parameter is valid
 		if (is_array($meta)){
 			$paramKeys = array_keys($meta);
 			
 			if(
-				//All required meta keys are set
+				//All required items are set
 				!count(array_diff(
 					static::$requiredMetaKeys,
 					$paramKeys
 				)) &&
-				//code is int
-				is_int($meta['code']) &&
-				//success is sbool
-				is_bool($meta['success']) &&
-				//there is no diff between meta keys and allowed meta keys
+				//And only allowed items are set
 				!count(array_diff(
 					$paramKeys,
 					static::$allowedMetaKeys
 				)) &&
+				//code is int
+				is_int($meta['code']) &&
+				//success is bool
+				is_bool($meta['success']) &&
 				(
 					//message is not set
 					!isset($meta['message']) ||
@@ -105,7 +105,7 @@ class Response {
 	
 	/**
 	 * validateMetaMessage
-	 * @version 1.0.1 (2021-03-10)
+	 * @version 1.0.2 (2021-03-10)
 	 * 
 	 * @param $message {arrayAssociative} — @reuired
 	 * @param $message['content'] {string} — @required
@@ -116,7 +116,7 @@ class Response {
 	public function validateMetaMessage($message){
 		$result = false;
 		
-		//Param is valid
+		//Parameter is valid
 		if (is_array($message)){
 			$paramKeys = array_keys($message);
 			
