@@ -154,22 +154,22 @@ class Response {
 	
 	/**
 	 * toArray
-	 * @version 1.0.1 (2021-03-09)
+	 * @version 1.0.2 (2021-03-10)
 	 * 
 	 * @desc Converts this object to array.
 	 * 
 	 * @return {array}
 	 */
 	public function toArray(){
-		$output = [
+		$result = [
 			'meta' => $this->meta
 		];
 		
 		if(isset($this->data)){
-			$output['data'] = $this->data;
+			$result['data'] = $this->data;
 		}
 		
-		return $output;
+		return $result;
 	}
 	
 	/**
