@@ -105,7 +105,7 @@ class Response {
 	
 	/**
 	 * validateMetaMessage
-	 * @version 1.0.2 (2021-03-10)
+	 * @version 1.1 (2021-03-10)
 	 * 
 	 * @param $message {arrayAssociative} — @reuired
 	 * @param $message['content'] {string} — @required
@@ -130,7 +130,9 @@ class Response {
 				!count(array_diff(
 					$paramKeys,
 					static::$allowedMetaMessageKeys
-				))
+				)) &&
+				//content is string
+				is_string($message['content'])
 			){
 				$result = true;
 			}
