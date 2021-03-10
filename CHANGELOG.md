@@ -1,6 +1,20 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.43 (2021-03-10)
+* \* Attention! PHP >= 5.6 is required.
+* \* `\DDTools\Response`:
+	* \- Child version classes are not used anymore.
+	* \+ `$requiredMetaKeys`: The new field.
+	* \+ `$requiredMetaMessageKeys`: The new field.
+	* \+ `validateMetaMessage`: The new method.
+	* \+ `setMetaMessage`: The new method.
+	* \+ `validateMeta`: Can take any type of parameter and just returns `false` if it is not an array.
+	* \* `toJSON`: Refactoring, `\DDTools\ObjectTools::convertType` is used instead of `json_encode`.
+* \* `\DDTools\BaseClass::toJSON`: Refactoring, `\DDTools\ObjectTools::convertType` is used instead of `json_encode`.
+* \+ Composer.json → `authors`: Added missing authors.
+
+
 ## Version 0.42 (2021-02-24)
 * \* `\ddTools::verifyRenamedParams`:
 	* \+ If `$params->params` set as an object, the method will return an instance of stdClass.

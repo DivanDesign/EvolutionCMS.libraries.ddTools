@@ -1,6 +1,20 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.43 (2021-03-10)
+* \* Внимание! Требуется PHP >= 5.6.
+* \* `\DDTools\Response`:
+	* \- Дочерние версионные классы больше не используются.
+	* \+ `$requiredMetaKeys`: Новое поле.
+	* \+ `$requiredMetaMessageKeys`: Новое поле.
+	* \+ `validateMetaMessage`: Новый метод.
+	* \+ `setMetaMessage`: Новый метод.
+	* \+ `validateMeta`: Может принимать любой тип параметра и просто вернёт `false`, если это не массив.
+	* \* `toJSON`: Рефакторинг, `\DDTools\ObjectTools::convertType` используется вместо `json_encode`.
+* \* `\DDTools\BaseClass::toJSON`: Рефакторинг, `\DDTools\ObjectTools::convertType` используется вместо `json_encode`.
+* \+ Composer.json → `authors`: Добавлены недостающие авторы.
+
+
 ## Версия 0.42 (2021-02-24)
 * \* `\ddTools::verifyRenamedParams`:
 	* \+ Если `$params->params` задан, как объект — метод вернёт экземпляр stdClass.

@@ -71,7 +71,7 @@ class ObjectTools {
 	
 	/**
 	 * convertType
-	 * @version 1.0.1 (2020-06-02)
+	 * @version 1.0.2 (2021-03-09)
 	 * 
 	 * @see README.md
 	 */
@@ -136,10 +136,10 @@ class ObjectTools {
 		if ($params->type == 'objectstdclass'){
 			$result = (object) $result;
 		//array
-		}else if ($params->type == 'objectarray'){
+		}elseif ($params->type == 'objectarray'){
 			$result = (array) $result;
 		//stringJson
-		}else if(
+		}elseif(
 			substr(
 				$params->type,
 				0,
@@ -148,7 +148,7 @@ class ObjectTools {
 		){
 			if ($params->type == 'stringjsonobject'){
 				$result = (object) $result;
-			}else if ($params->type == 'stringjsonarray'){
+			}elseif ($params->type == 'stringjsonarray'){
 				$result = array_values((array) $result);
 			}
 			
