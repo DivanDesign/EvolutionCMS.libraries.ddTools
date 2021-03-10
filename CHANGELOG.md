@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.44 (2021-03-10)
+* \+ `\DDTools\Snippet::prepareParams`: The new method.
+
+
 ## Version 0.43 (2021-03-10)
 * \* Attention! PHP >= 5.6 is required.
 * \* `\DDTools\Response`:
