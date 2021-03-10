@@ -36,7 +36,7 @@ abstract class Snippet {
 	
 	/**
 	 * __construct
-	 * @version 1.1 (2021-02-24)
+	 * @version 1.1.1 (2021-03-10)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 */
@@ -76,6 +76,18 @@ abstract class Snippet {
 		
 		
 		//# Prepare params
+		$this->prepareParams($params);
+	}
+	
+	/**
+	 * prepareParams
+	 * @version 1.0 (2021-03-10)
+	 * 
+	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
+	 * 
+	 * @return {void}
+	 */
+	protected function prepareParams($params = []){
 		$params = \DDTools\ObjectTools::convertType([
 			'object' => $params,
 			'type' => 'objectStdClass'
