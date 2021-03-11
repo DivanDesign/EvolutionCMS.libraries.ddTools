@@ -222,6 +222,27 @@ class Response {
 	}
 	
 	/**
+	 * isSuccess
+	 * @version 1.0 (2021-03-11)
+	 * 
+	 * @return {boolean}
+	 */
+	public function isSuccess(){
+		$result = false;
+		
+		if (
+			//If meta is set
+			is_array($this->meta) &&
+			//And success
+			$this->meta['success']
+		){
+			$result = true;
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * toArray
 	 * @version 1.0.2 (2021-03-10)
 	 * 
