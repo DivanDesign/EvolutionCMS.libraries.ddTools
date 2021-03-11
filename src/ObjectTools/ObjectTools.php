@@ -164,7 +164,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.1 (2021-03-11)
+	 * @version 1.3.2 (2021-03-11)
 	 * 
 	 * @see README.md
 	 * 
@@ -200,11 +200,6 @@ class ObjectTools {
 					$additionalPropName =>
 					$additionalPropValue
 				){
-					//Is the original property exists
-					$isOriginalPropExists = self::isPropExists([
-						'object' => $result,
-						'propName' => $additionalPropName
-					]);
 					//Original property value
 					$originalPropValue = self::getPropValue([
 						'object' => $result,
@@ -218,7 +213,10 @@ class ObjectTools {
 						//Overwriting with empty value is disabled
 						!$params->overwriteWithEmpty &&
 						//And original property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
-						$isOriginalPropExists
+						self::isPropExists([
+							'object' => $result,
+							'propName' => $additionalPropName
+						])
 					){
 						//Check if additional property value is empty
 						$isAdditionalUsed =
