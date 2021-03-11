@@ -164,7 +164,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.2 (2021-03-11)
+	 * @version 1.3.3 (2021-03-11)
 	 * 
 	 * @see README.md
 	 * 
@@ -207,7 +207,7 @@ class ObjectTools {
 					]);
 					
 					//The additional property value will be used by default
-					$isAdditionalUsed = true;
+					$isAdditionalPropUsed = true;
 					
 					if (
 						//Overwriting with empty value is disabled
@@ -219,7 +219,7 @@ class ObjectTools {
 						])
 					){
 						//Check if additional property value is empty
-						$isAdditionalUsed =
+						$isAdditionalPropUsed =
 							(
 								//Empty string
 								(
@@ -242,7 +242,7 @@ class ObjectTools {
 						
 						if (
 							//Additional property value is empty
-							!$isAdditionalUsed &&
+							!$isAdditionalPropUsed &&
 							//And original property value is empty too
 							(
 								//Empty string
@@ -262,12 +262,12 @@ class ObjectTools {
 							$originalPropValue !== $additionalPropValue
 						){
 							//Okay, overwrite original in this case
-							$isAdditionalUsed = true;
+							$isAdditionalPropUsed = true;
 						}
 					}
 					
 					//If additional value must be used
-					if ($isAdditionalUsed){
+					if ($isAdditionalPropUsed){
 						if (
 							//If recursive merging is needed
 							$params->deep &&
