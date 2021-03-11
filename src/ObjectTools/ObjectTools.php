@@ -164,7 +164,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.3 (2021-03-11)
+	 * @version 1.3.4 (2021-03-11)
 	 * 
 	 * @see README.md
 	 * 
@@ -206,6 +206,11 @@ class ObjectTools {
 						'propName' => $additionalPropName
 					]);
 					
+					//Is the original property object or array
+					$isOriginalPropObjectOrArray = self::isObjectOrArray($originalPropValue);
+					//Is the additional property object or array
+					$isAdditionalPropObjectOrArray = self::isObjectOrArray($additionalPropValue);
+					
 					//The additional property value will be used by default
 					$isAdditionalPropUsed = true;
 					
@@ -230,7 +235,7 @@ class ObjectTools {
 								is_null($additionalPropValue) ||
 								//Empty object or array
 								(
-									self::isObjectOrArray($additionalPropValue) &&
+									$isAdditionalPropObjectOrArray &&
 									count((array) $additionalPropValue) == 0
 								)
 							) ?
@@ -254,7 +259,7 @@ class ObjectTools {
 								is_null($originalPropValue) ||
 								//Empty object or array
 								(
-									self::isObjectOrArray($originalPropValue) &&
+									$isOriginalPropObjectOrArray &&
 									count((array) $originalPropValue) == 0
 								)
 							) &&
@@ -272,9 +277,9 @@ class ObjectTools {
 							//If recursive merging is needed
 							$params->deep &&
 							//And we can extend original value
-							self::isObjectOrArray($originalPropValue) &&
+							$isOriginalPropObjectOrArray &&
 							//And the value is an object or array
-							self::isObjectOrArray($additionalPropValue)
+							$isAdditionalPropObjectOrArray
 						){
 							//Start recursion
 							$additionalPropValue = self::extend([
