@@ -164,7 +164,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.4 (2021-03-11)
+	 * @version 1.3.5 (2021-03-11)
 	 * 
 	 * @see README.md
 	 * 
@@ -226,18 +226,18 @@ class ObjectTools {
 						//Check if additional property value is empty
 						$isAdditionalPropUsed =
 							(
+								//Empty object or array
+								(
+									$isAdditionalPropObjectOrArray &&
+									count((array) $additionalPropValue) == 0
+								) ||
 								//Empty string
 								(
 									is_string($additionalPropValue) &&
 									$additionalPropValue == ''
 								) ||
 								//NULL
-								is_null($additionalPropValue) ||
-								//Empty object or array
-								(
-									$isAdditionalPropObjectOrArray &&
-									count((array) $additionalPropValue) == 0
-								)
+								is_null($additionalPropValue)
 							) ?
 							//Additional is empty — don't use it
 							false:
@@ -250,18 +250,18 @@ class ObjectTools {
 							!$isAdditionalPropUsed &&
 							//And original property value is empty too
 							(
+								//Empty object or array
+								(
+									$isOriginalPropObjectOrArray &&
+									count((array) $originalPropValue) == 0
+								) ||
 								//Empty string
 								(
 									is_string($originalPropValue) &&
 									$originalPropValue == ''
 								) ||
 								//NULL
-								is_null($originalPropValue) ||
-								//Empty object or array
-								(
-									$isOriginalPropObjectOrArray &&
-									count((array) $originalPropValue) == 0
-								)
+								is_null($originalPropValue)
 							) &&
 							//But they have different types
 							$originalPropValue !== $additionalPropValue
