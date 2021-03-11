@@ -164,7 +164,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3 (2020-04-30)
+	 * @version 1.3.1 (2021-03-11)
 	 * 
 	 * @see README.md
 	 * 
@@ -273,18 +273,11 @@ class ObjectTools {
 						if (
 							//If recursive merging is needed
 							$params->deep &&
+							//And we can extend original value
+							self::isObjectOrArray($originalPropValue) &&
 							//And the value is an object or array
 							self::isObjectOrArray($additionalPropValue)
 						){
-							//Init initial property value to extend
-							if (!$isOriginalPropExists){
-								$originalPropValue =
-									gettype($additionalPropValue) == 'object' ?
-									new \stdClass() :
-									[]
-								;
-							}
-							
 							//Start recursion
 							$additionalPropValue = self::extend([
 								'objects' => [
