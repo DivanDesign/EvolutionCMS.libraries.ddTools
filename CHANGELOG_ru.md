@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.45 (2021-03-11)
+* \+ `\DDTools\Response::isSuccess`: Новый публичный метод.
+
+
 ## Версия 0.44 (2021-03-10)
 * \+ `\DDTools\Snippet::prepareParams`: Новый метод.
 
