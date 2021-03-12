@@ -164,7 +164,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.6 (2021-03-12)
+	 * @version 1.3.7 (2021-03-12)
 	 * 
 	 * @see README.md
 	 * 
@@ -200,14 +200,26 @@ class ObjectTools {
 					$additionalPropName =>
 					$additionalPropValue
 				){
-					//Source property value
-					$sourcePropValue = self::getPropValue([
+					//Is the source property exists
+					$isSourcePropExists = self::isPropExists([
 						'object' => $result,
 						'propName' => $additionalPropName
 					]);
 					
-					//Is the source property object or array
-					$isSourcePropObjectOrArray = self::isObjectOrArray($sourcePropValue);
+					if ($isSourcePropExists){
+						//Source property value
+						$sourcePropValue = self::getPropValue([
+							'object' => $result,
+							'propName' => $additionalPropName
+						]);
+						
+						//Is the source property object or array
+						$isSourcePropObjectOrArray = self::isObjectOrArray($sourcePropValue);
+					}else{
+						$sourcePropValue = null;
+						$isSourcePropObjectOrArray = false;
+					}
+					
 					//Is the additional property object or array
 					$isAdditionalPropObjectOrArray = self::isObjectOrArray($additionalPropValue);
 					
@@ -218,10 +230,7 @@ class ObjectTools {
 						//Overwriting with empty value is disabled
 						!$params->overwriteWithEmpty &&
 						//And source property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
-						self::isPropExists([
-							'object' => $result,
-							'propName' => $additionalPropName
-						])
+						$isSourcePropExists
 					){
 						//Check if additional property value is empty
 						$isAdditionalPropUsed =
