@@ -164,7 +164,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.5 (2021-03-11)
+	 * @version 1.3.6 (2021-03-12)
 	 * 
 	 * @see README.md
 	 * 
@@ -200,14 +200,14 @@ class ObjectTools {
 					$additionalPropName =>
 					$additionalPropValue
 				){
-					//Original property value
-					$originalPropValue = self::getPropValue([
+					//Source property value
+					$sourcePropValue = self::getPropValue([
 						'object' => $result,
 						'propName' => $additionalPropName
 					]);
 					
-					//Is the original property object or array
-					$isOriginalPropObjectOrArray = self::isObjectOrArray($originalPropValue);
+					//Is the source property object or array
+					$isSourcePropObjectOrArray = self::isObjectOrArray($sourcePropValue);
 					//Is the additional property object or array
 					$isAdditionalPropObjectOrArray = self::isObjectOrArray($additionalPropValue);
 					
@@ -217,7 +217,7 @@ class ObjectTools {
 					if (
 						//Overwriting with empty value is disabled
 						!$params->overwriteWithEmpty &&
-						//And original property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
+						//And source property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
 						self::isPropExists([
 							'object' => $result,
 							'propName' => $additionalPropName
@@ -248,25 +248,25 @@ class ObjectTools {
 						if (
 							//Additional property value is empty
 							!$isAdditionalPropUsed &&
-							//And original property value is empty too
+							//And source property value is empty too
 							(
 								//Empty object or array
 								(
-									$isOriginalPropObjectOrArray &&
-									count((array) $originalPropValue) == 0
+									$isSourcePropObjectOrArray &&
+									count((array) $sourcePropValue) == 0
 								) ||
 								//Empty string
 								(
-									is_string($originalPropValue) &&
-									$originalPropValue == ''
+									is_string($sourcePropValue) &&
+									$sourcePropValue == ''
 								) ||
 								//NULL
-								is_null($originalPropValue)
+								is_null($sourcePropValue)
 							) &&
 							//But they have different types
-							$originalPropValue !== $additionalPropValue
+							$sourcePropValue !== $additionalPropValue
 						){
-							//Okay, overwrite original in this case
+							//Okay, overwrite source in this case
 							$isAdditionalPropUsed = true;
 						}
 					}
@@ -276,15 +276,15 @@ class ObjectTools {
 						if (
 							//If recursive merging is needed
 							$params->deep &&
-							//And we can extend original value
-							$isOriginalPropObjectOrArray &&
+							//And we can extend source value
+							$isSourcePropObjectOrArray &&
 							//And the value is an object or array
 							$isAdditionalPropObjectOrArray
 						){
 							//Start recursion
 							$additionalPropValue = self::extend([
 								'objects' => [
-									$originalPropValue,
+									$sourcePropValue,
 									$additionalPropValue
 								],
 								'deep' => true,
