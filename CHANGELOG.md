@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.45.1 (2021-03-12)
+* \* `\DDTools\ObjectTools::extend`:
+	* \* Recursion is called only if source value is an object or array.
+	* \* Optimization.
+
+
 ## Version 0.45 (2021-03-11)
 * \+ `\DDTools\Response::isSuccess`: The new public method.
 
