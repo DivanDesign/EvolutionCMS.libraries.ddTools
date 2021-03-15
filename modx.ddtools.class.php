@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.45.1 (2021-03-12)
+ * @version 0.46 (2021-03-15)
  * 
  * @see README.md
  * 
@@ -1398,7 +1398,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.4.2 (2021-03-09)
+	 * @version 1.5 (2021-03-15)
 	 * 
 	 * @desc Update document(s). Cache of the updated docs and their parents will be cleared.
 	 * 
@@ -1422,6 +1422,20 @@ class ddTools {
 		){
 			return false;
 		}
+		
+		$docData = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					//Если не передана дата изменения документа, ставим текущую
+					'editedon' => time(),
+					//Если не передано, кем документ изменён, ставим 1
+					'editedby' => 1
+				],
+				$docData
+			],
+			'overwriteWithEmpty' => false
+		]);
 		
 		$whereSql = '';
 		
@@ -1470,8 +1484,6 @@ class ddTools {
 			while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
 				$docIdsToUpdate[] = $doc['id'];
 			}
-			
-			$docData = (object) $docData;
 			
 			foreach (
 				$docData as
