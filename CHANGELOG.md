@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.46 (2021-03-15)
+* \+ `\ddTools::updateDocument`: Added default values for the following parameters:
+	* \+ `$docData->editedon`: If it isn't set, it will be equal to current date-time (`time()`).
+	* \+ `$docData->editedby`: If it isn't set, it will be equal to `1`.
+
+
 ## Version 0.45.1 (2021-03-12)
 * \* `\DDTools\ObjectTools::extend`:
 	* \* Recursion is called only if source value is an object or array.
