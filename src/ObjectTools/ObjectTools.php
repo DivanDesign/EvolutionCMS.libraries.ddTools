@@ -71,7 +71,7 @@ class ObjectTools {
 	
 	/**
 	 * convertType
-	 * @version 1.0.2 (2021-03-09)
+	 * @version 1.0.3 (2021-03-20)
 	 * 
 	 * @see README.md
 	 */
@@ -110,12 +110,12 @@ class ObjectTools {
 				;
 				
 				if ($isObjectJson){
-					try {
-						$result = json_decode(
-							$params->object,
-							$params->type == 'objectarray'
-						);
-					}catch (\Exception $e){
+					$result = json_decode(
+						$params->object,
+						$params->type == 'objectarray'
+					);
+					
+					if (is_null($result)){
 						//Flag
 						$isObjectJson = false;
 					}
