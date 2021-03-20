@@ -8,6 +8,7 @@ A library with various tools facilitating your work.
 * PHP >= 5.6
 * [(MODX)EvolutionCMS](https://github.com/evolution-cms/evolution) >= 1.1
 * [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.15-202004301145 (included)
+* [PHP.libraries.hjson](https://github.com/hjson/hjson-php) 2.1 (included)
 
 
 ## Documentation
@@ -258,8 +259,10 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 	* Valid values:
 		* `stdClass`
 		* `array`
-		* `stringJsonObject`
-		* `stringJsonArray`
+		* `stringJsonObject` — [JSON](https://en.wikipedia.org/wiki/JSON) object
+		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
+		* `stringHjsonObject` — [HJSON](https://hjson.github.io/) object
+		* `stringHjsonArray` — [HJSON](https://hjson.github.io/) array
 		* `stringQueryFormated`
 	* **Required**
 	
@@ -674,6 +677,36 @@ Returns:
 	"Ramin",
 	"Djawadi"
 ]
+```
+
+
+##### Convert a HJSON encoded string to an object
+
+```php
+\DDTools\ObjectTools::convertType([
+	'object' => "{
+		//This is HJSON, not JSON, so we can use comments insides
+		keys: and values can be specified without quotes,
+		multilineValues:
+			'''
+			Write multiline strings with proper whitespace handling.
+			Starts and ends with triple quotes.
+			A simple syntax and easy to read.
+			'''
+	}",
+	'type' => 'objectStdClass'
+]);
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array(
+   'keys' => 'and values can be specified without quotes,',
+   'multilineValues' => 'Write multiline strings with proper whitespace handling.
+Starts and ends with triple quotes.
+A simple syntax and easy to read.',
+))
 ```
 
 
