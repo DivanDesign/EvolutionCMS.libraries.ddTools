@@ -71,7 +71,7 @@ class ObjectTools {
 	
 	/**
 	 * convertType
-	 * @version 1.0.2 (2021-03-09)
+	 * @version 1.1 (2021-03-20)
 	 * 
 	 * @see README.md
 	 */
@@ -110,14 +110,42 @@ class ObjectTools {
 				;
 				
 				if ($isObjectJson){
-					try {
-						$result = json_decode(
-							$params->object,
-							$params->type == 'objectarray'
+					$result = json_decode(
+						$params->object,
+						$params->type == 'objectarray'
+					);
+					
+					if (is_null($result)){
+						//Include PHP.libraries.hjson
+						require_once(
+							'hjson' .
+							DIRECTORY_SEPARATOR .
+							'HJSONException.php'
 						);
-					}catch (\Exception $e){
-						//Flag
-						$isObjectJson = false;
+						require_once(
+							'hjson' .
+							DIRECTORY_SEPARATOR .
+							'HJSONUtils.php'
+						);
+						require_once(
+							'hjson' .
+							DIRECTORY_SEPARATOR .
+							'HJSONParser.php'
+						);
+						
+						try {
+							$hjsonParser = new \HJSON\HJSONParser();
+							
+							$result = $hjsonParser->parse(
+								$params->object,
+								[
+									'assoc' => $params->type == 'objectarray'
+								]
+							);
+						}catch (\Exception $e){
+							//Flag
+							$isObjectJson = false;
+						}
 					}
 				}
 				
