@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.47 (2021-03-20)
+* \+ `\DDTools\ObjectTools::convertType`:
+	* \+ Добавлена поддержка [HJSON](https://hjson.github.io/) (closes #7).
+	* \+ Улучшено обнаружение неудачной попытки `json_decode`.
+
+
 ## Версия 0.46 (2021-03-15)
 * \+ `\ddTools::updateDocument`: Добавлены значения по умолчанию для следующих параметров:
 	* \+ `$docData->editedon`: Если не задан — будет равен текущей дате-времени (`time()`).
