@@ -1,7 +1,7 @@
 {
 	"name": "dd/evolutioncms-libraries-ddtools",
 	"type": "modxevo-library-ddtools",
-	"version": "0.47.0",
+	"version": "0.48.0",
 	"description": "A library with various tools facilitating your work.",
 	"keywords": [
 		"modx",

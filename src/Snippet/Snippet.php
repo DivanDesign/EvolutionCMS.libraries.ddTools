@@ -29,6 +29,12 @@ abstract class Snippet {
 		$params = [],
 		
 		/**
+		 * @property $paramsTypes {arrayAssociative} — Overwrite in child classes if you want to convert some parameters types.
+		 * @property $paramsTypes[$paramName] {'integer'|'boolean'|'objectAuto'|'objectStdClass'|'objectArray'|'stringJsonAuto'|'stringJsonObject'|'stringJsonArray'} — The parameter type.
+		 */
+		$paramsTypes = [],
+		
+		/**
 		 * @property $renamedParamsCompliance {arrayAssociative} — Overwrite in child classes if you want to rename some parameters with backward compatibility (see \ddTools::verifyRenamedParams).
 		 */
 		$renamedParamsCompliance = []
@@ -81,13 +87,15 @@ abstract class Snippet {
 	
 	/**
 	 * prepareParams
-	 * @version 1.0 (2021-03-10)
+	 * @version 1.1 (2021-03-24)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * 
 	 * @return {void}
 	 */
 	protected function prepareParams($params = []){
+		$this->params = (object) $this->params;
+		
 		$params = \DDTools\ObjectTools::convertType([
 			'object' => $params,
 			'type' => 'objectStdClass'
@@ -102,10 +110,52 @@ abstract class Snippet {
 			]);
 		}
 		
+		if (!empty($this->paramsTypes)){
+			foreach (
+				$this->paramsTypes as
+				$paramName =>
+				$paramType
+			){
+				$paramType = strtolower($paramType);
+				
+				if ($paramType == 'integer'){
+					$params->{$paramName} = intval($params->{$paramName});
+				}elseif ($paramType == 'boolean'){
+					$params->{$paramName} = boolval($params->{$paramName});
+				}else{
+					//Convert defaults
+					if (
+						\DDTools\ObjectTools::isPropExists([
+							'object' => $this->params,
+							'propName' => $paramName
+						])
+					){
+						$this->params->{$paramName} = \DDTools\ObjectTools::convertType([
+							'object' => $this->params->{$paramName},
+							'type' => $paramType
+						]);
+					}
+					
+					//Convert given
+					if (
+						\DDTools\ObjectTools::isPropExists([
+							'object' => $params,
+							'propName' => $paramName
+						])
+					){
+						$params->{$paramName} = \DDTools\ObjectTools::convertType([
+							'object' => $params->{$paramName},
+							'type' => $paramType
+						]);
+					}
+				}
+			}
+		}
+		
 		$this->params = \DDTools\ObjectTools::extend([
 			'objects' => [
 				//Defaults
-				(object) $this->params,
+				$this->params,
 				//Given parameters
 				$params
 			]

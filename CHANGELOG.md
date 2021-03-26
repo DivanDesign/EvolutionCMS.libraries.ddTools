@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.48 (2021-03-25)
+* \+ `\DDTools\Snippet`:
+	* \+ `$paramsTypes`: The new property. Overwrite in child classes if you want to convert some parameters types.
+	* \+ `prepareParams`: The parameter types will be converted respectively with `$this->paramsTypes`.
+
+
 ## Version 0.47 (2021-03-20)
 * \+ `\DDTools\ObjectTools::convertType`:
 	* \+ Added [HJSON](https://hjson.github.io/) support (closes #7).

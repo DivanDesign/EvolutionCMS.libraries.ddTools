@@ -487,6 +487,26 @@ Abstract class for snippets.
 	* Desctription: Key is parameter name, value is value.
 	* Valid values: `mixed`
 	
+* `\DDTools\Snippet::$paramsTypes`
+	* Desctription: Overwrite in child classes if you want to convert some parameters types.  
+		Parameters types will be converted respectively with this field in `\DDTools\Snippet::prepareParams`.
+	* Valid values: `arrayAssociative`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$paramsTypes[$paramName]`
+	* Desctription: The parameter type.  
+		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
+	* Valid values:
+		* `'integer'`
+		* `'boolean'`
+		* `'objectAuto'`
+		* `'objectStdClass'`
+		* `'objectArray'`
+		* `'stringJsonAuto'`
+		* `'stringJsonObject'`
+		* `'stringJsonArray'`
+	* Visibility: `protected`
+	
 * `\DDTools\Snippet::$renamedParamsCompliance`
 	* Desctription: Overwrite in child classes if you want to rename some parameters with backward compatibility (see `$params->compliance` of `\ddTools::verifyRenamedParams`).
 	* Valid values: `arrayAssociative`
