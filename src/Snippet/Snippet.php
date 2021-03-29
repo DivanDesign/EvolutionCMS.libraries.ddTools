@@ -87,7 +87,7 @@ abstract class Snippet {
 	
 	/**
 	 * prepareParams
-	 * @version 1.1 (2021-03-24)
+	 * @version 1.1.1 (2021-03-29)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * 
@@ -118,31 +118,37 @@ abstract class Snippet {
 			){
 				$paramType = strtolower($paramType);
 				
-				if ($paramType == 'integer'){
-					$params->{$paramName} = intval($params->{$paramName});
-				}elseif ($paramType == 'boolean'){
-					$params->{$paramName} = boolval($params->{$paramName});
-				}else{
-					//Convert defaults
-					if (
-						\DDTools\ObjectTools::isPropExists([
-							'object' => $this->params,
-							'propName' => $paramName
-						])
-					){
+				//Convert defaults
+				if (
+					\DDTools\ObjectTools::isPropExists([
+						'object' => $this->params,
+						'propName' => $paramName
+					])
+				){
+					if ($paramType == 'integer'){
+						$this->params->{$paramName} = intval($this->params->{$paramName});
+					}elseif ($paramType == 'boolean'){
+						$this->params->{$paramName} = boolval($this->params->{$paramName});
+					}else{
 						$this->params->{$paramName} = \DDTools\ObjectTools::convertType([
 							'object' => $this->params->{$paramName},
 							'type' => $paramType
 						]);
 					}
-					
-					//Convert given
-					if (
-						\DDTools\ObjectTools::isPropExists([
-							'object' => $params,
-							'propName' => $paramName
-						])
-					){
+				}
+				
+				//Convert given
+				if (
+					\DDTools\ObjectTools::isPropExists([
+						'object' => $params,
+						'propName' => $paramName
+					])
+				){
+					if ($paramType == 'integer'){
+						$params->{$paramName} = intval($params->{$paramName});
+					}elseif ($paramType == 'boolean'){
+						$params->{$paramName} = boolval($params->{$paramName});
+					}else{
 						$params->{$paramName} = \DDTools\ObjectTools::convertType([
 							'object' => $params->{$paramName},
 							'type' => $paramType
