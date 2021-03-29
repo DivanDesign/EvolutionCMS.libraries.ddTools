@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.48.1 (2021-03-29)
+* \* `\DDTools\Snippet::prepareParams`: Type of only existing params will be converted.
+
+
 ## Version 0.48 (2021-03-25)
 * \+ `\DDTools\Snippet`:
 	* \+ `$paramsTypes`: The new property. Overwrite in child classes if you want to convert some parameters types.
