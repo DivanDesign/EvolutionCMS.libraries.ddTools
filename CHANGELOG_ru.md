@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.48.2 (2021-03-31)
+* \* `\DDTools\ObjectTools::extend`: Добавлено глубокое клонирование объектов для предотвращения ссылок.
+
+
 ## Версия 0.48.1 (2021-03-29)
 * \* `\DDTools\Snippet::prepareParams`: Тип только существующих параметров будет преобразован.
 
