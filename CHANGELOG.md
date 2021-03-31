@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.48.2 (2021-03-31)
+* \* `\DDTools\ObjectTools::extend`: Added deep object cloning to prevent references.
+
+
 ## Version 0.48.1 (2021-03-29)
 * \* `\DDTools\Snippet::prepareParams`: Type of only existing params will be converted.
 
