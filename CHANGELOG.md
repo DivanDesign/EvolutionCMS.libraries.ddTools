@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.49 (2021-04-25)
+* \* `\ddTools::parseText`:
+	* \+ Parameters → `$params->data`: Can also be set as JSON, HJSON or Query string.
+	* \* `\DDTools\ObjectTools::extend` is used instead of `array_merge`.
+* \+ README → Documentation → Parameters description → `\ddTools::parseText($params)`.
+
+
 ## Version 0.48.2 (2021-03-31)
 * \* `\DDTools\ObjectTools::extend`: Added deep object cloning to prevent references.
 
