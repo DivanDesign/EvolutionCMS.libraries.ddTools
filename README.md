@@ -60,13 +60,16 @@ Like `$modx->parseChunk`, but takes a text and has some features.
 	* Valid values:
 		* `arrayAssociative`
 		* `stdClass`
+		* `stringJsonObject` — as [JSON](https://en.wikipedia.org/wiki/JSON)
+		* `stringHjsonObject` — as [HJSON](https://hjson.github.io/)
+		* `stringQueryFormated` — as [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* Default value: `[]`
 	
 * `$params->data->{$key}`
 	* Valid values: Key is placeholder name, value is value.
 		* `string`
-		* `arrayAssociative`
-		* `stdClass`
+		* `array`
+		* `object`
 	* **Required**
 	
 * `$params->placeholderPrefix`

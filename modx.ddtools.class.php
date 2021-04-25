@@ -897,7 +897,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.5.3 (2021-04-25)
+	 * @version 1.6 (2021-04-25)
 	 * 
 	 * @see README.md
 	 */
@@ -932,13 +932,13 @@ class ddTools {
 			]
 		]);
 		
+		$params->data = \DDTools\ObjectTools::convertType([
+			'object' => $params->data,
+			'type' => 'objectArray'
+		]);
+		
 		
 		$result = $params->text;
-		
-		//Convert stdClass to array
-		if (!is_array($params->data)){
-			$params->data = (array) $params->data;
-		}
 		
 		//Если значения для парсинга переданы
 		if (!empty($params->data)){
