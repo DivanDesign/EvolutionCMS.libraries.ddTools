@@ -897,7 +897,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.5.2 (2019-06-22)
+	 * @version 1.5.3 (2021-04-25)
 	 * 
 	 * @see README.md
 	 */
@@ -917,18 +917,21 @@ class ddTools {
 			]);
 		}
 		
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'text' => '',
-				'data' => [],
-				'placeholderPrefix' => '[+',
-				'placeholderSuffix' => '+]',
-				'removeEmptyPlaceholders' => false,
-				'mergeAll' => true
-			],
-			(array) $params
-		);
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'text' => '',
+					'data' => [],
+					'placeholderPrefix' => '[+',
+					'placeholderSuffix' => '+]',
+					'removeEmptyPlaceholders' => false,
+					'mergeAll' => true
+				],
+				$params
+			]
+		]);
+		
 		
 		$result = $params->text;
 		
