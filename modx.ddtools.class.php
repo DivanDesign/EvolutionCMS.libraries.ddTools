@@ -899,18 +899,7 @@ class ddTools {
 	 * parseText
 	 * @version 1.5.2 (2019-06-22)
 	 * 
-	 * @desc Similar to $modx->parseChunk, but takes a text.
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->text {string} — String to parse. @required
-	 * @param $params->data {stdClass|arrayAssociative} — Array of values. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”. Default: [].
-	 * @param $params->data->{$key} {string|stdClass|arrayAssociative} — Key — placeholder name, value — value.
-	 * @param $params->placeholderPrefix {string} — Placeholders prefix. Default: '[+'.
-	 * @param $params->placeholderSuffix {string} — Placeholders suffix. Default: '+]'.
-	 * @param $params->removeEmptyPlaceholders {boolean} — Do you need to remove empty placeholders? Default: false.
-	 * @param $params->mergeAll {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
-	 * 
-	 * @return {string}
+	 * @see README.md
 	 */
 	public static function parseText($params = []){
 		//For backward compatibility
