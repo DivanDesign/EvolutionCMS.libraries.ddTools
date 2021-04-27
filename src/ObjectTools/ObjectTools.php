@@ -192,7 +192,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.8 (2021-03-31)
+	 * @version 1.3.9 (2021-04-27)
 	 * 
 	 * @see README.md
 	 * 
@@ -341,7 +341,7 @@ class ObjectTools {
 							]);
 						}
 						
-						if ($isAdditionalPropObject){
+						if (is_object($additionalPropValue)){
 							$additionalPropValue = clone $additionalPropValue;
 						}
 						

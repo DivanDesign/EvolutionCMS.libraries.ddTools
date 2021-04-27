@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.49.1 (2021-04-27)
+* \* `\DDTools\ObjectTools::extend`: Improved deep cloning objects to arrays.
+
+
 ## Version 0.49 (2021-04-25)
 * \* `\ddTools::parseText`:
 	* \+ Parameters → `$params->data`: Can also be set as JSON, HJSON or Query string.
