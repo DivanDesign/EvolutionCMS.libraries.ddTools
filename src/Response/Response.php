@@ -199,7 +199,7 @@ class Response {
 	
 	/**
 	 * setMetaMessage
-	 * @version 1.0 (2021-03-10)
+	 * @version 1.1 (2021-05-11)
 	 * 
 	 * @desc Setter for $this->meta['message'].
 	 * 
@@ -210,13 +210,15 @@ class Response {
 	public function setMetaMessage($message){
 		$result = false;
 		
-		if(
-			//This meta is set
-			is_array($this->meta) &&
-			//Parameter is valid
-			$this->validateMetaMessage($message)
-		){
+		//If parameter is valid
+		if ($this->validateMetaMessage($message)){
+			//Set default meta if it is not set
+			if (!is_array($this->meta)){
+				$this->setMeta();
+			}
+			
 			$this->meta['message'] = $message;
+			
 			$result = true;
 		}
 		
