@@ -234,6 +234,44 @@ class Response {
 		$this->data = $data;
 	}
 	
+	/**
+	 * setMetaData
+	 * @version 1.0 (2021-05-11)
+	 * 
+	 * @desc Setter for $this->meta and $this->data.
+	 * 
+	 * @param $params
+	 * 
+	 * @return {void}
+	 */
+	public function setMetaData($params){
+		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormated
+		if (!is_array($params)){
+			$params = \DDTools\ObjectTools::convertType([
+				'object' => $params,
+				'type' => 'objectArray'
+			]);
+		}
+		
+		if (
+			\DDTools\ObjectTools::isPropExists([
+				'object' => $params,
+				'propName' => 'meta'
+			])
+		){
+			$this->setMeta($params['meta']);
+		}
+		
+		if (
+			\DDTools\ObjectTools::isPropExists([
+				'object' => $params,
+				'propName' => 'data'
+			])
+		){
+			$this->setData($params['data']);
+		}
+	}
+	
 	/**s
 	 * getMeta
 	 * 
