@@ -1,6 +1,18 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.50 (2021-05-11)
+* \+ `\DDTools\Response`:
+	* \+ `setMetaData`: Новый публичный метод. Сеттер для `$this->meta` и `$this->data`.
+	* \+ `setMeta` → Параметры:
+		* \+ `$meta['success']`: Больше не обязателен и по умолчанию будет равен `true`.
+		* \+ `$meta['code']`: Больше не обязателен и по умолчанию будет равен `200` или `400` в зависимости от `$meta['success']`.
+		* \+ `$meta`:
+		 	* \+ Также может быть задан как stdClass, stringJsonObject, stringHjsonObject, stringQueryFormated.
+			* \+ Больше не обязателен и по умолчанию будет равен `['success' => true, 'code' => 200]`.
+	* \+ `setMetaMessage`: Если `$this->meta` не задано, будет задано со значениями по умолчанию `success` и `code`.
+
+
 ## Версия 0.49.1 (2021-04-27)
 * \* `\DDTools\ObjectTools::extend`: Улучшено глубокое клонирование объектов в массивы.
 
