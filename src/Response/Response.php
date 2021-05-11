@@ -143,7 +143,7 @@ class Response {
 	
 	/**
 	 * setMeta
-	 * @version 1.2 (2021-05-11)
+	 * @version 1.3 (2021-05-11)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -169,6 +169,21 @@ class Response {
 		){
 			//true by default
 			$meta['success'] = true;
+		}
+		
+		//If code is not set
+		if (
+			!\DDTools\ObjectTools::isPropExists([
+				'object' => $meta,
+				'propName' => 'code'
+			])
+		){
+			//Depends on success by default
+			$meta['code'] =
+				$meta['success'] ?
+				200 :
+				400
+			;
 		}
 		
 		
