@@ -143,7 +143,7 @@ class Response {
 	
 	/**
 	 * setMeta
-	 * @version 1.0.1 (2021-03-10)
+	 * @version 1.1 (2021-05-11)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -152,6 +152,15 @@ class Response {
 	 * @return {boolean}
 	 */
 	public function setMeta($meta){
+		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormated
+		if (!is_array($meta)){
+			$meta = \DDTools\ObjectTools::convertType([
+				'object' => $meta,
+				'type' => 'objectArray'
+			]);
+		}
+		
+		
 		$result = false;
 		
 		if($this->validateMeta($meta)){
