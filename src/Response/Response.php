@@ -143,7 +143,7 @@ class Response {
 	
 	/**
 	 * setMeta
-	 * @version 1.1 (2021-05-11)
+	 * @version 1.2 (2021-05-11)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -158,6 +158,17 @@ class Response {
 				'object' => $meta,
 				'type' => 'objectArray'
 			]);
+		}
+		
+		//If success is not set
+		if (
+			!\DDTools\ObjectTools::isPropExists([
+				'object' => $meta,
+				'propName' => 'success'
+			])
+		){
+			//true by default
+			$meta['success'] = true;
 		}
 		
 		
