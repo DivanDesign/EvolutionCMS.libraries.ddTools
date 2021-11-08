@@ -330,7 +330,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
 		* `stringHjsonObject` — [HJSON](https://hjson.github.io/) object
 		* `stringHjsonArray` — [HJSON](https://hjson.github.io/) array
-		* `stringQueryFormated`
+		* `stringQueryFormated` — [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* **Required**
 	
 * `$params->type`
@@ -343,6 +343,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `'stringJsonAuto'` — `stringJsonObject` or `stringJsonArray` depends on input object
 		* `'stringJsonObject'`
 		* `'stringJsonArray'`
+		* `'stringQueryFormated'`
 	* Default value: `'objectAuto'`
 
 
