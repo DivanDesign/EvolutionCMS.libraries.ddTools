@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.51 (2021-11-08)
+* \+ `\DDTools\ObjectTools::convertType`: Added the ability to return `stringQueryFormated`.
+
+
 ## Version 0.50 (2021-05-11)
 * \+ `\DDTools\Response`:
 	* \+ `setMetaData`: The new public method. Setter for `$this->meta` and `$this->data`.
