@@ -287,22 +287,6 @@ class ddTools {
 	}
 	
 	/**
-	 * unfoldArray
-	 * @version 1.1 (2021-11-16)
-	 * 
-	 * @see README.md (\DDTools\ObjectTools::unfold)
-	 */
-	public static function unfoldArray(
-		$array,
-		$keyPrefix = ''
-	){
-		return \DDTools\ObjectTools::unfold([
-			'object' => $array,
-			'keyPrefix' => $keyPrefix
-		]);
-	}
-	
-	/**
 	 * sort2dArray
 	 * @version 1.2.1 (2021-03-09)
 	 * 
@@ -483,56 +467,6 @@ class ddTools {
 		}
 		
 		return $result;
-	}
-	
-	/**
-	 * createDir
-	 * @version 1.0 (2019-10-22)
-	 * 
-	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->path {string} — The directory path. @required
-	 * 
-	 * @return {boolean} — Success status.
-	 */
-	public static function createDir($params){
-		return \DDTools\FilesTools::createDir($params);
-	}
-	
-	/**
-	 * copyDir
-	 * @version 1.1 (2018-10-02)
-	 * 
-	 * @desc Copies a required folder with all contents recursively.
-	 * 
-	 * @param $sourcePath {string} — Path to the directory, that should copied. @required
-	 * @param $destinationPath {string} — The destination path. @required
-	 * 
-	 * @return {boolean} — Returns true on success or false on failure.
-	 */
-	public static function copyDir(
-		$sourcePath,
-		$destinationPath
-	){
-		return \DDTools\FilesTools::copyDir([
-			'sourcePath' => $sourcePath,
-			'destinationPath' => $destinationPath
-		]);
-	}
-	
-	/**
-	 * removeDir
-	 * @version 1.1 (2018-10-02)
-	 * 
-	 * @desc Removes a required folder with all contents recursively.
-	 * 
-	 * @param $path {string} — Path to the directory, that should removed. @required
-	 * 
-	 * @return {boolean}
-	 */
-	public static function removeDir($path){
-		return \DDTools\FilesTools::removeDir($path);
 	}
 	
 	/**
@@ -2826,6 +2760,72 @@ class ddTools {
 	 */
 	public static function getResponse(){
 		return new \DDTools\Response();
+	}
+	
+	/**
+	 * unfoldArray
+	 * @version 1.1 (2021-11-16)
+	 * 
+	 * @see README.md (\DDTools\ObjectTools::unfold)
+	 */
+	public static function unfoldArray(
+		$array,
+		$keyPrefix = ''
+	){
+		return \DDTools\ObjectTools::unfold([
+			'object' => $array,
+			'keyPrefix' => $keyPrefix
+		]);
+	}
+	
+	/**
+	 * createDir
+	 * @version 1.0 (2019-10-22)
+	 * 
+	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->path {string} — The directory path. @required
+	 * 
+	 * @return {boolean} — Success status.
+	 */
+	public static function createDir($params){
+		return \DDTools\FilesTools::createDir($params);
+	}
+	
+	/**
+	 * copyDir
+	 * @version 1.1 (2018-10-02)
+	 * 
+	 * @desc Copies a required folder with all contents recursively.
+	 * 
+	 * @param $sourcePath {string} — Path to the directory, that should copied. @required
+	 * @param $destinationPath {string} — The destination path. @required
+	 * 
+	 * @return {boolean} — Returns true on success or false on failure.
+	 */
+	public static function copyDir(
+		$sourcePath,
+		$destinationPath
+	){
+		return \DDTools\FilesTools::copyDir([
+			'sourcePath' => $sourcePath,
+			'destinationPath' => $destinationPath
+		]);
+	}
+	
+	/**
+	 * removeDir
+	 * @version 1.1 (2018-10-02)
+	 * 
+	 * @desc Removes a required folder with all contents recursively.
+	 * 
+	 * @param $path {string} — Path to the directory, that should removed. @required
+	 * 
+	 * @return {boolean}
+	 */
+	public static function removeDir($path){
+		return \DDTools\FilesTools::removeDir($path);
 	}
 	
 	/**
