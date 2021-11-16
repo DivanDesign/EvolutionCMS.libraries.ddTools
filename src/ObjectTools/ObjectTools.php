@@ -361,4 +361,87 @@ class ObjectTools {
 		
 		return $result;
 	}
+	
+	/**
+	 * unfold
+	 * @version 1.1 (2021-11-17)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {stdClass|array}
+	 */
+	public static function unfold($params){
+		$params = self::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'keySeparator' => '.',
+					'keyPrefix' => '',
+					//The internal parameter, should not be used outside. Used only in child calls of recursion.
+					'isSourceObject' => null
+				],
+				$params
+			]
+		]);
+		
+		//Array is used as base and it always be returned in child calls of recursion
+		$result = [];
+		
+		$isSourceObject =
+			//If it's the first call of recurson
+			is_null($params->isSourceObject) ?
+			//Use original type
+			is_object($params->object) :
+			//Use from parent call of recursion
+			$params->isSourceObject
+		;
+		
+		//Iterate over source
+		foreach (
+			$params->object as
+			$key =>
+			$value
+		){
+			//If the value must be unfolded
+			if (
+				(
+					$isSourceObject &&
+					is_object($value)
+				) ||
+				(
+					!$isSourceObject &&
+					is_array($value)
+				)
+			){
+				$result = array_merge(
+					$result,
+					self::unfold([
+						'object' => $value,
+						'keyPrefix' =>
+							$params->keyPrefix .
+							$key .
+							$params->keySeparator
+						,
+						'isSourceObject' => $isSourceObject
+					])
+				);
+			//Если значение — не массив
+			}else{
+				//Запоминаем (в соответствии с ключом родителя)
+				$result[$params->keyPrefix . $key] = $value;
+			}
+		}
+		
+		if (
+			//If it's first call of recurson
+			is_null($params->isSourceObject) &&
+			//And the final result must be an object
+			$isSourceObject
+		){
+			//Only the first call of recursion can return an object
+			$result = (object) $result;
+		}
+		
+		return $result;
+	}
 }

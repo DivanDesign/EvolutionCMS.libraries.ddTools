@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.51 (2021-11-08)
+ * @version 0.52 (2021-11-16)
  * 
  * @see README.md
  * 
@@ -287,66 +287,6 @@ class ddTools {
 	}
 	
 	/**
-	 * unfoldArray
-	 * @version 1.0.5 (2019-06-22)
-	 * 
-	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
-	 * @example [
-	 * 	'a' => 'a val',
-	 * 	'b' => [
-	 * 		'b1' => 'b1 val',
-	 * 		'b2' => [
-	 * 			'b21' => 'b2.1 val',
-	 * 			'b22' => 'b2.2 val'
-	 * 		]
-	 * 	],
-	 * 	'c' => 'c val'
-	 * ] turns into [
-	 * 	'a' => 'a val',
-	 * 	'b.b1' => 'b1 val',
-	 * 	'b.b2.b21' => 'b2.1 val',
-	 * 	'b.b2.b22' => 'b2.2 val',
-	 * 	'c' => 'c val'
-	 * ].
-	 * 
-	 * @param $array {array} — An array to convert. @required
-	 * @param $keyPrefix {string} — Prefix of the keys of an array (it's an internal varible, can be used if required). Default: ''.
-	 * 
-	 * @return {array} — Unfolded array.
-	 */
-	public static function unfoldArray(
-		$array,
-		$keyPrefix = ''
-	){
-		$result = [];
-		
-		//Перебираем массив
-		foreach (
-			$array as
-			$key =>
-			$val
-		){
-			//Если значение является массивом
-			if (is_array($val)){
-				//Запускаем рекурсию дальше
-				$result = array_merge(
-					$result,
-					self::unfoldArray(
-						$val,
-						$keyPrefix . $key . '.'
-					)
-				);
-			//Если значение — не массив
-			}else{
-				//Запоминаем (в соответствии с ключом родителя)
-				$result[$keyPrefix . $key] = $val;
-			}
-		}
-		
-		return $result;
-	}
-	
-	/**
 	 * sort2dArray
 	 * @version 1.2.1 (2021-03-09)
 	 * 
@@ -527,56 +467,6 @@ class ddTools {
 		}
 		
 		return $result;
-	}
-	
-	/**
-	 * createDir
-	 * @version 1.0 (2019-10-22)
-	 * 
-	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->path {string} — The directory path. @required
-	 * 
-	 * @return {boolean} — Success status.
-	 */
-	public static function createDir($params){
-		return \DDTools\FilesTools::createDir($params);
-	}
-	
-	/**
-	 * copyDir
-	 * @version 1.1 (2018-10-02)
-	 * 
-	 * @desc Copies a required folder with all contents recursively.
-	 * 
-	 * @param $sourcePath {string} — Path to the directory, that should copied. @required
-	 * @param $destinationPath {string} — The destination path. @required
-	 * 
-	 * @return {boolean} — Returns true on success or false on failure.
-	 */
-	public static function copyDir(
-		$sourcePath,
-		$destinationPath
-	){
-		return \DDTools\FilesTools::copyDir([
-			'sourcePath' => $sourcePath,
-			'destinationPath' => $destinationPath
-		]);
-	}
-	
-	/**
-	 * removeDir
-	 * @version 1.1 (2018-10-02)
-	 * 
-	 * @desc Removes a required folder with all contents recursively.
-	 * 
-	 * @param $path {string} — Path to the directory, that should removed. @required
-	 * 
-	 * @return {boolean}
-	 */
-	public static function removeDir($path){
-		return \DDTools\FilesTools::removeDir($path);
 	}
 	
 	/**
@@ -2870,6 +2760,72 @@ class ddTools {
 	 */
 	public static function getResponse(){
 		return new \DDTools\Response();
+	}
+	
+	/**
+	 * unfoldArray
+	 * @version 1.1 (2021-11-16)
+	 * 
+	 * @see README.md (\DDTools\ObjectTools::unfold)
+	 */
+	public static function unfoldArray(
+		$array,
+		$keyPrefix = ''
+	){
+		return \DDTools\ObjectTools::unfold([
+			'object' => $array,
+			'keyPrefix' => $keyPrefix
+		]);
+	}
+	
+	/**
+	 * createDir
+	 * @version 1.0 (2019-10-22)
+	 * 
+	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->path {string} — The directory path. @required
+	 * 
+	 * @return {boolean} — Success status.
+	 */
+	public static function createDir($params){
+		return \DDTools\FilesTools::createDir($params);
+	}
+	
+	/**
+	 * copyDir
+	 * @version 1.1 (2018-10-02)
+	 * 
+	 * @desc Copies a required folder with all contents recursively.
+	 * 
+	 * @param $sourcePath {string} — Path to the directory, that should copied. @required
+	 * @param $destinationPath {string} — The destination path. @required
+	 * 
+	 * @return {boolean} — Returns true on success or false on failure.
+	 */
+	public static function copyDir(
+		$sourcePath,
+		$destinationPath
+	){
+		return \DDTools\FilesTools::copyDir([
+			'sourcePath' => $sourcePath,
+			'destinationPath' => $destinationPath
+		]);
+	}
+	
+	/**
+	 * removeDir
+	 * @version 1.1 (2018-10-02)
+	 * 
+	 * @desc Removes a required folder with all contents recursively.
+	 * 
+	 * @param $path {string} — Path to the directory, that should removed. @required
+	 * 
+	 * @return {boolean}
+	 */
+	public static function removeDir($path){
+		return \DDTools\FilesTools::removeDir($path);
 	}
 	
 	/**

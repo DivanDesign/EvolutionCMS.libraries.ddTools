@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.52 (2021-11-16)
+* \+ `\DDTools\ObjectTools::unfold`: The new method.  
+	Converts a multidimensional array/object into an one-dimensional one joining the keys with `$params->keySeparator`.  
+	For example, it can be helpful while using placeholders like `[+size.width+]`.  
+	See more info and examples in README.md.
+
+
 ## Version 0.51 (2021-11-08)
 * \+ `\DDTools\ObjectTools::convertType`: Added the ability to return `stringQueryFormated`.
 
