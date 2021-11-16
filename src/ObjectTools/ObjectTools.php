@@ -364,7 +364,7 @@ class ObjectTools {
 	
 	/**
 	 * unfold
-	 * @version 1.0 (2021-11-16)
+	 * @version 1.1 (2021-11-17)
 	 * 
 	 * @see README.md
 	 * 
@@ -375,6 +375,7 @@ class ObjectTools {
 			'objects' => [
 				//Defaults
 				(object) [
+					'keySeparator' => '.',
 					'keyPrefix' => '',
 					//The internal parameter, should not be used outside. Used only in child calls of recursion.
 					'isSourceObject' => null
@@ -419,7 +420,7 @@ class ObjectTools {
 						'keyPrefix' =>
 							$params->keyPrefix .
 							$key .
-							'.'
+							$params->keySeparator
 						,
 						'isSourceObject' => $isSourceObject
 					])

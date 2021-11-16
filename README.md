@@ -407,7 +407,7 @@ Merge the contents of two or more objects or arrays together into the first one.
 
 ##### `\DDTools\ObjectTools::unfold($params)`
 
-Converts a multidimensional array/object into an one-dimensional one joining the keys with `'.'`.
+Converts a multidimensional array/object into an one-dimensional one joining the keys with `$params->keySeparator`.
 For example, it can be helpful while using placeholders like `[+size.width+]`.
 
 * `$params`
@@ -423,6 +423,11 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
+	
+* `$params->keySeparator`
+	* Desctription: Separator between nested keys in the result object/array.
+	* Valid values: `string`
+	* Default value: `'.'`
 	
 * `$params->keyPrefix`
 	* Desctription: Prefix of the keys of an object/array (it's an internal varible, but can be used if required).
@@ -1070,6 +1075,31 @@ array (
 	'c' => 'c val'
 )
 ```
+
+
+##### Use custom key separator
+
+```php
+var_export(\DDTools\ObjectTools::unfold([
+	'object' => [
+		'name' => 'Elon Musk',
+		'parents' => [
+			'mother' => 'Maye Musk',
+			'father' => 'Errol Musk'
+		]
+	],
+	'keySeparator' => '_'
+]));
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array (
+	'name' => 'Elon Musk',
+	'parents_mother' => 'Maye Musk',
+	'parents_father' => 'Errol Musk'
+))
 
 
 #### `\DDTools\ObjectTools::isPropExists($params)`
