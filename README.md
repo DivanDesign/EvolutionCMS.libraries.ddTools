@@ -405,6 +405,40 @@ Merge the contents of two or more objects or arrays together into the first one.
 	* Default value: `true`
 
 
+##### `\DDTools\ObjectTools::unfold($params)`
+
+Converts a multidimensional array/object into an one-dimensional one joining the keys with `'.'`.
+For example, it can be helpful while using placeholders like `[+size.width+]`.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->object`
+	* Desctription: An object/array to convert.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->keyPrefix`
+	* Desctription: Prefix of the keys of an object/array (it's an internal varible, but can be used if required).
+	* Valid values: `string`
+	* Default value: `''`
+
+
+###### Returns
+
+* `$result`
+	* Desctription: Unfolded object/array. Type of results depends on `$params->object`.
+	* Valid values:
+		* `stdClass`
+		* `array`
+
+
 #### `\DDTools\BaseClass`
 
 Simple class with some small methods facilitating your work.
@@ -972,6 +1006,69 @@ stdClass::__set_state(array(
 	'lastName' => 'Tesla',
 	'discipline' => 'Electrical engineering'
 ))
+```
+
+
+#### `\DDTools\ObjectTools::unfold($params)`
+
+
+##### Unfold an object
+
+```php
+var_export(\DDTools\ObjectTools::unfold([
+	'object' => (object) [
+		'name' => 'Elon Musk',
+		'address' => (object) [
+			'line1' => '3500 Deer Creek Road',
+			'city' => 'Palo Alto',
+			'state' => 'California',
+			'country' => 'United States'
+		]
+	]
+]));
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array (
+	'name' => 'Elon Musk',
+	'address.line1' => '3500 Deer Creek Road',
+	'address.city' => 'Palo Alto',
+	'address.state' => 'California',
+	'address.country' => 'United States'
+))
+```
+
+
+##### Unfold an array
+
+```php
+var_export(\DDTools\ObjectTools::unfold([
+	'object' => [
+		'a' => 'a val',
+		'b' => [
+			'b1' => 'b1 val',
+			'b2' => [
+				'b21' => 'b21 val',
+				'b22' => 'b22 val'
+			]
+		],
+		'c' => 'c val'
+	]
+]));
+```
+
+Returns:
+
+```php
+array (
+	'a' => 'a val',
+	'b.b1' => 'b1 val',
+	'b.b2.b21' => 'b21 val',
+	'b.b2.b22' => 'b22 val',
+	'c' => 'c val'
+)
 ```
 
 

@@ -288,62 +288,18 @@ class ddTools {
 	
 	/**
 	 * unfoldArray
-	 * @version 1.0.5 (2019-06-22)
+	 * @version 1.1 (2021-11-16)
 	 * 
-	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
-	 * @example [
-	 * 	'a' => 'a val',
-	 * 	'b' => [
-	 * 		'b1' => 'b1 val',
-	 * 		'b2' => [
-	 * 			'b21' => 'b2.1 val',
-	 * 			'b22' => 'b2.2 val'
-	 * 		]
-	 * 	],
-	 * 	'c' => 'c val'
-	 * ] turns into [
-	 * 	'a' => 'a val',
-	 * 	'b.b1' => 'b1 val',
-	 * 	'b.b2.b21' => 'b2.1 val',
-	 * 	'b.b2.b22' => 'b2.2 val',
-	 * 	'c' => 'c val'
-	 * ].
-	 * 
-	 * @param $array {array} — An array to convert. @required
-	 * @param $keyPrefix {string} — Prefix of the keys of an array (it's an internal varible, can be used if required). Default: ''.
-	 * 
-	 * @return {array} — Unfolded array.
+	 * @see README.md (\DDTools\ObjectTools::unfold)
 	 */
 	public static function unfoldArray(
 		$array,
 		$keyPrefix = ''
 	){
-		$result = [];
-		
-		//Перебираем массив
-		foreach (
-			$array as
-			$key =>
-			$val
-		){
-			//Если значение является массивом
-			if (is_array($val)){
-				//Запускаем рекурсию дальше
-				$result = array_merge(
-					$result,
-					self::unfoldArray(
-						$val,
-						$keyPrefix . $key . '.'
-					)
-				);
-			//Если значение — не массив
-			}else{
-				//Запоминаем (в соответствии с ключом родителя)
-				$result[$keyPrefix . $key] = $val;
-			}
-		}
-		
-		return $result;
+		return \DDTools\ObjectTools::unfold([
+			'object' => $array,
+			'keyPrefix' => $keyPrefix
+		]);
 	}
 	
 	/**
