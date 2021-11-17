@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.52.1 (2021-11-17)
+* \* `\ddTools::parseText`: Исправлена работа, Когда `$params->data` является многомерным объектом.
+
+
 ## Версия 0.52 (2021-11-16)
 * \+ `\DDTools\ObjectTools::unfold`: Новый метод.  
 	Преобразует многомерный массив в одномерный, при этом ключи результирующего массива сливаются через `$params->keySeparator`.  
