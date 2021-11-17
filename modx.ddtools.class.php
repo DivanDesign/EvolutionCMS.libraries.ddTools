@@ -787,7 +787,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.6 (2021-04-25)
+	 * @version 1.6.1 (2021-11-17)
 	 * 
 	 * @see README.md
 	 */
@@ -822,30 +822,36 @@ class ddTools {
 			]
 		]);
 		
-		$params->data = \DDTools\ObjectTools::convertType([
-			'object' => $params->data,
-			'type' => 'objectArray'
+		//Arrays and objects are already ready to use
+		if (
+			//Also, objects should not be converted to arrays for correct unfolding
+			!is_object($params->data) &&
+			!is_array($params->data)
+		){
+			$params->data = \DDTools\ObjectTools::convertType([
+				'object' => $params->data,
+				'type' => 'objectArray'
+			]);
+		}
+		
+		//Unfold for nested objects and arrays support (e. g. ['some' => ['a' => 'one', 'b' => 'two'] ] → '[+some.a+]', '[+some.b+]'; ['some' => ['one', 'two'] ] → '[+some.0+]', '[some.1]')
+		$params->data = \DDTools\ObjectTools::unfold([
+			'object' => $params->data
 		]);
 		
 		
 		$result = $params->text;
 		
-		//Если значения для парсинга переданы
-		if (!empty($params->data)){
-			//Unfold for arrays support (e. g. “some[a]=one&some[b]=two” => “[+some.a+]”, “[+some.b+]”; “some[]=one&some[]=two” => “[+some.0+]”, “[some.1]”)
-			$params->data = self::unfoldArray($params->data);
-			
-			foreach (
-				$params->data as
-				$key =>
-				$value
-			){
-				$result = str_replace(
-					$params->placeholderPrefix . $key . $params->placeholderSuffix,
-					$value,
-					$result
-				);
-			}
+		foreach (
+			$params->data as
+			$key =>
+			$value
+		){
+			$result = str_replace(
+				$params->placeholderPrefix . $key . $params->placeholderSuffix,
+				$value,
+				$result
+			);
 		}
 		
 		if ($params->mergeAll){
