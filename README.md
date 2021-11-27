@@ -939,7 +939,7 @@ Returns:
 ```php
 //The object expanded the source array
 array(
-	name' => 'jokes',
+	'name' => 'jokes',
 	//The array expanded the source object
 	'countries' => stdClass::__set_state(
 		'usa' => 'democracy',
@@ -1097,6 +1097,7 @@ stdClass::__set_state(array (
 	'parents_mother' => 'Maye Musk',
 	'parents_father' => 'Errol Musk'
 ))
+```
 
 
 ### `\DDTools\ObjectTools::isPropExists($params)`
