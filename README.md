@@ -11,29 +11,26 @@ A library with various tools facilitating your work.
 * [PHP.libraries.hjson](https://github.com/hjson/hjson-php) 2.1 (included)
 
 
-## Documentation
+## Installation
 
 
-### Installation
-
-
-#### Manual
+### Manual
 
 1. Create a new folder `assets/libs/ddTools/`.
 2. Extract the archive to the folder.
 
 
-#### Using [Composer](https://getcomposer.org/)
+### Using [Composer](https://getcomposer.org/)
 
 Just add `dd/evolutioncms-libraries-ddtools` to your `composer.json`.
 
 _ddTools version must be 0.14 or higher to use this method. If you use it, the compatibility with all your snippets, modules, etc. that use ddTools versions under 0.14 will be maintained._
 
 
-### Parameters description
+## Parameters description
 
 
-#### `\ddTools::parseText($params)`
+### `\ddTools::parseText($params)`
 
 Replaces placeholders in a text with required values.
 Like `$modx->parseChunk`, but takes a text and has some features.
@@ -93,14 +90,14 @@ Like `$modx->parseChunk`, but takes a text and has some features.
 	* Default value: `true`
 
 
-##### Returns
+#### Returns
 
 * `$result`
 	* Desctription: Parsed text.
 	* Valid values: `string`
 
 
-#### `\ddTools::verifyRenamedParams($params)`
+### `\ddTools::verifyRenamedParams($params)`
 
 The method checks an array for deprecated parameters and writes warning messages into the MODX event log.
 It returns an associative array, in which the correct parameter names are the keys and the parameter values are the values.
@@ -151,7 +148,7 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* Default value: `true`
 
 
-##### Returns
+#### Returns
 
 * `$result`
 	* Desctription: An array or object, in which the correct parameter names are the keys and the parameter values are the values.  
@@ -165,10 +162,10 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* Valid values: `mixed`
 
 
-#### `\DDTools\FilesTools`
+### `\DDTools\FilesTools`
 
 
-##### `\DDTools\FilesTools::modifyImage($params)`
+#### `\DDTools\FilesTools::modifyImage($params)`
 
 Modify your images: create thumbnails, crop, resize, fill background color or add watermark.
 
@@ -240,10 +237,10 @@ Modify your images: create thumbnails, crop, resize, fill background color or ad
 	* Default value: —
 
 
-#### `\DDTools\ObjectTools`
+### `\DDTools\ObjectTools`
 
 
-##### `\DDTools\ObjectTools::isPropExists($params)`
+#### `\DDTools\ObjectTools::isPropExists($params)`
 
 Checks if the object, class or array has a property / element.
 This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
@@ -273,7 +270,7 @@ Second, the different order of parameters in the native PHP functions makes us c
 	* **Required**
 
 
-##### `\DDTools\ObjectTools::getPropValue($params)`
+#### `\DDTools\ObjectTools::getPropValue($params)`
 
 Get the value of an object property or an array element.
 This is a “syntactic sugar” for getting an element in one way regardless of the “object” type.
@@ -300,7 +297,7 @@ This is a “syntactic sugar” for getting an element in one way regardless of 
 	* **Required**
 
 
-###### Returns
+##### Returns
 
 * `$result`
 	* Desctription: Value of an object property or an array element.
@@ -309,7 +306,7 @@ This is a “syntactic sugar” for getting an element in one way regardless of 
 		* `NULL` — if property not exists
 
 
-##### `\DDTools\ObjectTools::convertType($params)`
+#### `\DDTools\ObjectTools::convertType($params)`
 
 Converts an object type.
 Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en.wikipedia.org/wiki/Query_string) objects are also supported.
@@ -347,7 +344,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 	* Default value: `'objectAuto'`
 
 
-###### Returns
+##### Returns
 
 * `$result`
 	* Desctription: Result type depends on `$params->type`.
@@ -358,7 +355,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `stringJsonArray`
 
 
-##### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\ObjectTools::extend($params)`
 
 Merge the contents of two or more objects or arrays together into the first one.
 
@@ -405,7 +402,7 @@ Merge the contents of two or more objects or arrays together into the first one.
 	* Default value: `true`
 
 
-##### `\DDTools\ObjectTools::unfold($params)`
+#### `\DDTools\ObjectTools::unfold($params)`
 
 Converts a multidimensional array/object into an one-dimensional one joining the keys with `$params->keySeparator`.
 For example, it can be helpful while using placeholders like `[+size.width+]`.
@@ -435,7 +432,7 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 	* Default value: `''`
 
 
-###### Returns
+##### Returns
 
 * `$result`
 	* Desctription: Unfolded object/array. Type of results depends on `$params->object`.
@@ -444,7 +441,7 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 		* `array`
 
 
-#### `\DDTools\BaseClass`
+### `\DDTools\BaseClass`
 
 Simple class with some small methods facilitating your work.
 It is convenient to inherit your classes from this.
@@ -452,7 +449,7 @@ It is convenient to inherit your classes from this.
 You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
 
 
-##### `\DDTools\BaseClass::setExistingProps($props)`
+#### `\DDTools\BaseClass::setExistingProps($props)`
 
 Sets existing object properties.
 
@@ -471,12 +468,12 @@ Sets existing object properties.
 	* **Required**
 
 
-##### `\DDTools\BaseClass::toArray()`
+#### `\DDTools\BaseClass::toArray()`
 
 Returns all properties of this object as an associative array independent of their visibility.
 
 
-###### Returns
+##### Returns
 
 * `$result`
 	* Desctription: An associative array representation of this object.  
@@ -488,12 +485,12 @@ Returns all properties of this object as an associative array independent of the
 	* Valid values: `mixed`
 
 
-##### `\DDTools\BaseClass::toJSON()`
+#### `\DDTools\BaseClass::toJSON()`
 
 Returns all properties of this object as an JSON string independent of their visibility.
 
 
-###### Returns
+##### Returns
 
 * `$result`
 	* Desctription: An JSON string representation of this object.  
@@ -505,12 +502,12 @@ Returns all properties of this object as an JSON string independent of their vis
 	* Valid values: `mixed`
 
 
-##### `\DDTools\BaseClass::__toString()`
+#### `\DDTools\BaseClass::__toString()`
 
 The same as `\DDTools\BaseClass::toJSON()`.
 
 
-##### `\DDTools\BaseClass::createChildInstance($params)`
+#### `\DDTools\BaseClass::createChildInstance($params)`
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.
@@ -542,19 +539,19 @@ The same as `\DDTools\BaseClass::toJSON()`.
 	* Default value: `true`
 
 
-###### Returns
+##### Returns
 
 * `$result`
 	* Desctription: The new object instance.
 	* Valid values: `object`
 
 
-#### `\DDTools\Snippet`
+### `\DDTools\Snippet`
 
 Abstract class for snippets.
 
 
-##### Properties
+#### Properties
 
 * `\DDTools\Snippet::$name`
 	* Desctription: Snippet name (e. g. `ddGetDocuments`).  
@@ -620,7 +617,7 @@ Abstract class for snippets.
 	* Visibility: `protected`
 
 
-##### `\DDTools\Snippet::__construct($params)`
+#### `\DDTools\Snippet::__construct($params)`
 
 * `$params`
 	* Desctription: Snippet parameters, the pass-by-name style is used.
@@ -637,14 +634,14 @@ Abstract class for snippets.
 	* **Required**
 
 
-##### `\DDTools\Snippet::run()`
+#### `\DDTools\Snippet::run()`
 
 Abstract method for main snippet action.
 
 You **must** define it in your child class declaration.
 
 
-##### `\DDTools\Snippet::runSnippet($params)`
+#### `\DDTools\Snippet::runSnippet($params)`
 
 Static method for easy running needed snippet using only it's name and parameters (if needed).
 
@@ -677,10 +674,10 @@ Static method for easy running needed snippet using only it's name and parameter
 	* **Required**
 
 
-### Examples
+## Examples
 
 
-#### Verify renamed snippet params (`\ddTools::verifyRenamedParams($params)`)
+### Verify renamed snippet params (`\ddTools::verifyRenamedParams($params)`)
 
 Suppose we have the snippet `ddSendFeedback` with the `getEmail` and `getId` parameters.
 Over time, we decided to rename the parameters as `docField` and `docId` respectively (as it happened in version 1.9).
@@ -730,10 +727,10 @@ extract(\ddTools::verifyRenamedParams([
 ```
 
 
-#### `\DDTools\ObjectTools::convertType($params)`
+### `\DDTools\ObjectTools::convertType($params)`
 
 
-##### Convert a JSON or Query encoded string to an array
+#### Convert a JSON or Query encoded string to an array
 
 For example, some snippet supports 2 formats in one of parameters: JSON or Query string.
 Users use the format that is convenient to them and we support both.
@@ -766,7 +763,7 @@ Both calls return:
 ```
 
 
-##### Convert a Query encoded string to a JSON object string
+#### Convert a Query encoded string to a JSON object string
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -785,7 +782,7 @@ Returns:
 ```
 
 
-##### Convert a JSON object to a JSON array
+#### Convert a JSON object to a JSON array
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -807,7 +804,7 @@ Returns:
 ```
 
 
-##### Convert a HJSON encoded string to an object
+#### Convert a HJSON encoded string to an object
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -837,10 +834,10 @@ A simple syntax and easy to read.',
 ```
 
 
-#### `\DDTools\ObjectTools::extend($params)`
+### `\DDTools\ObjectTools::extend($params)`
 
 
-##### Merge two objects, modifying the first
+#### Merge two objects, modifying the first
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -878,7 +875,7 @@ stdClass::__set_state(array(
 ```
 
 
-##### Also you can extend arrays
+#### Also you can extend arrays
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -916,7 +913,7 @@ array(
 ```
 
 
-##### Moreover, objects can extend arrays and vice versa
+#### Moreover, objects can extend arrays and vice versa
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -952,7 +949,7 @@ array(
 ```
 
 
-##### Don't overwrite fields with empty values (`$params->overwriteWithEmpty` == `false`)
+#### Don't overwrite fields with empty values (`$params->overwriteWithEmpty` == `false`)
 
 By default, empty field values (e. g. `''`) are treated as other values and will replace non-empty ones.
 
@@ -1014,10 +1011,10 @@ stdClass::__set_state(array(
 ```
 
 
-#### `\DDTools\ObjectTools::unfold($params)`
+### `\DDTools\ObjectTools::unfold($params)`
 
 
-##### Unfold an object
+#### Unfold an object
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1046,7 +1043,7 @@ stdClass::__set_state(array (
 ```
 
 
-##### Unfold an array
+#### Unfold an array
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1077,7 +1074,7 @@ array (
 ```
 
 
-##### Use custom key separator
+#### Use custom key separator
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1102,7 +1099,7 @@ stdClass::__set_state(array (
 ))
 
 
-#### `\DDTools\ObjectTools::isPropExists($params)`
+### `\DDTools\ObjectTools::isPropExists($params)`
 
 Checks if the object, class or array has a property / element using the same syntax.
 
@@ -1133,7 +1130,7 @@ var_export(\DDTools\ObjectTools::isPropExists([
 Both calls return `true`.
 
 
-#### `\DDTools\ObjectTools::getPropValue($params)`
+### `\DDTools\ObjectTools::getPropValue($params)`
 
 Get the value of an object property or an array element using the same syntax.
 
