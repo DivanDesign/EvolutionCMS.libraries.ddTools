@@ -441,6 +441,136 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 		* `array`
 
 
+### `\DDTools\ObjectCollection`
+
+Class representing a collection of some objects or arrays.
+
+
+#### `\DDTools\ObjectCollection::__construct($params)`
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: —
+	
+* `$params->items`
+	* Desctription: An array of items.  
+		You can avoid this parameter to create an empty collection and set items later.
+	* Valid values:
+		* `array` — can be indexed or associative, keys will not be used
+		* `object` — also can be set as an object for better convenience, only property values will be used
+	* Default value: —
+	
+* `$params->items[$itemIndex]`
+	* Desctription: An item.
+	* Valid values:
+		* `array` — indexed arrays are supported as well as associative
+		* `object`
+	* **Required**
+
+
+#### `\DDTools\ObjectCollection::setItems($params)`
+
+Sets new collection items. Existing items will be removed.
+
+Has the same parameters as `\DDTools\ObjectCollection::__construct($params)`.
+
+
+#### `\DDTools\ObjectCollection::addItems($params)`
+
+Appends items onto the end of collection.
+
+Has the same parameters as `\DDTools\ObjectCollection::__construct($params)`.
+
+
+#### `\DDTools\ObjectCollection::getItems($params)`
+
+Gets an array of required collection items.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: —.
+	
+* `$params->filter`
+	* Desctription: Filter clause for item properties.  
+		* Thus,
+			```
+			'
+			"gender" == "female" ||
+			"gender" == "male" &&
+			"firstName" != "Bill" &&
+			"lastName"
+			'
+			```
+			returns:
+			* All items with the `gender` property equal to `'female'`.
+			* All items:
+				* with the `gender` property equal to `'male'` **and**
+				* with the `firstName` property not equal to `'Bill'` **and**
+				* with the `lastName` property is exist with any value.
+		* Quoted property names and values are optional, this is valid too:
+			```
+			'
+			gender == female ||
+			gender == male &&
+			firstName != Bill &&
+			lastName
+			' 
+			```
+		* Single quotes are also supported as double quotes:
+			```
+			"
+			gender == 'a' ||
+			gender == 'b' &&
+			firstName != 'Bill' &&
+			lastName
+			"
+			```
+		* Spaces, tabs and line breaks are optional, this is valid too: `gender==female||gender==male&&firstName!=Bill&&lastName`.
+	* Valid values: `stringSeparated`
+	* Default value: `''` (without filtration)
+	
+* `$params->maxResults`
+	* Desctription: Maximum number if items to return.
+	* Valid values:
+		* `integer`
+		* `0` — all matching items
+	* Default value: `0`
+	
+* `$params->propAsResultKey`
+	* Desctription: Item property, which value will be an item key in result array instead of an item index.  
+		For example, it can be useful if items have an ID property or something like that.
+	* Valid values:
+		* `string`
+		* `null` — result array will be indexed
+	* Default value: `null`
+	
+* `$params->propAsResultValue`
+	* Desctription: Item property, which value will be an item value in result array instead of an item object.
+	* Valid values:
+		* `string`
+		* `null` — result array values will item objects
+	* Default value: `null`
+
+
+##### Returns
+
+* `$result`
+	* Desctription: An array of items.
+	* Valid values:
+		* `arrayIndexed`
+		* `arrayAssociative` — item property values will be used as result keys if `$params->propAsResultKey` is set
+	
+* `$result[$itemIndex|$itemFieldValue]`
+	* Desctription: An item object or item property value if specified in `$params->propAsResultValue`.  
+	* Valid values: `mixed`
+
+
 ### `\DDTools\BaseClass`
 
 Simple class with some small methods facilitating your work.
@@ -1097,6 +1227,202 @@ stdClass::__set_state(array (
 	'parents_mother' => 'Maye Musk',
 	'parents_father' => 'Errol Musk'
 ))
+```
+
+
+### `\DDTools\ObjectCollection`
+
+
+#### Create a collection with items
+
+```php
+$collection = new \DDTools\ObjectCollection([
+	'items' => [
+		[
+			'name' => 'Mary Teresa',
+			'isHuman' => 1,
+			'gender' => 'female',
+			'nobelPeacePrize' => 1,
+			'religion' => 'Catholicism'
+		],
+		[
+			'name' => 'Mahatma Gandhi',
+			'isHuman' => 1,
+			'gender' => 'male',
+			'nobelPeacePrize' => 0
+		],
+		[
+			'name' => 'Tenzin Gyatso',
+			'isHuman' => 1,
+			'gender' => 'male',
+			'nobelPeacePrize' => 1,
+			'religion' => 'Tibetan Buddhism'
+		],
+		[
+			'name' => 'ICAN',
+			'isHuman' => 0,
+			'nobelPeacePrize' => 1
+		]
+	]
+]);
+```
+
+
+#### Get an array of items using filter (`$params->filter`)
+
+
+##### Filter by existence of a property
+
+```php
+$collection->getItems([
+	'filter' => 'religion'
+]);
+```
+
+Returns:
+
+```php
+array(
+	0 => array(
+		'name' => 'Mary Teresa',
+		'isHuman' => 1,
+		'gender' => 'female',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Catholicism'
+	),
+	1 => array(
+		'name' => 'Tenzin Gyatso',
+		'isHuman' => 1,
+		'gender' => 'male',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Tibetan Buddhism'
+	)
+)
+```
+
+
+##### Filter by a property value
+
+```php
+$collection->getItems([
+	'filter' => 'gender==male'
+]);
+```
+
+Returns:
+
+```php
+array(
+	0 => array(
+		'name' => 'Mahatma Gandhi',
+		'isHuman' => 1,
+		'gender' => 'male',
+		'nobelPeacePrize' => 0
+	),
+	1 => array(
+		'name' => 'Tenzin Gyatso',
+		'isHuman' => 1,
+		'gender' => 'male',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Tibetan Buddhism'
+	)
+)
+```
+
+
+##### Filter using several conditions
+
+```php
+$collection->getItems([
+	//Spaces, tabs and line breaks are also allowed and do not matter
+	'filter' => '
+		gender == female ||
+		nobelPeacePrize == 1 && isHuman == 0
+	'
+]);
+```
+
+Returns:
+
+```php
+array(
+	//gender == female
+	0 => array(
+		'name' => 'Mary Teresa',
+		'isHuman' => 1,
+		'gender' => 'female',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Catholicism'
+	),
+	//nobelPeacePrize == 1 && isHuman == 0
+	1 => array(
+		'name' => 'ICAN',
+		'isHuman' => 0,
+		'nobelPeacePrize' => 1
+	),
+)
+```
+
+
+#### Get an associative array of items using a property value as a result key
+
+```php
+$collection->getItems([
+	'propAsResultKey' => 'name'
+]);
+```
+
+Returns:
+
+```php
+array(
+	'Mary Teresa' => array(
+		'name' => 'Mary Teresa',
+		'isHuman' => 1,
+		'gender' => 'female',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Catholicism'
+	),
+	'Mahatma Gandhi' => array(
+		'name' => 'Mahatma Gandhi',
+		'isHuman' => 1,
+		'gender' => 'male',
+		'nobelPeacePrize' => 0
+	),
+	'Tenzin Gyatso' => array(
+		'name' => 'Tenzin Gyatso',
+		'isHuman' => 1,
+		'gender' => 'male',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Tibetan Buddhism'
+	),
+	'ICAN' => array(
+		'name' => 'ICAN',
+		'isHuman' => 0,
+		'nobelPeacePrize' => 1
+	)
+)
+```
+
+
+#### Get a one-dimensional array of item property values
+
+```php
+$collection->getItems([
+	'propAsResultKey' => 'name',
+	'propAsResultValue' => 'isHuman'
+]);
+```
+
+Returns:
+
+```php
+array(
+	'Mary Teresa' => 1,
+	'Mahatma Gandhi' => 1,
+	'Tenzin Gyatso' => 1,
+	'ICAN' => 0
+)
 ```
 
 
