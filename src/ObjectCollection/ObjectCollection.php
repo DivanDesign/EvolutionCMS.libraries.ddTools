@@ -311,5 +311,15 @@ class ObjectCollection {
 		
 		return $result;
 	}
+	
+	/**
+	 * count
+	 * @version 1.0 (2021-11-30)
+	 * 
+	 * @see README.md
+	 */
+	public function count(){
+		return count($this->items);
+	}
 }
 ?>

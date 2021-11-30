@@ -571,6 +571,11 @@ Gets an array of required collection items.
 	* Valid values: `mixed`
 
 
+#### `\DDTools\ObjectCollection::count()`
+
+Counts all items.
+
+
 ### `\DDTools\BaseClass`
 
 Simple class with some small methods facilitating your work.
