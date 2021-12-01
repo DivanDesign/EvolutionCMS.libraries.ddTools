@@ -571,6 +571,28 @@ Gets an array of required collection items.
 	* Valid values: `mixed`
 
 
+#### `\DDTools\ObjectCollection::getOneItem($params)`
+
+Gets required item.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: —.
+	
+* `$params->filter`
+	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
+	* Valid values: `stringSeparated`
+	* Default value: `''` (first found item will be returned)
+	
+* `$params->notFoundResult`
+	* Desctription: What will be returned when no items found.
+	* Valid values: `mixed`
+	* Default value: `null`
+
+
 #### `\DDTools\ObjectCollection::count()`
 
 Counts all items.
@@ -1273,10 +1295,13 @@ $collection = new \DDTools\ObjectCollection([
 ```
 
 
-#### Get an array of items using filter (`$params->filter`)
+#### `\DDTools\ObjectCollection::getItems($params)`
 
 
-##### Filter by existence of a property
+##### Get an array of items using filter (`$params->filter`)
+
+
+###### Filter by existence of a property
 
 ```php
 $collection->getItems([
@@ -1306,7 +1331,7 @@ array(
 ```
 
 
-##### Filter by a property value
+###### Filter by a property value
 
 ```php
 $collection->getItems([
@@ -1335,7 +1360,7 @@ array(
 ```
 
 
-##### Filter using several conditions
+###### Filter using several conditions
 
 ```php
 $collection->getItems([
@@ -1369,7 +1394,7 @@ array(
 ```
 
 
-#### Get an associative array of items using a property value as a result key
+##### Get an associative array of items using a property value as a result key
 
 ```php
 $collection->getItems([
@@ -1410,7 +1435,7 @@ array(
 ```
 
 
-#### Get a one-dimensional array of item property values
+##### Get a one-dimensional array of item property values
 
 ```php
 $collection->getItems([
@@ -1427,6 +1452,49 @@ array(
 	'Mahatma Gandhi' => 1,
 	'Tenzin Gyatso' => 1,
 	'ICAN' => 0
+)
+```
+
+
+#### `\DDTools\ObjectCollection::getOneItem($params)`
+
+```php
+$collection->getOneItem([
+	'filter' => 'name == Mahatma Gandhi'
+]);
+```
+
+Returns:
+
+```php
+array(
+	'name' => 'Mahatma Gandhi',
+	'isHuman' => 1,
+	'gender' => 'male',
+	'nobelPeacePrize' => 0
+)
+```
+
+
+##### Custom results when no items found
+
+
+```php
+$collection->getOneItem([
+	'filter' => 'name == European Union',
+	notFoundResult' => [
+		'name' => 'Default item',
+		'nobelPeacePrize' => 0
+	]
+]);
+```
+
+Returns:
+
+```php
+array(
+	'name' => 'Default item',
+	'nobelPeacePrize' => 0
 )
 ```
 

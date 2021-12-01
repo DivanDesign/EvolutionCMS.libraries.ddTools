@@ -140,6 +140,41 @@ class ObjectCollection {
 	}
 	
 	/**
+	 * getOneItem
+	 * @version 1.0 (2021-12-01)
+	 * 
+	 * @see README.md
+	 */
+	public function getOneItem($params = []){
+		//# Prepare params
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'filter' => '',
+					'notFoundResult' => null
+				],
+				$params
+			]
+		]);
+		
+		
+		//# Run
+		$result = $this->getItems([
+			'filter' => $params->filter,
+			'maxResults' => 1
+		]);
+		
+		if (!empty($result)){
+			$result = $result[0];
+		}else{
+			$result = $params->notFoundResult;
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * isItemMatchFilter
 	 * @version 1.0 (2021-12-01)
 	 * 
