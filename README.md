@@ -474,6 +474,15 @@ Class representing a collection of some objects or arrays.
 		* `array` — indexed arrays are supported as well as associative
 		* `object`
 	* **Required**
+	
+* `$params->itemType`
+	* Desctription: Allows to convert item type. If set, each item of `$params->items` will be converted to needed type.  
+		Values are case insensitive (the following names are equal: `'objectstdclass'`, `'objectStdClass'`, `'OBJECTSTDCLASS'`, etc).
+	* Valid values:
+		* `'objectStdClass'`
+		* `'objectArray'`
+		* `null` — do not convert type of items, use them as is
+	* Default value: `null`
 
 
 #### `\DDTools\ObjectCollection::setItems($params)`
@@ -626,6 +635,41 @@ Converts type of needed items in collection.
 	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
 	* Valid values: `stringSeparated`
 	* Default value: `''` (all items will be converted)
+
+
+#### `\DDTools\ObjectCollection::updateItems($params)`
+
+Undates properties of existing items with new values.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->data`
+	* Desctription: New item data. Existing item will be extended by this data, it means:
+		* Type of existing item will not be changed.
+		* All given property values will overwrite existing.
+		* Non-existing given properties will be created.
+		* Existing properties that absent in `$params->data` will remain as is.
+	* Valid values:
+		* `array`
+		* `object`
+	* **Required**
+	
+* `$params->filter`
+	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
+	* Valid values: `stringSeparated`
+	* Default value: `''` (all items will be updated)
+	
+* `$params->limit`
+	* Desctription: Maximum number if items can be updated.
+	* Valid values:
+		* `integer`
+		* `0` — all matching items
+	* Default value: `0`
 
 
 ### `\DDTools\BaseClass`
@@ -1604,6 +1648,40 @@ array(
 		'isHuman' => 0,
 		'nobelPeacePrize' => 1
 	)
+)
+```
+
+
+#### `\DDTools\ObjectCollection::updateItems($params)`
+
+```php
+$collection->updateItems([
+	'filter' => 'name==Mahatma Gandhi',
+	'data' => [
+		'nobelPeacePrize' => 1,
+		'birthday' => '2 October 1869'
+	]
+]);
+
+$collection->getItems(
+	'filter' => 'name==Mahatma Gandhi'
+);
+```
+
+Returns:
+
+```php
+array(
+	0 => stdClass::__set_state(array(
+		//Existing properties that absent in `$params->data` have remained as is
+		'name' => 'Mahatma Gandhi',
+		'isHuman' => 1,
+		'gender' => 'male',
+		//Given property values have overwritten the existing ones
+		'nobelPeacePrize' => 1,
+		//Non-existing properties have been created
+		'birthday' => '2 October 1869'
+	))
 )
 ```
 

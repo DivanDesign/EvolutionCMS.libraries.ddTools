@@ -36,22 +36,26 @@ class ObjectCollection {
 	
 	/**
 	 * addItems
-	 * @version 1.1 (2021-12-02)
+	 * @version 1.2 (2021-12-02)
 	 * 
 	 * @see README.md
 	 */
 	public function addItems($params = []){
 		//# Prepare params
-		$params = (object) $params;
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'items' => null,
+					'itemType' => null
+				],
+				$params
+			]
+		]);
 		
 		
 		//# Run
-		if (
-			\DDTools\ObjectTools::isPropExists([
-				'object' => $params,
-				'propName' => 'items'
-			])
-		){
+		if (!is_null($params->items)){
 			//Items must be an array
 			if (!is_array($params->items)){
 				$params->items = \DDTools\ObjectTools::convertType([
@@ -60,10 +64,26 @@ class ObjectCollection {
 				]);
 			}
 			
+			//Reset keys because they are no needed
+			$params->items = array_values($params->items);
+			
+			//If need to convert type of items
+			if (!is_null($params->itemType)){
+				foreach (
+					$params->items as
+					$itemIndex =>
+					$itemObject
+				){
+					$params->items[$itemIndex] = \DDTools\ObjectTools::convertType([
+						'object' => $itemObject,
+						'type' => $params->itemType
+					]);
+				}
+			}
+			
 			$this->items = array_merge(
 				$this->items,
-				//Reset keys because they are no needed
-				array_values($params->items)
+				$params->items
 			);
 		}
 	}
@@ -107,6 +127,63 @@ class ObjectCollection {
 					'object' => $itemObject,
 					'type' => $params->itemType
 				]);
+			}
+		}
+	}
+	
+	/**
+	 * updateItems
+	 * @version 1.0 (2021-12-02)
+	 * 
+	 * @see README.md
+	 */
+	public function updateItems($params = []){
+		//# Prepare params
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'filter' => '',
+					'data' => [],
+					'limit' => 0
+				],
+				$params
+			]
+		]);
+		
+		$params->filter = $this->prepareItemsFilter($params->filter);
+		
+		
+		//# Run
+		$affectedCount = 0;
+		
+		foreach (
+			$this->items as
+			$itemIndex =>
+			$itemObject
+		){
+			if (
+				//If item is matched to filter
+				$this->isItemMatchFilter([
+					'item' => $itemObject,
+					'filter' => $params->filter
+				])
+			){
+				$this->items[$itemIndex] = \DDTools\ObjectTools::extend([
+					'objects' => [
+						$itemObject,
+						$params->data
+					]
+				]);
+				
+				//Increment result count
+				$affectedCount++;
+				
+				//If next item is no needed
+				if ($affectedCount == $params->limit){
+					//Stop the cycle
+					break;
+				}
 			}
 		}
 	}
