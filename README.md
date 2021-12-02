@@ -549,8 +549,8 @@ Gets an array of required collection items.
 	* Valid values: `stringSeparated`
 	* Default value: `''` (without filtration)
 	
-* `$params->maxResults`
-	* Desctription: Maximum number if items to return.
+* `$params->limit`
+	* Desctription: Maximum number of items to return.
 	* Valid values:
 		* `integer`
 		* `0` — all matching items
@@ -665,7 +665,7 @@ Undates properties of existing items with new values.
 	* Default value: `''` (any items will be updated)
 	
 * `$params->limit`
-	* Desctription: Maximum number if items can be updated.
+	* Desctription: Maximum number of items can be updated.
 	* Valid values:
 		* `integer`
 		* `0` — all matching items
@@ -689,7 +689,7 @@ Deletes required items from collection.
 	* Default value: `''` (any items will be deleted)
 	
 * `$params->limit`
-	* Desctription: Maximum number if items can be deleted.
+	* Desctription: Maximum number of items can be deleted.
 	* Valid values:
 		* `integer`
 		* `0` — all matching items

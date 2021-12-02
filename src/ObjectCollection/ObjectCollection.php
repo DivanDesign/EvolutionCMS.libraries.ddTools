@@ -190,7 +190,7 @@ class ObjectCollection {
 	
 	/**
 	 * getItems
-	 * @version 1.0 (2021-12-01)
+	 * @version 2.0 (2021-12-02)
 	 * 
 	 * @see README.md
 	 */
@@ -201,7 +201,7 @@ class ObjectCollection {
 				//Defaults
 				(object) [
 					'filter' => '',
-					'maxResults' => 0,
+					'limit' => 0,
 					'propAsResultKey' => null,
 					'propAsResultValue' => null
 				],
@@ -254,7 +254,7 @@ class ObjectCollection {
 				$resultCount++;
 				
 				//If next item is no needed
-				if ($resultCount == $params->maxResults){
+				if ($resultCount == $params->limit){
 					//Stop the cycle
 					break;
 				}
@@ -266,7 +266,7 @@ class ObjectCollection {
 	
 	/**
 	 * getOneItem
-	 * @version 1.0 (2021-12-01)
+	 * @version 1.0.1 (2021-12-02)
 	 * 
 	 * @see README.md
 	 */
@@ -287,7 +287,7 @@ class ObjectCollection {
 		//# Run
 		$result = $this->getItems([
 			'filter' => $params->filter,
-			'maxResults' => 1
+			'limit' => 1
 		]);
 		
 		if (!empty($result)){
