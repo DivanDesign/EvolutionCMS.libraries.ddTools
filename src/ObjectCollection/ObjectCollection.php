@@ -36,31 +36,36 @@ class ObjectCollection {
 	
 	/**
 	 * addItems
-	 * @version 1.0 (2021-11-26)
+	 * @version 1.1 (2021-12-02)
 	 * 
 	 * @see README.md
 	 */
 	public function addItems($params = []){
 		//# Prepare params
-		$params = \DDTools\ObjectTools::extend([
-			'objects' => [
-				//Defaults
-				(object) [
-					//Items must be an array
-					'items' => []
-				],
-				$params
-			],
-			'overwriteWithEmpty' => false
-		]);
+		$params = (object) $params;
 		
 		
 		//# Run
-		$this->items = array_merge(
-			$this->items,
-			//Reset keys because they are no needed
-			array_values($params->items)
-		);
+		if (
+			\DDTools\ObjectTools::isPropExists([
+				'object' => $params,
+				'propName' => 'items'
+			])
+		){
+			//Items must be an array
+			if (!is_array($params->items)){
+				$params->items = \DDTools\ObjectTools::convertType([
+					'object' => $params->items,
+					'type' => 'objectArray'
+				]);
+			}
+			
+			$this->items = array_merge(
+				$this->items,
+				//Reset keys because they are no needed
+				array_values($params->items)
+			);
+		}
 	}
 	
 	/**

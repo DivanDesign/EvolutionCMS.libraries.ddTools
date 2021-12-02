@@ -461,6 +461,11 @@ Class representing a collection of some objects or arrays.
 	* Valid values:
 		* `array` — can be indexed or associative, keys will not be used
 		* `object` — also can be set as an object for better convenience, only property values will be used
+		* `stringJsonObject` — [JSON](https://en.wikipedia.org/wiki/JSON) object
+		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
+		* `stringHjsonObject` — [HJSON](https://hjson.github.io/) object
+		* `stringHjsonArray` — [HJSON](https://hjson.github.io/) array
+		* `stringQueryFormated` — [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* Default value: —
 	
 * `$params->items[$itemIndex]`
@@ -1291,6 +1296,41 @@ $collection = new \DDTools\ObjectCollection([
 			'nobelPeacePrize' => 1
 		]
 	]
+]);
+```
+
+
+#### Set items as a JSON string
+
+```php
+$collection->setItems([
+	'items' => '[
+		{
+			"name": "Mary Teresa",
+			"isHuman": 1,
+			"gender": "female",
+			"nobelPeacePrize": 1,
+			"religion": "Catholicism"
+		},
+		{
+			"name": "Mahatma Gandhi",
+			"isHuman": 1,
+			"gender": "male",
+			"nobelPeacePrize": 0
+		},
+		{
+			"name": "Tenzin Gyatso",
+			"isHuman": 1,
+			"gender": "male",
+			"nobelPeacePrize": 1,
+			"religion": "Tibetan Buddhism"
+		},
+		{
+			"name": "ICAN",
+			"isHuman": 0,
+			"nobelPeacePrize": 1
+		}
+	]'
 ]);
 ```
 
