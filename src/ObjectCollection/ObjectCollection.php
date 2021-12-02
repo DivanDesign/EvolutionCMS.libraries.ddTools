@@ -300,6 +300,61 @@ class ObjectCollection {
 	}
 	
 	/**
+	 * deleteItems
+	 * @version 1.0 (2021-12-02)
+	 * 
+	 * @see README.md
+	 */
+	public function deleteItems($params = []){
+		//# Prepare params
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'filter' => '',
+					'limit' => 0
+				],
+				$params
+			]
+		]);
+		
+		$params->filter = $this->prepareItemsFilter($params->filter);
+		
+		
+		//# Run
+		$affectedCount = 0;
+		
+		foreach (
+			$this->items as
+			$itemIndex =>
+			$itemObject
+		){
+			if (
+				//If item is matched to filter
+				$this->isItemMatchFilter([
+					'item' => $itemObject,
+					'filter' => $params->filter
+				])
+			){
+				array_splice(
+					$this->items,
+					$itemIndex - $affectedCount,
+					1
+				);
+				
+				//Increment result count
+				$affectedCount++;
+				
+				//If next item is no needed
+				if ($affectedCount == $params->limit){
+					//Stop the cycle
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
 	 * isItemMatchFilter
 	 * @version 1.0 (2021-12-01)
 	 * 

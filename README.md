@@ -508,7 +508,7 @@ Gets an array of required collection items.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
-	* Default value: —.
+	* Default value: —
 	
 * `$params->filter`
 	* Desctription: Filter clause for item properties.  
@@ -594,7 +594,7 @@ Gets required item.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
-	* Default value: —.
+	* Default value: —
 	
 * `$params->filter`
 	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
@@ -621,7 +621,7 @@ Converts type of needed items in collection.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
-	* Default value: —.
+	* Default value: —
 	
 * `$params->itemType`
 	* Desctription: Result item type.  
@@ -662,10 +662,34 @@ Undates properties of existing items with new values.
 * `$params->filter`
 	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
 	* Valid values: `stringSeparated`
-	* Default value: `''` (all items will be updated)
+	* Default value: `''` (any items will be updated)
 	
 * `$params->limit`
 	* Desctription: Maximum number if items can be updated.
+	* Valid values:
+		* `integer`
+		* `0` — all matching items
+	* Default value: `0`
+
+
+#### `\DDTools\ObjectCollection::deleteItems($params)`
+
+Deletes required items from collection.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: —
+	
+* `$params->filter`
+	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
+	* Valid values: `stringSeparated`
+	* Default value: `''` (any items will be deleted)
+	
+* `$params->limit`
+	* Desctription: Maximum number if items can be deleted.
 	* Valid values:
 		* `integer`
 		* `0` — all matching items
@@ -1682,6 +1706,38 @@ array(
 		//Non-existing properties have been created
 		'birthday' => '2 October 1869'
 	))
+)
+```
+
+
+#### `\DDTools\ObjectCollection::deleteItems($params)`
+
+```php
+$collection->updateItems([
+	'filter' => 'isHuman==1',
+	'limit' => 2
+]);
+
+$collection->getItems();
+```
+
+Returns:
+
+```php
+array(
+	//2 humans have been deleted, 1 have remained
+	0 => stdClass::__set_state(array(
+		'name' => 'Tenzin Gyatso',
+		'isHuman' => 1,
+		'gender' => 'male',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Tibetan Buddhism'
+	)),
+	1 => array(
+		'name' => 'ICAN',
+		'isHuman' => 0,
+		'nobelPeacePrize' => 1
+	)
 )
 ```
 
