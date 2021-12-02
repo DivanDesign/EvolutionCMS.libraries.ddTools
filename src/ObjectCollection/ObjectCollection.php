@@ -69,6 +69,49 @@ class ObjectCollection {
 	}
 	
 	/**
+	 * convertItemsType
+	 * @version 1.0 (2021-12-02)
+	 * 
+	 * @see README.md
+	 */
+	public function convertItemsType($params = []){
+		//# Prepare params
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'filter' => '',
+					'itemType' => 'objectStdClass'
+				],
+				$params
+			]
+		]);
+		
+		$params->filter = $this->prepareItemsFilter($params->filter);
+		
+		
+		//# Run
+		foreach (
+			$this->items as
+			$itemIndex =>
+			$itemObject
+		){
+			if (
+				//If item is matched to filter
+				$this->isItemMatchFilter([
+					'item' => $itemObject,
+					'filter' => $params->filter
+				])
+			){
+				$this->items[$itemIndex] = \DDTools\ObjectTools::convertType([
+					'object' => $itemObject,
+					'type' => $params->itemType
+				]);
+			}
+		}
+	}
+	
+	/**
 	 * getItems
 	 * @version 1.0 (2021-12-01)
 	 * 

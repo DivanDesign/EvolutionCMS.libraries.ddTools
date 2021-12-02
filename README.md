@@ -603,6 +603,31 @@ Gets required item.
 Counts all items.
 
 
+#### `\DDTools\ObjectCollection::convertItemsType($params)`
+
+Converts type of needed items in collection.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: —.
+	
+* `$params->itemType`
+	* Desctription: Result item type.  
+		Values are case insensitive (the following names are equal: `'objectstdclass'`, `'objectStdClass'`, `'OBJECTSTDCLASS'`, etc).
+	* Valid values:
+		* `'objectStdClass'`
+		* `'objectArray'`
+	* **Required**
+	
+* `$params->filter`
+	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
+	* Valid values: `stringSeparated`
+	* Default value: `''` (all items will be converted)
+
+
 ### `\DDTools\BaseClass`
 
 Simple class with some small methods facilitating your work.
@@ -1535,6 +1560,50 @@ Returns:
 array(
 	'name' => 'Default item',
 	'nobelPeacePrize' => 0
+)
+```
+
+
+#### `\DDTools\ObjectCollection::convertItemsType($params)`
+
+```php
+$collection->convertItemsType([
+	'filter' => 'gender==male',
+	'itemType' => 'objectStdClass'
+]);
+
+$collection->getItems();
+```
+
+Returns:
+
+```php
+array(
+	0 => array(
+		'name' => 'Mary Teresa',
+		'isHuman' => 1,
+		'gender' => 'female',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Catholicism'
+	),
+	1 => stdClass::__set_state(array(
+		'name' => 'Mahatma Gandhi',
+		'isHuman' => 1,
+		'gender' => 'male',
+		'nobelPeacePrize' => 0
+	)),
+	2 => stdClass::__set_state(array(
+		'name' => 'Tenzin Gyatso',
+		'isHuman' => 1,
+		'gender' => 'male',
+		'nobelPeacePrize' => 1,
+		'religion' => 'Tibetan Buddhism'
+	)),
+	3 => array(
+		'name' => 'ICAN',
+		'isHuman' => 0,
+		'nobelPeacePrize' => 1
+	)
 )
 ```
 
