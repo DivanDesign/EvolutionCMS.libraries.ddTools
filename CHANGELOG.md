@@ -1,6 +1,14 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.53 (2021-12-13)
+* \+ `\DDTools\ObjectCollection`: The new class representing a collection of some objects or arrays. See more info and examples in README.
+* \* `\ddTools::parseText` → Parameters → `$params->data`: A bug with multidimensional objects has been fixed.
+* \* README:
+	* \- Documentation: Useless header level has been removed.
+	* \* Examples: Several missed characters have been added.
+
+
 ## Version 0.52.1 (2021-11-17)
 * \* `\ddTools::parseText`: Fixed working when `$params->data` is a multidimensional object.
 
