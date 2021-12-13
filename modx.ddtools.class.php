@@ -787,7 +787,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.6.1 (2021-11-17)
+	 * @version 1.6.2 (2021-12-09)
 	 * 
 	 * @see README.md
 	 */
@@ -812,7 +812,7 @@ class ddTools {
 				//Defaults
 				(object) [
 					'text' => '',
-					'data' => [],
+					'data' => null,
 					'placeholderPrefix' => '[+',
 					'placeholderSuffix' => '+]',
 					'removeEmptyPlaceholders' => false,
