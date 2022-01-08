@@ -14,7 +14,7 @@ A library with various tools facilitating your work.
 ## Installation
 
 
-### Manual
+### Manually
 
 1. Create a new folder `assets/libs/ddTools/`.
 2. Extract the archive to the folder.
@@ -25,6 +25,28 @@ A library with various tools facilitating your work.
 Just add `dd/evolutioncms-libraries-ddtools` to your `composer.json`.
 
 _ddTools version must be 0.14 or higher to use this method. If you use it, the compatibility with all your snippets, modules, etc. that use ddTools versions under 0.14 will be maintained._
+
+
+### Update using [(MODX)EvolutionCMS.libraries.ddInstaller](https://github.com/DivanDesign/EvolutionCMS.libraries.ddInstaller)
+
+Just run the following PHP code in your sources or [Console](https://github.com/vanchelo/MODX-Evolution-Ajax-Console):
+
+```php
+//Include (MODX)EvolutionCMS.libraries.ddInstaller
+require_once(
+	$modx->getConfig('base_path') .
+	'assets/libs/ddInstaller/require.php'
+);
+
+//Update (MODX)EvolutionCMS.libraries.ddTools
+\DDInstaller::install([
+	'url' => 'https://github.com/DivanDesign/EvolutionCMS.libraries.ddTools',
+	'type' => 'snippet'
+]);
+```
+
+* If `ddTools` is already exist on your site, `ddInstaller` will check it version and update it if needed.
+* If `ddTools` is not exist on your site, `ddInstaller` can't do anything because requires it for itself.
 
 
 ## Parameters description
