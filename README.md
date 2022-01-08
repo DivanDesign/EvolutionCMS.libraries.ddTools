@@ -7,14 +7,14 @@ A library with various tools facilitating your work.
 
 * PHP >= 5.6
 * [(MODX)EvolutionCMS](https://github.com/evolution-cms/evolution) >= 1.1
+* [PHP.libraries.HJSON](https://github.com/hjson/hjson-php) 2.2 (included)
 * [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.15-202004301145 (included)
-* [PHP.libraries.hjson](https://github.com/hjson/hjson-php) 2.1 (included)
 
 
 ## Installation
 
 
-### Manual
+### Manually
 
 1. Create a new folder `assets/libs/ddTools/`.
 2. Extract the archive to the folder.
@@ -25,6 +25,28 @@ A library with various tools facilitating your work.
 Just add `dd/evolutioncms-libraries-ddtools` to your `composer.json`.
 
 _ddTools version must be 0.14 or higher to use this method. If you use it, the compatibility with all your snippets, modules, etc. that use ddTools versions under 0.14 will be maintained._
+
+
+### Update using [(MODX)EvolutionCMS.libraries.ddInstaller](https://github.com/DivanDesign/EvolutionCMS.libraries.ddInstaller)
+
+Just run the following PHP code in your sources or [Console](https://github.com/vanchelo/MODX-Evolution-Ajax-Console):
+
+```php
+//Include (MODX)EvolutionCMS.libraries.ddInstaller
+require_once(
+	$modx->getConfig('base_path') .
+	'assets/libs/ddInstaller/require.php'
+);
+
+//Update (MODX)EvolutionCMS.libraries.ddTools
+\DDInstaller::install([
+	'url' => 'https://github.com/DivanDesign/EvolutionCMS.libraries.ddTools',
+	'type' => 'snippet'
+]);
+```
+
+* If `ddTools` is already exist on your site, `ddInstaller` will check it version and update it if needed.
+* If `ddTools` is not exist on your site, `ddInstaller` can't do anything because requires it for itself.
 
 
 ## Parameters description
@@ -59,7 +81,7 @@ Like `$modx->parseChunk`, but takes a text and has some features.
 		* `stdClass`
 		* `stringJsonObject` — as [JSON](https://en.wikipedia.org/wiki/JSON)
 		* `stringHjsonObject` — as [HJSON](https://hjson.github.io/)
-		* `stringQueryFormated` — as [Query string](https://en.wikipedia.org/wiki/Query_string)
+		* `stringQueryFormatted` — as [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* Default value: `[]`
 	
 * `$params->data->{$key}`
@@ -327,7 +349,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
 		* `stringHjsonObject` — [HJSON](https://hjson.github.io/) object
 		* `stringHjsonArray` — [HJSON](https://hjson.github.io/) array
-		* `stringQueryFormated` — [Query string](https://en.wikipedia.org/wiki/Query_string)
+		* `stringQueryFormatted` — [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* **Required**
 	
 * `$params->type`
@@ -340,7 +362,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `'stringJsonAuto'` — `stringJsonObject` or `stringJsonArray` depends on input object
 		* `'stringJsonObject'`
 		* `'stringJsonArray'`
-		* `'stringQueryFormated'`
+		* `'stringQueryFormatted'`
 	* Default value: `'objectAuto'`
 
 
@@ -465,7 +487,7 @@ Class representing a collection of some objects or arrays.
 		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
 		* `stringHjsonObject` — [HJSON](https://hjson.github.io/) object
 		* `stringHjsonArray` — [HJSON](https://hjson.github.io/) array
-		* `stringQueryFormated` — [Query string](https://en.wikipedia.org/wiki/Query_string)
+		* `stringQueryFormatted` — [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* Default value: —
 	
 * `$params->items[$itemIndex]`
@@ -713,8 +735,12 @@ Sets existing object properties.
 		* The method sets all existing properties: public, private or protected — it doesn't matter, exactly what you pass will be set.
 		* No problem if If some properties are not exist, the method just skip them without errors.
 	* Valid values:
-		* `stdClass`
 		* `arrayAssociative`
+		* `object`
+		* It can also be set as an object-like string:
+			* `stringJsonObject` — as [JSON](https://en.wikipedia.org/wiki/JSON)
+			* `stringHjsonObject` — as [HJSON](https://hjson.github.io/)
+			* `stringQueryFormatted` — as [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* **Required**
 	
 * `$props->{$propName}`
@@ -880,7 +906,7 @@ Abstract class for snippets.
 		* `stdClass`
 		* `arrayAssociative`
 		* `stringJsonObject`
-		* `stringQueryFormated`
+		* `stringQueryFormatted`
 	* Default value: `[]`
 	
 * `$params->{$paramName}`
@@ -906,7 +932,7 @@ Static method for easy running needed snippet using only it's name and parameter
 		* `stdClass`
 		* `arrayAssociative`
 		* `stringJsonObject`
-		* `stringQueryFormated`
+		* `stringQueryFormatted`
 	* **Required**
 	
 * `$params->name`
@@ -920,7 +946,7 @@ Static method for easy running needed snippet using only it's name and parameter
 		* `stdClass`
 		* `arrayAssociative`
 		* `stringJsonObject`
-		* `stringQueryFormated`
+		* `stringQueryFormatted`
 	* Default value: —
 	
 * `$params->params->{$paramName}`

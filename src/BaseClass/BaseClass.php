@@ -4,14 +4,19 @@ namespace DDTools;
 class BaseClass {
 	/**
 	 * setExistingProps
-	 * @version 1.3.1 (2020-05-06)
+	 * @version 1.4 (2022-01-08)
 	 * 
 	 * @see README.md
 	 * 
 	 * @return {void}
 	 */
 	public function setExistingProps($props){
-		$props = (object) $props;
+		if (is_string($props)){
+			$props = \DDTools\ObjectTools::convertType([
+				'object' => $props,
+				'type' => 'objectStdClass'
+			]);
+		}
 		
 		foreach (
 			$props as

@@ -1,11 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.53 (2021-12-13)
+ * @version 0.54 (2022-01-08)
  * 
  * @see README.md
  * 
- * @copyright 2012–2021 DD Group {@link https://DivanDesign.biz }
+ * @copyright 2012–2022 DD Group {@link https://DivanDesign.biz }
  */
 
 global $modx;
