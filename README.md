@@ -59,7 +59,7 @@ Like `$modx->parseChunk`, but takes a text and has some features.
 		* `stdClass`
 		* `stringJsonObject` — as [JSON](https://en.wikipedia.org/wiki/JSON)
 		* `stringHjsonObject` — as [HJSON](https://hjson.github.io/)
-		* `stringQueryFormated` — as [Query string](https://en.wikipedia.org/wiki/Query_string)
+		* `stringQueryFormatted` — as [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* Default value: `[]`
 	
 * `$params->data->{$key}`
@@ -327,7 +327,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
 		* `stringHjsonObject` — [HJSON](https://hjson.github.io/) object
 		* `stringHjsonArray` — [HJSON](https://hjson.github.io/) array
-		* `stringQueryFormated` — [Query string](https://en.wikipedia.org/wiki/Query_string)
+		* `stringQueryFormatted` — [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* **Required**
 	
 * `$params->type`
@@ -340,7 +340,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `'stringJsonAuto'` — `stringJsonObject` or `stringJsonArray` depends on input object
 		* `'stringJsonObject'`
 		* `'stringJsonArray'`
-		* `'stringQueryFormated'`
+		* `'stringQueryFormatted'`
 	* Default value: `'objectAuto'`
 
 
@@ -465,7 +465,7 @@ Class representing a collection of some objects or arrays.
 		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
 		* `stringHjsonObject` — [HJSON](https://hjson.github.io/) object
 		* `stringHjsonArray` — [HJSON](https://hjson.github.io/) array
-		* `stringQueryFormated` — [Query string](https://en.wikipedia.org/wiki/Query_string)
+		* `stringQueryFormatted` — [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* Default value: —
 	
 * `$params->items[$itemIndex]`
@@ -884,7 +884,7 @@ Abstract class for snippets.
 		* `stdClass`
 		* `arrayAssociative`
 		* `stringJsonObject`
-		* `stringQueryFormated`
+		* `stringQueryFormatted`
 	* Default value: `[]`
 	
 * `$params->{$paramName}`
@@ -910,7 +910,7 @@ Static method for easy running needed snippet using only it's name and parameter
 		* `stdClass`
 		* `arrayAssociative`
 		* `stringJsonObject`
-		* `stringQueryFormated`
+		* `stringQueryFormatted`
 	* **Required**
 	
 * `$params->name`
@@ -924,7 +924,7 @@ Static method for easy running needed snippet using only it's name and parameter
 		* `stdClass`
 		* `arrayAssociative`
 		* `stringJsonObject`
-		* `stringQueryFormated`
+		* `stringQueryFormatted`
 	* Default value: —
 	
 * `$params->params->{$paramName}`
