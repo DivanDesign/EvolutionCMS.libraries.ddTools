@@ -713,8 +713,12 @@ Sets existing object properties.
 		* The method sets all existing properties: public, private or protected — it doesn't matter, exactly what you pass will be set.
 		* No problem if If some properties are not exist, the method just skip them without errors.
 	* Valid values:
-		* `stdClass`
 		* `arrayAssociative`
+		* `object`
+		* It can also be set as an object-like string:
+			* `stringJsonObject` — as [JSON](https://en.wikipedia.org/wiki/JSON)
+			* `stringHjsonObject` — as [HJSON](https://hjson.github.io/)
+			* `stringQueryFormatted` — as [Query string](https://en.wikipedia.org/wiki/Query_string)
 	* **Required**
 	
 * `$props->{$propName}`
