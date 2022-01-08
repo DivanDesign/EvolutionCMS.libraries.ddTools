@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.54 (2022-01-08)
+* \+ `\DDTools\BaseClass::setExistingProps` → Параметры → `$props`: Также может быть задан как строка в формете [JSON](https://ru.wikipedia.org/wiki/JSON), [HJSON](https://hjson.github.io/) или [Query](https://en.wikipedia.org/wiki/Query_string).
+* \* PHP.libraries.HJSON, включённая в репозиторий, обновлена с 2.1 до 2.2.
+* \+ README → Установка → Обновление используя (MODX)EvolutionCMS.libraries.ddInstaller.
+
+
 ## Версия 0.53 (2021-12-13)
 * \+ `\DDTools\ObjectCollection`: Новый класс, представляющий коллекцию некоторых объектов или массивов. См. больше информации и примеры в README.
 * \* `\ddTools::parseText` → Параметры → `$params->data`: Исправлена ошибка с многомерными объектами.
