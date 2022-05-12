@@ -356,9 +356,9 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 	* Desctription: Type of resulting object.  
 		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
 	* Valid values:
-		* `'objectAuto'` — `stdClass` or `array` depends on input string
-		* `'objectStdClass'`
-		* `'objectArray'`
+		* `'objectAuto'` — `stdClass` or `array` depends on input object
+		* `'objectStdClass'` — `stdClass`
+		* `'objectArray'` — `array`
 		* `'stringJsonAuto'` — `stringJsonObject` or `stringJsonArray` depends on input object
 		* `'stringJsonObject'`
 		* `'stringJsonArray'`
