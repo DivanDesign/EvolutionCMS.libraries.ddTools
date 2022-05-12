@@ -1008,10 +1008,13 @@ extract(\ddTools::verifyRenamedParams([
 ```
 
 
-### `\DDTools\ObjectTools::convertType($params)`
+### `\DDTools\ObjectTools`
 
 
-#### Convert a JSON or Query encoded string to an array
+#### `\DDTools\ObjectTools::convertType($params)`
+
+
+##### Convert a JSON or Query encoded string to an array
 
 For example, some snippet supports 2 formats in one of parameters: JSON or Query string.
 Users use the format that is convenient to them and we support both.
@@ -1044,7 +1047,7 @@ Both calls return:
 ```
 
 
-#### Convert a Query encoded string to a JSON object string
+##### Convert a Query encoded string to a JSON object string
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -1063,7 +1066,7 @@ Returns:
 ```
 
 
-#### Convert a JSON object to a JSON array
+##### Convert a JSON object to a JSON array
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -1085,7 +1088,7 @@ Returns:
 ```
 
 
-#### Convert a HJSON encoded string to an object
+##### Convert a HJSON encoded string to an object
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -1115,10 +1118,10 @@ A simple syntax and easy to read.',
 ```
 
 
-### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\ObjectTools::extend($params)`
 
 
-#### Merge two objects, modifying the first
+##### Merge two objects, modifying the first
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -1156,7 +1159,7 @@ stdClass::__set_state(array(
 ```
 
 
-#### Also you can extend arrays
+##### Also you can extend arrays
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -1194,7 +1197,7 @@ array(
 ```
 
 
-#### Moreover, objects can extend arrays and vice versa
+##### Moreover, objects can extend arrays and vice versa
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -1230,7 +1233,7 @@ array(
 ```
 
 
-#### Don't overwrite fields with empty values (`$params->overwriteWithEmpty` == `false`)
+##### Don't overwrite fields with empty values (`$params->overwriteWithEmpty` == `false`)
 
 By default, empty field values (e. g. `''`) are treated as other values and will replace non-empty ones.
 
@@ -1292,10 +1295,10 @@ stdClass::__set_state(array(
 ```
 
 
-### `\DDTools\ObjectTools::unfold($params)`
+#### `\DDTools\ObjectTools::unfold($params)`
 
 
-#### Unfold an object
+##### Unfold an object
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1324,7 +1327,7 @@ stdClass::__set_state(array (
 ```
 
 
-#### Unfold an array
+##### Unfold an array
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1355,7 +1358,7 @@ array (
 ```
 
 
-#### Use custom key separator
+##### Use custom key separator
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1379,6 +1382,68 @@ stdClass::__set_state(array (
 	'parents_father' => 'Errol Musk'
 ))
 ```
+
+
+#### `\DDTools\ObjectTools::isPropExists($params)`
+
+Checks if the object, class or array has a property / element using the same syntax.
+
+You can pass an object:
+
+```php
+var_export(\DDTools\ObjectTools::isPropExists([
+	'object' => (object) [
+		'firstName' => 'John',
+		'lastName' => 'Lennon'
+	],
+	'propName' => 'firstName'
+]));
+```
+
+Or an array:
+
+```php
+var_export(\DDTools\ObjectTools::isPropExists([
+	'object' => [
+		'firstName' => 'Paul',
+		'lastName' => 'McCartney'
+	],
+	'propName' => 'firstName'
+]));
+```
+
+Both calls return `true`.
+
+
+#### `\DDTools\ObjectTools::getPropValue($params)`
+
+Get the value of an object property or an array element using the same syntax.
+
+You can pass an object:
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => (object) [
+		'name' => 'Floyd',
+		'weight' => 7
+	],
+	'propName' => 'name'
+]));
+```
+
+Or an array:
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => [
+		'name' => 'Floyd',
+		'weight' => 7
+	],
+	'propName' => 'name'
+]));
+```
+
+Both calls return `'Floyd'`.
 
 
 ### `\DDTools\ObjectCollection`
@@ -1766,68 +1831,6 @@ array(
 	)
 )
 ```
-
-
-### `\DDTools\ObjectTools::isPropExists($params)`
-
-Checks if the object, class or array has a property / element using the same syntax.
-
-You can pass an object:
-
-```php
-var_export(\DDTools\ObjectTools::isPropExists([
-	'object' => (object) [
-		'firstName' => 'John',
-		'lastName' => 'Lennon'
-	],
-	'propName' => 'firstName'
-]));
-```
-
-Or an array:
-
-```php
-var_export(\DDTools\ObjectTools::isPropExists([
-	'object' => [
-		'firstName' => 'Paul',
-		'lastName' => 'McCartney'
-	],
-	'propName' => 'firstName'
-]));
-```
-
-Both calls return `true`.
-
-
-### `\DDTools\ObjectTools::getPropValue($params)`
-
-Get the value of an object property or an array element using the same syntax.
-
-You can pass an object:
-
-```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => (object) [
-		'name' => 'Floyd',
-		'weight' => 7
-	],
-	'propName' => 'name'
-]));
-```
-
-Or an array:
-
-```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => [
-		'name' => 'Floyd',
-		'weight' => 7
-	],
-	'propName' => 'name'
-]));
-```
-
-Both calls return `'Floyd'`.
 
 
 ## Links
