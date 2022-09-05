@@ -41,7 +41,7 @@ require_once(
 //Update (MODX)EvolutionCMS.libraries.ddTools
 \DDInstaller::install([
 	'url' => 'https://github.com/DivanDesign/EvolutionCMS.libraries.ddTools',
-	'type' => 'snippet'
+	'type' => 'library'
 ]);
 ```
 
