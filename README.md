@@ -52,6 +52,48 @@ require_once(
 ## Parameters description
 
 
+### `\ddTools::convertUrlToAbsolute($params)`
+
+Converts relative URLs to absolute.
+
+The method tends to change URL as little as possible and just prepends required scheme and/or host (or sometimes nothing at all).
+All kinds of query parameters, hash, ports, etc. are not modified.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->url`
+	* Desctription: Source URL. Can be set as:
+		* `'some/url'` — relative
+		* `'/some/url'` — relative starting with slash
+		* `'example.com/some/url'` — absolute starting with domain
+		* `'//example.com/some/url'` — absolute starting with double slash
+		* `'https://example.com/some/url'` — absolute starting with scheme
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->host`
+	* Desctription: Host for the result URL.
+	* Valid values: `string`
+	* Default value: `$_SERVER['HTTP_HOST']`
+	
+* `$params->scheme`
+	* Desctription: Scheme for the result URL.
+	* Valid values: `string`
+	* Default value: `'https'` or `'http'` depending on `$_SERVER['HTTPS']`
+
+
+#### Returns
+
+* `$result`
+	* Desctription: Source URL converted to absolute. Always contains scheme.
+	* Valid values: `string`
+
+
 ### `\ddTools::parseText($params)`
 
 Replaces placeholders in a text with required values.
@@ -956,6 +998,38 @@ Static method for easy running needed snippet using only it's name and parameter
 
 
 ## Examples
+
+
+### `\ddTools::convertUrlToAbsolute($params)`: Convert relative URLs to absolute
+
+`$params->url` can be set in various ways for more convenience:
+
+```php
+//Relative
+$url = 'some/page?q=42#hash';
+//Relative starting with slash
+$url = '/some/page?q=42#hash';
+//Absolute starting with domain
+$url = 'example.com/some/page?q=42#hash';
+//Absolute starting with double slash
+$url = '//example.com/some/page?q=42#hash';
+//Absolute starting with scheme
+$url = 'https://example.com/some/page?q=42#hash';
+```
+
+```php
+\ddTools::convertUrlToAbsolute([
+	'url' => $url,
+	//The parameter is optional and is used here just for clarity. By default it will be equal to domain of your site.
+	'host' => 'example.com'
+]);
+```
+
+Returns this with any of the above URLs:
+
+```php
+'https://example.com/some/page?q=42#hash'
+```
 
 
 ### Verify renamed snippet params (`\ddTools::verifyRenamedParams($params)`)
