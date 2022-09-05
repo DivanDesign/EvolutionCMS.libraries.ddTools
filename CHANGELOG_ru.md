@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.55 (2022-09-05)
+* \+ `\ddTools::convertUrlToAbsolute`: Новый публичный метод. Конвертирует относительные URL в абсолютные. См. больше информации и примеры в README.
+* \* README: Различные улучшения.
+
+
 ## Версия 0.54 (2022-01-08)
 * \+ `\DDTools\BaseClass::setExistingProps` → Параметры → `$props`: Также может быть задан как строка в формете [JSON](https://ru.wikipedia.org/wiki/JSON), [HJSON](https://hjson.github.io/) или [Query](https://en.wikipedia.org/wiki/Query_string).
 * \* PHP.libraries.HJSON, включённая в репозиторий, обновлена с 2.1 до 2.2.

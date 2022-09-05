@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.55 (2022-09-05)
+* \+ `\ddTools::convertUrlToAbsolute`: The new public method. Converts relative URLs to absolute. See more info and examples in README.md.
+* \* README: Various improvements.
+
+
 ## Version 0.54 (2022-01-08)
 * \+ `\DDTools\BaseClass::setExistingProps` → Parameters → `$props`: Can also be set as a [JSON](https://en.wikipedia.org/wiki/JSON), [HJSON](https://hjson.github.io/) or [Query formatted](https://en.wikipedia.org/wiki/Query_string) string.
 * \* Included PHP.libraries.HJSON has been updated from 2.1 to 2.2.
