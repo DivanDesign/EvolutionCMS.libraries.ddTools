@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.54 (2022-01-08)
+ * @version 0.55 (2022-09-05)
  * 
  * @see README.md
  * 
@@ -464,6 +464,103 @@ class ddTools {
 		if (count($match) >= 4){
 			$result['name'] = strtolower($match[1]);
 			$result['version'] = strtolower($match[2]);
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * convertUrlToAbsolute
+	 * @version 1.0 (2022-09-05)
+	 * 
+	 * @desc Converts relative URLs to absolute.
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->url {string} — Source URL. Can be set as relative with(out) host or absolute with(out) protocol: example.com/some/url, some/url, /some/url, //example.com/some/url, https://example.com/some/url. @required
+	 * @param $params->host {string} — Host for the result URL. Default: $_SERVER['HTTP_HOST'].
+	 * @param $params->scheme {string} — Scheme for the result URL. Default: 'https' || 'http' depending on $_SERVER['HTTPS'].
+	 * 
+	 * @return {string}
+	 */
+	public static function convertUrlToAbsolute($params){
+		//# Prepare params
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'url' => '',
+					'host' => $_SERVER['HTTP_HOST'],
+					'scheme' => null
+				],
+				$params
+			]
+		]);
+		
+		if (is_null($params->scheme)){
+			$params->scheme =
+				(
+					isset($_SERVER['HTTPS']) &&
+					(
+						$_SERVER['HTTPS'] == 'on' ||
+						$_SERVER['HTTPS'] == 1
+					)
+				) ?
+				'https' :
+				'http'
+			;
+		}
+		
+		
+		//# Run
+		$result = '';
+		
+		//E. g. '//example.com/some/url'
+		if (
+			substr(
+				$params->url,
+				0,
+				2
+			) ==
+			'//'
+		){
+			$result =
+				$params->scheme .
+				':' .
+				$params->url
+			;
+		//E. g. 'https://example.com/some/url'
+		}elseif (
+			!empty(parse_url(
+				$params->url,
+				PHP_URL_SCHEME
+			))
+		){
+			$result = $params->url;
+		//E. g. 'example.com/some/url'
+		}elseif (
+			strpos(
+				$params->url,
+				$params->host
+			) ===
+			0
+		){
+			$result =
+				$params->scheme .
+				'://' .
+				$params->url
+			;
+		//E. g. 'some/url', '/some/url'
+		}else{
+			$result =
+				$params->scheme .
+				'://' .
+				$params->host .
+				'/' .
+				ltrim(
+					$params->url,
+					'/'
+				)
+			;
 		}
 		
 		return $result;

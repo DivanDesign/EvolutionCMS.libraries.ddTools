@@ -41,7 +41,7 @@ require_once(
 //Update (MODX)EvolutionCMS.libraries.ddTools
 \DDInstaller::install([
 	'url' => 'https://github.com/DivanDesign/EvolutionCMS.libraries.ddTools',
-	'type' => 'snippet'
+	'type' => 'library'
 ]);
 ```
 
@@ -50,6 +50,48 @@ require_once(
 
 
 ## Parameters description
+
+
+### `\ddTools::convertUrlToAbsolute($params)`
+
+Converts relative URLs to absolute.
+
+The method tends to change URL as little as possible and just prepends required scheme and/or host (or sometimes nothing at all).
+All kinds of query parameters, hash, ports, etc. are not modified.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->url`
+	* Desctription: Source URL. Can be set as:
+		* `'some/url'` — relative
+		* `'/some/url'` — relative starting with slash
+		* `'example.com/some/url'` — absolute starting with domain
+		* `'//example.com/some/url'` — absolute starting with double slash
+		* `'https://example.com/some/url'` — absolute starting with scheme
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->host`
+	* Desctription: Host for the result URL.
+	* Valid values: `string`
+	* Default value: `$_SERVER['HTTP_HOST']`
+	
+* `$params->scheme`
+	* Desctription: Scheme for the result URL.
+	* Valid values: `string`
+	* Default value: `'https'` or `'http'` depending on `$_SERVER['HTTPS']`
+
+
+#### Returns
+
+* `$result`
+	* Desctription: Source URL converted to absolute. Always contains scheme.
+	* Valid values: `string`
 
 
 ### `\ddTools::parseText($params)`
@@ -356,9 +398,9 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 	* Desctription: Type of resulting object.  
 		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
 	* Valid values:
-		* `'objectAuto'` — `stdClass` or `array` depends on input string
-		* `'objectStdClass'`
-		* `'objectArray'`
+		* `'objectAuto'` — `stdClass` or `array` depends on input object
+		* `'objectStdClass'` — `stdClass`
+		* `'objectArray'` — `array`
 		* `'stringJsonAuto'` — `stringJsonObject` or `stringJsonArray` depends on input object
 		* `'stringJsonObject'`
 		* `'stringJsonArray'`
@@ -958,6 +1000,38 @@ Static method for easy running needed snippet using only it's name and parameter
 ## Examples
 
 
+### `\ddTools::convertUrlToAbsolute($params)`: Convert relative URLs to absolute
+
+`$params->url` can be set in various ways for more convenience:
+
+```php
+//Relative
+$url = 'some/page?q=42#hash';
+//Relative starting with slash
+$url = '/some/page?q=42#hash';
+//Absolute starting with domain
+$url = 'example.com/some/page?q=42#hash';
+//Absolute starting with double slash
+$url = '//example.com/some/page?q=42#hash';
+//Absolute starting with scheme
+$url = 'https://example.com/some/page?q=42#hash';
+```
+
+```php
+\ddTools::convertUrlToAbsolute([
+	'url' => $url,
+	//The parameter is optional and is used here just for clarity. By default it will be equal to domain of your site.
+	'host' => 'example.com'
+]);
+```
+
+Returns this with any of the above URLs:
+
+```php
+'https://example.com/some/page?q=42#hash'
+```
+
+
 ### Verify renamed snippet params (`\ddTools::verifyRenamedParams($params)`)
 
 Suppose we have the snippet `ddSendFeedback` with the `getEmail` and `getId` parameters.
@@ -1008,10 +1082,13 @@ extract(\ddTools::verifyRenamedParams([
 ```
 
 
-### `\DDTools\ObjectTools::convertType($params)`
+### `\DDTools\ObjectTools`
 
 
-#### Convert a JSON or Query encoded string to an array
+#### `\DDTools\ObjectTools::convertType($params)`
+
+
+##### Convert a JSON or Query encoded string to an array
 
 For example, some snippet supports 2 formats in one of parameters: JSON or Query string.
 Users use the format that is convenient to them and we support both.
@@ -1044,7 +1121,7 @@ Both calls return:
 ```
 
 
-#### Convert a Query encoded string to a JSON object string
+##### Convert a Query encoded string to a JSON object string
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -1063,7 +1140,7 @@ Returns:
 ```
 
 
-#### Convert a JSON object to a JSON array
+##### Convert a JSON object to a JSON array
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -1085,7 +1162,7 @@ Returns:
 ```
 
 
-#### Convert a HJSON encoded string to an object
+##### Convert a HJSON encoded string to an object
 
 ```php
 \DDTools\ObjectTools::convertType([
@@ -1115,10 +1192,10 @@ A simple syntax and easy to read.',
 ```
 
 
-### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\ObjectTools::extend($params)`
 
 
-#### Merge two objects, modifying the first
+##### Merge two objects, modifying the first
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -1156,7 +1233,7 @@ stdClass::__set_state(array(
 ```
 
 
-#### Also you can extend arrays
+##### Also you can extend arrays
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -1194,7 +1271,7 @@ array(
 ```
 
 
-#### Moreover, objects can extend arrays and vice versa
+##### Moreover, objects can extend arrays and vice versa
 
 ```php
 var_export(\DDTools\ObjectTools::extend([
@@ -1230,7 +1307,7 @@ array(
 ```
 
 
-#### Don't overwrite fields with empty values (`$params->overwriteWithEmpty` == `false`)
+##### Don't overwrite fields with empty values (`$params->overwriteWithEmpty` == `false`)
 
 By default, empty field values (e. g. `''`) are treated as other values and will replace non-empty ones.
 
@@ -1292,10 +1369,10 @@ stdClass::__set_state(array(
 ```
 
 
-### `\DDTools\ObjectTools::unfold($params)`
+#### `\DDTools\ObjectTools::unfold($params)`
 
 
-#### Unfold an object
+##### Unfold an object
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1324,7 +1401,7 @@ stdClass::__set_state(array (
 ```
 
 
-#### Unfold an array
+##### Unfold an array
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1355,7 +1432,7 @@ array (
 ```
 
 
-#### Use custom key separator
+##### Use custom key separator
 
 ```php
 var_export(\DDTools\ObjectTools::unfold([
@@ -1379,6 +1456,68 @@ stdClass::__set_state(array (
 	'parents_father' => 'Errol Musk'
 ))
 ```
+
+
+#### `\DDTools\ObjectTools::isPropExists($params)`
+
+Checks if the object, class or array has a property / element using the same syntax.
+
+You can pass an object:
+
+```php
+var_export(\DDTools\ObjectTools::isPropExists([
+	'object' => (object) [
+		'firstName' => 'John',
+		'lastName' => 'Lennon'
+	],
+	'propName' => 'firstName'
+]));
+```
+
+Or an array:
+
+```php
+var_export(\DDTools\ObjectTools::isPropExists([
+	'object' => [
+		'firstName' => 'Paul',
+		'lastName' => 'McCartney'
+	],
+	'propName' => 'firstName'
+]));
+```
+
+Both calls return `true`.
+
+
+#### `\DDTools\ObjectTools::getPropValue($params)`
+
+Get the value of an object property or an array element using the same syntax.
+
+You can pass an object:
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => (object) [
+		'name' => 'Floyd',
+		'weight' => 7
+	],
+	'propName' => 'name'
+]));
+```
+
+Or an array:
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => [
+		'name' => 'Floyd',
+		'weight' => 7
+	],
+	'propName' => 'name'
+]));
+```
+
+Both calls return `'Floyd'`.
 
 
 ### `\DDTools\ObjectCollection`
@@ -1766,68 +1905,6 @@ array(
 	)
 )
 ```
-
-
-### `\DDTools\ObjectTools::isPropExists($params)`
-
-Checks if the object, class or array has a property / element using the same syntax.
-
-You can pass an object:
-
-```php
-var_export(\DDTools\ObjectTools::isPropExists([
-	'object' => (object) [
-		'firstName' => 'John',
-		'lastName' => 'Lennon'
-	],
-	'propName' => 'firstName'
-]));
-```
-
-Or an array:
-
-```php
-var_export(\DDTools\ObjectTools::isPropExists([
-	'object' => [
-		'firstName' => 'Paul',
-		'lastName' => 'McCartney'
-	],
-	'propName' => 'firstName'
-]));
-```
-
-Both calls return `true`.
-
-
-### `\DDTools\ObjectTools::getPropValue($params)`
-
-Get the value of an object property or an array element using the same syntax.
-
-You can pass an object:
-
-```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => (object) [
-		'name' => 'Floyd',
-		'weight' => 7
-	],
-	'propName' => 'name'
-]));
-```
-
-Or an array:
-
-```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => [
-		'name' => 'Floyd',
-		'weight' => 7
-	],
-	'propName' => 'name'
-]));
-```
-
-Both calls return `'Floyd'`.
 
 
 ## Links
