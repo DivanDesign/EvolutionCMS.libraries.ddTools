@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.55.1 (2022-12-03)
+* \* `\DDTools\FilesTools::modifyImage`: Included PHP.libraries.phpThumb has been updated from 1.7.15-202004301145 to 1.7.19-202210110924 (now supports WebP, PHP8, etc).
+
+
 ## Version 0.55 (2022-09-05)
 * \+ `\ddTools::convertUrlToAbsolute`: The new public method. Converts relative URLs to absolute. See more info and examples in README.md.
 * \* README: Various improvements.

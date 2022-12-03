@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.55.1 (2022-12-03)
+* \* `\DDTools\FilesTools::modifyImage`: PHP.libraries.phpThumb, включённая в репозиторий, обновлена с 1.7.15-202004301145 до 1.7.19-202210110924 (теперь поддерживает WebP, PHP8, etc).
+
+
 ## Версия 0.55 (2022-09-05)
 * \+ `\ddTools::convertUrlToAbsolute`: Новый публичный метод. Конвертирует относительные URL в абсолютные. См. больше информации и примеры в README.
 * \* README: Различные улучшения.
