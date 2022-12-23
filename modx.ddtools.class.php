@@ -288,11 +288,12 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.2.2 (2022-12-23)
+	 * @version 1.3 (2022-12-23)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
 	 * @param $array {array} — Array to sort. Associative arrays are also supported. @required
+	 * @param $array[$i] {array|object} — Array to sort. Associative arrays are also supported. @required
 	 * @param $sortBy {array} — Columns (second level keys) by which the array is sorted. @required
 	 * @param $sortDir {1|-1} — Sort direction (1 == ASC; -1 == DESC). Default: 1.
 	 * @param $i {integer} — Count, an internal variable used during recursive calls. Default: 0.
@@ -306,7 +307,10 @@ class ddTools {
 		$i = 0
 	){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
-		$currentItem_comparisonValue = array_values($array)[0][$sortBy[$i]];
+		$currentItem_comparisonValue = \DDTools\ObjectTools::getPropValue([
+			'object' => array_values($array)[0],
+			'propName' => $sortBy[$i]
+		]);
 		$isCurrentItemComparisonValueNumeric = is_numeric($currentItem_comparisonValue);
 		
 		$isArrayAssociative =
@@ -327,7 +331,10 @@ class ddTools {
 			$arrayItemKey =>
 			$arrayItem
 		){
-			$arrayItem_comparisonValue = $arrayItem[$sortBy[$i]];
+			$arrayItem_comparisonValue = \DDTools\ObjectTools::getPropValue([
+				'object' => $arrayItem,
+				'propName' => $sortBy[$i]
+			]);
 			
 			//Если эталон и текущее значение — числа
 			if (
