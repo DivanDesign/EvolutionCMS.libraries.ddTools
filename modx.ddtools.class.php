@@ -288,7 +288,7 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.2.1 (2021-03-09)
+	 * @version 1.2.2 (2022-12-23)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
@@ -306,8 +306,8 @@ class ddTools {
 		$i = 0
 	){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
-		$currentRow = array_values($array)[0][$sortBy[$i]];
-		$isCurrentRowNumeric = is_numeric($currentRow);
+		$currentItem_comparisonValue = array_values($array)[0][$sortBy[$i]];
+		$isCurrentItemComparisonValueNumeric = is_numeric($currentItem_comparisonValue);
 		
 		$isArrayAssociative =
 			count(array_filter(
@@ -324,20 +324,22 @@ class ddTools {
 		//Перебираем массив
 		foreach (
 			$array as
-			$rowKey =>
-			$rowValue
+			$arrayItemKey =>
+			$arrayItem
 		){
+			$arrayItem_comparisonValue = $arrayItem[$sortBy[$i]];
+			
 			//Если эталон и текущее значение — числа
 			if (
-				$isCurrentRowNumeric &&
-				is_numeric($rowValue[$sortBy[$i]])
+				$isCurrentItemComparisonValueNumeric &&
+				is_numeric($arrayItem_comparisonValue)
 			){
 				//Получаем нужную циферку
 				$cmpRes =
-					$rowValue[$sortBy[$i]] == $currentRow ?
+					$arrayItem_comparisonValue == $currentItem_comparisonValue ?
 					0 :
 					(
-						$rowValue[$sortBy[$i]] > $currentRow ?
+						$arrayItem_comparisonValue > $currentItem_comparisonValue ?
 						1 :
 						-1
 					)
@@ -346,8 +348,8 @@ class ddTools {
 			}else{
 				//Сравниваем текущее значение со значением эталонного
 				$cmpRes = strcmp(
-					$rowValue[$sortBy[$i]],
-					$currentRow
+					$arrayItem_comparisonValue,
+					$currentItem_comparisonValue
 				);
 			}
 			
@@ -363,9 +365,9 @@ class ddTools {
 			}
 			
 			if ($isArrayAssociative){
-				$resultArray[$rowKey] = $rowValue;
+				$resultArray[$arrayItemKey] = $arrayItem;
 			}else{
-				$resultArray[] = $rowValue;
+				$resultArray[] = $arrayItem;
 			}
 		}
 		
