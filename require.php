@@ -1,5 +1,6 @@
 <?php
 require_once('src/Base/Base.php');
+require_once('src/Base/AncestorTrait.php');
 require_once('src/Base/BaseClass.php');
 
 require_once('src/ObjectTools/ObjectTools.php');

@@ -830,7 +830,14 @@ Returns all properties of this object as an JSON string independent of their vis
 The same as `\DDTools\Base\Base::toJSON()`.
 
 
-#### `\DDTools\Base\Base::createChildInstance($params)`
+### `\DDTools\Base\AncestorTrait`
+
+Simple trait for ancestors with some small methods facilitating your work.
+
+You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
+
+
+#### `\DDTools\Base\AncestorTrait::createChildInstance($params)`
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.
