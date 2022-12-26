@@ -143,7 +143,7 @@ abstract class Base {
 	
 	/**
 	 * toJSON
-	 * @version 1.0.1 (2021-03-10)
+	 * @version 1.1 (2022-12-26)
 	 * 
 	 * @see README.md
 	 * 
@@ -152,7 +152,7 @@ abstract class Base {
 	public function toJSON(){
 		return \DDTools\ObjectTools::convertType([
 			'object' => $this->toArray(),
-			'type' => 'stringJsonObject'
+			'type' => 'stringJsonAuto'
 		]);
 	}
 	

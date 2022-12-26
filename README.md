@@ -818,7 +818,9 @@ Returns all properties of this object as an JSON string independent of their vis
 * `$result`
 	* Desctription: An JSON string representation of this object.  
 		The method returns all existing properties: public, private and protected.
-	* Valid values: `stringJsonObject`
+	* Valid values:
+		* `stringJsonObject`
+		* `stringJsonArray` — if `$this->toArray` returns indexed array
 	
 * `$result->{$propName}`
 	* Desctription: The key is the object field name and the value is the object field value.
