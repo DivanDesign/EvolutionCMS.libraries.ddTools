@@ -1,7 +1,7 @@
 <?php
 namespace DDTools;
 
-class ObjectCollection {
+class ObjectCollection extends \DDTools\Base\Base {
 	protected
 		/**
 		 * @property $items {array}
@@ -535,6 +535,16 @@ class ObjectCollection {
 	 */
 	public function count(){
 		return count($this->items);
+	}
+	
+	/**
+	 * toArray
+	 * @version 1.0 (2022-12-26)
+	 * 
+	 * @desc Simple implementation of $this->getItems. Used for correct working of $this->toJSON, $this->__toString.
+	 */
+	public function toArray(){
+		return $this->items;
 	}
 }
 ?>

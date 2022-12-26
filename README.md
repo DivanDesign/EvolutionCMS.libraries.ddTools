@@ -760,6 +760,18 @@ Deletes required items from collection.
 	* Default value: `0`
 
 
+#### `\DDTools\ObjectCollection::toJSON()`, `\DDTools\ObjectCollection::__toString()`
+
+Gets an JSON-array of all collection items.
+
+
+##### Returns
+
+* `$result`
+	* Desctription: An JSON-array of items.
+	* Valid values: `stringJsonArray`
+
+
 ### `\DDTools\Base\Base`
 
 Simple abstract class with some small methods facilitating your work.
