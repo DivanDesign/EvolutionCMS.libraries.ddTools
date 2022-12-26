@@ -762,7 +762,7 @@ Deletes required items from collection.
 
 ### `\DDTools\BaseClass`
 
-Simple class with some small methods facilitating your work.
+Simple abstract class with some small methods facilitating your work.
 It is convenient to inherit your classes from this.
 
 You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
