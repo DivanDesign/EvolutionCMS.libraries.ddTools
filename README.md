@@ -760,7 +760,7 @@ Deletes required items from collection.
 	* Default value: `0`
 
 
-### `\DDTools\BaseClass`
+### `\DDTools\Base\Base`
 
 Simple abstract class with some small methods facilitating your work.
 It is convenient to inherit your classes from this.
@@ -768,7 +768,7 @@ It is convenient to inherit your classes from this.
 You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
 
 
-#### `\DDTools\BaseClass::setExistingProps($props)`
+#### `\DDTools\Base\Base::setExistingProps($props)`
 
 Sets existing object properties.
 
@@ -791,7 +791,7 @@ Sets existing object properties.
 	* **Required**
 
 
-#### `\DDTools\BaseClass::toArray()`
+#### `\DDTools\Base\Base::toArray()`
 
 Returns all properties of this object as an associative array independent of their visibility.
 
@@ -808,7 +808,7 @@ Returns all properties of this object as an associative array independent of the
 	* Valid values: `mixed`
 
 
-#### `\DDTools\BaseClass::toJSON()`
+#### `\DDTools\Base\Base::toJSON()`
 
 Returns all properties of this object as an JSON string independent of their visibility.
 
@@ -825,12 +825,12 @@ Returns all properties of this object as an JSON string independent of their vis
 	* Valid values: `mixed`
 
 
-#### `\DDTools\BaseClass::__toString()`
+#### `\DDTools\Base\Base::__toString()`
 
-The same as `\DDTools\BaseClass::toJSON()`.
+The same as `\DDTools\Base\Base::toJSON()`.
 
 
-#### `\DDTools\BaseClass::createChildInstance($params)`
+#### `\DDTools\Base\Base::createChildInstance($params)`
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.

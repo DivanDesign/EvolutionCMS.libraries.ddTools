@@ -1,7 +1,7 @@
 <?php
-namespace DDTools;
+namespace DDTools\Base;
 
-abstract class BaseClass {
+abstract class Base {
 	/**
 	 * setExistingProps
 	 * @version 1.4 (2022-01-08)
