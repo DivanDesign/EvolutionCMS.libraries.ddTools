@@ -90,7 +90,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * convertItemsType
-	 * @version 1.0 (2021-12-02)
+	 * @version 1.0.1 (2022-12-28)
 	 * 
 	 * @see README.md
 	 */
@@ -119,7 +119,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			if (
 				//If item is matched to filter
 				$this->isItemMatchFilter([
-					'item' => $itemObject,
+					'itemObject' => $itemObject,
 					'filter' => $params->filter
 				])
 			){
@@ -133,7 +133,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * updateItems
-	 * @version 1.0 (2021-12-02)
+	 * @version 1.0.1 (2022-12-28)
 	 * 
 	 * @see README.md
 	 */
@@ -165,7 +165,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			if (
 				//If item is matched to filter
 				$this->isItemMatchFilter([
-					'item' => $itemObject,
+					'itemObject' => $itemObject,
 					'filter' => $params->filter
 				])
 			){
@@ -190,7 +190,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * getItems
-	 * @version 2.0 (2021-12-02)
+	 * @version 2.0.1 (2022-12-28)
 	 * 
 	 * @see README.md
 	 */
@@ -224,7 +224,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			if (
 				//If item is matched to filter
 				$this->isItemMatchFilter([
-					'item' => $itemObject,
+					'itemObject' => $itemObject,
 					'filter' => $params->filter
 				])
 			){
@@ -301,7 +301,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * deleteItems
-	 * @version 1.0 (2021-12-02)
+	 * @version 1.0.1 (2022-12-28)
 	 * 
 	 * @see README.md
 	 */
@@ -332,7 +332,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			if (
 				//If item is matched to filter
 				$this->isItemMatchFilter([
-					'item' => $itemObject,
+					'itemObject' => $itemObject,
 					'filter' => $params->filter
 				])
 			){
@@ -356,10 +356,10 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * isItemMatchFilter
-	 * @version 1.0 (2021-12-01)
+	 * @version 2.0 (2022-12-28)
 	 * 
 	 * @param $params {array} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->item {array|object} — An item to test. @required
+	 * @param $params->itemObject {array|object} — An item to test. @required
 	 * @param $params->filter {array} — Result of $this->prepareItemsFilter. @required
 	 * 
 	 * @return $result {boolean}
