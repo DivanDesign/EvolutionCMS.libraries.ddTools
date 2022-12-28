@@ -772,6 +772,60 @@ Gets an JSON-array of all collection items.
 	* Valid values: `stringJsonArray`
 
 
+#### `\DDTools\ObjectCollection::setOneItemData` (protected)
+
+Sets data of an item object. All setting of an item data inside the class must be use this method.
+It's convenient to override this method in child classes if items are not plain objects.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->itemIndex`
+	* Desctription: Item index which data will be set.
+	* Valid values: `integer`
+	* **Required**
+	
+* `$params->itemData`
+	* Desctription: New item data.
+	* Valid values:
+		* `array` — indexed arrays are supported as well as associative
+		* `object`
+	* **Required**
+
+
+#### `\DDTools\ObjectCollection::getOneItemData` (protected)
+
+Returns data of an item object. All getting of an item data inside the class must use this method.
+It's convenient to override this method in child classes if items are not plain objects.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->itemObject`
+	* Desctription: An item object which data will be returned.
+	* Valid values:
+		* `array` — indexed arrays are supported as well as associative
+		* `object`
+	* **Required**
+
+
+##### Returns
+
+* `$result`
+	* Desctription: Data of an item object.
+	* Valid values:
+		* `array`
+		* `object`
+
+
 ### `\DDTools\Base\Base`
 
 Simple abstract class with some small methods facilitating your work.
