@@ -1,11 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.55.1 (2022-12-03)
+ * @version 0.56 (2023-01-29)
  * 
  * @see README.md
  * 
- * @copyright 2012–2022 DD Group {@link https://DivanDesign.biz }
+ * @copyright 2012–2023 DD Group {@link https://DivanDesign.biz }
  */
 
 global $modx;
@@ -288,11 +288,12 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.2.1 (2021-03-09)
+	 * @version 1.3 (2022-12-23)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
 	 * @param $array {array} — Array to sort. Associative arrays are also supported. @required
+	 * @param $array[$i] {array|object} — Array to sort. Associative arrays are also supported. @required
 	 * @param $sortBy {array} — Columns (second level keys) by which the array is sorted. @required
 	 * @param $sortDir {1|-1} — Sort direction (1 == ASC; -1 == DESC). Default: 1.
 	 * @param $i {integer} — Count, an internal variable used during recursive calls. Default: 0.
@@ -306,8 +307,11 @@ class ddTools {
 		$i = 0
 	){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
-		$currentRow = array_values($array)[0][$sortBy[$i]];
-		$isCurrentRowNumeric = is_numeric($currentRow);
+		$currentItem_comparisonValue = \DDTools\ObjectTools::getPropValue([
+			'object' => array_values($array)[0],
+			'propName' => $sortBy[$i]
+		]);
+		$isCurrentItemComparisonValueNumeric = is_numeric($currentItem_comparisonValue);
 		
 		$isArrayAssociative =
 			count(array_filter(
@@ -324,20 +328,25 @@ class ddTools {
 		//Перебираем массив
 		foreach (
 			$array as
-			$rowKey =>
-			$rowValue
+			$arrayItemKey =>
+			$arrayItem
 		){
+			$arrayItem_comparisonValue = \DDTools\ObjectTools::getPropValue([
+				'object' => $arrayItem,
+				'propName' => $sortBy[$i]
+			]);
+			
 			//Если эталон и текущее значение — числа
 			if (
-				$isCurrentRowNumeric &&
-				is_numeric($rowValue[$sortBy[$i]])
+				$isCurrentItemComparisonValueNumeric &&
+				is_numeric($arrayItem_comparisonValue)
 			){
 				//Получаем нужную циферку
 				$cmpRes =
-					$rowValue[$sortBy[$i]] == $currentRow ?
+					$arrayItem_comparisonValue == $currentItem_comparisonValue ?
 					0 :
 					(
-						$rowValue[$sortBy[$i]] > $currentRow ?
+						$arrayItem_comparisonValue > $currentItem_comparisonValue ?
 						1 :
 						-1
 					)
@@ -346,8 +355,8 @@ class ddTools {
 			}else{
 				//Сравниваем текущее значение со значением эталонного
 				$cmpRes = strcmp(
-					$rowValue[$sortBy[$i]],
-					$currentRow
+					$arrayItem_comparisonValue,
+					$currentItem_comparisonValue
 				);
 			}
 			
@@ -363,9 +372,9 @@ class ddTools {
 			}
 			
 			if ($isArrayAssociative){
-				$resultArray[$rowKey] = $rowValue;
+				$resultArray[$arrayItemKey] = $arrayItem;
 			}else{
-				$resultArray[] = $rowValue;
+				$resultArray[] = $arrayItem;
 			}
 		}
 		

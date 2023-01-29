@@ -1,7 +1,7 @@
 <?php
 namespace DDTools;
 
-class ObjectCollection {
+class ObjectCollection extends \DDTools\Base\Base {
 	protected
 		/**
 		 * @property $items {array}
@@ -90,7 +90,7 @@ class ObjectCollection {
 	
 	/**
 	 * convertItemsType
-	 * @version 1.0 (2021-12-02)
+	 * @version 1.0.2 (2022-12-28)
 	 * 
 	 * @see README.md
 	 */
@@ -119,13 +119,18 @@ class ObjectCollection {
 			if (
 				//If item is matched to filter
 				$this->isItemMatchFilter([
-					'item' => $itemObject,
+					'itemObject' => $itemObject,
 					'filter' => $params->filter
 				])
 			){
-				$this->items[$itemIndex] = \DDTools\ObjectTools::convertType([
-					'object' => $itemObject,
-					'type' => $params->itemType
+				$this->setOneItemData([
+					'itemIndex' => $itemIndex,
+					'itemData' => \DDTools\ObjectTools::convertType([
+						'object' => $this->getOneItemData([
+							'itemObject' => $itemObject
+						]),
+						'type' => $params->itemType
+					])
 				]);
 			}
 		}
@@ -133,7 +138,7 @@ class ObjectCollection {
 	
 	/**
 	 * updateItems
-	 * @version 1.0 (2021-12-02)
+	 * @version 1.0.2 (2022-12-28)
 	 * 
 	 * @see README.md
 	 */
@@ -165,15 +170,20 @@ class ObjectCollection {
 			if (
 				//If item is matched to filter
 				$this->isItemMatchFilter([
-					'item' => $itemObject,
+					'itemObject' => $itemObject,
 					'filter' => $params->filter
 				])
 			){
-				$this->items[$itemIndex] = \DDTools\ObjectTools::extend([
-					'objects' => [
-						$itemObject,
-						$params->data
-					]
+				$this->setOneItemData([
+					'itemIndex' => $itemIndex,
+					'itemData' => \DDTools\ObjectTools::extend([
+						'objects' => [
+							$this->getOneItemData([
+								'itemObject' => $itemObject
+							]),
+							$params->data
+						]
+					])
 				]);
 				
 				//Increment result count
@@ -190,7 +200,7 @@ class ObjectCollection {
 	
 	/**
 	 * getItems
-	 * @version 2.0 (2021-12-02)
+	 * @version 2.0.2 (2022-12-28)
 	 * 
 	 * @see README.md
 	 */
@@ -224,14 +234,18 @@ class ObjectCollection {
 			if (
 				//If item is matched to filter
 				$this->isItemMatchFilter([
-					'item' => $itemObject,
+					'itemObject' => $itemObject,
 					'filter' => $params->filter
 				])
 			){
+				$itemData = $this->getOneItemData([
+					'itemObject' => $itemObject
+				]);
+				
 				//Save only field value instead of object if needed
 				if (!is_null($params->propAsResultValue)){
 					$resultItemObject = \DDTools\ObjectTools::getPropValue([
-						'object' => $itemObject,
+						'object' => $itemData,
 						'propName' => $params->propAsResultValue
 					]);
 				}else{
@@ -242,7 +256,7 @@ class ObjectCollection {
 				if (!is_null($params->propAsResultKey)){
 					$result[
 						\DDTools\ObjectTools::getPropValue([
-							'object' => $itemObject,
+							'object' => $itemData,
 							'propName' => $params->propAsResultKey
 						])
 					] = $resultItemObject;
@@ -301,7 +315,7 @@ class ObjectCollection {
 	
 	/**
 	 * deleteItems
-	 * @version 1.0 (2021-12-02)
+	 * @version 1.0.1 (2022-12-28)
 	 * 
 	 * @see README.md
 	 */
@@ -332,7 +346,7 @@ class ObjectCollection {
 			if (
 				//If item is matched to filter
 				$this->isItemMatchFilter([
-					'item' => $itemObject,
+					'itemObject' => $itemObject,
 					'filter' => $params->filter
 				])
 			){
@@ -355,11 +369,46 @@ class ObjectCollection {
 	}
 	
 	/**
-	 * isItemMatchFilter
-	 * @version 1.0 (2021-12-01)
+	 * setOneItemData
+	 * @version 1.0 (2022-12-27)
 	 * 
-	 * @param $params {array} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->item {array|object} — An item to test. @required
+	 * @desc Sets data of an item object. All setting of an item data inside the class must be use this method. It's convenient to override this method in child classes if items are not plain objects.
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->itemIndex {integer} — Item index which data will be set. @required
+	 * @param $params->itemData {array|object} — New item data. @required
+	 * 
+	 * @return {void}
+	 */
+	protected function setOneItemData($params){
+		$params = (object) $params;
+		
+		$this->items[$params->itemIndex] = $params->itemData;
+	}
+	
+	/**
+	 * getOneItemData
+	 * @version 1.0 (2022-12-27)
+	 * 
+	 * @desc Returns data of an item object. All getting of an item data inside the class must use this method. It's convenient to override this method in child classes if items are not plain objects.
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->itemObject {array|object} — An item object which data will be returned. @required
+	 * 
+	 * @return $result {object|arrayAssociative}
+	 */
+	protected function getOneItemData($params){
+		$params = (object) $params;
+		
+		return $params->itemObject;
+	}
+	
+	/**
+	 * isItemMatchFilter
+	 * @version 2.0.1 (2022-12-28)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->itemObject {array|object} — An item to test. @required
 	 * @param $params->filter {array} — Result of $this->prepareItemsFilter. @required
 	 * 
 	 * @return $result {boolean}
@@ -369,6 +418,10 @@ class ObjectCollection {
 		
 		//By default assume that item is matched
 		$result = true;
+		
+		$itemData = $this->getOneItemData([
+			'itemObject' => $params->itemObject
+		]);
 		
 		//Iterate over “or” conditions
 		foreach (
@@ -383,7 +436,7 @@ class ObjectCollection {
 				//If the item has no the property
 				if (
 					!\DDTools\ObjectTools::isPropExists([
-						'object' => $params->item,
+						'object' => $itemData,
 						'propName' => $andCondition->propName
 					])
 				){
@@ -395,7 +448,7 @@ class ObjectCollection {
 				}elseif ($andCondition->operator == '=='){
 					$result =
 						\DDTools\ObjectTools::getPropValue([
-							'object' => $params->item,
+							'object' => $itemData,
 							'propName' => $andCondition->propName
 						]) ==
 						$andCondition->propValue
@@ -404,7 +457,7 @@ class ObjectCollection {
 				}else{
 					$result =
 						\DDTools\ObjectTools::getPropValue([
-							'object' => $params->item,
+							'object' => $itemData,
 							'propName' => $andCondition->propName
 						]) !=
 						$andCondition->propValue
@@ -535,6 +588,16 @@ class ObjectCollection {
 	 */
 	public function count(){
 		return count($this->items);
+	}
+	
+	/**
+	 * toArray
+	 * @version 1.0 (2022-12-26)
+	 * 
+	 * @desc Simple implementation of $this->getItems. Used for correct working of $this->toJSON, $this->__toString.
+	 */
+	public function toArray(){
+		return $this->items;
 	}
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
-namespace DDTools;
+namespace DDTools\Base;
 
-class BaseClass {
+abstract class Base {
 	/**
 	 * setExistingProps
 	 * @version 1.4 (2022-01-08)
@@ -132,79 +132,6 @@ class BaseClass {
 	}
 	
 	/**
-	 * createChildInstance
-	 * @version 1.1.1 (2019-08-22)
-	 * 
-	 * @see README.md
-	 * 
-	 * @throws \Exception
-	 */
-	public static final function createChildInstance($params){
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'params' => [],
-				'capitalizeName' => true
-			],
-			(array) $params
-		);
-		
-		$thisClassName = get_called_class();
-		
-		$thisNameSpace = substr(
-			$thisClassName,
-			0,
-			strrpos(
-				$thisClassName,
-				'\\'
-			)
-		);
-		
-		//Current classname without namespace
-		$thisClassName = substr(
-			$thisClassName,
-			strrpos(
-				$thisClassName,
-				'\\'
-			) + 1
-		);
-		
-		//Capitalize child name if needed
-		if ($params->capitalizeName){
-			$params->name = ucfirst(strtolower($params->name));
-		}
-		
-		$filePath =
-			$params->parentDir .
-			DIRECTORY_SEPARATOR .
-			$params->name .
-			DIRECTORY_SEPARATOR .
-			$thisClassName .
-			'.php'
-		;
-		
-		if(is_file($filePath)){
-			require_once($filePath);
-			
-			$objectClass =
-				'\\' .
-				$thisNameSpace .
-				'\\' .
-				$params->name .
-				'\\' .
-				$thisClassName
-			;
-			
-			return new $objectClass($params->params);
-		}else{
-			throw new \Exception(
-				$thisClassName . ' “' . $params->name . '” not found.',
-				500
-			);
-		}
-	}
-	
-	/**
 	 * toArray
 	 * @version 1.0 (2020-05-06)
 	 * 
@@ -216,7 +143,7 @@ class BaseClass {
 	
 	/**
 	 * toJSON
-	 * @version 1.0.1 (2021-03-10)
+	 * @version 1.1 (2022-12-26)
 	 * 
 	 * @see README.md
 	 * 
@@ -225,7 +152,7 @@ class BaseClass {
 	public function toJSON(){
 		return \DDTools\ObjectTools::convertType([
 			'object' => $this->toArray(),
-			'type' => 'stringJsonObject'
+			'type' => 'stringJsonAuto'
 		]);
 	}
 	

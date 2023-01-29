@@ -1,6 +1,19 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.56 (2023-01-29)
+* \+ `\ddTools::sort2dArray` → Параметры → `$array[$i]`: Также может быть задан, как объект.
+* \* `\DDTools\Base\Base`:
+	* \* Класс переименован из `\DDTools\BaseClass`. Обратная совместимость сохранена (множно использовать `\DDTools\BaseClass`, но не рекомендуется).
+	* \* Класс стал абстрактным.
+	* \- `createChildInstance`: Метод удалён, используйте вместо него `\DDTools\Base\AncestorTrait::createChildInstance`. Обратная совместимость сохранена (можно использовать `\DDTools\BaseClass::createChildInstance`, но не рекомендуется).
+	* \+ `toJSON`: Возвращает JSON-массив если `$this->toArray` возвращает индексированный массив.
+* \+ `\DDTools\Base\AncestorTrait`: Новый trait.
+* \+ `\DDTools\ObjectCollection`:
+	* \+ `toJSON`, `__toString`: Новые публичные методы. Возвращают JSON-массив всех элементов коллекции.
+	* \+ `\DDTools\ObjectCollection::setOneItemData`, `getOneItemData`: Новые protected методы.
+
+
 ## Версия 0.55.1 (2022-12-03)
 * \* `\DDTools\FilesTools::modifyImage`: PHP.libraries.phpThumb, включённая в репозиторий, обновлена с 1.7.15-202004301145 до 1.7.19-202210110924 (теперь поддерживает WebP, PHP8, etc).
 

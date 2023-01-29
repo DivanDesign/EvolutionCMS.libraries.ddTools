@@ -760,15 +760,81 @@ Deletes required items from collection.
 	* Default value: `0`
 
 
-### `\DDTools\BaseClass`
+#### `\DDTools\ObjectCollection::toJSON()`, `\DDTools\ObjectCollection::__toString()`
 
-Simple class with some small methods facilitating your work.
+Gets an JSON-array of all collection items.
+
+
+##### Returns
+
+* `$result`
+	* Desctription: An JSON-array of items.
+	* Valid values: `stringJsonArray`
+
+
+#### `\DDTools\ObjectCollection::setOneItemData` (protected)
+
+Sets data of an item object. All setting of an item data inside the class must be use this method.
+It's convenient to override this method in child classes if items are not plain objects.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->itemIndex`
+	* Desctription: Item index which data will be set.
+	* Valid values: `integer`
+	* **Required**
+	
+* `$params->itemData`
+	* Desctription: New item data.
+	* Valid values:
+		* `array` — indexed arrays are supported as well as associative
+		* `object`
+	* **Required**
+
+
+#### `\DDTools\ObjectCollection::getOneItemData` (protected)
+
+Returns data of an item object. All getting of an item data inside the class must use this method.
+It's convenient to override this method in child classes if items are not plain objects.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->itemObject`
+	* Desctription: An item object which data will be returned.
+	* Valid values:
+		* `array` — indexed arrays are supported as well as associative
+		* `object`
+	* **Required**
+
+
+##### Returns
+
+* `$result`
+	* Desctription: Data of an item object.
+	* Valid values:
+		* `array`
+		* `object`
+
+
+### `\DDTools\Base\Base`
+
+Simple abstract class with some small methods facilitating your work.
 It is convenient to inherit your classes from this.
 
 You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
 
 
-#### `\DDTools\BaseClass::setExistingProps($props)`
+#### `\DDTools\Base\Base::setExistingProps($props)`
 
 Sets existing object properties.
 
@@ -791,7 +857,7 @@ Sets existing object properties.
 	* **Required**
 
 
-#### `\DDTools\BaseClass::toArray()`
+#### `\DDTools\Base\Base::toArray()`
 
 Returns all properties of this object as an associative array independent of their visibility.
 
@@ -808,7 +874,7 @@ Returns all properties of this object as an associative array independent of the
 	* Valid values: `mixed`
 
 
-#### `\DDTools\BaseClass::toJSON()`
+#### `\DDTools\Base\Base::toJSON()`
 
 Returns all properties of this object as an JSON string independent of their visibility.
 
@@ -818,19 +884,28 @@ Returns all properties of this object as an JSON string independent of their vis
 * `$result`
 	* Desctription: An JSON string representation of this object.  
 		The method returns all existing properties: public, private and protected.
-	* Valid values: `stringJsonObject`
+	* Valid values:
+		* `stringJsonObject`
+		* `stringJsonArray` — if `$this->toArray` returns indexed array
 	
 * `$result->{$propName}`
 	* Desctription: The key is the object field name and the value is the object field value.
 	* Valid values: `mixed`
 
 
-#### `\DDTools\BaseClass::__toString()`
+#### `\DDTools\Base\Base::__toString()`
 
-The same as `\DDTools\BaseClass::toJSON()`.
+The same as `\DDTools\Base\Base::toJSON()`.
 
 
-#### `\DDTools\BaseClass::createChildInstance($params)`
+### `\DDTools\Base\AncestorTrait`
+
+Simple trait for ancestors with some small methods facilitating your work.
+
+You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
+
+
+#### `\DDTools\Base\AncestorTrait::createChildInstance($params)`
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.
