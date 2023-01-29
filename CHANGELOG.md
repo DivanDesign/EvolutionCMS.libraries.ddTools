@@ -1,6 +1,19 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.56 (2023-01-29)
+* \+ `\ddTools::sort2dArray` → Parameters → `$array[$i]`: Can also be set as object.
+* \* `\DDTools\Base\Base`:
+	* \* The class has been renamed from `\DDTools\BaseClass`. Backward compatibility is maintained (you can still use `\DDTools\BaseClass`, but it is not recommended).
+	* \* The class has become abstract.
+	* \- `createChildInstance`: The method has been removed, use `\DDTools\Base\AncestorTrait::createChildInstance` instead. Backward compatibility is maintained (you can still use `\DDTools\BaseClass::createChildInstance`, but it is not recommended).
+	* \+ `toJSON`: Returns JSON-array if `$this->toArray` returns indexed array.
+* \+ `\DDTools\Base\AncestorTrait`: The new trait.
+* \+ `\DDTools\ObjectCollection`:
+	* \+ `toJSON`, `__toString`: The new public methods. Get an JSON-array of all collection items.
+	* \+ `\DDTools\ObjectCollection::setOneItemData`, `getOneItemData`: The new protected methods.
+
+
 ## Version 0.55.1 (2022-12-03)
 * \* `\DDTools\FilesTools::modifyImage`: Included PHP.libraries.phpThumb has been updated from 1.7.15-202004301145 to 1.7.19-202210110924 (now supports WebP, PHP8, etc).
 
