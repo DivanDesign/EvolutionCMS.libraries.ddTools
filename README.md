@@ -336,8 +336,7 @@ Second, the different order of parameters in the native PHP functions makes us c
 
 #### `\DDTools\ObjectTools::getPropValue($params)`
 
-Get the value of an object property or an array element.
-This is a “syntactic sugar” for getting an element in one way regardless of the “object” type.
+Get the value of an object property or an array element in any nesting level in one way regardless of the “object” type.
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.
@@ -347,14 +346,19 @@ This is a “syntactic sugar” for getting an element in one way regardless of 
 	* **Required**
 	
 * `$params->object`
-	* Desctription: Source object or array.
+	* Desctription: Source object or array.  
+		It can be nested, and elements of all levels can be mix of objects and arrays (see Examples below).
 	* Valid values:
 		* `stdClass`
 		* `array`
 	* **Required**
 	
 * `$params->propName`
-	* Desctription: Object property name or array key.
+	* Desctription: Object property name or array key.  
+		You can also use `'.'` to get nested properties. Several examples (see also full Examples below):
+		* `somePlainProp` — get first-level property
+		* `someObjectProp.secondLevelProp` — get property of the `someObjectProp` object|array
+		* `someArrayProp.0.thirdLevelProp` — get property of the zero element of the `someArrayProp` array
 	* Valid values:
 		* `string`
 		* `integer`
@@ -1566,7 +1570,8 @@ Both calls return `true`.
 
 #### `\DDTools\ObjectTools::getPropValue($params)`
 
-Get the value of an object property or an array element using the same syntax.
+
+##### Get the value of an object property or an array element using the same syntax
 
 You can pass an object:
 
@@ -1593,6 +1598,142 @@ var_export(\DDTools\ObjectTools::getPropValue([
 ```
 
 Both calls return `'Floyd'`.
+
+
+##### Get the value of an object property or an array element in any nesting level
+
+Source object can be nested, and elements of all levels can be mix of objects and arrays.
+
+```php
+//For example let the first level be stdClass
+$sourceObject = (object) [
+	//Let the second level be an indexed array
+	'PinkFloyd' => [
+		//Let the third level be an associative array
+		[
+			'name' => 'Syd Barrett',
+			'role' => 'lead and rhythm guitars, vocals'
+		],
+		[
+			'name' => 'David Gilmour',
+			'role' => 'lead and rhythm guitars, vocals, bass, keyboards, synthesisers'
+		],
+		//Let Roger be a little bit special ;)
+		(object) [
+			'name' => 'Roger Waters',
+			'role' => 'bass, vocals, rhythm guitar, synthesisers'
+		],
+		[
+			'name' => 'Richard Wright',
+			'role' => 'keyboards, piano, organ, synthesisers, vocals'
+		],
+		[
+			'name' => 'Nick Mason',
+			'role' => 'drums, percussion'
+		]
+	]
+];
+```
+
+
+###### Get a first-level property
+
+There's nothing special, just look at this example for the full picture.
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => $sourceObject,
+	'propName' => 'PinkFloyd'
+]));
+```
+
+Returns:
+
+```php
+array (
+	0 => array (
+		'name' => 'Syd Barrett',
+		'role' => 'lead and rhythm guitars, vocals',
+	),
+	1 => array (
+		'name' => 'David Gilmour',
+		'role' => 'lead and rhythm guitars, vocals, bass, keyboards, synthesisers',
+	),
+	2 => stdClass::__set_state(array(
+		 'name' => 'Roger Waters',
+		 'role' => 'bass, vocals, rhythm guitar, synthesisers',
+	)),
+	3 => array (
+		'name' => 'Richard Wright',
+		'role' => 'keyboards, piano, organ, synthesisers, vocals',
+	),
+	4 => array (
+		'name' => 'Nick Mason',
+		'role' => 'drums, percussion',
+	),
+)
+```
+
+
+###### Get a second-level property
+
+Let's make it a little more interesting: let's get the 4th element of the second-level indexed array.
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => $sourceObject,
+	'propName' => 'PinkFloyd.4'
+]));
+```
+
+Returns:
+
+```php
+array (
+	'name' => 'Nick Mason',
+	'role' => 'drums, percussion',
+)
+```
+
+
+###### Get a third-level property
+
+Any level of nesting is supported.
+
+No matter what type of element is used in any nesting level, the method will work fine.
+So let's get Roger's name. As you remember, he is stdClass as opposed to the other members who are associative arrays.
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => $sourceObject,
+	'propName' => 'PinkFloyd.2.name'
+]));
+```
+
+Returns:
+
+```php
+'Roger Waters'
+```
+
+
+###### Of course, it works fine with single-level objects that contain `'.'` in their property names
+
+```php
+var_export(\DDTools\ObjectTools::getPropValue([
+	'object' => [
+		'1973.03.01' => 'The Dark Side of the Moon',
+		'1975.09.12' => 'Wish You Were Here'
+	],
+	'propName' => '1975.09.12'
+]));
+```
+
+Returns:
+
+```php
+'Wish You Were Here'
+```
 
 
 ### `\DDTools\ObjectCollection`

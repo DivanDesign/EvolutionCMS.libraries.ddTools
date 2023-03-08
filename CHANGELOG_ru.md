@@ -1,6 +1,14 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.57 (2023-03-09)
+* \+ `\DDTools\ObjectTools::getPropValue` → Параметры → `$params->propName`: Теперь метод умеет получать значение свойства объекта или элемента массива на любом уровне вложенности. Просто используйте `'.'` в параметре для получения свойств вложенных элементов.  
+	Несколько примеров (см. полные примеры в README):
+	* \* `somePlainProp` — получить свойство первого уровня.
+	* \* `someObjectProp.secondLevelProp` — получить свойство объекта|массива `someObjectProp`.
+	* \* `someArrayProp.0.thirdLevelProp` — получить свойство нулевого элемента массива `someArrayProp`.
+
+
 ## Версия 0.56 (2023-01-29)
 * \+ `\ddTools::sort2dArray` → Параметры → `$array[$i]`: Также может быть задан, как объект.
 * \* `\DDTools\Base\Base`:
