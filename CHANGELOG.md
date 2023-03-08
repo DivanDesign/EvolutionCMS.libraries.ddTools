@@ -1,6 +1,14 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.57 (2023-03-09)
+* \+ `\DDTools\ObjectTools::getPropValue` → Parameters → `$params->propName`: The method can now get the value of an object property or an array element in any nesting level. Just use `'.'` to get nested properties.  
+	Several examples (see full examples in README):
+	* \* `somePlainProp` — get first-level property.
+	* \* `someObjectProp.secondLevelProp` — get property of the `someObjectProp` object|array.
+	* \* `someArrayProp.0.thirdLevelProp` — get property of the zero element of the `someArrayProp` array.
+
+
 ## Version 0.56 (2023-01-29)
 * \+ `\ddTools::sort2dArray` → Parameters → `$array[$i]`: Can also be set as object.
 * \* `\DDTools\Base\Base`:
