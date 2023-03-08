@@ -44,20 +44,22 @@ class ObjectTools {
 	}
 	
 	/**
-	 * getPropValue
-	 * @version 1.0.1 (2020-04-30)
+	 * getSingleLevelPropValue
+	 * @version 1.0 (2023-03-09)
 	 * 
-	 * @see README.md
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->object {stdClass|array} — Source object or array.. @required
+	 * @param $params->propName {string|integer} — Object property name or array key. @required
 	 * 
-	 * @return {mixed}
+	 * @return {mixed|null}
 	 */
-	public static function getPropValue($params){
+	private static function getSingleLevelPropValue($params){
 		$params = (object) $params;
 		
 		return
 			!self::isPropExists($params) ?
 			//Non-existing properties
-			NULL :
+			null :
 			//Existing properties
 			(
 				is_object($params->object) ?
@@ -67,6 +69,60 @@ class ObjectTools {
 				$params->object[$params->propName]
 			)
 		;
+	}
+	
+	/**
+	 * getPropValue
+	 * @version 1.1 (2023-03-09)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {mixed|null}
+	 */
+	public static function getPropValue($params){
+		$params = (object) $params;
+		
+		//First try to get value by original propName
+		$result = self::getSingleLevelPropValue($params);
+		
+		if (is_null($result)){
+			//Unfolding support (e. g. `parentKey.someKey.0`)
+			$propNames = explode(
+				'.',
+				$params->propName
+			);
+			
+			//If first-level exists
+			if (
+				\DDTools\ObjectTools::isPropExists([
+					'object' => $params->object,
+					'propName' => $propNames[0]
+				])
+			){
+				$result = $params->object;
+				
+				//Find needed value
+				foreach (
+					$propNames as
+					$propName
+				){
+					//If need to see deeper
+					if (self::isObjectOrArray($result)){
+						$result = self::getSingleLevelPropValue([
+							'object' => $result,
+							'propName' => $propName
+						]);
+					}else{
+						//We need to look deeper, but we can't
+						$result = null;
+						
+						break;
+					}
+				}
+			}
+		}
+		
+		return $result;
 	}
 	
 	/**
@@ -195,7 +251,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.9 (2021-04-27)
+	 * @version 1.3.10 (2023-03-09)
 	 * 
 	 * @see README.md
 	 * 
@@ -239,7 +295,7 @@ class ObjectTools {
 					
 					if ($isSourcePropExists){
 						//Source property value
-						$sourcePropValue = self::getPropValue([
+						$sourcePropValue = self::getSingleLevelPropValue([
 							'object' => $result,
 							'propName' => $additionalPropName
 						]);
