@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.58 (2023-03-21)
+* \+ `\DDTools\Base\AncestorTrait::createChildInstance` → Parameters → `$params->parentDir`: Is no longer required and by default is equal to dirname of a class that uses this trait.
+
+
 ## Version 0.57 (2023-03-09)
 * \+ `\DDTools\ObjectTools::getPropValue` → Parameters → `$params->propName`: The method can now get the value of an object property or an array element in any nesting level. Just use `'.'` to get nested properties.  
 	Several examples (see full examples in README):
