@@ -4,7 +4,7 @@ namespace DDTools\Base;
 trait AncestorTrait {
 	/**
 	 * createChildInstance
-	 * @version 1.1.1 (2019-08-22)
+	 * @version 1.1.2 (2023-03-21)
 	 * 
 	 * @see README.md
 	 * 
@@ -20,30 +20,30 @@ trait AncestorTrait {
 			(array) $params
 		);
 		
-		$thisClassName = get_called_class();
+		//Capitalize child name if needed
+		if ($params->capitalizeName){
+			$params->name = ucfirst(strtolower($params->name));
+		}
+		
+		$thisClassNameFull = get_called_class();
 		
 		$thisNameSpace = substr(
-			$thisClassName,
+			$thisClassNameFull,
 			0,
 			strrpos(
-				$thisClassName,
+				$thisClassNameFull,
 				'\\'
 			)
 		);
 		
 		//Current classname without namespace
 		$thisClassName = substr(
-			$thisClassName,
+			$thisClassNameFull,
 			strrpos(
-				$thisClassName,
+				$thisClassNameFull,
 				'\\'
 			) + 1
 		);
-		
-		//Capitalize child name if needed
-		if ($params->capitalizeName){
-			$params->name = ucfirst(strtolower($params->name));
-		}
 		
 		$filePath =
 			$params->parentDir .
