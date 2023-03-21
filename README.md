@@ -918,11 +918,6 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 		* `arrayAssociative`
 	* **Required**
 	
-* `$params->parentDir`
-	* Desctription: Directory of the parent file (e. g. `__DIR__`).
-	* Valid values: `string`
-	* **Required**
-	
 * `$params->name`
 	* Desctription: Class name.
 	* Valid values: `string`
@@ -934,6 +929,11 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 		* `stdClass`
 		* `arrayAssociative`
 	* Default value: `[]`
+	
+* `$params->parentDir`
+	* Desctription: Directory of the parent file (e. g. `__DIR__`).
+	* Valid values: `string`
+	* Default value: — (dirname of a class that uses this trait)
 	
 * `$params->capitalizeName`
 	* Desctription: Need to capitalize child name?
