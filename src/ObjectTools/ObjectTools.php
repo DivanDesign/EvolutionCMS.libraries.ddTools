@@ -127,7 +127,7 @@ class ObjectTools {
 	
 	/**
 	 * convertType
-	 * @version 1.2 (2021-11-08)
+	 * @version 1.2.1 (2023-03-29)
 	 * 
 	 * @see README.md
 	 */
@@ -222,8 +222,12 @@ class ObjectTools {
 		//array
 		}elseif ($params->type == 'objectarray'){
 			$result = (array) $result;
-		//stringQueryFormated
-		}elseif ($params->type == 'stringqueryformated'){
+		//stringQueryFormatted
+		}elseif (
+			$params->type == 'stringqueryformatted' ||
+			//Backward compatibility with typo
+			$params->type == 'stringqueryformated'
+		){
 			$result = http_build_query($result);
 		//stringJson
 		}elseif(

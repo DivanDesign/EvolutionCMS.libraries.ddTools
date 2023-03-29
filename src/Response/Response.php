@@ -143,7 +143,7 @@ class Response {
 	
 	/**
 	 * setMeta
-	 * @version 1.4 (2021-05-11)
+	 * @version 1.4.1 (2023-03-29)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -152,7 +152,7 @@ class Response {
 	 * @return {boolean}
 	 */
 	public function setMeta($meta = []){
-		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormated
+		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormatted
 		if (!is_array($meta)){
 			$meta = \DDTools\ObjectTools::convertType([
 				'object' => $meta,
@@ -238,7 +238,7 @@ class Response {
 	
 	/**
 	 * setMetaData
-	 * @version 1.0 (2021-05-11)
+	 * @version 1.0.1 (2023-03-29)
 	 * 
 	 * @desc Setter for $this->meta and $this->data.
 	 * 
@@ -247,7 +247,7 @@ class Response {
 	 * @return {void}
 	 */
 	public function setMetaData($params){
-		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormated
+		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormatted
 		if (!is_array($params)){
 			$params = \DDTools\ObjectTools::convertType([
 				'object' => $params,

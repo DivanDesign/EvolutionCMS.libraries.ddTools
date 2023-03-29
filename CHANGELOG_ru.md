@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.58.1 (2023-03-29)
+* \* `\DDTools\ObjectTools::convertType` → Параметры → `$params->type` → Допустимые значения → `'stringQueryFormatted'`: Исправлена ошибка в написании. Некорректное значение `'stringQueryFormated'` также поддерживается для обратной совместимости.
+
+
 ## Версия 0.58 (2023-03-21)
 * \+ `\DDTools\Base\AncestorTrait::createChildInstance` → Параметры → `$params->parentDir`: Больше не обязателен и по умолчанию равен папке класса, использующего этот трейт.
 
@@ -61,7 +65,7 @@
 
 
 ## Версия 0.51 (2021-11-08)
-* \+ `\DDTools\ObjectTools::convertType`: Добавлена возможность конвертировать в `stringQueryFormated`.
+* \+ `\DDTools\ObjectTools::convertType`: Добавлена возможность конвертировать в `stringQueryFormatted`.
 
 
 ## Версия 0.50 (2021-05-11)
@@ -71,7 +75,7 @@
 		* \+ `$meta['success']`: Больше не обязателен и по умолчанию будет равен `true`.
 		* \+ `$meta['code']`: Больше не обязателен и по умолчанию будет равен `200` или `400` в зависимости от `$meta['success']`.
 		* \+ `$meta`:
-		 	* \+ Также может быть задан как stdClass, stringJsonObject, stringHjsonObject, stringQueryFormated.
+		 	* \+ Также может быть задан как stdClass, stringJsonObject, stringHjsonObject, stringQueryFormatted.
 			* \+ Больше не обязателен и по умолчанию будет равен `['success' => true, 'code' => 200]`.
 	* \+ `setMetaMessage`: Если `$this->meta` не задано, будет задано со значениями по умолчанию `success` и `code`.
 
