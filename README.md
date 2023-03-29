@@ -1161,6 +1161,82 @@ extract(\ddTools::verifyRenamedParams([
 ```
 
 
+### `\ddTools::parseText($params)`
+
+
+#### Basic example
+
+```php
+\ddTools::parseText([
+	'text' => '
+		<article>
+			<h1>[+title+]</h1>
+			[+text+]
+			<p>[+authorFirstName+] [+authorLastName+], [+date+].</p>
+		</article>
+	',
+	'data' => [
+		'title' => 'Bethink Yourselves!',
+		'text' => '<p>Question your loyalty to your country and government and strive for a more just and peaceful society.</p>',
+		'authorFirstName' => 'Leo',
+		'authorLastName' => 'Tolstoy',
+		'date' => '1904'
+	]
+]);
+```
+
+Returns:
+
+```html
+<article>
+	<h1>Bethink Yourselves!</h1>
+	<p>Question your loyalty to your country and government and strive for a more just and peaceful society.</p>
+	<p>Leo Tolstoy, 1904.</p>
+</article>
+```
+
+
+#### Nested objects in `$params->data`
+
+```php
+\ddTools::parseText([
+	//Data can have a complex nested structure
+	'data' => [
+		'title' => 'Bethink Yourselves!',
+		'text' => '<p>Question your actions and consider the morality behind them.</p>',
+		//Note that this is not a string, but that's okay
+		'meta' => [
+			//Moreover, any depth is supported
+			'author' => [
+				'firstName' => 'Leo',
+				'lastName' => 'Tolstoy',
+			],
+			'date' => '1904'
+		]
+	],
+	//For nested data you can use placeholders like '[+meta.date+]' for getting a property
+	//Or like '[+meta+]' to get whole object as JSON
+	'text' => '
+		<article data-meta=\'[+meta+]\'>
+			<h1>[+title+]</h1>
+			[+text+]
+			<p>[+meta.author.firstName+] [+meta.author.lastName+], [+meta.date+].</p>
+		</article>
+	'
+]);
+```
+
+Returns:
+
+```html
+<article data-meta='{"author":{"firstName":"Leo","lastName":"Tolstoy"},"date":"1904"}'>
+	<h1>Bethink Yourselves!</h1>
+	<p>Question your actions and consider the morality behind them.</p>
+	<p>Leo Tolstoy, 1904.</p>
+</article>
+```
+
+
 ### `\DDTools\ObjectTools`
 
 
