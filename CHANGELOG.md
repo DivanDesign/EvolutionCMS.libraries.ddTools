@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.58.1 (2023-03-29)
+* \* `\DDTools\ObjectTools::convertType` → Parameters → `$params->type` → Valid values → `'stringQueryFormatted'`: A mistake has been fixed. The incorrect value `'stringQueryFormated'` is also supported for backward compatibility.
+
+
 ## Version 0.58 (2023-03-21)
 * \+ `\DDTools\Base\AncestorTrait::createChildInstance` → Parameters → `$params->parentDir`: Is no longer required and by default is equal to dirname of a class that uses this trait.
 
