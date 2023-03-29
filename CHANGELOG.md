@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.59 (2023-03-30)
+* \+ `\ddTools::parseText`: In addition to accessing nested properties via placeholders like `'[+prop.subProp+]'`, you can get whole object as JSON via placeholders like `'[+prop+]'` (see README → Examples).
+
+
 ## Version 0.58.1 (2023-03-29)
 * \* `\DDTools\ObjectTools::convertType` → Parameters → `$params->type` → Valid values → `'stringQueryFormatted'`: A mistake has been fixed. The incorrect value `'stringQueryFormated'` is also supported for backward compatibility.
 

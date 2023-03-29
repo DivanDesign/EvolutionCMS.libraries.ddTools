@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.59 (2023-03-30)
+* \+ `\ddTools::parseText`: Помимо доступа свойствам вложенных объектов через плейсхоледры вида `'[+prop.subProp+]'`, вы также можете получить весь объект в JSON через плейсхолдеры вида `'[+prop+]'` (см. README → Примеры).
+
+
 ## Версия 0.58.1 (2023-03-29)
 * \* `\DDTools\ObjectTools::convertType` → Параметры → `$params->type` → Допустимые значения → `'stringQueryFormatted'`: Исправлена ошибка в написании. Некорректное значение `'stringQueryFormated'` также поддерживается для обратной совместимости.
 
