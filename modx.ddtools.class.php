@@ -690,7 +690,7 @@ class ddTools {
 	 * 1. [JSON](https://en.wikipedia.org/wiki/JSON).
 	 * 2. [Query string](https://en.wikipedia.org/wiki/Query_string).
 	 * 
-	 * @param $inputString {stringJsonObject|stringJsonArray|stringQueryFormated|stdClass|array} — Input string. @required
+	 * @param $inputString {stringJsonObject|stringJsonArray|stringQueryFormatted|stdClass|array} — Input string. @required
 	 * 
 	 * @return {array}
 	 */

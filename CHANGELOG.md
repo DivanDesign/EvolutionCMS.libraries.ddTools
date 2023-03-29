@@ -61,7 +61,7 @@
 
 
 ## Version 0.51 (2021-11-08)
-* \+ `\DDTools\ObjectTools::convertType`: Added the ability to return `stringQueryFormated`.
+* \+ `\DDTools\ObjectTools::convertType`: Added the ability to return `stringQueryFormatted`.
 
 
 ## Version 0.50 (2021-05-11)
@@ -71,7 +71,7 @@
 		* \+ `$meta['success']`: Is not required anymore and by default will be equal to `true`.
 		* \+ `$meta['code']`: Is not required anymore and by default will be equal to `200` or `400` depending on `$meta['success']`.
 		* \+ `$meta`:
-		 	* \+ Can also be set as stdClass, stringJsonObject, stringHjsonObject, stringQueryFormated.
+		 	* \+ Can also be set as stdClass, stringJsonObject, stringHjsonObject, stringQueryFormatted.
 			* \+ Is not required anymore and by default will be equal to `['success' => true, 'code' => 200]`.
 	* \+ `setMetaMessage`: If `$this->meta` is not set, it will be set with default values of `success` and `code`.
 
