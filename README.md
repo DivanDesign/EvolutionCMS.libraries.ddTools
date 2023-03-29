@@ -2128,6 +2128,7 @@ array(
 * [Home page](https://code.divandesign.biz/modx/ddtools)
 * [Telegram chat](https://t.me/dd_code)
 * [Packagist](https://packagist.org/packages/dd/evolutioncms-libraries-ddtools)
+* [GitHub](https://github.com/DivanDesign/EvolutionCMS.libraries.ddTools)
 
 
 <link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
