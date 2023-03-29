@@ -893,7 +893,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.6.2 (2021-12-09)
+	 * @version 1.7 (2023-03-29)
 	 * 
 	 * @see README.md
 	 */
@@ -940,11 +940,6 @@ class ddTools {
 			]);
 		}
 		
-		//Unfold for nested objects and arrays support (e. g. ['some' => ['a' => 'one', 'b' => 'two'] ] → '[+some.a+]', '[+some.b+]'; ['some' => ['one', 'two'] ] → '[+some.0+]', '[some.1]')
-		$params->data = \DDTools\ObjectTools::unfold([
-			'object' => $params->data
-		]);
-		
 		
 		$result = $params->text;
 		
@@ -953,6 +948,36 @@ class ddTools {
 			$key =>
 			$value
 		){
+			if (
+				is_object($value) ||
+				is_array($value)
+			){
+				//Unfold for nested objects and arrays support (e. g. ['some' => ['a' => 'one', 'b' => 'two'] ] → '[+some.a+]', '[+some.b+]'; ['some' => ['one', 'two'] ] → '[+some.0+]', '[some.1]')
+				$unfoldedValue = \DDTools\ObjectTools::unfold([
+					'object' => [
+						$key => $value
+					]
+				]);
+				
+				foreach (
+					$unfoldedValue as
+					$unfoldedValue_itemKey =>
+					$unfoldedValue_itemValue
+				){
+					$result = str_replace(
+						$params->placeholderPrefix . $unfoldedValue_itemKey . $params->placeholderSuffix,
+						$unfoldedValue_itemValue,
+						$result
+					);
+				}
+				
+				//Also add object value as JSON
+				$value = \DDTools\ObjectTools::convertType([
+					'object' => $value,
+					'type' => 'stringJsonAuto'
+				]);
+			}
+			
 			$result = str_replace(
 				$params->placeholderPrefix . $key . $params->placeholderSuffix,
 				$value,
