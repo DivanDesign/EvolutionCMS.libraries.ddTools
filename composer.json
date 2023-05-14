@@ -9,23 +9,16 @@
 		"modx evolution",
 		"ddtools"
 	],
-	"homepage": "https://code.divandesign.biz/modx/ddtools",
+	"homepage": "https://code.divandesign.ru/modx/ddtools",
 	"authors": [
-		{
-			"name": "DD Group",
-			"email": "code@DivanDesign.biz",
-			"homepage": "https://code.divandesign.biz",
-			"role": "Owner"
-		},
 		{
 			"name": "Ilyas Ronef",
 			"email": "ilyas@DivanDesign.ru",
 			"homepage": "https://ronef.ru",
-			"role": "Developer"
+			"role": "Owner"
 		},
 		{
 			"name": "Alexey Davydov",
-			"email": "davalemic@DivanDesign.ru",
 			"homepage": "https://github.com/davalemic",
 			"role": "Developer"
 		},

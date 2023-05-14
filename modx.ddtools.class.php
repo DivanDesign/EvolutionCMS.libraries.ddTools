@@ -5,7 +5,7 @@
  * 
  * @see README.md
  * 
- * @copyright 2012–2023 DD Group {@link https://DivanDesign.biz }
+ * @copyright 2012–2023 Ronef {@link https://Ronef.ru }
  */
 
 global $modx;
@@ -2423,7 +2423,7 @@ class ddTools {
 	 * @desc Adds a required JS-file into a required MODX inner list according to its version and name. The method is used to register the scripts, that has already been connected manually.
 	 * Be advised that the method does not add script code, but register its name and version to avoid future connections with $modx->regClientScript and $modx->regClientStartupScript, and the script code will be deleted if the script had been connected with $modx->regClientScript or $modx->regClientStartupScript.
 	 * 
-	 * @see ddRegJsCssLinks snippet (http://code.divandesign.biz/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
+	 * @see ddRegJsCssLinks snippet (http://code.divandesign.ru/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
 	 * @param $params->name {string} — Script name. @required
