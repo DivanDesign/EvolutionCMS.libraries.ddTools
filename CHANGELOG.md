@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.60 (2023-05-14)
+* \+ `\ddTools::getTpl`: The new public method (see README).
+
+
 ## Version 0.59 (2023-03-30)
 * \+ `\ddTools::parseText`: In addition to accessing nested properties via placeholders like `'[+prop.subProp+]'`, you can get whole object as JSON via placeholders like `'[+prop+]'` (see README → Examples).
 
