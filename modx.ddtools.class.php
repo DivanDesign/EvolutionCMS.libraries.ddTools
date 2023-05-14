@@ -892,6 +892,40 @@ class ddTools {
 	}
 	
 	/**
+	 * getTpl
+	 * @version 1.0 (2023-05-14)
+	 * 
+	 * @see README.md
+	 */
+	public static function getTpl($tpl = ''){
+		//Cast the parameter to a string
+		$tpl = $tpl . '';
+		
+		$result = $tpl;
+		
+		if (!empty($tpl)){
+			//$modx->getTpl('@CODE:') returns '@CODE:' O_o
+			if (
+				substr(
+					$tpl,
+					0,
+					6
+				) ==
+				'@CODE:'
+			){
+				$result = substr(
+					$tpl,
+					6
+				);
+			}else{
+				$result = self::$modx->getTpl($tpl);
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
 	 * parseText
 	 * @version 1.7 (2023-03-29)
 	 * 
