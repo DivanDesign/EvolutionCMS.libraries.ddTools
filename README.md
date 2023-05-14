@@ -94,6 +94,28 @@ All kinds of query parameters, hash, ports, etc. are not modified.
 	* Valid values: `string`
 
 
+### `\ddTools::getTpl($tpl = '')`
+
+The same as `$modx->getTpl` with some differences:
+* This method always returns `string` regardless of the parameter type. For example, `$modx->getTpl(null)` returns `null`, this method returns `''`.
+* The parameter is optional. `$modx->getTpl()` throws an error, this method jsut returns `''`.
+* `$modx->getTpl('@CODE:')` returns `'@CODE:'`, this method returns `''`.
+
+* `$tpl`
+	* Desctription: Chunk name or inline template.
+	* Valid values:
+		* `stringChunkName`
+		* `string` — use inline templates starting with `@CODE:`
+	* Default value: `''`
+
+
+#### Returns
+
+* `$result`
+	* Desctription: Required template.
+	* Valid values: `string`
+
+
 ### `\ddTools::parseText($params)`
 
 Replaces placeholders in a text with required values.
@@ -835,7 +857,7 @@ It's convenient to override this method in child classes if items are not plain 
 Simple abstract class with some small methods facilitating your work.
 It is convenient to inherit your classes from this.
 
-You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
+You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.ru/modx/ddgetdocumentfield) code.
 
 
 #### `\DDTools\Base\Base::setExistingProps($props)`
@@ -906,7 +928,7 @@ The same as `\DDTools\Base\Base::toJSON()`.
 
 Simple trait for ancestors with some small methods facilitating your work.
 
-You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.biz/modx/ddgetdocumentfield) code.
+You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.ru/modx/ddgetdocumentfield) code.
 
 
 #### `\DDTools\Base\AncestorTrait::createChildInstance($params)`
@@ -2201,10 +2223,10 @@ array(
 
 ## Links
 
-* [Home page](https://code.divandesign.biz/modx/ddtools)
+* [Home page](https://code.divandesign.ru/modx/ddtools)
 * [Telegram chat](https://t.me/dd_code)
 * [Packagist](https://packagist.org/packages/dd/evolutioncms-libraries-ddtools)
 * [GitHub](https://github.com/DivanDesign/EvolutionCMS.libraries.ddTools)
 
 
-<link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/DivanDesign/CSS.ddMarkdown/master/style.min.css" />

@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.60 (2023-05-14)
+* \+ `\ddTools::getTpl`: The new public method (see README).
+
+
 ## Version 0.59 (2023-03-30)
 * \+ `\ddTools::parseText`: In addition to accessing nested properties via placeholders like `'[+prop.subProp+]'`, you can get whole object as JSON via placeholders like `'[+prop+]'` (see README → Examples).
 
@@ -557,5 +561,5 @@
 * \+ The first release.
 
 
-<link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/DivanDesign/CSS.ddMarkdown/master/style.min.css" />
 <style>ul{list-style:none;}</style>

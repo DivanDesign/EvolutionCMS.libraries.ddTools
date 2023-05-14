@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.60 (2023-05-14)
+* \+ `\ddTools::getTpl`: Новый публичный метод (см. README).
+
+
 ## Версия 0.59 (2023-03-30)
 * \+ `\ddTools::parseText`: Помимо доступа свойствам вложенных объектов через плейсхоледры вида `'[+prop.subProp+]'`, вы также можете получить весь объект в JSON через плейсхолдеры вида `'[+prop+]'` (см. README → Примеры).
 
@@ -559,5 +563,5 @@
 * \+ Первый релиз.
 
 
-<link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/DivanDesign/CSS.ddMarkdown/master/style.min.css" />
 <style>ul{list-style:none;}</style>

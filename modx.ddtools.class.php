@@ -1,11 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.59 (2023-03-30)
+ * @version 0.60 (2023-05-14)
  * 
  * @see README.md
  * 
- * @copyright 2012–2023 DD Group {@link https://DivanDesign.biz }
+ * @copyright 2012–2023 Ronef {@link https://Ronef.ru }
  */
 
 global $modx;
@@ -889,6 +889,40 @@ class ddTools {
 			$params->message,
 			$params->source
 		);
+	}
+	
+	/**
+	 * getTpl
+	 * @version 1.0 (2023-05-14)
+	 * 
+	 * @see README.md
+	 */
+	public static function getTpl($tpl = ''){
+		//Cast the parameter to a string
+		$tpl = $tpl . '';
+		
+		$result = $tpl;
+		
+		if (!empty($tpl)){
+			//$modx->getTpl('@CODE:') returns '@CODE:' O_o
+			if (
+				substr(
+					$tpl,
+					0,
+					6
+				) ==
+				'@CODE:'
+			){
+				$result = substr(
+					$tpl,
+					6
+				);
+			}else{
+				$result = self::$modx->getTpl($tpl);
+			}
+		}
+		
+		return $result;
 	}
 	
 	/**
@@ -2389,7 +2423,7 @@ class ddTools {
 	 * @desc Adds a required JS-file into a required MODX inner list according to its version and name. The method is used to register the scripts, that has already been connected manually.
 	 * Be advised that the method does not add script code, but register its name and version to avoid future connections with $modx->regClientScript and $modx->regClientStartupScript, and the script code will be deleted if the script had been connected with $modx->regClientScript or $modx->regClientStartupScript.
 	 * 
-	 * @see ddRegJsCssLinks snippet (http://code.divandesign.biz/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
+	 * @see ddRegJsCssLinks snippet (http://code.divandesign.ru/modx/ddregjscsslinks), предназначенный для «правильного» подключения js и css. Даже при «ручном» подключении сниппет регистрирует то, что подключил, используя данный метод.
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
 	 * @param $params->name {string} — Script name. @required
