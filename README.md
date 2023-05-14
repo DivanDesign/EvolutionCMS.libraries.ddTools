@@ -2229,4 +2229,4 @@ array(
 * [GitHub](https://github.com/DivanDesign/EvolutionCMS.libraries.ddTools)
 
 
-<link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/DivanDesign/CSS.ddMarkdown/master/style.min.css" />
