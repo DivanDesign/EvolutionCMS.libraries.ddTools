@@ -431,6 +431,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `'stringJsonObject'`
 		* `'stringJsonArray'`
 		* `'stringQueryFormatted'`
+		* `'stringHtmlAttrs'` — HTML attributes string (e. g. `width='100' height='50'`), boolean values will be converted to `0` or `1` (e. g. `data-is-loaded='1'`), objects/arrays will be converted to JSON string (e. g. `data-user-data='{"firstName": "Elon", "lastName": "Musk"}'`)
 	* Default value: `'objectAuto'`
 
 
@@ -1366,6 +1367,36 @@ stdClass::__set_state(array(
 Starts and ends with triple quotes.
 A simple syntax and easy to read.',
 ))
+```
+
+
+##### Convert an associative array to a string of HTML attributes
+
+```php
+\DDTools\ObjectTools::convertType([
+	'object' => [
+		'data-name' => 'KINO',
+		//Will be converted to 1
+		'data-is-active' => true,
+		//Will be converted to JSON array
+		'data-members' => [
+			'Viktor Tsoi',
+			'Yuri Kasparyan',
+			'Aleksei Rybin',
+			'Igor Tikhomirov',
+			'Aleksandr Titov',
+			'Georgy Guryanov',
+			'Oleg Valinsky',
+		],
+	],
+	'type' => 'stringHtmlAttrs'
+]);
+```
+
+Returns:
+
+```html
+data-name='KINO' data-is-active='1' data-members='["Viktor Tsoi","Yuri Kasparyan","Aleksei Rybin","Igor Tikhomirov","Aleksandr Titov","Georgy Guryanov","Oleg Valinsky"]'
 ```
 
 
