@@ -127,7 +127,7 @@ class ObjectTools {
 	
 	/**
 	 * convertType
-	 * @version 1.2.1 (2023-03-29)
+	 * @version 1.3 (2023-10-01)
 	 * 
 	 * @see README.md
 	 */
@@ -229,6 +229,43 @@ class ObjectTools {
 			$params->type == 'stringqueryformated'
 		){
 			$result = http_build_query($result);
+		//stringHtmlAttrs
+		}elseif ($params->type == 'stringhtmlattrs'){
+			$resultObject = $result;
+			//Temporary use an array
+			$result = [];
+			
+			foreach (
+				$resultObject as
+				$result_itemAttrName =>
+				$result_itemAttrValue
+			){
+				//Prepare value
+				//Boolean to 0|1
+				if (is_bool($result_itemAttrValue)){
+					$result_itemAttrValue = intval($result_itemAttrValue);
+				//Objects to JSON
+				}elseif(self::isObjectOrArray($result_itemAttrValue)){
+					$result_itemAttrValue = self::convertType([
+						'object' => $result_itemAttrValue,
+						'type' => 'stringJsonAuto',
+					]);
+				//Other to string
+				}else{
+					$result_itemAttrValue = strval($result_itemAttrValue);
+				}
+				
+				$result[] =
+					$result_itemAttrName . '=\'' .
+					$result_itemAttrValue .
+					'\''
+				;
+			}
+			
+			$result = implode(
+				' ',
+				$result
+			);
 		//stringJson
 		}elseif(
 			substr(

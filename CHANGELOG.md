@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.61 (2023-10-01)
+* \+ `\DDTools\ObjectTools::convertType` → Parameters → `$params->type` → Valid values → `'stringHtmlAttrs'`: The new available value. Allows conversion to an HTML attributes string (see README → Examples).
+
+
 ## Version 0.60 (2023-05-14)
 * \+ `\ddTools::getTpl`: The new public method (see README).
 
