@@ -19,7 +19,7 @@ class ObjectTools {
 	
 	/**
 	 * isPropExists
-	 * @version 1.0 (2020-04-30)
+	 * @version 1.0.1 (2023-12-03)
 	 * 
 	 * @see README.md
 	 * 
@@ -35,10 +35,15 @@ class ObjectTools {
 				$params->object,
 				$params->propName
 			) :
-			//Arrays
-			array_key_exists(
-				$params->propName,
-				$params->object
+			(
+				is_array($params->object) ?
+				//Arrays
+				array_key_exists(
+					$params->propName,
+					$params->object
+				) :
+				//Always not exist for other types for less fragility
+				false
 			)
 		;
 	}
