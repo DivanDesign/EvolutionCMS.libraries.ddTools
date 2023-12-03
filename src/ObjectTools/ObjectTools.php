@@ -78,14 +78,22 @@ class ObjectTools {
 	
 	/**
 	 * getPropValue
-	 * @version 1.1 (2023-03-09)
+	 * @version 1.2 (2023-12-03)
 	 * 
 	 * @see README.md
 	 * 
 	 * @return {mixed|null}
 	 */
 	public static function getPropValue($params){
-		$params = (object) $params;
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'notFoundResult' => null
+				],
+				$params
+			]
+		]);
 		
 		//First try to get value by original propName
 		$result = self::getSingleLevelPropValue($params);
@@ -125,6 +133,13 @@ class ObjectTools {
 					}
 				}
 			}
+		}
+		
+		if (
+			!is_null($params->notFoundResult) &&
+			is_null($result)
+		){
+			$result = $params->notFoundResult;
 		}
 		
 		return $result;

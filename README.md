@@ -385,6 +385,11 @@ Get the value of an object property or an array element in any nesting level in 
 		* `string`
 		* `integer`
 	* **Required**
+	
+* `$params->notFoundResult`
+	* Desctription: What will be returned when property is not found.
+	* Valid values: `mixed`
+	* Default value: `null`
 
 
 ##### Returns
@@ -393,7 +398,7 @@ Get the value of an object property or an array element in any nesting level in 
 	* Desctription: Value of an object property or an array element.
 	* Valid values:
 		* `mixed`
-		* `NULL` — if property not exists
+		* `$params->notFoundResult` — if property not exists
 
 
 #### `\DDTools\ObjectTools::convertType($params)`
