@@ -90,7 +90,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * convertItemsType
-	 * @version 1.0.2 (2022-12-28)
+	 * @version 1.0.3 (2023-12-25)
 	 * 
 	 * @see README.md
 	 */
@@ -124,8 +124,8 @@ class ObjectCollection extends \DDTools\Base\Base {
 				])
 			){
 				$this->setOneItemData([
-					'itemIndex' => $itemIndex,
-					'itemData' => \DDTools\ObjectTools::convertType([
+					'index' => $itemIndex,
+					'data' => \DDTools\ObjectTools::convertType([
 						'object' => $this->getOneItemData([
 							'itemObject' => $itemObject
 						]),
@@ -138,7 +138,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * updateItems
-	 * @version 1.0.2 (2022-12-28)
+	 * @version 1.0.3 (2023-12-25)
 	 * 
 	 * @see README.md
 	 */
@@ -175,8 +175,8 @@ class ObjectCollection extends \DDTools\Base\Base {
 				])
 			){
 				$this->setOneItemData([
-					'itemIndex' => $itemIndex,
-					'itemData' => \DDTools\ObjectTools::extend([
+					'index' => $itemIndex,
+					'data' => \DDTools\ObjectTools::extend([
 						'objects' => [
 							$this->getOneItemData([
 								'itemObject' => $itemObject
@@ -370,20 +370,27 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * setOneItemData
-	 * @version 1.0 (2022-12-27)
+	 * @version 1.0.1 (2023-12-25)
 	 * 
 	 * @desc Sets data of an item object. All setting of an item data inside the class must be use this method. It's convenient to override this method in child classes if items are not plain objects.
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->itemIndex {integer} — Item index which data will be set. @required
-	 * @param $params->itemData {array|object} — New item data. @required
+	 * @param $params->index {integer} — Item index which data will be set. @required
+	 * @param $params->data {array|object} — New item data. @required
 	 * 
 	 * @return {void}
 	 */
 	protected function setOneItemData($params){
-		$params = (object) $params;
+		$params = \ddTools::verifyRenamedParams([
+			'params' => (object) $params,
+			'compliance' => [
+				'index' => 'itemIndex',
+				'data' => 'itemData',
+			],
+			'returnCorrectedOnly' => false,
+		]);
 		
-		$this->items[$params->itemIndex] = $params->itemData;
+		$this->items[$params->index] = $params->data;
 	}
 	
 	/**

@@ -816,12 +816,12 @@ It's convenient to override this method in child classes if items are not plain 
 		* `arrayAssociative`
 	* **Required**
 	
-* `$params->itemIndex`
+* `$params->index`
 	* Desctription: Item index which data will be set.
 	* Valid values: `integer`
 	* **Required**
 	
-* `$params->itemData`
+* `$params->data`
 	* Desctription: New item data.
 	* Valid values:
 		* `array` — indexed arrays are supported as well as associative
