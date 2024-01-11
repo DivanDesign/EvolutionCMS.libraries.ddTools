@@ -558,17 +558,29 @@ class Table {
 	
 	/**
 	 * items_updateOne
-	 * @version 1.0 (2023-12-25)
+	 * @version 1.1 (2024-01-11)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
 	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values. @required
 	 * @param $params->where {string} — SQL 'WHERE' clause. Default: '' (first found item will be updated).
+	 * @param $params->isEnabledAddNotFound {boolean} — Is allowed to add item if it is not exist? Default: false.
 	 * 
 	 * @return $result {stdClass|null} — An added item object or `null` if fail.
 	 * @return $result->id {integer} — ID of added item.
 	 */
 	public function items_updateOne($params): ?\stdClass {
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'isEnabledAddNotFound' => false,
+					'data' => [],
+				],
+				$params
+			]
+		]);
+		
 		$result = $this->items_update(
 			\DDTools\ObjectTools::extend([
 				'objects' => [
@@ -583,7 +595,13 @@ class Table {
 		if (!empty($result)){
 			$result = $result[0];
 		}else{
-			$result = null;
+			if ($params->isEnabledAddNotFound){
+				$result = $this->items_addOne([
+					'data' => $params->data
+				]);
+			}else{
+				$result = null;
+			}
 		}
 		
 		return $result;
