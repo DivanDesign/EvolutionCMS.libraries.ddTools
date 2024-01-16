@@ -34,7 +34,13 @@ class Storage extends \DDTools\Storage\Storage {
 		 * @property $columns->items[$i]->isComparedCaseSensitive {boolean} — Should column to be compared case-sensitive in where clauses? Default: false.
 		 * @property $columns->items[$i]->isTagsAllowed {boolean} — Are HTML and MODX tags allowed? Default: false.
 		 */
-		$columns = []
+		$columns = [
+			[
+				'name' => 'id',
+				'attrs' => 'INTEGER(10) AUTO_INCREMENT PRIMARY KEY',
+				'isReadOnly' => true,
+			],
+		]
 	;
 	
 	/**
