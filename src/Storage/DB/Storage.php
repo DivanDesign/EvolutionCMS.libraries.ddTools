@@ -432,7 +432,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.3.2 (2023-12-29)
+	 * @version 1.3.3 (2024-01-16)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
@@ -473,58 +473,60 @@ class Storage extends \DDTools\Storage\Storage {
 			])
 		);
 		
-		//Collect all updated resource IDs to a SQL variable
-		\ddTools::$modx->db->query('SET @updated_ids := ""');
-		\ddTools::$modx->db->query('
-			UPDATE
-				' . $this->nameFull . '
-			SET
-				' . $this->buildSqlSetString(['data' => $params->data]) . '
-			WHERE
-				(
-					' . $this->buildSqlWhereString($params) . '
-				)
-				AND (
-					@updated_ids := IF (
-						@updated_ids = "",
-						`id`,
-						CONCAT_WS(
-							",",
+		if (!empty($params->data)){
+			//Collect all updated resource IDs to a SQL variable
+			\ddTools::$modx->db->query('SET @updated_ids := ""');
+			\ddTools::$modx->db->query('
+				UPDATE
+					' . $this->nameFull . '
+				SET
+					' . $this->buildSqlSetString(['data' => $params->data]) . '
+				WHERE
+					(
+						' . $this->buildSqlWhereString($params) . '
+					)
+					AND (
+						@updated_ids := IF (
+							@updated_ids = "",
 							`id`,
-							@updated_ids
+							CONCAT_WS(
+								",",
+								`id`,
+								@updated_ids
+							)
 						)
 					)
-				)
-			' . static::buildSqlLimitString($params) . '
-		');
-		$dbResult = \ddTools::$modx->db->getValue(
-			\ddTools::$modx->db->query('
-				SELECT @updated_ids
-			')
-		);
-		
-		//Comma separated string or fail
-		if (
-			is_string($dbResult) &&
-			!empty($dbResult)
-		){
-			$dbResult = explode(
-				',',
-				$dbResult
+				' . static::buildSqlLimitString($params) . '
+			');
+			$dbResult = \ddTools::$modx->db->getValue(
+				\ddTools::$modx->db->query('
+					SELECT @updated_ids
+				')
 			);
 			
-			foreach (
-				$dbResult as
-				$itemId
+			//Comma separated string or fail
+			if (
+				is_string($dbResult) &&
+				!empty($dbResult)
 			){
-				$result[] = \DDTools\ObjectTools::extend([
-					'objects' => [
-						(object) [
-							'id' => $itemId
-						],
-						$params->data
-					]
-				]);
+				$dbResult = explode(
+					',',
+					$dbResult
+				);
+				
+				foreach (
+					$dbResult as
+					$itemId
+				){
+					$result[] = \DDTools\ObjectTools::extend([
+						'objects' => [
+							(object) [
+								'id' => $itemId
+							],
+							$params->data
+						]
+					]);
+				}
 			}
 		}
 		
