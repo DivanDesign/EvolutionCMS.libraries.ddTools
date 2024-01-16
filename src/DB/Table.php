@@ -645,6 +645,30 @@ class Table {
 	}
 	
 	/**
+	 * items_deleteOne
+	 * @version 1.0 (2024-01-16)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
+	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (first found item will be deleted).
+	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
+	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause. Default: ''.
+	 * 
+	 * @return {void}
+	 */
+	public function items_deleteOne($params = []): void {
+		$this->items_delete(
+			\DDTools\ObjectTools::extend([
+				'objects' => [
+					$params,
+					[
+						'limit' => 1,
+					],
+				]
+			])
+		);
+	}
+	
+	/**
 	 * items_get
 	 * @version 1.2 (2023-12-26)
 	 * 
