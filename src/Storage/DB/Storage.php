@@ -1,9 +1,7 @@
 <?php
-namespace DDTools\DB;
+namespace DDTools\Storage\DB;
 
-class Table {
-	use \DDTools\Base\AncestorTrait;
-	
+class Storage extends \DDTools\Storage\Storage {
 	protected static
 		/**
 		 * @property $columnsDefaultParams {stdClass} — Default parameters for all columns. If some items are not defined in child classes, parent values will be used (see static::initStatic).
@@ -427,35 +425,6 @@ class Table {
 	}
 	
 	/**
-	 * items_addOne
-	 * @version 2.0 (2023-12-25)
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
-	 * @param $params->data {object|array} — An item. @required
-	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values. @required
-	 * 
-	 * @return $result {stdClass|null} — An added item object or `null` if fail.
-	 * @return $result->id {integer} — ID of added item.
-	 */
-	public function items_addOne($params): ?\stdClass {
-		$params = (object) $params;
-		
-		$result = $this->items_add([
-			'items' => [
-				$params->data
-			]
-		]);
-		
-		if (!empty($result)){
-			$result = $result[0];
-		}else{
-			$result = null;
-		}
-		
-		return $result;
-	}
-	
-	/**
 	 * items_update
 	 * @version 1.3.2 (2023-12-29)
 	 * 
@@ -557,57 +526,6 @@ class Table {
 	}
 	
 	/**
-	 * items_updateOne
-	 * @version 1.1 (2024-01-11)
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
-	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
-	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values. @required
-	 * @param $params->where {string} — SQL 'WHERE' clause. Default: '' (first found item will be updated).
-	 * @param $params->isEnabledAddNotFound {boolean} — Is allowed to add item if it is not exist? Default: false.
-	 * 
-	 * @return $result {stdClass|null} — An added item object or `null` if fail.
-	 * @return $result->id {integer} — ID of added item.
-	 */
-	public function items_updateOne($params): ?\stdClass {
-		$params = \DDTools\ObjectTools::extend([
-			'objects' => [
-				//Defaults
-				(object) [
-					'isEnabledAddNotFound' => false,
-					'data' => [],
-				],
-				$params
-			]
-		]);
-		
-		$result = $this->items_update(
-			\DDTools\ObjectTools::extend([
-				'objects' => [
-					$params,
-					[
-						'limit' => 1,
-					],
-				]
-			])
-		);
-		
-		if (!empty($result)){
-			$result = $result[0];
-		}else{
-			if ($params->isEnabledAddNotFound){
-				$result = $this->items_addOne([
-					'data' => $params->data
-				]);
-			}else{
-				$result = null;
-			}
-		}
-		
-		return $result;
-	}
-	
-	/**
 	 * items_delete
 	 * @version 1.1 (2023-12-26)
 	 * 
@@ -641,30 +559,6 @@ class Table {
 			$params->orderBy,
 			//Limit
 			static::buildSqlLimitString($params)
-		);
-	}
-	
-	/**
-	 * items_deleteOne
-	 * @version 1.0 (2024-01-16)
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (first found item will be deleted).
-	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
-	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause. Default: ''.
-	 * 
-	 * @return {void}
-	 */
-	public function items_deleteOne($params = []): void {
-		$this->items_delete(
-			\DDTools\ObjectTools::extend([
-				'objects' => [
-					$params,
-					[
-						'limit' => 1,
-					],
-				]
-			])
 		);
 	}
 	
@@ -751,49 +645,6 @@ class Table {
 					}
 				}
 			}
-		}
-		
-		return $result;
-	}
-	
-	/**
-	 * items_getOne
-	 * @version 1.0 (2023-12-08)
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {string} — SQL 'WHERE' clause. Default: '' (first found item will be returned).
-	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause. Default: ''.
-	 * @param $params->propsToReturn {array|'*'|stringCommaSeparated} — Required item prop names to return. Can be set as array of prop names, comma separated string or '*' for all props. Default: '*' (all).
-	 * @param $params->propsToReturn[$i] {string} — A prop name. @required
-	 * @param $params->notFoundResult {mixed} — What will be returned when no items found. Default: null.
-	 * 
-	 * @return {stdClass|mixed} — Found item object or $params->notFoundResult.
-	 */
-	public function items_getOne($params = []){
-		$params = \DDTools\ObjectTools::extend([
-			'objects' => [
-				//Defaults
-				(object) [
-					'where' => '',
-					'orderBy' => '',
-					'propsToReturn' => '*',
-					'notFoundResult' => null,
-				],
-				$params
-			]
-		]);
-		
-		$result = $this->items_get([
-			'where' => $params->where,
-			'orderBy' => $params->orderBy,
-			'propsToReturn' => $params->propsToReturn,
-			'limit' => 1,
-		]);
-		
-		if (!empty($result)){
-			$result = $result[0];
-		}else{
-			$result = $params->notFoundResult;
 		}
 		
 		return $result;
