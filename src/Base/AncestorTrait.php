@@ -4,7 +4,7 @@ namespace DDTools\Base;
 trait AncestorTrait {
 	/**
 	 * createChildInstance
-	 * @version 1.2 (2023-03-21)
+	 * @version 1.2.1 (2024-02-06)
 	 * 
 	 * @see README.md
 	 * 
@@ -16,7 +16,7 @@ trait AncestorTrait {
 			[
 				'params' => [],
 				'parentDir' => null,
-				'capitalizeName' => true
+				'capitalizeName' => true,
 			],
 			(array) $params
 		);
@@ -46,31 +46,34 @@ trait AncestorTrait {
 		//Current classname without namespace
 		$thisClassName = substr(
 			$thisClassNameFull,
-			strrpos(
-				$thisClassNameFull,
-				'\\'
-			) + 1
+			(
+				strrpos(
+					$thisClassNameFull,
+					'\\'
+				)
+				+ 1
+			)
 		);
 		
 		$filePath =
-			$params->parentDir .
-			DIRECTORY_SEPARATOR .
-			$params->name .
-			DIRECTORY_SEPARATOR .
-			$thisClassName .
-			'.php'
+			$params->parentDir
+			. DIRECTORY_SEPARATOR
+			. $params->name
+			. DIRECTORY_SEPARATOR
+			. $thisClassName
+			. '.php'
 		;
 		
 		if(is_file($filePath)){
 			require_once($filePath);
 			
 			$objectClass =
-				'\\' .
-				$thisNameSpace .
-				'\\' .
-				$params->name .
-				'\\' .
-				$thisClassName
+				'\\'
+				. $thisNameSpace
+				. '\\'
+				. $params->name
+				. '\\'
+				. $thisClassName
 			;
 			
 			return new $objectClass($params->params);
