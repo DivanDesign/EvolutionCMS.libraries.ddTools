@@ -3,18 +3,17 @@ namespace DDTools\Base;
 
 trait AncestorTrait {
 	/**
-	 * createChildInstance
-	 * @version 1.2.1 (2024-02-06)
+	 * getChildClassName
+	 * @version 1.0 (2024-02-06)
 	 * 
 	 * @see README.md
 	 * 
 	 * @throws \Exception
 	 */
-	public static final function createChildInstance($params){
+	final public static function getChildClassName($params): string {
 		//Defaults
 		$params = (object) array_merge(
 			[
-				'params' => [],
 				'parentDir' => null,
 				'capitalizeName' => true,
 			],
@@ -67,7 +66,7 @@ trait AncestorTrait {
 		if(is_file($filePath)){
 			require_once($filePath);
 			
-			$objectClass =
+			return
 				'\\'
 				. $thisNameSpace
 				. '\\'
@@ -75,13 +74,32 @@ trait AncestorTrait {
 				. '\\'
 				. $thisClassName
 			;
-			
-			return new $objectClass($params->params);
 		}else{
 			throw new \Exception(
 				$thisClassName . ' “' . $params->name . '” not found.',
 				500
 			);
 		}
+	}
+	
+	/**
+	 * createChildInstance
+	 * @version 1.2.2 (2024-02-06)
+	 * 
+	 * @see README.md
+	 */
+	final public static function createChildInstance($params){
+		$params = (object) $params;
+		
+		$objectClass = static::getChildClassName($params);
+		
+		return new $objectClass(
+			\DDTools\ObjectTools::isPropExists([
+				'object' => $params,
+				'propName' => 'params',
+			])
+			? $params->params
+			: []
+		);
 	}
 }

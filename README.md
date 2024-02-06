@@ -947,7 +947,7 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 	* **Required**
 	
 * `$params->name`
-	* Desctription: Class name.
+	* Desctription: Short name of child class.
 	* Valid values: `string`
 	* **Required**
 	
@@ -974,6 +974,38 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 * `$result`
 	* Desctription: The new object instance.
 	* Valid values: `object`
+
+
+#### `\DDTools\Base\AncestorTrait::getChildClassName($params)`
+
+* `$params`
+	* Desctription: The object of parameters.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->name`
+	* Desctription: Short name of child class.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->parentDir`
+	* Desctription: Directory of the parent file (e. g. `__DIR__`).
+	* Valid values: `string`
+	* Default value: — (dirname of a class that uses this trait)
+	
+* `$params->capitalizeName`
+	* Desctription: Need to capitalize child name?
+	* Valid values: `boolean`
+	* Default value: `true`
+
+
+##### Returns
+
+* `$result`
+	* Desctription: Child class name.
+	* Valid values: `string`
 
 
 ### `\DDTools\Snippet`
