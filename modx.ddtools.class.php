@@ -927,11 +927,62 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.9 (2024-06-06)
+	 * @version 1.9.1 (2024-06-06)
 	 * 
 	 * @see README.md
 	 */
 	public static function parseText($params = []){
+		$params = call_user_func_array(
+			[
+				static::class,
+				'parseText_parepareParams',
+			],
+			func_get_args()
+		);
+		
+		$result = $params->text;
+		
+		$params->data = static::parseText_prepareData([
+			'data' => $params->data
+		]);
+		
+		foreach (
+			$params->data as
+			$key =>
+			$value
+		){
+			$result = static::parseText_parseItem([
+				'text' => $result,
+				'placeholder' => $params->placeholderPrefix . $key . $params->placeholderSuffix,
+				'value' => $value,
+			]);
+		}
+		
+		if ($params->isCompletelyParsingEnabled){
+			$result = static::parseSource($result);
+		}
+		
+		//It is needed only after static::parseSource because some snippets can create the new empty placeholders
+		if ($params->removeEmptyPlaceholders){
+			$result = preg_replace(
+				'/(\[\+\S+?\+\])/m',
+				'',
+				$result
+			);
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * parseText_parepareParams
+	 * @version 1.0 (2024-06-06)
+	 *
+	 * @param $params {stdClass|arrayAssociative} — The object of parameters. See $this->parseText.
+	 *
+	 * @return {string}
+	 */
+	private static function parseText_parepareParams($params = []): \stdClass {
 		//For backward compatibility
 		if (func_num_args() > 1){
 			//Convert ordered list of params to named
@@ -970,39 +1021,7 @@ class ddTools {
 			]
 		]);
 		
-		
-		$result = $params->text;
-		
-		$params->data = static::parseText_prepareData([
-			'data' => $params->data
-		]);
-		
-		foreach (
-			$params->data as
-			$key =>
-			$value
-		){
-			$result = static::parseText_parseItem([
-				'text' => $result,
-				'placeholder' => $params->placeholderPrefix . $key . $params->placeholderSuffix,
-				'value' => $value,
-			]);
-		}
-		
-		if ($params->isCompletelyParsingEnabled){
-			$result = static::parseSource($result);
-		}
-		
-		//It is needed only after static::parseSource because some snippets can create the new empty placeholders
-		if ($params->removeEmptyPlaceholders){
-			$result = preg_replace(
-				'/(\[\+\S+?\+\])/m',
-				'',
-				$result
-			);
-		}
-		
-		return $result;
+		return $params;
 	}
 	
 	/**
