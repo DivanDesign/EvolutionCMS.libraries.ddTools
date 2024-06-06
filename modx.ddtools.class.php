@@ -927,7 +927,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.8 (2024-06-06)
+	 * @version 1.8.1 (2024-06-06)
 	 * 
 	 * @see README.md
 	 */
@@ -962,6 +962,56 @@ class ddTools {
 			]
 		]);
 		
+		
+		$result = $params->text;
+		
+		$params->data = static::parseText_prepareData([
+			'data' => $params->data
+		]);
+		
+		foreach (
+			$params->data as
+			$key =>
+			$value
+		){
+			$result = static::parseText_parseItem([
+				'text' => $result,
+				'placeholder' => $params->placeholderPrefix . $key . $params->placeholderSuffix,
+				'value' => $value,
+			]);
+		}
+		
+		if ($params->mergeAll){
+			$result = self::$modx->mergeDocumentContent($result);
+			$result = self::$modx->mergeSettingsContent($result);
+			$result = self::$modx->mergeChunkContent($result);
+		}
+		
+		if ($params->removeEmptyPlaceholders){
+			$result = preg_replace(
+				'/(\[\+\S+?\+\])/m',
+				'',
+				$result
+			);
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * parseText_prepareData
+	 * @version 1.0 (2024-06-06)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The object of parameters. See $this->parseText.
+	 * @param $params->data {stdClass|array|string}
+	 * 
+	 * @return {stdClass}
+	 */
+	private static function parseText_prepareData($params = []): \stdClass {
+		$params = (object) $params;
+		
+		$result = new \stdClass();
+		
 		//Arrays and objects are already ready to use
 		if (
 			!is_object($params->data) &&
@@ -972,9 +1022,6 @@ class ddTools {
 				'type' => 'objectArray'
 			]);
 		}
-		
-		
-		$result = $params->text;
 		
 		foreach (
 			$params->data as
@@ -998,11 +1045,7 @@ class ddTools {
 					$unfoldedValue_itemKey =>
 					$unfoldedValue_itemValue
 				){
-					$result = static::parseText_parseItem([
-						'text' => $result,
-						'placeholder' => $params->placeholderPrefix . $unfoldedValue_itemKey . $params->placeholderSuffix,
-						'value' => $unfoldedValue_itemValue,
-					]);
+					$result->{$unfoldedValue_itemKey} = $unfoldedValue_itemValue;
 				}
 				
 				//Also add object value as JSON
@@ -1012,25 +1055,7 @@ class ddTools {
 				]);
 			}
 			
-			$result = static::parseText_parseItem([
-				'text' => $result,
-				'placeholder' => $params->placeholderPrefix . $key . $params->placeholderSuffix,
-				'value' => $value,
-			]);
-		}
-		
-		if ($params->mergeAll){
-			$result = self::$modx->mergeDocumentContent($result);
-			$result = self::$modx->mergeSettingsContent($result);
-			$result = self::$modx->mergeChunkContent($result);
-		}
-		
-		if ($params->removeEmptyPlaceholders){
-			$result = preg_replace(
-				'/(\[\+\S+?\+\])/m',
-				'',
-				$result
-			);
+			$result->{$key} = $value;
 		}
 		
 		return $result;
