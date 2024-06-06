@@ -927,7 +927,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.7 (2023-03-29)
+	 * @version 1.7.1 (2024-02-12)
 	 * 
 	 * @see README.md
 	 */
@@ -998,11 +998,11 @@ class ddTools {
 					$unfoldedValue_itemKey =>
 					$unfoldedValue_itemValue
 				){
-					$result = str_replace(
-						$params->placeholderPrefix . $unfoldedValue_itemKey . $params->placeholderSuffix,
-						$unfoldedValue_itemValue,
-						$result
-					);
+					$result = static::parseText_parseItem([
+						'text' => $result,
+						'placeholder' => $params->placeholderPrefix . $unfoldedValue_itemKey . $params->placeholderSuffix,
+						'value' => $unfoldedValue_itemValue,
+					]);
 				}
 				
 				//Also add object value as JSON
@@ -1012,11 +1012,11 @@ class ddTools {
 				]);
 			}
 			
-			$result = str_replace(
-				$params->placeholderPrefix . $key . $params->placeholderSuffix,
-				$value,
-				$result
-			);
+			$result = static::parseText_parseItem([
+				'text' => $result,
+				'placeholder' => $params->placeholderPrefix . $key . $params->placeholderSuffix,
+				'value' => $value,
+			]);
 		}
 		
 		if ($params->mergeAll){
@@ -1034,6 +1034,27 @@ class ddTools {
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * parseText_parseItem
+	 * @version 1.0 (2024-02-12)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
+	 * @param $params->text {string} — Source text.
+	 * @param $params->placeholder {string} — Placeholder string, e. g. [+fullName+].
+	 * @param $params->value {string} — Placeholder value.
+	 * 
+	 * @return {string}
+	 */
+	private static function parseText_parseItem($params = []) :string {
+		$params = (object) $params;
+		
+		return str_replace(
+			$params->placeholder,
+			$params->value,
+			$params->text
+		);
 	}
 	
 	/**
