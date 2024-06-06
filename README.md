@@ -172,7 +172,7 @@ Replaces placeholders in a text with required values.
 	* Default value: `false`
 	
 * `$params->isCompletelyParsingEnabled`
-	* Desctription: Additional parsing of document fields, settings, chunks.
+	* Desctription: Additional parsing of document fields, settings, chunks, snippets, URLs — everything.
 	* Valid values: `boolean`
 	* Default value: `true`
 

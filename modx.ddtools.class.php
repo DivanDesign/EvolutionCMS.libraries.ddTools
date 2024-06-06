@@ -927,7 +927,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.8.2 (2024-06-06)
+	 * @version 1.9 (2024-06-06)
 	 * 
 	 * @see README.md
 	 */
@@ -990,11 +990,10 @@ class ddTools {
 		}
 		
 		if ($params->isCompletelyParsingEnabled){
-			$result = self::$modx->mergeDocumentContent($result);
-			$result = self::$modx->mergeSettingsContent($result);
-			$result = self::$modx->mergeChunkContent($result);
+			$result = static::parseSource($result);
 		}
 		
+		//It is needed only after static::parseSource because some snippets can create the new empty placeholders
 		if ($params->removeEmptyPlaceholders){
 			$result = preg_replace(
 				'/(\[\+\S+?\+\])/m',
