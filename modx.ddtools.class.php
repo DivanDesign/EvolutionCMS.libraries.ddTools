@@ -927,7 +927,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.8.1 (2024-06-06)
+	 * @version 1.8.2 (2024-06-06)
 	 * 
 	 * @see README.md
 	 */
@@ -942,10 +942,18 @@ class ddTools {
 					'data',
 					'placeholderPrefix',
 					'placeholderSuffix',
-					'mergeAll'
+					'isCompletelyParsingEnabled'
 				]
 			]);
 		}
+		
+		$params = \ddTools::verifyRenamedParams([
+			'params' => (object) $params,
+			'compliance' => [
+				'mergeAll' => 'isCompletelyParsingEnabled',
+			],
+			'returnCorrectedOnly' => false,
+		]);
 		
 		$params = \DDTools\ObjectTools::extend([
 			'objects' => [
@@ -956,7 +964,7 @@ class ddTools {
 					'placeholderPrefix' => '[+',
 					'placeholderSuffix' => '+]',
 					'removeEmptyPlaceholders' => false,
-					'mergeAll' => true
+					'isCompletelyParsingEnabled' => true
 				],
 				$params
 			]
@@ -981,7 +989,7 @@ class ddTools {
 			]);
 		}
 		
-		if ($params->mergeAll){
+		if ($params->isCompletelyParsingEnabled){
 			$result = self::$modx->mergeDocumentContent($result);
 			$result = self::$modx->mergeSettingsContent($result);
 			$result = self::$modx->mergeChunkContent($result);

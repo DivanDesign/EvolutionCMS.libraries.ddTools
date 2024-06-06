@@ -171,7 +171,7 @@ Replaces placeholders in a text with required values.
 	* Valid values: `boolean`
 	* Default value: `false`
 	
-* `$params->mergeAll`
+* `$params->isCompletelyParsingEnabled`
 	* Desctription: Additional parsing of document fields, settings, chunks.
 	* Valid values: `boolean`
 	* Default value: `true`
