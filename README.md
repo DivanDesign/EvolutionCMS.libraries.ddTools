@@ -151,6 +151,7 @@ Replaces placeholders in a text with required values.
 	* Desctription: Key is placeholder name, value is value.
 	* Valid values:
 		* `string`
+		* `boolean` — will be converted to `'1'` or `'0'` respectively
 		* `array` — will be unfolded and also will be converted to a JSON string
 		* `object` — will be unfolded and also will be converted to a JSON string
 	* **Required**

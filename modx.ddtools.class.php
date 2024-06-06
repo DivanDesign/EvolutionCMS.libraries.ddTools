@@ -1038,7 +1038,7 @@ class ddTools {
 	
 	/**
 	 * parseText_parseItem
-	 * @version 1.0 (2024-02-12)
+	 * @version 1.1 (2024-06-06)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
 	 * @param $params->text {string} — Source text.
@@ -1049,6 +1049,10 @@ class ddTools {
 	 */
 	private static function parseText_parseItem($params = []) :string {
 		$params = (object) $params;
+		
+		if (is_bool($params->value)){
+			$params->value = intval($params->value);
+		}
 		
 		return str_replace(
 			$params->placeholder,
