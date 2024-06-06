@@ -119,7 +119,6 @@ The same as `$modx->getTpl` with some differences:
 ### `\ddTools::parseText($params)`
 
 Replaces placeholders in a text with required values.
-Like `$modx->parseChunk`, but takes a text and has some features.
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.
@@ -149,10 +148,11 @@ Like `$modx->parseChunk`, but takes a text and has some features.
 	* Default value: `[]`
 	
 * `$params->data->{$key}`
-	* Valid values: Key is placeholder name, value is value.
+	* Desctription: Key is placeholder name, value is value.
+	* Valid values:
 		* `string`
-		* `array`
-		* `object`
+		* `array` — will be unfolded and also will be converted to a JSON string
+		* `object` — will be unfolded and also will be converted to a JSON string
 	* **Required**
 	
 * `$params->placeholderPrefix`
