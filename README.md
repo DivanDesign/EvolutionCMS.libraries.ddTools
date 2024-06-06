@@ -1273,7 +1273,8 @@ Returns:
 		//Note that this is not a string, but that's okay
 		'meta' => [
 			//Moreover, any depth is supported
-			'author' => [
+			//And objects are also supported as well as arrays regardless of nesting level
+			'author' => (object) [
 				'firstName' => 'Leo',
 				'lastName' => 'Tolstoy',
 			],

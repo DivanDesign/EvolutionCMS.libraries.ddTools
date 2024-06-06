@@ -927,7 +927,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.7.1 (2024-02-12)
+	 * @version 1.8 (2024-06-06)
 	 * 
 	 * @see README.md
 	 */
@@ -964,7 +964,6 @@ class ddTools {
 		
 		//Arrays and objects are already ready to use
 		if (
-			//Also, objects should not be converted to arrays for correct unfolding
 			!is_object($params->data) &&
 			!is_array($params->data)
 		){
@@ -990,7 +989,8 @@ class ddTools {
 				$unfoldedValue = \DDTools\ObjectTools::unfold([
 					'object' => [
 						$key => $value
-					]
+					],
+					'isCrossTypeEnabled' => true,
 				]);
 				
 				foreach (
