@@ -526,6 +526,11 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 	* Desctription: Prefix of the keys of an object/array (it's an internal varible, but can be used if required).
 	* Valid values: `string`
 	* Default value: `''`
+	
+* `$params->isCrossTypeEnabled`
+	* Desctription: This parameter determines whether the method should process elements across different data types, such as arrays and objects, at all levels. When set to `true`, the method will recursively unfold elements of both array and object types, regardless of the type of the root parent.
+	* Valid values: `boolean`
+	* Default value: `false`
 
 
 ##### Returns
@@ -1700,6 +1705,76 @@ stdClass::__set_state(array (
 	'parents_mother' => 'Maye Musk',
 	'parents_father' => 'Errol Musk'
 ))
+```
+
+
+##### Cross-type unfolding (`$params->isCrossTypeEnabled` == `true`)
+
+```php
+//Array
+$data = [
+	//Array
+	'bin1' => [
+		'plastic' => 'plastic bottles',
+		'paper' => 'newspapers',
+		'glass' => 'glass bottles'
+	],
+	//Object
+	'bin2' => (object) [
+		'organic' => 'food waste',
+		'paper' => 'cardboard boxes',
+		'metal' => 'aluminum cans'
+	]
+];
+```
+
+###### Without cross-type unfolding (by default)
+
+```php
+var_export(
+	\DDTools\ObjectTools::unfold([
+		'object' => $data,
+	])
+);
+```
+
+Returns:
+
+```php
+array (
+	'bin1.plastic' => 'plastic bottles',
+	'bin1.paper' => 'newspapers',
+	'bin1.glass' => 'glass bottles',
+	'bin2' => (object) array(
+		'organic' => 'food waste',
+		'paper' => 'cardboard boxes',
+		'metal' => 'aluminum cans',
+	),
+)
+```
+
+###### With cross-type unfolding enabled
+
+```php
+var_export(
+	\DDTools\ObjectTools::unfold([
+		'object' => $data,
+		'isCrossTypeEnabled' => true,
+	])
+);
+```
+
+Returns:
+
+```php
+array (
+	'bin1.plastic' => 'plastic bottles',
+	'bin1.paper' => 'newspapers',
+	'bin1.glass' => 'glass bottles',
+	'bin2.organic' => 'food waste',
+	'bin2.paper' => 'cardboard boxes',
+	'bin2.metal' => 'aluminum cans',
+)
 ```
 
 

@@ -481,7 +481,7 @@ class ObjectTools {
 	
 	/**
 	 * unfold
-	 * @version 1.1 (2021-11-17)
+	 * @version 1.2 (2024-06-06)
 	 * 
 	 * @see README.md
 	 * 
@@ -492,6 +492,7 @@ class ObjectTools {
 			'objects' => [
 				//Defaults
 				(object) [
+					'isCrossTypeEnabled' => false,
 					'keySeparator' => '.',
 					'keyPrefix' => '',
 					//The internal parameter, should not be used outside. Used only in child calls of recursion.
@@ -521,6 +522,14 @@ class ObjectTools {
 		){
 			//If the value must be unfolded
 			if (
+				//Arrays can unfold objects and vice versa
+				(
+					$params->isCrossTypeEnabled &&
+					(
+						is_object($value) ||
+						is_array($value)
+					)
+				) ||
 				(
 					$isSourceObject &&
 					is_object($value)
@@ -539,7 +548,8 @@ class ObjectTools {
 							$key .
 							$params->keySeparator
 						,
-						'isSourceObject' => $isSourceObject
+						'isSourceObject' => $isSourceObject,
+						'isCrossTypeEnabled' => $params->isCrossTypeEnabled,
 					])
 				);
 			//Если значение — не массив
