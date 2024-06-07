@@ -158,6 +158,22 @@ class ddTools {
 	}
 	
 	/**
+	 * isEmpty
+	 * @version 1.0 (2024-06-07)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {boolean}
+	 */
+	public static function isEmpty($value = null): bool {
+		return
+			is_object($value)
+			? empty((array) $value)
+			: empty($value)
+		;
+	}
+	
+	/**
 	 * orderedParamsToNamed
 	 * @version 1.1.6 (2019-06-22)
 	 * 

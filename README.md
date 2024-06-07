@@ -52,6 +52,20 @@ require_once(
 ## Parameters description
 
 
+### `\ddTools::isEmpty($value)`
+
+Determines whether a variable is empty.
+
+The following values are considered as empty:
+* Empty objects (e. g. `new \stdClass()`).
+* Any values equal to `false` (the same as `$value == false`).
+
+* `$value`
+	* Desctription: Value to be checked.
+	* Valid values: `mixed`
+	* Default value: `null`
+
+
 ### `\ddTools::convertUrlToAbsolute($params)`
 
 Converts relative URLs to absolute.
