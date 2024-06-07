@@ -680,42 +680,6 @@ class ddTools {
 		
 		return $str;
 	}
-	
-	/**
-	 * encodedStringToArray
-	 * @version 1.2 (2020-06-02)
-	 * 
-	 * @desc Converts encoded strings to arrays.
-	 * Supported formats:
-	 * 1. [JSON](https://en.wikipedia.org/wiki/JSON).
-	 * 2. [Query string](https://en.wikipedia.org/wiki/Query_string).
-	 * 
-	 * @param $inputString {stringJsonObject|stringJsonArray|stringQueryFormatted|stdClass|array} — Input string. @required
-	 * 
-	 * @return {array}
-	 */
-	public static function encodedStringToArray($inputString){
-		$result = \DDTools\ObjectTools::convertType([
-			'object' => $inputString,
-			'type' => 'objectArray'
-		]);
-		
-		//The old deprecated format where string is separated by '||' and '::'
-		if (
-			count($result) == 1 &&
-			array_keys($result)[0] == $inputString
-		){
-			$result = self::explodeAssoc($inputString);
-			
-			self::logEvent([
-				'message' =>
-					'<p>Strings separated by <code>::</code> && <code>||</code> in parameters are deprecated.</p>' .
-					'<p>Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
-			]);
-		}
-		
-		return $result;
-	}
 
 	/**
 	 * getPlaceholdersFromText
@@ -3007,6 +2971,42 @@ class ddTools {
 	 */
 	public static function getResponse(){
 		return new \DDTools\Response();
+	}
+	
+	/**
+	 * encodedStringToArray
+	 * @version 1.2 (2020-06-02)
+	 * 
+	 * @desc Converts encoded strings to arrays.
+	 * Supported formats:
+	 * 1. [JSON](https://en.wikipedia.org/wiki/JSON).
+	 * 2. [Query string](https://en.wikipedia.org/wiki/Query_string).
+	 * 
+	 * @param $inputString {stringJsonObject|stringJsonArray|stringQueryFormatted|stdClass|array} — Input string. @required
+	 * 
+	 * @return {array}
+	 */
+	public static function encodedStringToArray($inputString){
+		$result = \DDTools\ObjectTools::convertType([
+			'object' => $inputString,
+			'type' => 'objectArray'
+		]);
+		
+		//The old deprecated format where string is separated by '||' and '::'
+		if (
+			count($result) == 1 &&
+			array_keys($result)[0] == $inputString
+		){
+			$result = self::explodeAssoc($inputString);
+			
+			self::logEvent([
+				'message' =>
+				'<p>Strings separated by <code>::</code> && <code>||</code> in parameters are deprecated.</p>' .
+				'<p>Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+			]);
+		}
+		
+		return $result;
 	}
 	
 	/**
