@@ -61,7 +61,7 @@ The following values are considered as empty:
 * Any values equal to `false` (the same as `$value == false`).
 
 * `$value`
-	* Desctription: Value to be checked.
+	* Description: Value to be checked.
 	* Valid values: `mixed`
 	* Default value: `null`
 
@@ -74,14 +74,14 @@ The method tends to change URL as little as possible and just prepends required 
 All kinds of query parameters, hash, ports, etc. are not modified.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->url`
-	* Desctription: Source URL. Can be set as:
+	* Description: Source URL. Can be set as:
 		* `'some/url'` — relative
 		* `'/some/url'` — relative starting with slash
 		* `'example.com/some/url'` — absolute starting with domain
@@ -91,12 +91,12 @@ All kinds of query parameters, hash, ports, etc. are not modified.
 	* **Required**
 	
 * `$params->host`
-	* Desctription: Host for the result URL.
+	* Description: Host for the result URL.
 	* Valid values: `string`
 	* Default value: `$_SERVER['HTTP_HOST']`
 	
 * `$params->scheme`
-	* Desctription: Scheme for the result URL.
+	* Description: Scheme for the result URL.
 	* Valid values: `string`
 	* Default value: `'https'` or `'http'` depending on `$_SERVER['HTTPS']`
 
@@ -104,7 +104,7 @@ All kinds of query parameters, hash, ports, etc. are not modified.
 #### Returns
 
 * `$result`
-	* Desctription: Source URL converted to absolute. Always contains scheme.
+	* Description: Source URL converted to absolute. Always contains scheme.
 	* Valid values: `string`
 
 
@@ -116,7 +116,7 @@ The same as `$modx->getTpl` with some differences:
 * `$modx->getTpl('@CODE:')` returns `'@CODE:'`, this method returns `''`.
 
 * `$tpl`
-	* Desctription: Chunk name or inline template.
+	* Description: Chunk name or inline template.
 	* Valid values:
 		* `stringChunkName`
 		* `string` — use inline templates starting with `@CODE:`
@@ -126,7 +126,7 @@ The same as `$modx->getTpl` with some differences:
 #### Returns
 
 * `$result`
-	* Desctription: Required template.
+	* Description: Required template.
 	* Valid values: `string`
 
 
@@ -135,19 +135,19 @@ The same as `$modx->getTpl` with some differences:
 Replaces placeholders in a text with required values.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->text`
-	* Desctription: String to parse.
+	* Description: String to parse.
 	* Valid values: `string`
 	* **Required**
 	
 * `$params->data`
-	* Desctription:
+	* Description:
 		The array of additional data has to be replaced in `$params->text`.  
 		Nested objects and arrays are supported too:
 		* `{"someOne": "1", "someTwo": "test" }` => `[+someOne+], [+someTwo+]`.
@@ -162,7 +162,7 @@ Replaces placeholders in a text with required values.
 	* Default value: `[]`
 	
 * `$params->data->{$key}`
-	* Desctription: Key is placeholder name, value is value.
+	* Description: Key is placeholder name, value is value.
 	* Valid values:
 		* `string`
 		* `boolean` — will be converted to `'1'` or `'0'` respectively
@@ -171,22 +171,22 @@ Replaces placeholders in a text with required values.
 	* **Required**
 	
 * `$params->placeholderPrefix`
-	* Desctription: Placeholders prefix.
+	* Description: Placeholders prefix.
 	* Valid values: `string`
 	* Default value: `'[+'`
 	
 * `$params->placeholderSuffix`
-	* Desctription: Placeholders suffix.
+	* Description: Placeholders suffix.
 	* Valid values: `string`
 	* Default value: `'+]'`
 	
 * `$params->removeEmptyPlaceholders`
-	* Desctription: Do you need to remove empty placeholders?
+	* Description: Do you need to remove empty placeholders?
 	* Valid values: `boolean`
 	* Default value: `false`
 	
 * `$params->isCompletelyParsingEnabled`
-	* Desctription: Additional parsing of document fields, settings, chunks, snippets, URLs — everything.
+	* Description: Additional parsing of document fields, settings, chunks, snippets, URLs — everything.
 	* Valid values: `boolean`
 	* Default value: `true`
 
@@ -194,7 +194,7 @@ Replaces placeholders in a text with required values.
 #### Returns
 
 * `$result`
-	* Desctription: Parsed text.
+	* Description: Parsed text.
 	* Valid values: `string`
 
 
@@ -205,14 +205,14 @@ It returns an associative array, in which the correct parameter names are the ke
 You can use the `exctract` function to turn the array into variables of the current symbol table.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->params`
-	* Desctription: The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values.  
+	* Description: The associative array of the parameters of a snippet, in which the parameter names are the keys and the parameter values are the values.  
 		You can directly pass here the `$params` variable if you call the method inside of a snippet.
 	* Valid values:
 		* `stdClass`
@@ -220,31 +220,31 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* **Required**
 	
 * `$params->compliance`
-	* Desctription: An array (or object) of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values.
+	* Description: An array (or object) of correspondence between new parameter names and old ones, in which the new names are the keys and the old names are the values.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->compliance->{$newName}`
-	* Desctription: The old name(s). Use a string for a single name or an array for multiple.
+	* Description: The old name(s). Use a string for a single name or an array for multiple.
 	* Valid values:
 		* `string`
 		* `array`
 	* **Required**
 	
 * `$params->compliance->{$newName}[i]`
-	* Desctription: One of the old names.
+	* Description: One of the old names.
 	* Valid values: `string`
 	* **Required**
 	
 * `$params->returnCorrectedOnly`
-	* Desctription: Need to return only corrected parameters?
+	* Description: Need to return only corrected parameters?
 	* Valid values: `boolean`
 	* Default value: `true`
 	
 * `$params->writeToLog`
-	* Desctription: Write a warning message about deprecated parameters to the CMS event log.
+	* Description: Write a warning message about deprecated parameters to the CMS event log.
 	* Valid values: `boolean`
 	* Default value: `true`
 
@@ -252,14 +252,14 @@ You can use the `exctract` function to turn the array into variables of the curr
 #### Returns
 
 * `$result`
-	* Desctription: An array or object, in which the correct parameter names are the keys and the parameter values are the values.  
+	* Description: An array or object, in which the correct parameter names are the keys and the parameter values are the values.  
 		Can contains all parameters or only corrected (see `$params->returnCorrectedOnly`).
 	* Valid values:
 		* `arrayAssociative` — if `$params->params` set as an array
 		* `stdClass` — if `$params->params` set as an object
 	
 * `$result[$newName]`
-	* Desctription: A parameter value, in which the correct parameter name is the key and the parameter value is the value.
+	* Description: A parameter value, in which the correct parameter name is the key and the parameter value is the value.
 	* Valid values: `mixed`
 
 
@@ -271,27 +271,27 @@ You can use the `exctract` function to turn the array into variables of the curr
 Modify your images: create thumbnails, crop, resize, fill background color or add watermark.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->sourceFullPathName`
-	* Desctription: Full file path of source image.  
+	* Description: Full file path of source image.  
 		You can pass a relative path too (e. g. `assets/images/some.jpg`), the method will automatically add `base_path` if needed.
 	* Valid values: `string`
 	* **Required**
 	
 * `$params->outputFullPathName`
-	* Desctription: Full file path of result image.
+	* Description: Full file path of result image.
 		* You can pass a relative path too (e. g. `assets/images/some.jpg`), the method will automatically add `base_path` if needed.
 		* The original image will be overwritten if this parameter is omitted.
 	* Valid values: `string`
 	* Default value: == `$params->sourceFullPathName`
 	
 * `$params->transformMode`
-	* Desctription: Transform mode.
+	* Description: Transform mode.
 	* Valid values:
 		* `'resize'` — resize only, the image will be inscribed into the specified sizes with the same proportions
 		* `'crop'` — crop only
@@ -300,39 +300,39 @@ Modify your images: create thumbnails, crop, resize, fill background color or ad
 	* Default value: `'resize'`
 	
 * `$params->width`
-	* Desctription: Result image width.  
+	* Description: Result image width.  
 		In pair width / height only one is required, omitted size will be calculated according to the image proportions.
 	* Valid values: `integer`
 	* **Required**
 	
 * `$params->height`
-	* Desctription: Result image height.  
+	* Description: Result image height.  
 		In pair width / height only one is required, omitted size will be calculated according to the image proportions.
 	* Valid values: `integer`
 	* **Required**
 	
 * `$params->allowEnlargement`
-	* Desctription: Allow image enlargement when resizing.
+	* Description: Allow image enlargement when resizing.
 	* Valid values: `boolean`
 	* Default value: `false`
 	
 * `$params->backgroundColor`
-	* Desctription: Result image background color in HEX (used only for `$params->transformMode` == `'resizeAndFill'`).
+	* Description: Result image background color in HEX (used only for `$params->transformMode` == `'resizeAndFill'`).
 	* Valid values: `string`
 	* Default value: `FFFFFF`
 	
 * `$params->allowEnlargement`
-	* Desctription: Allow image enlargement when resizing.
+	* Description: Allow image enlargement when resizing.
 	* Valid values: `boolean`
 	* Default value: `false`
 	
 * `$params->quality`
-	* Desctription: JPEG compression level.
+	* Description: JPEG compression level.
 	* Valid values: `integer`
 	* Default value: `100`
 	
 * `$params->watermarkImageFullPathName`
-	* Desctription: Specify if you want to overlay your image with watermark.  
+	* Description: Specify if you want to overlay your image with watermark.  
 		You can pass a relative path too (e. g. `assets/images/some.jpg`), the method will automatically add `base_path` if needed.
 	* Valid values: `string`
 	* Default value: —
@@ -350,21 +350,21 @@ The first reason for creating this method is convenience to not thinking about t
 Second, the different order of parameters in the native PHP functions makes us crazy.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->object`
-	* Desctription: Source object or array.
+	* Description: Source object or array.
 	* Valid values:
 		* `stdClass`
 		* `array`
 	* **Required**
 	
 * `$params->propName`
-	* Desctription: Object property name or array key.
+	* Description: Object property name or array key.
 	* Valid values:
 		* `string`
 		* `integer`
@@ -376,14 +376,14 @@ Second, the different order of parameters in the native PHP functions makes us c
 Get the value of an object property or an array element in any nesting level in one way regardless of the “object” type.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->object`
-	* Desctription: Source object or array.  
+	* Description: Source object or array.  
 		It can be nested, and elements of all levels can be mix of objects and arrays (see Examples below).
 	* Valid values:
 		* `stdClass`
@@ -391,7 +391,7 @@ Get the value of an object property or an array element in any nesting level in 
 	* **Required**
 	
 * `$params->propName`
-	* Desctription: Object property name or array key.  
+	* Description: Object property name or array key.  
 		You can also use `'.'` to get nested properties. Several examples (see also full Examples below):
 		* `somePlainProp` — get first-level property
 		* `someObjectProp.secondLevelProp` — get property of the `someObjectProp` object|array
@@ -402,7 +402,7 @@ Get the value of an object property or an array element in any nesting level in 
 	* **Required**
 	
 * `$params->notFoundResult`
-	* Desctription: What will be returned when property is not found.
+	* Description: What will be returned when property is not found.
 	* Valid values: `mixed`
 	* Default value: `null`
 
@@ -410,7 +410,7 @@ Get the value of an object property or an array element in any nesting level in 
 ##### Returns
 
 * `$result`
-	* Desctription: Value of an object property or an array element.
+	* Description: Value of an object property or an array element.
 	* Valid values:
 		* `mixed`
 		* `$params->notFoundResult` — if property not exists
@@ -422,14 +422,14 @@ Converts an object type.
 Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en.wikipedia.org/wiki/Query_string) objects are also supported.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->object`
-	* Desctription: Input object | array | encoded string.
+	* Description: Input object | array | encoded string.
 	* Valid values:
 		* `stdClass`
 		* `array`
@@ -441,7 +441,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 	* **Required**
 	
 * `$params->type`
-	* Desctription: Type of resulting object.  
+	* Description: Type of resulting object.  
 		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
 	* Valid values:
 		* `'objectAuto'` — `stdClass` or `array` depends on input object
@@ -458,7 +458,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 ##### Returns
 
 * `$result`
-	* Desctription: Result type depends on `$params->type`.
+	* Description: Result type depends on `$params->type`.
 	* Valid values:
 		* `stdClass`
 		* `array`
@@ -471,19 +471,19 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 Merge the contents of two or more objects or arrays together into the first one.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->objects`
-	* Desctription: Objects or arrays to merge. Moreover, objects can extend arrays and vice versa.
+	* Description: Objects or arrays to merge. Moreover, objects can extend arrays and vice versa.
 	* Valid values: `array`
 	* **Required**
 	
 * `$params->objects[0]`
-	* Desctription: The object or array to extend. It will receive the new properties.
+	* Description: The object or array to extend. It will receive the new properties.
 	* Valid values:
 		* `object`
 		* `array`
@@ -491,19 +491,19 @@ Merge the contents of two or more objects or arrays together into the first one.
 	* **Required**
 	
 * `$params->objects[i]`
-	* Desctription: An object or array containing additional properties to merge in.
+	* Description: An object or array containing additional properties to merge in.
 	* Valid values:
 		* `object`
 		* `array`
 	* **Required**
 	
 * `$params->deep`
-	* Desctription: If true, the merge becomes recursive (aka. deep copy).
+	* Description: If true, the merge becomes recursive (aka. deep copy).
 	* Valid values: `boolean`
 	* Default value: `true`
 	
 * `$params->overwriteWithEmpty`
-	* Desctription: Overwrite fields with empty values (see examples below).  
+	* Description: Overwrite fields with empty values (see examples below).  
 		The following values are considered to be empty:
 		* `''` — an empty string
 		* `[]` — an empty array
@@ -519,31 +519,31 @@ Converts a multidimensional array/object into an one-dimensional one joining the
 For example, it can be helpful while using placeholders like `[+size.width+]`.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->object`
-	* Desctription: An object/array to convert.
+	* Description: An object/array to convert.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->keySeparator`
-	* Desctription: Separator between nested keys in the result object/array.
+	* Description: Separator between nested keys in the result object/array.
 	* Valid values: `string`
 	* Default value: `'.'`
 	
 * `$params->keyPrefix`
-	* Desctription: Prefix of the keys of an object/array (it's an internal varible, but can be used if required).
+	* Description: Prefix of the keys of an object/array (it's an internal varible, but can be used if required).
 	* Valid values: `string`
 	* Default value: `''`
 	
 * `$params->isCrossTypeEnabled`
-	* Desctription: This parameter determines whether the method should process elements across different data types, such as arrays and objects, at all levels. When set to `true`, the method will recursively unfold elements of both array and object types, regardless of the type of the root parent.
+	* Description: This parameter determines whether the method should process elements across different data types, such as arrays and objects, at all levels. When set to `true`, the method will recursively unfold elements of both array and object types, regardless of the type of the root parent.
 	* Valid values: `boolean`
 	* Default value: `false`
 
@@ -551,7 +551,7 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 ##### Returns
 
 * `$result`
-	* Desctription: Unfolded object/array. Type of results depends on `$params->object`.
+	* Description: Unfolded object/array. Type of results depends on `$params->object`.
 	* Valid values:
 		* `stdClass`
 		* `array`
@@ -565,14 +565,14 @@ Class representing a collection of some objects or arrays.
 #### `\DDTools\ObjectCollection::__construct($params)`
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* Default value: —
 	
 * `$params->items`
-	* Desctription: An array of items.  
+	* Description: An array of items.  
 		You can avoid this parameter to create an empty collection and set items later.
 	* Valid values:
 		* `array` — can be indexed or associative, keys will not be used
@@ -585,14 +585,14 @@ Class representing a collection of some objects or arrays.
 	* Default value: —
 	
 * `$params->items[$itemIndex]`
-	* Desctription: An item.
+	* Description: An item.
 	* Valid values:
 		* `array` — indexed arrays are supported as well as associative
 		* `object`
 	* **Required**
 	
 * `$params->itemType`
-	* Desctription: Allows to convert item type. If set, each item of `$params->items` will be converted to needed type.  
+	* Description: Allows to convert item type. If set, each item of `$params->items` will be converted to needed type.  
 		Values are case insensitive (the following names are equal: `'objectstdclass'`, `'objectStdClass'`, `'OBJECTSTDCLASS'`, etc).
 	* Valid values:
 		* `'objectStdClass'`
@@ -620,14 +620,14 @@ Has the same parameters as `\DDTools\ObjectCollection::__construct($params)`.
 Gets an array of required collection items.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* Default value: —
 	
 * `$params->filter`
-	* Desctription: Filter clause for item properties.  
+	* Description: Filter clause for item properties.  
 		* Thus,
 			```
 			'
@@ -666,14 +666,14 @@ Gets an array of required collection items.
 	* Default value: `''` (without filtration)
 	
 * `$params->limit`
-	* Desctription: Maximum number of items to return.
+	* Description: Maximum number of items to return.
 	* Valid values:
 		* `integer`
 		* `0` — all matching items
 	* Default value: `0`
 	
 * `$params->propAsResultKey`
-	* Desctription: Item property, which value will be an item key in result array instead of an item index.  
+	* Description: Item property, which value will be an item key in result array instead of an item index.  
 		For example, it can be useful if items have an ID property or something like that.
 	* Valid values:
 		* `string`
@@ -681,7 +681,7 @@ Gets an array of required collection items.
 	* Default value: `null`
 	
 * `$params->propAsResultValue`
-	* Desctription: Item property, which value will be an item value in result array instead of an item object.
+	* Description: Item property, which value will be an item value in result array instead of an item object.
 	* Valid values:
 		* `string`
 		* `null` — result array values will item objects
@@ -691,13 +691,13 @@ Gets an array of required collection items.
 ##### Returns
 
 * `$result`
-	* Desctription: An array of items.
+	* Description: An array of items.
 	* Valid values:
 		* `arrayIndexed`
 		* `arrayAssociative` — item property values will be used as result keys if `$params->propAsResultKey` is set
 	
 * `$result[$itemIndex|$itemFieldValue]`
-	* Desctription: An item object or item property value if specified in `$params->propAsResultValue`.  
+	* Description: An item object or item property value if specified in `$params->propAsResultValue`.  
 	* Valid values: `mixed`
 
 
@@ -706,19 +706,19 @@ Gets an array of required collection items.
 Gets required item.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* Default value: —
 	
 * `$params->filter`
-	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
+	* Description: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
 	* Valid values: `stringSeparated`
 	* Default value: `''` (first found item will be returned)
 	
 * `$params->notFoundResult`
-	* Desctription: What will be returned when no items found.
+	* Description: What will be returned when no items found.
 	* Valid values: `mixed`
 	* Default value: `null`
 
@@ -733,14 +733,14 @@ Counts all items.
 Converts type of needed items in collection.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* Default value: —
 	
 * `$params->itemType`
-	* Desctription: Result item type.  
+	* Description: Result item type.  
 		Values are case insensitive (the following names are equal: `'objectstdclass'`, `'objectStdClass'`, `'OBJECTSTDCLASS'`, etc).
 	* Valid values:
 		* `'objectStdClass'`
@@ -748,7 +748,7 @@ Converts type of needed items in collection.
 	* **Required**
 	
 * `$params->filter`
-	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
+	* Description: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
 	* Valid values: `stringSeparated`
 	* Default value: `''` (all items will be converted)
 
@@ -758,14 +758,14 @@ Converts type of needed items in collection.
 Undates properties of existing items with new values.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->data`
-	* Desctription: New item data. Existing item will be extended by this data, it means:
+	* Description: New item data. Existing item will be extended by this data, it means:
 		* Type of existing item will not be changed.
 		* All given property values will overwrite existing.
 		* Non-existing given properties will be created.
@@ -776,12 +776,12 @@ Undates properties of existing items with new values.
 	* **Required**
 	
 * `$params->filter`
-	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
+	* Description: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
 	* Valid values: `stringSeparated`
 	* Default value: `''` (any items will be updated)
 	
 * `$params->limit`
-	* Desctription: Maximum number of items can be updated.
+	* Description: Maximum number of items can be updated.
 	* Valid values:
 		* `integer`
 		* `0` — all matching items
@@ -793,19 +793,19 @@ Undates properties of existing items with new values.
 Deletes required items from collection.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* Default value: —
 	
 * `$params->filter`
-	* Desctription: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
+	* Description: Filter clause for item properties. The same parameter as `\DDTools\ObjectCollection::getItems($params)`.
 	* Valid values: `stringSeparated`
 	* Default value: `''` (any items will be deleted)
 	
 * `$params->limit`
-	* Desctription: Maximum number of items can be deleted.
+	* Description: Maximum number of items can be deleted.
 	* Valid values:
 		* `integer`
 		* `0` — all matching items
@@ -820,7 +820,7 @@ Gets an JSON-array of all collection items.
 ##### Returns
 
 * `$result`
-	* Desctription: An JSON-array of items.
+	* Description: An JSON-array of items.
 	* Valid values: `stringJsonArray`
 
 
@@ -830,19 +830,19 @@ Sets data of an item object. All setting of an item data inside the class must b
 It's convenient to override this method in child classes if items are not plain objects.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->index`
-	* Desctription: Item index which data will be set.
+	* Description: Item index which data will be set.
 	* Valid values: `integer`
 	* **Required**
 	
 * `$params->data`
-	* Desctription: New item data.
+	* Description: New item data.
 	* Valid values:
 		* `array` — indexed arrays are supported as well as associative
 		* `object`
@@ -855,14 +855,14 @@ Returns data of an item object. All getting of an item data inside the class mus
 It's convenient to override this method in child classes if items are not plain objects.
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->itemObject`
-	* Desctription: An item object which data will be returned.
+	* Description: An item object which data will be returned.
 	* Valid values:
 		* `array` — indexed arrays are supported as well as associative
 		* `object`
@@ -872,7 +872,7 @@ It's convenient to override this method in child classes if items are not plain 
 ##### Returns
 
 * `$result`
-	* Desctription: Data of an item object.
+	* Description: Data of an item object.
 	* Valid values:
 		* `array`
 		* `object`
@@ -891,7 +891,7 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 Sets existing object properties.
 
 * `$props`
-	* Desctription: The object properties.
+	* Description: The object properties.
 		* The method sets all existing properties: public, private or protected — it doesn't matter, exactly what you pass will be set.
 		* No problem if If some properties are not exist, the method just skip them without errors.
 	* Valid values:
@@ -904,7 +904,7 @@ Sets existing object properties.
 	* **Required**
 	
 * `$props->{$propName}`
-	* Desctription: Key is the property name, value is the property value.
+	* Description: Key is the property name, value is the property value.
 	* Valid values: `mixed`
 	* **Required**
 
@@ -917,12 +917,12 @@ Returns all properties of this object as an associative array independent of the
 ##### Returns
 
 * `$result`
-	* Desctription: An associative array representation of this object.  
+	* Description: An associative array representation of this object.  
 		The method returns all existing properties: public, private and protected.
 	* Valid values: `arrayAssociative`
 	
 * `$result[$propName]`
-	* Desctription: The key is the object field name and the value is the object field value.
+	* Description: The key is the object field name and the value is the object field value.
 	* Valid values: `mixed`
 
 
@@ -934,14 +934,14 @@ Returns all properties of this object as an JSON string independent of their vis
 ##### Returns
 
 * `$result`
-	* Desctription: An JSON string representation of this object.  
+	* Description: An JSON string representation of this object.  
 		The method returns all existing properties: public, private and protected.
 	* Valid values:
 		* `stringJsonObject`
 		* `stringJsonArray` — if `$this->toArray` returns indexed array
 	
 * `$result->{$propName}`
-	* Desctription: The key is the object field name and the value is the object field value.
+	* Description: The key is the object field name and the value is the object field value.
 	* Valid values: `mixed`
 
 
@@ -960,31 +960,31 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 #### `\DDTools\Base\AncestorTrait::createChildInstance($params)`
 
 * `$params`
-	* Desctription: Parameters, the pass-by-name style is used.
+	* Description: Parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->name`
-	* Desctription: Short name of child class.
+	* Description: Short name of child class.
 	* Valid values: `string`
 	* **Required**
 	
 * `$params->params`
-	* Desctription: Params to be passed to object constructor.
+	* Description: Params to be passed to object constructor.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* Default value: `[]`
 	
 * `$params->parentDir`
-	* Desctription: Directory of the parent file (e. g. `__DIR__`).
+	* Description: Directory of the parent file (e. g. `__DIR__`).
 	* Valid values: `string`
 	* Default value: — (dirname of a class that uses this trait)
 	
 * `$params->capitalizeName`
-	* Desctription: Need to capitalize child name?
+	* Description: Need to capitalize child name?
 	* Valid values: `boolean`
 	* Default value: `true`
 
@@ -992,31 +992,31 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 ##### Returns
 
 * `$result`
-	* Desctription: The new object instance.
+	* Description: The new object instance.
 	* Valid values: `object`
 
 
 #### `\DDTools\Base\AncestorTrait::getChildClassName($params)`
 
 * `$params`
-	* Desctription: The object of parameters.
+	* Description: The object of parameters.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
 * `$params->name`
-	* Desctription: Short name of child class.
+	* Description: Short name of child class.
 	* Valid values: `string`
 	* **Required**
 	
 * `$params->parentDir`
-	* Desctription: Directory of the parent file (e. g. `__DIR__`).
+	* Description: Directory of the parent file (e. g. `__DIR__`).
 	* Valid values: `string`
 	* Default value: — (dirname of a class that uses this trait)
 	
 * `$params->capitalizeName`
-	* Desctription: Need to capitalize child name?
+	* Description: Need to capitalize child name?
 	* Valid values: `boolean`
 	* Default value: `true`
 
@@ -1024,7 +1024,7 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 ##### Returns
 
 * `$result`
-	* Desctription: Child class name.
+	* Description: Child class name.
 	* Valid values: `string`
 
 
@@ -1036,51 +1036,51 @@ Abstract class for snippets.
 #### Properties
 
 * `\DDTools\Snippet::$name`
-	* Desctription: Snippet name (e. g. `ddGetDocuments`).  
+	* Description: Snippet name (e. g. `ddGetDocuments`).  
 		Will be set from namespace in `\DDTools\Snippet::__construct($params)`.  
 		You can use it inside child classes: `$this->name`.
 	* Valid values: `string`
 	* Visibility: `protected`
 	
 * `\DDTools\Snippet::$version`
-	* Desctription: Snippet version.  
+	* Description: Snippet version.  
 		You **must** define it in your child class declaration.
 	* Valid values: `string`
 	* Visibility: `protected`
 	
 * `\DDTools\Snippet::$paths`
-	* Desctription: Snippet paths.  
+	* Description: Snippet paths.  
 		Will be set in `\DDTools\Snippet::__construct($params)`.
 	* Valid values: `stdClass`
 	* Visibility: `protected`
 	
 * `\DDTools\Snippet::$paths->snippet`
-	* Desctription: Full path to the snippet folder.
+	* Description: Full path to the snippet folder.
 	* Valid values: `string`
 	
 * `\DDTools\Snippet::$paths->src`
-	* Desctription: Ful path to the `src` folder.
+	* Description: Ful path to the `src` folder.
 	* Valid values: `string`
 	
 * `\DDTools\Snippet::$params`
-	* Desctription: Snippet params.  
+	* Description: Snippet params.  
 		Will be set in `\DDTools\Snippet::__construct($params)`.  
 		You can define default values of parameters as associative array in this field of your child class (e. g. `protected $params = ['someParameter' => 'valueByDefault'];`);.
 	* Valid values: `stdClass`
 	* Visibility: `protected`
 	
 * `\DDTools\Snippet::$params->{$paramName}`
-	* Desctription: Key is parameter name, value is value.
+	* Description: Key is parameter name, value is value.
 	* Valid values: `mixed`
 	
 * `\DDTools\Snippet::$paramsTypes`
-	* Desctription: Overwrite in child classes if you want to convert some parameters types.  
+	* Description: Overwrite in child classes if you want to convert some parameters types.  
 		Parameters types will be converted respectively with this field in `\DDTools\Snippet::prepareParams`.
 	* Valid values: `arrayAssociative`
 	* Visibility: `protected`
 	
 * `\DDTools\Snippet::$paramsTypes[$paramName]`
-	* Desctription: The parameter type.  
+	* Description: The parameter type.  
 		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
 	* Valid values:
 		* `'integer'`
@@ -1094,7 +1094,7 @@ Abstract class for snippets.
 	* Visibility: `protected`
 	
 * `\DDTools\Snippet::$renamedParamsCompliance`
-	* Desctription: Overwrite in child classes if you want to rename some parameters with backward compatibility (see `$params->compliance` of `\ddTools::verifyRenamedParams`).
+	* Description: Overwrite in child classes if you want to rename some parameters with backward compatibility (see `$params->compliance` of `\ddTools::verifyRenamedParams`).
 	* Valid values: `arrayAssociative`
 	* Visibility: `protected`
 
@@ -1102,7 +1102,7 @@ Abstract class for snippets.
 #### `\DDTools\Snippet::__construct($params)`
 
 * `$params`
-	* Desctription: Snippet parameters, the pass-by-name style is used.
+	* Description: Snippet parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -1111,7 +1111,7 @@ Abstract class for snippets.
 	* Default value: `[]`
 	
 * `$params->{$paramName}`
-	* Desctription: Key is parameter name, value is value.
+	* Description: Key is parameter name, value is value.
 	* Valid values: `mixed`
 	* **Required**
 
@@ -1128,7 +1128,7 @@ You **must** define it in your child class declaration.
 Static method for easy running needed snippet using only it's name and parameters (if needed).
 
 * `$params`
-	* Desctription: Snippet parameters, the pass-by-name style is used.
+	* Description: Snippet parameters, the pass-by-name style is used.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -1137,12 +1137,12 @@ Static method for easy running needed snippet using only it's name and parameter
 	* **Required**
 	
 * `$params->name`
-	* Desctription: The name of the snippet you want to run (e. g. `ddGetDocuments`).
+	* Description: The name of the snippet you want to run (e. g. `ddGetDocuments`).
 	* Valid values: `string`
 	* **Required**
 	
 * `$params->params`
-	* Desctription: Parameters that will be passed to the snippet constructor.
+	* Description: Parameters that will be passed to the snippet constructor.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -1151,7 +1151,7 @@ Static method for easy running needed snippet using only it's name and parameter
 	* Default value: —
 	
 * `$params->params->{$paramName}`
-	* Desctription: Key is parameter name, value is value.
+	* Description: Key is parameter name, value is value.
 	* Valid values: `mixed`
 	* **Required**
 
