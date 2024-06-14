@@ -886,6 +886,38 @@ It is convenient to inherit your classes from this.
 You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.ru/modx/ddgetdocumentfield) code.
 
 
+#### `\DDTools\Base\Base::getClassName()`
+
+Gets data about a class name.
+
+
+##### Returns
+
+* `$result`
+	* Description: Class name data.
+	* Valid values: `stdClass`
+	
+* `$result->full`
+	* Description: Full class name including namespace, e. g.: `'\\ddSendFeedback\\Sender\\Email\\Sender'`.
+	* Valid values: `string`
+	
+* `$result->nameShort`
+	* Description: Short class name, e. g.: `'Sender'`.
+	* Valid values: `string`
+	
+* `$result->namespaceFull`
+	* Description: Namespace, e. g.: `'\\ddSendFeedback\\Sender\\Email'`.
+	* Valid values: `string`
+	
+* `$result->namespaceShort`
+	* Description: Last namespace item, e. g.: `'Email'`.
+	* Valid values: `string`
+	
+* `$result->namespacePrefix`
+	* Description: Namespace prefix, e. g.: `'\\ddSendFeedback\\Sender'`.
+	* Valid values: `string`
+
+
 #### `\DDTools\Base\Base::setExistingProps($props)`
 
 Sets existing object properties.
