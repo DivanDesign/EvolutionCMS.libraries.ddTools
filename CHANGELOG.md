@@ -1,6 +1,26 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.62 (2024-06-14)
+* \+ `\ddTools::isEmpty`: The new public static method. Determines whether a variable is empty.
+* \* `\ddTools::parseText` → Parameters:
+	* \+ `$params->data`: Both objects and arrays are supported regardless of nesting level.
+	* \+ `$params->data->{$key}` → Valid values → `boolean`: The new supported value. It will be converted to `'1'` or `'0'` respectively.
+	* \* `$params->isCompletelyParsingEnabled`:
+		* \* Has been renamed from `$params->mergeAll` (with backward compatibility).
+		* \+ If enabled, the method will parse everything, including document fields, settings, chunks, snippets and URLs.
+* \* `\DDTools\ObjectTools::`
+	* \+ `getPropValue` → Parameters → `$params->notFoundResult`: The new optional parameter. Allows to define what will be returned if required property will not found (see README → Examples).
+	* \+ `unfold` → Parameters → `$params->isCrossTypeEnabled`: The new optional parameter. This parameter determines whether the method should process elements across different data types, such as arrays and objects, at all levels. When set to `true`, the method will recursively unfold elements of both array and object types, regardless of the type of the root parent (see README → Examples).
+	* \* `isPropExists` → Parameters → `$params->object`: The method will return `false` even if the parameter is not an object or array.
+* \* `\DDTools\ObjectCollection::setOneItemData` → Parameters: The following have been renamed (old names are still supported but deprecated):
+	* \* `itemIndex` → `index`.
+	* \* `itemData` → `data`.
+* \+ `\DDTools\Base\Base::getClassName`: The new public static method. Gets data about a class name (see README).
+* \+ `\DDTools\Base\AncestorTrait::getChildClassName`: The new public static method (see README).
+* \+ `\DDTools\Storage\`: The new classes. This is beta functionality, use it at your own risk.
+
+
 ## Version 0.61 (2023-10-01)
 * \+ `\DDTools\ObjectTools::convertType` → Parameters → `$params->type` → Valid values → `'stringHtmlAttrs'`: The new available value. Allows conversion to an HTML attributes string (see README → Examples).
 
