@@ -3,6 +3,87 @@ namespace DDTools\Base;
 
 abstract class Base {
 	/**
+	 * @var $ddClassNames {\stdClass} — Storage of all class names.
+	 * @var $ddClassNames->{$className} {\stdClass}
+	 * @var $ddClassNames->{$className}->full {string} — Full class name including namespace, e. g.: '\\ddSendFeedback\\Sender\\Email\\Sender'.
+	 * @var $ddClassNames->{$className}->nameShort {string} — Short class name, e. g.: 'Sender'.
+	 * @var $ddClassNames->{$className}->namespaceFull {string} — Namespace, e. g.: '\\ddSendFeedback\\Sender\\Email'.
+	 * @var $ddClassNames->{$className}->namespaceShort {string} — Last namespace item, e. g.: 'Email'.
+	 * @var $ddClassNames->{$className}->namespacePrefix {string} — Namespace prefix, e. g.: '\\ddSendFeedback\\Sender'.
+	 */
+	private static $ddClassNames = null;
+	
+	/**
+	 * getClassName
+	 * @version 1.0 (2024-06-14)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return $result {stdClass}
+	 */
+	public static function getClassName(): \stdClass {
+		$full = get_called_class();
+		
+		//Init
+		if (is_null(self::$ddClassNames)){
+			self::$ddClassNames = new \stdClass();
+		}
+		
+		//If not defined before for this child class
+		if (
+			!property_exists(
+				self::$ddClassNames,
+				$full
+			)
+		){
+			static::$ddClassNames->{$full} = (object) [
+				'full' => '',
+				'nameShort' => '',
+				'namespaceFull' => '',
+				'namespaceShort' => '',
+				'namespacePrefix' => '',
+			];
+			
+			static::$ddClassNames->{$full}->full = $full;
+			
+			$fullArray = explode(
+				'\\',
+				static::$ddClassNames->{$full}->full
+			);
+			
+			static::$ddClassNames->{$full}->full = '\\' . static::$ddClassNames->{$full}->full;
+			//Extract short class name
+			static::$ddClassNames->{$full}->nameShort = array_pop($fullArray);
+			
+			//If namespace exists
+			if (count($fullArray) > 0){
+				static::$ddClassNames->{$full}->namespaceFull =
+					'\\'
+					. implode(
+						'\\',
+						$fullArray
+					)
+				;
+				//Extract namespace
+				static::$ddClassNames->{$full}->namespaceShort = array_pop($fullArray);
+				
+				//If neamespace prefix exists
+				if (count($fullArray) > 0){
+					static::$ddClassNames->{$full}->namespacePrefix =
+						'\\'
+						. implode(
+							'\\',
+							$fullArray
+						)
+					;
+				}
+			}
+		}
+		
+		return static::$ddClassNames->{$full};
+	}
+	
+	/**
 	 * setExistingProps
 	 * @version 1.4 (2022-01-08)
 	 * 

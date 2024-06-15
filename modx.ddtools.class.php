@@ -1,11 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.61 (2023-10-01)
+ * @version 0.62 (2024-06-14)
  * 
  * @see README.md
  * 
- * @copyright 2012–2023 Ronef {@link https://Ronef.ru }
+ * @copyright 2012–2024 Ronef {@link https://Ronef.ru }
  */
 
 global $modx;
@@ -155,6 +155,22 @@ class ddTools {
 		}
 		
 		return self::$instance;
+	}
+	
+	/**
+	 * isEmpty
+	 * @version 1.0 (2024-06-07)
+	 * 
+	 * @see README.md
+	 * 
+	 * @return {boolean}
+	 */
+	public static function isEmpty($value = null): bool {
+		return
+			is_object($value)
+			? empty((array) $value)
+			: empty($value)
+		;
 	}
 	
 	/**
@@ -680,42 +696,6 @@ class ddTools {
 		
 		return $str;
 	}
-	
-	/**
-	 * encodedStringToArray
-	 * @version 1.2 (2020-06-02)
-	 * 
-	 * @desc Converts encoded strings to arrays.
-	 * Supported formats:
-	 * 1. [JSON](https://en.wikipedia.org/wiki/JSON).
-	 * 2. [Query string](https://en.wikipedia.org/wiki/Query_string).
-	 * 
-	 * @param $inputString {stringJsonObject|stringJsonArray|stringQueryFormatted|stdClass|array} — Input string. @required
-	 * 
-	 * @return {array}
-	 */
-	public static function encodedStringToArray($inputString){
-		$result = \DDTools\ObjectTools::convertType([
-			'object' => $inputString,
-			'type' => 'objectArray'
-		]);
-		
-		//The old deprecated format where string is separated by '||' and '::'
-		if (
-			count($result) == 1 &&
-			array_keys($result)[0] == $inputString
-		){
-			$result = self::explodeAssoc($inputString);
-			
-			self::logEvent([
-				'message' =>
-					'<p>Strings separated by <code>::</code> && <code>||</code> in parameters are deprecated.</p>' .
-					'<p>Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
-			]);
-		}
-		
-		return $result;
-	}
 
 	/**
 	 * getPlaceholdersFromText
@@ -927,11 +907,62 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.7 (2023-03-29)
+	 * @version 1.9.1 (2024-06-06)
 	 * 
 	 * @see README.md
 	 */
 	public static function parseText($params = []){
+		$params = call_user_func_array(
+			[
+				static::class,
+				'parseText_parepareParams',
+			],
+			func_get_args()
+		);
+		
+		$result = $params->text;
+		
+		$params->data = static::parseText_prepareData([
+			'data' => $params->data
+		]);
+		
+		foreach (
+			$params->data as
+			$key =>
+			$value
+		){
+			$result = static::parseText_parseItem([
+				'text' => $result,
+				'placeholder' => $params->placeholderPrefix . $key . $params->placeholderSuffix,
+				'value' => $value,
+			]);
+		}
+		
+		if ($params->isCompletelyParsingEnabled){
+			$result = static::parseSource($result);
+		}
+		
+		//It is needed only after static::parseSource because some snippets can create the new empty placeholders
+		if ($params->removeEmptyPlaceholders){
+			$result = preg_replace(
+				'/(\[\+\S+?\+\])/m',
+				'',
+				$result
+			);
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * parseText_parepareParams
+	 * @version 1.0 (2024-06-06)
+	 *
+	 * @param $params {stdClass|arrayAssociative} — The object of parameters. See $this->parseText.
+	 *
+	 * @return {string}
+	 */
+	private static function parseText_parepareParams($params = []): \stdClass {
 		//For backward compatibility
 		if (func_num_args() > 1){
 			//Convert ordered list of params to named
@@ -942,10 +973,18 @@ class ddTools {
 					'data',
 					'placeholderPrefix',
 					'placeholderSuffix',
-					'mergeAll'
+					'isCompletelyParsingEnabled'
 				]
 			]);
 		}
+		
+		$params = \ddTools::verifyRenamedParams([
+			'params' => (object) $params,
+			'compliance' => [
+				'mergeAll' => 'isCompletelyParsingEnabled',
+			],
+			'returnCorrectedOnly' => false,
+		]);
 		
 		$params = \DDTools\ObjectTools::extend([
 			'objects' => [
@@ -956,15 +995,31 @@ class ddTools {
 					'placeholderPrefix' => '[+',
 					'placeholderSuffix' => '+]',
 					'removeEmptyPlaceholders' => false,
-					'mergeAll' => true
+					'isCompletelyParsingEnabled' => true
 				],
 				$params
 			]
 		]);
 		
+		return $params;
+	}
+	
+	/**
+	 * parseText_prepareData
+	 * @version 1.0 (2024-06-06)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The object of parameters. See $this->parseText.
+	 * @param $params->data {stdClass|array|string}
+	 * 
+	 * @return {stdClass}
+	 */
+	private static function parseText_prepareData($params = []): \stdClass {
+		$params = (object) $params;
+		
+		$result = new \stdClass();
+		
 		//Arrays and objects are already ready to use
 		if (
-			//Also, objects should not be converted to arrays for correct unfolding
 			!is_object($params->data) &&
 			!is_array($params->data)
 		){
@@ -973,9 +1028,6 @@ class ddTools {
 				'type' => 'objectArray'
 			]);
 		}
-		
-		
-		$result = $params->text;
 		
 		foreach (
 			$params->data as
@@ -990,7 +1042,8 @@ class ddTools {
 				$unfoldedValue = \DDTools\ObjectTools::unfold([
 					'object' => [
 						$key => $value
-					]
+					],
+					'isCrossTypeEnabled' => true,
 				]);
 				
 				foreach (
@@ -998,11 +1051,7 @@ class ddTools {
 					$unfoldedValue_itemKey =>
 					$unfoldedValue_itemValue
 				){
-					$result = str_replace(
-						$params->placeholderPrefix . $unfoldedValue_itemKey . $params->placeholderSuffix,
-						$unfoldedValue_itemValue,
-						$result
-					);
+					$result->{$unfoldedValue_itemKey} = $unfoldedValue_itemValue;
 				}
 				
 				//Also add object value as JSON
@@ -1012,28 +1061,35 @@ class ddTools {
 				]);
 			}
 			
-			$result = str_replace(
-				$params->placeholderPrefix . $key . $params->placeholderSuffix,
-				$value,
-				$result
-			);
-		}
-		
-		if ($params->mergeAll){
-			$result = self::$modx->mergeDocumentContent($result);
-			$result = self::$modx->mergeSettingsContent($result);
-			$result = self::$modx->mergeChunkContent($result);
-		}
-		
-		if ($params->removeEmptyPlaceholders){
-			$result = preg_replace(
-				'/(\[\+\S+?\+\])/m',
-				'',
-				$result
-			);
+			$result->{$key} = $value;
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * parseText_parseItem
+	 * @version 1.1 (2024-06-06)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
+	 * @param $params->text {string} — Source text.
+	 * @param $params->placeholder {string} — Placeholder string, e. g. [+fullName+].
+	 * @param $params->value {string} — Placeholder value.
+	 * 
+	 * @return {string}
+	 */
+	private static function parseText_parseItem($params = []) :string {
+		$params = (object) $params;
+		
+		if (is_bool($params->value)){
+			$params->value = intval($params->value);
+		}
+		
+		return str_replace(
+			$params->placeholder,
+			$params->value,
+			$params->text
+		);
 	}
 	
 	/**
@@ -2931,6 +2987,42 @@ class ddTools {
 	 */
 	public static function getResponse(){
 		return new \DDTools\Response();
+	}
+	
+	/**
+	 * encodedStringToArray
+	 * @version 1.2 (2020-06-02)
+	 * 
+	 * @desc Converts encoded strings to arrays.
+	 * Supported formats:
+	 * 1. [JSON](https://en.wikipedia.org/wiki/JSON).
+	 * 2. [Query string](https://en.wikipedia.org/wiki/Query_string).
+	 * 
+	 * @param $inputString {stringJsonObject|stringJsonArray|stringQueryFormatted|stdClass|array} — Input string. @required
+	 * 
+	 * @return {array}
+	 */
+	public static function encodedStringToArray($inputString){
+		$result = \DDTools\ObjectTools::convertType([
+			'object' => $inputString,
+			'type' => 'objectArray'
+		]);
+		
+		//The old deprecated format where string is separated by '||' and '::'
+		if (
+			count($result) == 1 &&
+			array_keys($result)[0] == $inputString
+		){
+			$result = self::explodeAssoc($inputString);
+			
+			self::logEvent([
+				'message' =>
+				'<p>Strings separated by <code>::</code> && <code>||</code> in parameters are deprecated.</p>' .
+				'<p>Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+			]);
+		}
+		
+		return $result;
 	}
 	
 	/**
