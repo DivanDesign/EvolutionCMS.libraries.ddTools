@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.62 (2024-06-14)
+ * @version 0.62.1 (2024-06-17)
  * 
  * @see README.md
  * 
@@ -956,7 +956,7 @@ class ddTools {
 	
 	/**
 	 * parseText_parepareParams
-	 * @version 1.0 (2024-06-06)
+	 * @version 1.0.1 (2024-06-17)
 	 *
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. See $this->parseText.
 	 *
@@ -981,7 +981,7 @@ class ddTools {
 		$params = \ddTools::verifyRenamedParams([
 			'params' => (object) $params,
 			'compliance' => [
-				'mergeAll' => 'isCompletelyParsingEnabled',
+				'isCompletelyParsingEnabled' => 'mergeAll',
 			],
 			'returnCorrectedOnly' => false,
 		]);
