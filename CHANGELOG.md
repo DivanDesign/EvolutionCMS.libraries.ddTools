@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.62.1 (2024-06-17)
+* \* `\ddTools::parseText` → Parameters → `$params->isCompletelyParsingEnabled`: Broken support for deprecated name `$params->mergeAll` has been fixed.
+
+
 ## Version 0.62 (2024-06-14)
 * \+ `\ddTools::isEmpty`: The new public static method. Determines whether a variable is empty.
 * \* `\ddTools::parseText` → Parameters:

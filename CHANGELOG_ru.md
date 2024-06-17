@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.62.1 (2024-06-17)
+* \* `\ddTools::parseText` → Parameters → `$params->isCompletelyParsingEnabled`: Неработающая поддержка устаревшего названия `$params->mergeAll` исправлена.
+
+
 ## Версия 0.62 (2024-06-14)
 * \+ `\ddTools::isEmpty`: Новый публичный статичный метод. Проверяет, пуста ли переменная.
 * \* `\ddTools::parseText` → Параметры:
