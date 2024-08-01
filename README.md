@@ -645,6 +645,13 @@ Deletes one or more cache files.
 		* `string`
 		* `'*'` — means any prefix
 	* Default value: `'doc'`
+	
+* `$params->suffix`
+	* Description: Cache suffix.
+	* Valid values:
+		* `string`
+		* `'*'` — means any suffix
+	* Default value: `'*'`
 
 
 ### `\DDTools\ObjectCollection`

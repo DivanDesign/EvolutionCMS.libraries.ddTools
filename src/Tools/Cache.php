@@ -137,13 +137,14 @@ class Cache {
 	
 	/**
 	 * clear
-	 * @version 2.1.2 (2024-08-01)
+	 * @version 2.2 (2024-08-01)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The object of parameters.
 	 * @param [$params->resourceId=null] {integer|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param [$params->prefix='doc'] {string|'*'} — Cache prefix.
+	 * @param [$params->suffix='*'] {string|'*'} — Cache suffix.
 	 * 
 	 * @return {void}
 	 */
@@ -155,6 +156,7 @@ class Cache {
 				(object) [
 					'resourceId' => null,
 					'prefix' => 'doc',
+					'suffix' => '*',
 				],
 				$params,
 			],
@@ -166,8 +168,7 @@ class Cache {
 		//Clear cache for specified documents
 		}else{
 			$files = glob(
-				static::$cacheDir
-				. '/' . $params->prefix . $params->resourceId . '-*.php'
+				static::buildCacheFilePath($params)
 			);
 			
 			foreach (
