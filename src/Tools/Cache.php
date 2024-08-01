@@ -35,11 +35,11 @@ class Cache {
 	
 	/**
 	 * create
-	 * @version 2.1.2 (2024-08-01)
+	 * @version 3.0 (2024-08-01)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
-	 * @param $params->name {string} — Unique cache name for the resource.
+	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param $params->data {string|array|stdClass} — Data to save.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
@@ -84,11 +84,11 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 2.1.2 (2024-08-01)
+	 * @version 3.0 (2024-08-01)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
-	 * @param $params->name {string} — Unique cache name for the document.
+	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
 	 * @return {null|string|array|stdClass} — `null` means that the cache file does not exist.
@@ -181,11 +181,11 @@ class Cache {
 	
 	/**
 	 * buildCacheFilePath
-	 * @version 2.1.1 (2024-08-01)
+	 * @version 3.0 (2024-08-01)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
-	 * @param $params->name {string} — Unique cache name for the document.
+	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
 	 * @return {string}
@@ -202,7 +202,7 @@ class Cache {
 		
 		return
 			static::$cacheDir
-			. '/' . $params->prefix . $params->resourceId . '-' . $params->name . '.php'
+			. '/' . $params->prefix . $params->resourceId . '-' . $params->suffix . '.php'
 		;
 	}
 }

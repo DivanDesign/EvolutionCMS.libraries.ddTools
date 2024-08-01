@@ -562,7 +562,7 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 You can cache some data (e. g. a snippet result) to a file.
 
 * All cache files are stored in the `assets/cache/ddCache` folder.
-* The name of each cache file is `[+prefix+][+resourceId+]-[+name+].php`.
+* The name of each cache file is `[+prefix+][+resourceId+]-[+suffix+].php`.
 * Each cache file can contain a string, array or stdClass.
 
 
@@ -580,8 +580,8 @@ You can cache some data (e. g. a snippet result) to a file.
 	* Valid values: `integer`
 	* **Required**
 	
-* `$params->name`
-	* Description: Unique cache name.
+* `$params->suffix`
+	* Description: Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	* Valid values: `string`
 	* **Required**
 	
