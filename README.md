@@ -557,6 +557,96 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 		* `array`
 
 
+### `\DDTools\Tools\Cache`
+
+You can cache some data (e. g. a snippet result) to a file.
+
+* All cache files are stored in the `assets/cache/ddCache` folder.
+* The name of each cache file is `[+prefix+][+resourceId+]-[+name+].php`.
+* Each cache file can contain a string, array or stdClass.
+
+
+#### `\DDTools\Tools\Cache::create($params)`, `\DDTools\Tools\Cache::get($params)`
+
+* `$params`
+	* Description: The object of parameters.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->resourceId`
+	* Description: Resource ID related to cache (e. g. document ID).
+	* Valid values: `integer`
+	* **Required**
+	
+* `$params->name`
+	* Description: Unique cache name.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->prefix`
+	* Description: Cache file prefix. Useful if you want to cache some custom data that is not related to any documents.
+	* Valid values: `string`
+	* Default value: `'doc'`
+
+
+#### `\DDTools\Tools\Cache::create($params)`
+
+Saves custom data to a cache file.
+
+* `$params->data`
+	* Description: Data to save.
+	* Valid values:
+		* `string`
+		* `array`
+		* `stdClass`
+	* **Required**
+
+
+#### `\DDTools\Tools\Cache::get($params)`
+
+Retrieves data from a cache file.
+
+
+##### Returns
+
+* `$result`
+	* Description: Cached data.
+	* Valid values:
+		* Type of returned data depends on type of saved data:
+			* `string`
+			* `array`
+			* `stdClass`
+		* `null` — means that the cache file does not exist
+
+
+#### `\DDTools\Tools\Cache::clear($params)`
+
+Deletes one or more cache files.
+
+* `$params`
+	* Description: The object of parameters.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: —
+	
+* `$params->resourceId`
+	* Description: Resource ID related to cache (e. g. document ID).
+	* Valid values:
+		* `integer`
+		* `null` — cache of all resources will be cleared independent of `$params->prefix`
+	* Default value: `null`
+	
+* `$params->prefix`
+	* Description: Cache file prefix. Useful if you want to cache some custom data that is not related to any documents.
+	* Valid values:
+		* `string`
+		* `'*'` — means any prefix
+	* Default value: `'doc'`
+
+
 ### `\DDTools\ObjectCollection`
 
 Class representing a collection of some objects or arrays.
