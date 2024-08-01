@@ -562,7 +562,7 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 You can cache some data (e. g. a snippet result) to a file.
 
 * All cache files are stored in the `assets/cache/ddCache` folder.
-* The name of each cache file is `[+prefix+][+resourceId+]-[+suffix+].php`.
+* The name of each cache file is `[+prefix+]-[+resourceId+]-[+suffix+].php`.
 * Each cache file can contain a string, array or stdClass.
 
 

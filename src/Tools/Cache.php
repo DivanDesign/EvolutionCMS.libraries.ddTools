@@ -182,7 +182,7 @@ class Cache {
 	
 	/**
 	 * buildCacheFilePath
-	 * @version 3.0 (2024-08-01)
+	 * @version 4.0 (2024-08-01)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -203,7 +203,7 @@ class Cache {
 		
 		return
 			static::$cacheDir
-			. '/' . $params->prefix . $params->resourceId . '-' . $params->suffix . '.php'
+			. '/' . $params->prefix . '-' . $params->resourceId . '-' . $params->suffix . '.php'
 		;
 	}
 }
