@@ -10,6 +10,9 @@
 		"ddtools"
 	],
 	"homepage": "https://code.divandesign.ru/modx/ddtools",
+	"support": {
+		"chat": "https://t.me/dd_code"
+	},
 	"authors": [
 		{
 			"name": "Ilyas Ronef",
