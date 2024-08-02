@@ -85,7 +85,7 @@ abstract class Base {
 	
 	/**
 	 * setExistingProps
-	 * @version 1.4 (2022-01-08)
+	 * @version 1.4.1 (2024-08-02)
 	 * 
 	 * @see README.md
 	 * 
@@ -93,7 +93,7 @@ abstract class Base {
 	 */
 	public function setExistingProps($props){
 		if (is_string($props)){
-			$props = \DDTools\ObjectTools::convertType([
+			$props = \DDTools\Tools\Objects::convertType([
 				'object' => $props,
 				'type' => 'objectStdClass'
 			]);
@@ -224,14 +224,14 @@ abstract class Base {
 	
 	/**
 	 * toJSON
-	 * @version 1.1 (2022-12-26)
+	 * @version 1.1.1 (2024-08-02)
 	 * 
 	 * @see README.md
 	 * 
 	 * @return {stringJsonObject}
 	 */
 	public function toJSON(){
-		return \DDTools\ObjectTools::convertType([
+		return \DDTools\Tools\Objects::convertType([
 			'object' => $this->toArray(),
 			'type' => 'stringJsonAuto'
 		]);

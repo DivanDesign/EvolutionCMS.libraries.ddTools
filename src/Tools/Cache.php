@@ -35,7 +35,7 @@ class Cache {
 	
 	/**
 	 * create
-	 * @version 3.0 (2024-08-01)
+	 * @version 3.0.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -63,7 +63,7 @@ class Cache {
 		;
 		
 		if ($dataType != 'str'){
-			$params->data = \DDTools\ObjectTools::convertType([
+			$params->data = \DDTools\Tools\Objects::convertType([
 				'object' => $params->data,
 				'type' => 'stringJsonAuto',
 			]);
@@ -121,7 +121,7 @@ class Cache {
 			);
 			
 			if ($dataType != 'str'){
-				$result = \DDTools\ObjectTools::convertType([
+				$result = \DDTools\Tools\Objects::convertType([
 					'object' => $result,
 					'type' =>
 						$dataType == 'obj'
@@ -151,7 +151,7 @@ class Cache {
 	public static function clear($params = []): void {
 		static::initStatic();
 		
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
 					'resourceId' => null,
@@ -192,7 +192,7 @@ class Cache {
 	 * @return {string}
 	 */
 	private static function buildCacheFilePath($params): string {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
 					'prefix' => 'doc',

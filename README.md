@@ -338,10 +338,10 @@ Modify your images: create thumbnails, crop, resize, fill background color or ad
 	* Default value: —
 
 
-### `\DDTools\ObjectTools`
+### `\DDTools\Tools\Objects`
 
 
-#### `\DDTools\ObjectTools::isPropExists($params)`
+#### `\DDTools\Tools\Objects::isPropExists($params)`
 
 Checks if the object, class or array has a property / element.
 This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
@@ -371,7 +371,7 @@ Second, the different order of parameters in the native PHP functions makes us c
 	* **Required**
 
 
-#### `\DDTools\ObjectTools::getPropValue($params)`
+#### `\DDTools\Tools\Objects::getPropValue($params)`
 
 Get the value of an object property or an array element in any nesting level in one way regardless of the “object” type.
 
@@ -416,7 +416,7 @@ Get the value of an object property or an array element in any nesting level in 
 		* `$params->notFoundResult` — if property not exists
 
 
-#### `\DDTools\ObjectTools::convertType($params)`
+#### `\DDTools\Tools\Objects::convertType($params)`
 
 Converts an object type.
 Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en.wikipedia.org/wiki/Query_string) objects are also supported.
@@ -466,7 +466,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `stringJsonArray`
 
 
-#### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\Tools\Objects::extend($params)`
 
 Merge the contents of two or more objects or arrays together into the first one.
 
@@ -513,7 +513,7 @@ Merge the contents of two or more objects or arrays together into the first one.
 	* Default value: `true`
 
 
-#### `\DDTools\ObjectTools::unfold($params)`
+#### `\DDTools\Tools\Objects::unfold($params)`
 
 Converts a multidimensional array/object into an one-dimensional one joining the keys with `$params->keySeparator`.
 For example, it can be helpful while using placeholders like `[+size.width+]`.
@@ -1447,10 +1447,10 @@ Returns:
 ```
 
 
-### `\DDTools\ObjectTools`
+### `\DDTools\Tools\Objects`
 
 
-#### `\DDTools\ObjectTools::convertType($params)`
+#### `\DDTools\Tools\Objects::convertType($params)`
 
 
 ##### Convert a JSON or Query encoded string to an array
@@ -1461,7 +1461,7 @@ Just call this method and don't care about it.
 
 ```php
 //We can pass string in JSON format
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => '{
 		"pagetitle": "Test title",
 		"published": "0"
@@ -1470,7 +1470,7 @@ Just call this method and don't care about it.
 ]);
 
 //Or Query string
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => 'pagetitle=Test title&published=0',
 	'type' => 'objectArray'
 ]);
@@ -1489,7 +1489,7 @@ Both calls return:
 ##### Convert a Query encoded string to a JSON object string
 
 ```php
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => 'firstName=Hans&lastName=Zimmer',
 	'type' => 'stringJsonAuto'
 ]);
@@ -1508,7 +1508,7 @@ Returns:
 ##### Convert a JSON object to a JSON array
 
 ```php
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => '{
 		"firstName": "Ramin",
 		"lastName": "Djawadi"
@@ -1530,7 +1530,7 @@ Returns:
 ##### Convert a HJSON encoded string to an object
 
 ```php
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => "{
 		//This is HJSON, not JSON, so we can use comments insides
 		keys: and values can be specified without quotes,
@@ -1560,7 +1560,7 @@ A simple syntax and easy to read.',
 ##### Convert an associative array to a string of HTML attributes
 
 ```php
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => [
 		'data-name' => 'KINO',
 		//Will be converted to 1
@@ -1587,13 +1587,13 @@ data-name='KINO' data-is-active='1' data-members='["Viktor Tsoi","Yuri Kasparyan
 ```
 
 
-#### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\Tools\Objects::extend($params)`
 
 
 ##### Merge two objects, modifying the first
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
+var_export(\DDTools\Tools\Objects::extend([
 	'objects' => [
 		(object) [
 			'cat' => 'mew',
@@ -1631,7 +1631,7 @@ stdClass::__set_state(array(
 ##### Also you can extend arrays
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
+var_export(\DDTools\Tools\Objects::extend([
 	'objects' => [
 		[
 			'cat' => 'mew',
@@ -1669,7 +1669,7 @@ array(
 ##### Moreover, objects can extend arrays and vice versa
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
+var_export(\DDTools\Tools\Objects::extend([
 	'objects' => [
 		[
 			'name' => 'jokes',
@@ -1707,7 +1707,7 @@ array(
 By default, empty field values (e. g. `''`) are treated as other values and will replace non-empty ones.
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
+var_export(\DDTools\Tools\Objects::extend([
 	'objects' => [
 		(object) [
 			'firstName' => 'John',
@@ -1737,7 +1737,7 @@ Empty `lastName` from the second object replaced non-empty `lastName` from the f
 If you want to ignore empty values, just use `$params->overwriteWithEmpty` == `false`:
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
+var_export(\DDTools\Tools\Objects::extend([
 	'objects' => [
 		(object) [
 			'firstName' => 'John',
@@ -1764,13 +1764,13 @@ stdClass::__set_state(array(
 ```
 
 
-#### `\DDTools\ObjectTools::unfold($params)`
+#### `\DDTools\Tools\Objects::unfold($params)`
 
 
 ##### Unfold an object
 
 ```php
-var_export(\DDTools\ObjectTools::unfold([
+var_export(\DDTools\Tools\Objects::unfold([
 	'object' => (object) [
 		'name' => 'Elon Musk',
 		'address' => (object) [
@@ -1799,7 +1799,7 @@ stdClass::__set_state(array (
 ##### Unfold an array
 
 ```php
-var_export(\DDTools\ObjectTools::unfold([
+var_export(\DDTools\Tools\Objects::unfold([
 	'object' => [
 		'a' => 'a val',
 		'b' => [
@@ -1830,7 +1830,7 @@ array (
 ##### Use custom key separator
 
 ```php
-var_export(\DDTools\ObjectTools::unfold([
+var_export(\DDTools\Tools\Objects::unfold([
 	'object' => [
 		'name' => 'Elon Musk',
 		'parents' => [
@@ -1877,7 +1877,7 @@ $data = [
 
 ```php
 var_export(
-	\DDTools\ObjectTools::unfold([
+	\DDTools\Tools\Objects::unfold([
 		'object' => $data,
 	])
 );
@@ -1902,7 +1902,7 @@ array (
 
 ```php
 var_export(
-	\DDTools\ObjectTools::unfold([
+	\DDTools\Tools\Objects::unfold([
 		'object' => $data,
 		'isCrossTypeEnabled' => true,
 	])
@@ -1923,14 +1923,14 @@ array (
 ```
 
 
-#### `\DDTools\ObjectTools::isPropExists($params)`
+#### `\DDTools\Tools\Objects::isPropExists($params)`
 
 Checks if the object, class or array has a property / element using the same syntax.
 
 You can pass an object:
 
 ```php
-var_export(\DDTools\ObjectTools::isPropExists([
+var_export(\DDTools\Tools\Objects::isPropExists([
 	'object' => (object) [
 		'firstName' => 'John',
 		'lastName' => 'Lennon'
@@ -1942,7 +1942,7 @@ var_export(\DDTools\ObjectTools::isPropExists([
 Or an array:
 
 ```php
-var_export(\DDTools\ObjectTools::isPropExists([
+var_export(\DDTools\Tools\Objects::isPropExists([
 	'object' => [
 		'firstName' => 'Paul',
 		'lastName' => 'McCartney'
@@ -1954,7 +1954,7 @@ var_export(\DDTools\ObjectTools::isPropExists([
 Both calls return `true`.
 
 
-#### `\DDTools\ObjectTools::getPropValue($params)`
+#### `\DDTools\Tools\Objects::getPropValue($params)`
 
 
 ##### Get the value of an object property or an array element using the same syntax
@@ -1962,7 +1962,7 @@ Both calls return `true`.
 You can pass an object:
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
+var_export(\DDTools\Tools\Objects::getPropValue([
 	'object' => (object) [
 		'name' => 'Floyd',
 		'weight' => 7
@@ -1974,7 +1974,7 @@ var_export(\DDTools\ObjectTools::getPropValue([
 Or an array:
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
+var_export(\DDTools\Tools\Objects::getPropValue([
 	'object' => [
 		'name' => 'Floyd',
 		'weight' => 7
@@ -2027,7 +2027,7 @@ $sourceObject = (object) [
 There's nothing special, just look at this example for the full picture.
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
+var_export(\DDTools\Tools\Objects::getPropValue([
 	'object' => $sourceObject,
 	'propName' => 'PinkFloyd'
 ]));
@@ -2066,7 +2066,7 @@ array (
 Let's make it a little more interesting: let's get the 4th element of the second-level indexed array.
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
+var_export(\DDTools\Tools\Objects::getPropValue([
 	'object' => $sourceObject,
 	'propName' => 'PinkFloyd.4'
 ]));
@@ -2090,7 +2090,7 @@ No matter what type of element is used in any nesting level, the method will wor
 So let's get Roger's name. As you remember, he is stdClass as opposed to the other members who are associative arrays.
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
+var_export(\DDTools\Tools\Objects::getPropValue([
 	'object' => $sourceObject,
 	'propName' => 'PinkFloyd.2.name'
 ]));
@@ -2106,7 +2106,7 @@ Returns:
 ###### Of course, it works fine with single-level objects that contain `'.'` in their property names
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
+var_export(\DDTools\Tools\Objects::getPropValue([
 	'object' => [
 		'1973.03.01' => 'The Dark Side of the Moon',
 		'1975.09.12' => 'Wish You Were Here'

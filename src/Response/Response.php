@@ -143,7 +143,7 @@ class Response {
 	
 	/**
 	 * setMeta
-	 * @version 1.4.1 (2023-03-29)
+	 * @version 1.4.2 (2024-08-02)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -154,7 +154,7 @@ class Response {
 	public function setMeta($meta = []){
 		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormatted
 		if (!is_array($meta)){
-			$meta = \DDTools\ObjectTools::convertType([
+			$meta = \DDTools\Tools\Objects::convertType([
 				'object' => $meta,
 				'type' => 'objectArray'
 			]);
@@ -162,7 +162,7 @@ class Response {
 		
 		//If success is not set
 		if (
-			!\DDTools\ObjectTools::isPropExists([
+			!\DDTools\Tools\Objects::isPropExists([
 				'object' => $meta,
 				'propName' => 'success'
 			])
@@ -173,7 +173,7 @@ class Response {
 		
 		//If code is not set
 		if (
-			!\DDTools\ObjectTools::isPropExists([
+			!\DDTools\Tools\Objects::isPropExists([
 				'object' => $meta,
 				'propName' => 'code'
 			])
@@ -238,7 +238,7 @@ class Response {
 	
 	/**
 	 * setMetaData
-	 * @version 1.0.1 (2023-03-29)
+	 * @version 1.0.2 (2024-08-02)
 	 * 
 	 * @desc Setter for $this->meta and $this->data.
 	 * 
@@ -249,14 +249,14 @@ class Response {
 	public function setMetaData($params){
 		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormatted
 		if (!is_array($params)){
-			$params = \DDTools\ObjectTools::convertType([
+			$params = \DDTools\Tools\Objects::convertType([
 				'object' => $params,
 				'type' => 'objectArray'
 			]);
 		}
 		
 		if (
-			\DDTools\ObjectTools::isPropExists([
+			\DDTools\Tools\Objects::isPropExists([
 				'object' => $params,
 				'propName' => 'meta'
 			])
@@ -265,7 +265,7 @@ class Response {
 		}
 		
 		if (
-			\DDTools\ObjectTools::isPropExists([
+			\DDTools\Tools\Objects::isPropExists([
 				'object' => $params,
 				'propName' => 'data'
 			])
@@ -339,14 +339,14 @@ class Response {
 	
 	/**
 	 * toJSON
-	 * @version 1.0.1 (2021-03-10)
+	 * @version 1.0.2 (2024-08-02)
 	 * 
 	 * @desc Converts this object to JSON string.
 	 * 
 	 * @return string
 	 */
 	public function toJSON(){
-		return \DDTools\ObjectTools::convertType([
+		return \DDTools\Tools\Objects::convertType([
 			'object' => $this->toArray(),
 			'type' => 'stringJsonObject'
 		]);

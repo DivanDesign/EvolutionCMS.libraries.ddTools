@@ -45,7 +45,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * initStatic
-	 * @version 1.1.1 (2023-12-29)
+	 * @version 1.1.2 (2024-08-02)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
@@ -55,7 +55,7 @@ class Storage extends \DDTools\Storage\Storage {
 		//If is not inited before (type of static::$columnsDefaultParams is just used as flag)
 		if (!is_object(static::$columnsDefaultParams)){
 			//Merge columnsDefaultParams from parent and child static props
-			static::$columnsDefaultParams = \DDTools\ObjectTools::extend([
+			static::$columnsDefaultParams = \DDTools\Tools\Objects::extend([
 				'objects' => [
 					//Parent (\DDTools\DB\Table::$columnsDefaultParams)
 					(object) self::$columnsDefaultParams,
@@ -68,7 +68,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * __construct
-	 * @version 3.0 (2024-01-04)
+	 * @version 3.0.1 (2024-08-02)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — Parameters, the pass-by-name style is used. Default: —.
 	 * @param $params->nameAlias {string} — Short table name (e. g. 'site_content'). You can define it in child classes or pass to the constructor directly. Default: ''.
@@ -82,7 +82,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @param $params->columns[$i]->isTagsAllowed {boolean} — Are HTML and MODX tags allowed? Default: static::$columnsDefaultParams->isTagsAllowed.
 	 */
 	public function __construct($params = []){
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
 					'columns' => []
@@ -101,7 +101,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_props
-	 * @version 2.0 (2024-01-04)
+	 * @version 2.0.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass} — Parameters, see $this->__construct. @required
 	 * 
@@ -135,7 +135,7 @@ class Storage extends \DDTools\Storage\Storage {
 				
 				$this->columns->addItems([
 					'items' => [
-						\DDTools\ObjectTools::extend([
+						\DDTools\Tools\Objects::extend([
 							'objects' => [
 								//Column data
 								(object) [
@@ -153,7 +153,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_db
-	 * @version 1.0.1 (2024-01-04)
+	 * @version 1.0.2 (2024-08-02)
 	 * 
 	 * @return {void}
 	 */
@@ -197,7 +197,7 @@ class Storage extends \DDTools\Storage\Storage {
 					$propDefaultValue
 				){
 					if (
-						!\DDTools\ObjectTools::isPropExists([
+						!\DDTools\Tools\Objects::isPropExists([
 							'object' => $columnData,
 							'propName' => $propName
 						])
@@ -260,7 +260,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getColsParams
-	 * @version 3.0 (2023-12-28)
+	 * @version 3.0.1 (2024-08-02)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — Parameters, the pass-by-name style is used. Default: —.
 	 * @param $params->paramName {'name'|'attrs'} — Column property to return. Default: 'name'.
@@ -270,7 +270,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @return $result[$columnName] {string} — Key is column name, value is column property defined by $params->paramName.
 	 */
 	protected function cols_getColsParams($params = []): array {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -290,7 +290,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getOneColParam
-	 * @version 2.0 (2023-12-28)
+	 * @version 2.0.1 (2024-08-02)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — Parameters, the pass-by-name style is used. Default: —.
 	 * @param $params->filter {string} — Filter clause for column properties, see `\DDTools\ObjectCollection`. Default: ''.
@@ -299,7 +299,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @return {mixed|null} — `null` means that column or property is not exist.
 	 */
 	protected function cols_getOneColParam($params = []){
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -310,7 +310,7 @@ class Storage extends \DDTools\Storage\Storage {
 			]
 		]);
 		
-		return \DDTools\ObjectTools::getPropValue([
+		return \DDTools\Tools\Objects::getPropValue([
 			'object' => $this->columns->getOneItem([
 				'filter' => $params->filter,
 			]),
@@ -320,7 +320,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getValidNames
-	 * @version 1.1.2 (2023-12-28)
+	 * @version 1.1.3 (2024-08-02)
 	 * 
 	 * @desc Gets valid column names.
 	 * 
@@ -332,7 +332,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @return $result[$i] {string}
 	 */
 	protected function cols_getValidNames($params = []): array {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
 					'colNames' => '*'
@@ -369,7 +369,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_add
-	 * @version 1.2 (2023-12-28)
+	 * @version 1.2.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->items {mixed} — An array of items. @required
@@ -392,7 +392,7 @@ class Storage extends \DDTools\Storage\Storage {
 		
 		//Items must be an array
 		if (!is_array($params->items)){
-			$params->items = \DDTools\ObjectTools::convertType([
+			$params->items = \DDTools\Tools\Objects::convertType([
 				'object' => $params->items,
 				'type' => 'objectArray'
 			]);
@@ -432,7 +432,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.3.3 (2024-01-16)
+	 * @version 1.3.4 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
@@ -447,7 +447,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @return $result[$itemIndex]->id {integer} — ID of added item.
 	 */
 	public function items_update($params): array {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -518,7 +518,7 @@ class Storage extends \DDTools\Storage\Storage {
 					$dbResult as
 					$itemId
 				){
-					$result[] = \DDTools\ObjectTools::extend([
+					$result[] = \DDTools\Tools\Objects::extend([
 						'objects' => [
 							(object) [
 								'id' => $itemId
@@ -535,7 +535,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_delete
-	 * @version 1.1 (2023-12-26)
+	 * @version 1.1.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
 	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (all items will be deleted).
@@ -547,7 +547,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @return {void}
 	 */
 	public function items_delete($params = []): void {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -572,7 +572,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_get
-	 * @version 1.2 (2023-12-26)
+	 * @version 1.2.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
 	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (all items will be returned).
@@ -589,7 +589,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @return $result[$itemIndex|$itemFieldValue] {stdClass|mixed} — A item object or item property value if specified in `$params->propAsResultValue`.
 	 */
 	public function items_get($params = []): array {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -632,7 +632,7 @@ class Storage extends \DDTools\Storage\Storage {
 					
 					//Save only field value instead of object if needed
 					if (!is_null($params->propAsResultValue)){
-						$resultItemObject = \DDTools\ObjectTools::getPropValue([
+						$resultItemObject = \DDTools\Tools\Objects::getPropValue([
 							'object' => $itemData,
 							'propName' => $params->propAsResultValue
 						]);
@@ -643,7 +643,7 @@ class Storage extends \DDTools\Storage\Storage {
 					//Save item
 					if (!is_null($params->propAsResultKey)){
 						$result[
-							\DDTools\ObjectTools::getPropValue([
+							\DDTools\Tools\Objects::getPropValue([
 								'object' => $itemData,
 								'propName' => $params->propAsResultKey
 							])
@@ -693,7 +693,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * buildSqlWhereString
-	 * @version 1.1.2 (2023-12-28)
+	 * @version 1.1.3 (2024-08-02)
 	 * 
 	 * @desc Builds where clause string from array.
 	 * 
@@ -704,7 +704,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @return {string}
 	 */
 	final protected function buildSqlWhereString($params = []): string {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
 					'where' => ''
@@ -818,7 +818,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * buildSqlLimitString
-	 * @version 1.0 (2023-12-08)
+	 * @version 1.0.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
 	 * @param $params->limit {integer|0} — Maximum number of items to return. `0` means all matching. Default: 0.
@@ -827,7 +827,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @return {string}
 	 */
 	final protected static function buildSqlLimitString($params = []): string {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [

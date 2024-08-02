@@ -36,13 +36,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * addItems
-	 * @version 1.2 (2021-12-02)
+	 * @version 1.2.1 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
 	public function addItems($params = []){
 		//# Prepare params
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -58,7 +58,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 		if (!is_null($params->items)){
 			//Items must be an array
 			if (!is_array($params->items)){
-				$params->items = \DDTools\ObjectTools::convertType([
+				$params->items = \DDTools\Tools\Objects::convertType([
 					'object' => $params->items,
 					'type' => 'objectArray'
 				]);
@@ -74,7 +74,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 					$itemIndex =>
 					$itemObject
 				){
-					$params->items[$itemIndex] = \DDTools\ObjectTools::convertType([
+					$params->items[$itemIndex] = \DDTools\Tools\Objects::convertType([
 						'object' => $itemObject,
 						'type' => $params->itemType
 					]);
@@ -90,13 +90,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * convertItemsType
-	 * @version 1.0.3 (2023-12-25)
+	 * @version 1.0.4 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
 	public function convertItemsType($params = []){
 		//# Prepare params
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -125,7 +125,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			){
 				$this->setOneItemData([
 					'index' => $itemIndex,
-					'data' => \DDTools\ObjectTools::convertType([
+					'data' => \DDTools\Tools\Objects::convertType([
 						'object' => $this->getOneItemData([
 							'itemObject' => $itemObject
 						]),
@@ -138,13 +138,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * updateItems
-	 * @version 1.0.3 (2023-12-25)
+	 * @version 1.0.4 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
 	public function updateItems($params = []){
 		//# Prepare params
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -176,7 +176,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			){
 				$this->setOneItemData([
 					'index' => $itemIndex,
-					'data' => \DDTools\ObjectTools::extend([
+					'data' => \DDTools\Tools\Objects::extend([
 						'objects' => [
 							$this->getOneItemData([
 								'itemObject' => $itemObject
@@ -200,13 +200,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * getItems
-	 * @version 2.0.2 (2022-12-28)
+	 * @version 2.0.3 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
 	public function getItems($params = []){
 		//# Prepare params
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -244,7 +244,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 				
 				//Save only field value instead of object if needed
 				if (!is_null($params->propAsResultValue)){
-					$resultItemObject = \DDTools\ObjectTools::getPropValue([
+					$resultItemObject = \DDTools\Tools\Objects::getPropValue([
 						'object' => $itemData,
 						'propName' => $params->propAsResultValue
 					]);
@@ -255,7 +255,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 				//Save item
 				if (!is_null($params->propAsResultKey)){
 					$result[
-						\DDTools\ObjectTools::getPropValue([
+						\DDTools\Tools\Objects::getPropValue([
 							'object' => $itemData,
 							'propName' => $params->propAsResultKey
 						])
@@ -280,13 +280,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * getOneItem
-	 * @version 1.0.1 (2021-12-02)
+	 * @version 1.0.2 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
 	public function getOneItem($params = []){
 		//# Prepare params
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -315,13 +315,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * deleteItems
-	 * @version 1.0.1 (2022-12-28)
+	 * @version 1.0.2 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
 	public function deleteItems($params = []){
 		//# Prepare params
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -412,7 +412,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * isItemMatchFilter
-	 * @version 2.0.1 (2022-12-28)
+	 * @version 2.0.2 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
 	 * @param $params->itemObject {array|object} — An item to test. @required
@@ -442,7 +442,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			){
 				//If the item has no the property
 				if (
-					!\DDTools\ObjectTools::isPropExists([
+					!\DDTools\Tools\Objects::isPropExists([
 						'object' => $itemData,
 						'propName' => $andCondition->propName
 					])
@@ -454,7 +454,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 				//==
 				}elseif ($andCondition->operator == '=='){
 					$result =
-						\DDTools\ObjectTools::getPropValue([
+						\DDTools\Tools\Objects::getPropValue([
 							'object' => $itemData,
 							'propName' => $andCondition->propName
 						]) ==
@@ -463,7 +463,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 				//!=
 				}else{
 					$result =
-						\DDTools\ObjectTools::getPropValue([
+						\DDTools\Tools\Objects::getPropValue([
 							'object' => $itemData,
 							'propName' => $andCondition->propName
 						]) !=

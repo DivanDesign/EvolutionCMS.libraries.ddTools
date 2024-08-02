@@ -304,7 +304,7 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.3 (2022-12-23)
+	 * @version 1.3.1 (2024-08-02)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
@@ -323,7 +323,7 @@ class ddTools {
 		$i = 0
 	){
 		//В качестве эталона получаем сортируемое значение (по первому условию сортировки) первого элемента
-		$currentItem_comparisonValue = \DDTools\ObjectTools::getPropValue([
+		$currentItem_comparisonValue = \DDTools\Tools\Objects::getPropValue([
 			'object' => array_values($array)[0],
 			'propName' => $sortBy[$i]
 		]);
@@ -347,7 +347,7 @@ class ddTools {
 			$arrayItemKey =>
 			$arrayItem
 		){
-			$arrayItem_comparisonValue = \DDTools\ObjectTools::getPropValue([
+			$arrayItem_comparisonValue = \DDTools\Tools\Objects::getPropValue([
 				'object' => $arrayItem,
 				'propName' => $sortBy[$i]
 			]);
@@ -496,7 +496,7 @@ class ddTools {
 	
 	/**
 	 * convertUrlToAbsolute
-	 * @version 1.0 (2022-09-05)
+	 * @version 1.0.1 (2024-08-02)
 	 * 
 	 * @desc Converts relative URLs to absolute.
 	 * 
@@ -509,7 +509,7 @@ class ddTools {
 	 */
 	public static function convertUrlToAbsolute($params){
 		//# Prepare params
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -956,7 +956,7 @@ class ddTools {
 	
 	/**
 	 * parseText_parepareParams
-	 * @version 1.0.1 (2024-06-17)
+	 * @version 1.0.2 (2024-08-02)
 	 *
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. See $this->parseText.
 	 *
@@ -986,7 +986,7 @@ class ddTools {
 			'returnCorrectedOnly' => false,
 		]);
 		
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -1006,7 +1006,7 @@ class ddTools {
 	
 	/**
 	 * parseText_prepareData
-	 * @version 1.0 (2024-06-06)
+	 * @version 1.0.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. See $this->parseText.
 	 * @param $params->data {stdClass|array|string}
@@ -1023,7 +1023,7 @@ class ddTools {
 			!is_object($params->data) &&
 			!is_array($params->data)
 		){
-			$params->data = \DDTools\ObjectTools::convertType([
+			$params->data = \DDTools\Tools\Objects::convertType([
 				'object' => $params->data,
 				'type' => 'objectArray'
 			]);
@@ -1039,7 +1039,7 @@ class ddTools {
 				is_array($value)
 			){
 				//Unfold for nested objects and arrays support (e. g. ['some' => ['a' => 'one', 'b' => 'two'] ] → '[+some.a+]', '[+some.b+]'; ['some' => ['one', 'two'] ] → '[+some.0+]', '[some.1]')
-				$unfoldedValue = \DDTools\ObjectTools::unfold([
+				$unfoldedValue = \DDTools\Tools\Objects::unfold([
 					'object' => [
 						$key => $value
 					],
@@ -1055,7 +1055,7 @@ class ddTools {
 				}
 				
 				//Also add object value as JSON
-				$value = \DDTools\ObjectTools::convertType([
+				$value = \DDTools\Tools\Objects::convertType([
 					'object' => $value,
 					'type' => 'stringJsonAuto'
 				]);
@@ -1329,7 +1329,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.5 (2020-06-21)
+	 * @version 1.5.1 (2024-08-02)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1345,7 +1345,7 @@ class ddTools {
 		$docGroups = false
 	){
 		//Defaults
-		$docData = \DDTools\ObjectTools::extend([
+		$docData = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
 					'pagetitle' => 'New resource',
@@ -1507,7 +1507,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.5 (2021-03-15)
+	 * @version 1.5.1 (2024-08-02)
 	 * 
 	 * @desc Update document(s). Cache of the updated docs and their parents will be cleared.
 	 * 
@@ -1532,7 +1532,7 @@ class ddTools {
 			return false;
 		}
 		
-		$docData = \DDTools\ObjectTools::extend([
+		$docData = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -2730,7 +2730,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.7.1 (2021-03-09)
+	 * @version 1.7.2 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
@@ -2747,7 +2747,7 @@ class ddTools {
 			]);
 		}
 		
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -2991,7 +2991,7 @@ class ddTools {
 	
 	/**
 	 * encodedStringToArray
-	 * @version 1.2 (2020-06-02)
+	 * @version 1.2.1 (2024-08-02)
 	 * 
 	 * @desc Converts encoded strings to arrays.
 	 * Supported formats:
@@ -3003,7 +3003,7 @@ class ddTools {
 	 * @return {array}
 	 */
 	public static function encodedStringToArray($inputString){
-		$result = \DDTools\ObjectTools::convertType([
+		$result = \DDTools\Tools\Objects::convertType([
 			'object' => $inputString,
 			'type' => 'objectArray'
 		]);
@@ -3027,15 +3027,15 @@ class ddTools {
 	
 	/**
 	 * unfoldArray
-	 * @version 1.1 (2021-11-16)
+	 * @version 1.1.1 (2024-08-02)
 	 * 
-	 * @see README.md (\DDTools\ObjectTools::unfold)
+	 * @see README.md (\DDTools\Tools\Objects::unfold)
 	 */
 	public static function unfoldArray(
 		$array,
 		$keyPrefix = ''
 	){
-		return \DDTools\ObjectTools::unfold([
+		return \DDTools\Tools\Objects::unfold([
 			'object' => $array,
 			'keyPrefix' => $keyPrefix
 		]);
