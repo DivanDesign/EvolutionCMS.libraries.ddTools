@@ -34,8 +34,8 @@ class Cache {
 	}
 	
 	/**
-	 * create
-	 * @version 3.0.1 (2024-08-02)
+	 * save
+	 * @version 3.0.2 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -45,7 +45,7 @@ class Cache {
 	 * 
 	 * @return {void}
 	 */
-	public static function create($params): void {
+	public static function save($params): void {
 		static::initStatic();
 		
 		$params = (object) $params;
@@ -136,8 +136,8 @@ class Cache {
 	}
 	
 	/**
-	 * clear
-	 * @version 2.2.1 (2024-08-02)
+	 * delete
+	 * @version 2.2.2 (2024-08-02)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -148,7 +148,7 @@ class Cache {
 	 * 
 	 * @return {void}
 	 */
-	public static function clear($params = []): void {
+	public static function delete($params = []): void {
 		static::initStatic();
 		
 		$params = \DDTools\Tools\Objects::extend([

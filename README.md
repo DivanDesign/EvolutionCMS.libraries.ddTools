@@ -566,7 +566,7 @@ You can cache some data (e. g. a snippet result) to a file.
 * Each cache file can contain a string, array or stdClass.
 
 
-#### `\DDTools\Tools\Cache::create($params)`, `\DDTools\Tools\Cache::get($params)`
+#### `\DDTools\Tools\Cache::save($params)`, `\DDTools\Tools\Cache::get($params)`
 
 * `$params`
 	* Description: The object of parameters.
@@ -591,7 +591,7 @@ You can cache some data (e. g. a snippet result) to a file.
 	* Default value: `'doc'`
 
 
-#### `\DDTools\Tools\Cache::create($params)`
+#### `\DDTools\Tools\Cache::save($params)`
 
 Saves custom data to a cache file.
 
@@ -621,7 +621,7 @@ Retrieves data from a cache file.
 		* `null` — means that the cache file does not exist
 
 
-#### `\DDTools\Tools\Cache::clear($params)`
+#### `\DDTools\Tools\Cache::delete($params)`
 
 Deletes one or more cache files.
 
