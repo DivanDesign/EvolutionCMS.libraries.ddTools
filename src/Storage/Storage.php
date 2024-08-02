@@ -75,7 +75,7 @@ abstract class Storage {
 	
 	/**
 	 * items_updateOne
-	 * @version 1.1 (2024-01-11)
+	 * @version 1.1.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
@@ -87,7 +87,7 @@ abstract class Storage {
 	 * @return $result->id {integer} — ID of added item.
 	 */
 	public function items_updateOne($params): ?\stdClass {
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -99,7 +99,7 @@ abstract class Storage {
 		]);
 		
 		$result = $this->items_update(
-			\DDTools\ObjectTools::extend([
+			\DDTools\Tools\Objects::extend([
 				'objects' => [
 					$params,
 					[
@@ -141,7 +141,7 @@ abstract class Storage {
 	
 	/**
 	 * items_deleteOne
-	 * @version 1.0 (2024-01-16)
+	 * @version 1.0.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
 	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (first found item will be deleted).
@@ -152,7 +152,7 @@ abstract class Storage {
 	 */
 	public function items_deleteOne($params = []): void {
 		$this->items_delete(
-			\DDTools\ObjectTools::extend([
+			\DDTools\Tools\Objects::extend([
 				'objects' => [
 					$params,
 					[
@@ -185,7 +185,7 @@ abstract class Storage {
 	
 	/**
 	 * items_getOne
-	 * @version 1.0 (2023-12-08)
+	 * @version 1.0.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
 	 * @param $params->where {string} — SQL 'WHERE' clause. Default: '' (first found item will be returned).
@@ -197,7 +197,7 @@ abstract class Storage {
 	 * @return {stdClass|mixed} — Found item object or $params->notFoundResult.
 	 */
 	public function items_getOne($params = []){
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [

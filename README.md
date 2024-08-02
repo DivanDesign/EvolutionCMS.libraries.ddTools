@@ -34,14 +34,14 @@ Just run the following PHP code in your sources or [Console](https://github.com/
 ```php
 //Include (MODX)EvolutionCMS.libraries.ddInstaller
 require_once(
-	$modx->getConfig('base_path') .
-	'assets/libs/ddInstaller/require.php'
+	$modx->getConfig('base_path')
+	. 'assets/libs/ddInstaller/require.php'
 );
 
 //Update (MODX)EvolutionCMS.libraries.ddTools
 \DDInstaller::install([
 	'url' => 'https://github.com/DivanDesign/EvolutionCMS.libraries.ddTools',
-	'type' => 'library'
+	'type' => 'library',
 ]);
 ```
 
@@ -263,10 +263,10 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* Valid values: `mixed`
 
 
-### `\DDTools\FilesTools`
+### `\DDTools\Tools\Files`
 
 
-#### `\DDTools\FilesTools::modifyImage($params)`
+#### `\DDTools\Tools\Files::modifyImage($params)`
 
 Modify your images: create thumbnails, crop, resize, fill background color or add watermark.
 
@@ -338,10 +338,10 @@ Modify your images: create thumbnails, crop, resize, fill background color or ad
 	* Default value: —
 
 
-### `\DDTools\ObjectTools`
+### `\DDTools\Tools\Objects`
 
 
-#### `\DDTools\ObjectTools::isPropExists($params)`
+#### `\DDTools\Tools\Objects::isPropExists($params)`
 
 Checks if the object, class or array has a property / element.
 This is a “syntactic sugar” for checking an element in one way regardless of the “object” type.
@@ -371,7 +371,7 @@ Second, the different order of parameters in the native PHP functions makes us c
 	* **Required**
 
 
-#### `\DDTools\ObjectTools::getPropValue($params)`
+#### `\DDTools\Tools\Objects::getPropValue($params)`
 
 Get the value of an object property or an array element in any nesting level in one way regardless of the “object” type.
 
@@ -416,7 +416,7 @@ Get the value of an object property or an array element in any nesting level in 
 		* `$params->notFoundResult` — if property not exists
 
 
-#### `\DDTools\ObjectTools::convertType($params)`
+#### `\DDTools\Tools\Objects::convertType($params)`
 
 Converts an object type.
 Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en.wikipedia.org/wiki/Query_string) objects are also supported.
@@ -466,7 +466,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 		* `stringJsonArray`
 
 
-#### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\Tools\Objects::extend($params)`
 
 Merge the contents of two or more objects or arrays together into the first one.
 
@@ -513,7 +513,7 @@ Merge the contents of two or more objects or arrays together into the first one.
 	* Default value: `true`
 
 
-#### `\DDTools\ObjectTools::unfold($params)`
+#### `\DDTools\Tools\Objects::unfold($params)`
 
 Converts a multidimensional array/object into an one-dimensional one joining the keys with `$params->keySeparator`.
 For example, it can be helpful while using placeholders like `[+size.width+]`.
@@ -555,6 +555,103 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 	* Valid values:
 		* `stdClass`
 		* `array`
+
+
+### `\DDTools\Tools\Cache`
+
+You can cache some data (e. g. a snippet result) to a file.
+
+* All cache files are stored in the `assets/cache/ddCache` folder.
+* The name of each cache file is `[+prefix+]-[+resourceId+]-[+suffix+].php`.
+* Each cache file can contain a string, array or stdClass.
+
+
+#### `\DDTools\Tools\Cache::save($params)`, `\DDTools\Tools\Cache::get($params)`
+
+* `$params`
+	* Description: The object of parameters.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->resourceId`
+	* Description: Resource ID related to cache (e. g. document ID).
+	* Valid values: `integer`
+	* **Required**
+	
+* `$params->suffix`
+	* Description: Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->prefix`
+	* Description: Cache file prefix. Useful if you want to cache some custom data that is not related to any documents.
+	* Valid values: `string`
+	* Default value: `'doc'`
+
+
+#### `\DDTools\Tools\Cache::save($params)`
+
+Saves custom data to a cache file.
+
+* `$params->data`
+	* Description: Data to save.
+	* Valid values:
+		* `string`
+		* `array`
+		* `stdClass`
+	* **Required**
+
+
+#### `\DDTools\Tools\Cache::get($params)`
+
+Retrieves data from a cache file.
+
+
+##### Returns
+
+* `$result`
+	* Description: Cached data.
+	* Valid values:
+		* Type of returned data depends on type of saved data:
+			* `string`
+			* `array`
+			* `stdClass`
+		* `null` — means that the cache file does not exist
+
+
+#### `\DDTools\Tools\Cache::delete($params)`
+
+Deletes one or more cache files.
+
+* `$params`
+	* Description: The object of parameters.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* Default value: —
+	
+* `$params->resourceId`
+	* Description: Resource ID related to cache (e. g. document ID).
+	* Valid values:
+		* `integer`
+		* `null` — cache of all resources will be cleared independent of `$params->prefix`
+	* Default value: `null`
+	
+* `$params->prefix`
+	* Description: Cache file prefix. Useful if you want to cache some custom data that is not related to any documents.
+	* Valid values:
+		* `string`
+		* `'*'` — means any prefix
+	* Default value: `'doc'`
+	
+* `$params->suffix`
+	* Description: Cache suffix.
+	* Valid values:
+		* `string`
+		* `'*'` — means any suffix
+	* Default value: `'*'`
 
 
 ### `\DDTools\ObjectCollection`
@@ -631,10 +728,10 @@ Gets an array of required collection items.
 		* Thus,
 			```
 			'
-			"gender" == "female" ||
-			"gender" == "male" &&
-			"firstName" != "Bill" &&
-			"lastName"
+			"gender" == "female"
+			|| "gender" == "male"
+			&& "firstName" != "Bill"
+			&& "lastName"
 			'
 			```
 			returns:
@@ -646,19 +743,19 @@ Gets an array of required collection items.
 		* Quoted property names and values are optional, this is valid too:
 			```
 			'
-			gender == female ||
-			gender == male &&
-			firstName != Bill &&
-			lastName
+			gender == female
+			|| gender == male
+			&& firstName != Bill
+			&& lastName
 			' 
 			```
 		* Single quotes are also supported as double quotes:
 			```
 			"
-			gender == 'a' ||
-			gender == 'b' &&
-			firstName != 'Bill' &&
-			lastName
+			gender == 'a'
+			|| gender == 'b'
+			&& firstName != 'Bill'
+			&& lastName
 			"
 			```
 		* Spaces, tabs and line breaks are optional, this is valid too: `gender==female||gender==male&&firstName!=Bill&&lastName`.
@@ -1212,7 +1309,7 @@ $url = 'https://example.com/some/page?q=42#hash';
 \ddTools::convertUrlToAbsolute([
 	'url' => $url,
 	//The parameter is optional and is used here just for clarity. By default it will be equal to domain of your site.
-	'host' => 'example.com'
+	'host' => 'example.com',
 ]);
 ```
 
@@ -1232,8 +1329,8 @@ And we want to save backward compatibility, the snippet must work with the old n
 ```php
 //Include (MODX)EvolutionCMS.libraries.ddTools
 require_once(
-	$modx->getConfig('base_path') .
-	'assets/libs/ddTools/modx.ddtools.class.php'
+	$modx->getConfig('base_path')
+	. 'assets/libs/ddTools/modx.ddtools.class.php'
 );
 
 //Backward compatibility
@@ -1243,8 +1340,8 @@ extract(\ddTools::verifyRenamedParams([
 	'compliance' => [
 		//The new name => The old name
 		'docField' => 'getEmail',
-		'docId' => 'getId'
-	]
+		'docId' => 'getId',
+	],
 ]));
 ```
 
@@ -1260,15 +1357,15 @@ extract(\ddTools::verifyRenamedParams([
 		//The new name => The old names
 		'email_docField' => [
 			'docField',
-			'getEmail'
+			'getEmail',
 		],
 		'email_docId' => [
 			'docId',
-			'getId'
-		]
+			'getId',
+		],
 	],
 	//Also you can prevent writing to the CMS event log if you want
-	'writeToLog' => false
+	'writeToLog' => false,
 ]));
 ```
 
@@ -1292,8 +1389,8 @@ extract(\ddTools::verifyRenamedParams([
 		'text' => '<p>Question your loyalty to your country and government and strive for a more just and peaceful society.</p>',
 		'authorFirstName' => 'Leo',
 		'authorLastName' => 'Tolstoy',
-		'date' => '1904'
-	]
+		'date' => '1904',
+	],
 ]);
 ```
 
@@ -1324,8 +1421,8 @@ Returns:
 				'firstName' => 'Leo',
 				'lastName' => 'Tolstoy',
 			],
-			'date' => '1904'
-		]
+			'date' => '1904',
+		],
 	],
 	//For nested data you can use placeholders like '[+meta.date+]' for getting a property
 	//Or like '[+meta+]' to get whole object as JSON
@@ -1335,7 +1432,7 @@ Returns:
 			[+text+]
 			<p>[+meta.author.firstName+] [+meta.author.lastName+], [+meta.date+].</p>
 		</article>
-	'
+	',
 ]);
 ```
 
@@ -1350,10 +1447,10 @@ Returns:
 ```
 
 
-### `\DDTools\ObjectTools`
+### `\DDTools\Tools\Objects`
 
 
-#### `\DDTools\ObjectTools::convertType($params)`
+#### `\DDTools\Tools\Objects::convertType($params)`
 
 
 ##### Convert a JSON or Query encoded string to an array
@@ -1364,18 +1461,18 @@ Just call this method and don't care about it.
 
 ```php
 //We can pass string in JSON format
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => '{
 		"pagetitle": "Test title",
 		"published": "0"
 	}',
-	'type' => 'objectArray'
+	'type' => 'objectArray',
 ]);
 
 //Or Query string
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => 'pagetitle=Test title&published=0',
-	'type' => 'objectArray'
+	'type' => 'objectArray',
 ]);
 ```
 
@@ -1384,7 +1481,7 @@ Both calls return:
 ```php
 [
 	'pagetitle' => 'Test title',
-	'published' => '0'
+	'published' => '0',
 ];
 ```
 
@@ -1392,9 +1489,9 @@ Both calls return:
 ##### Convert a Query encoded string to a JSON object string
 
 ```php
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => 'firstName=Hans&lastName=Zimmer',
-	'type' => 'stringJsonAuto'
+	'type' => 'stringJsonAuto',
 ]);
 ```
 
@@ -1411,12 +1508,12 @@ Returns:
 ##### Convert a JSON object to a JSON array
 
 ```php
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => '{
 		"firstName": "Ramin",
 		"lastName": "Djawadi"
 	}',
-	'type' => 'stringJsonArray'
+	'type' => 'stringJsonArray',
 ]);
 ```
 
@@ -1433,7 +1530,7 @@ Returns:
 ##### Convert a HJSON encoded string to an object
 
 ```php
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => "{
 		//This is HJSON, not JSON, so we can use comments insides
 		keys: and values can be specified without quotes,
@@ -1444,7 +1541,7 @@ Returns:
 			A simple syntax and easy to read.
 			'''
 	}",
-	'type' => 'objectStdClass'
+	'type' => 'objectStdClass',
 ]);
 ```
 
@@ -1454,8 +1551,9 @@ Returns:
 stdClass::__set_state(array(
    'keys' => 'and values can be specified without quotes,',
    'multilineValues' => 'Write multiline strings with proper whitespace handling.
-Starts and ends with triple quotes.
-A simple syntax and easy to read.',
+		Starts and ends with triple quotes.
+		A simple syntax and easy to read.'
+	,
 ))
 ```
 
@@ -1463,7 +1561,7 @@ A simple syntax and easy to read.',
 ##### Convert an associative array to a string of HTML attributes
 
 ```php
-\DDTools\ObjectTools::convertType([
+\DDTools\Tools\Objects::convertType([
 	'object' => [
 		'data-name' => 'KINO',
 		//Will be converted to 1
@@ -1479,7 +1577,7 @@ A simple syntax and easy to read.',
 			'Oleg Valinsky',
 		],
 	],
-	'type' => 'stringHtmlAttrs'
+	'type' => 'stringHtmlAttrs',
 ]);
 ```
 
@@ -1490,30 +1588,32 @@ data-name='KINO' data-is-active='1' data-members='["Viktor Tsoi","Yuri Kasparyan
 ```
 
 
-#### `\DDTools\ObjectTools::extend($params)`
+#### `\DDTools\Tools\Objects::extend($params)`
 
 
 ##### Merge two objects, modifying the first
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
-	'objects' => [
-		(object) [
-			'cat' => 'mew',
-			'dog' => (object) [
-				'name' => 'Floyd',
-				'weight' => 6
+var_export(
+	\DDTools\Tools\Objects::extend([
+		'objects' => [
+			(object) [
+				'cat' => 'mew',
+				'dog' => (object) [
+					'name' => 'Floyd',
+					'weight' => 6,
+				],
+				'rabbit' => 42,
 			],
-			'rabbit' => 42
+			(object) [
+				'dog' => (object) [
+					'weight' => 10,
+				],
+				'bird' => 0,
+			],
 		],
-		(object) [
-			'dog' => (object) [
-				'weight' => 10
-			],
-			'bird' => 0
-		]
-	]
-]));
+	])
+);
 ```
 
 Returns:
@@ -1534,24 +1634,26 @@ stdClass::__set_state(array(
 ##### Also you can extend arrays
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
-	'objects' => [
-		[
-			'cat' => 'mew',
-			'dog' => [
-				'name' => 'Floyd',
-				'weight' => 6
+var_export(
+	\DDTools\Tools\Objects::extend([
+		'objects' => [
+			[
+				'cat' => 'mew',
+				'dog' => [
+					'name' => 'Floyd',
+					'weight' => 6,
+				],
+				'rabbit' => 42,
 			],
-			'rabbit' => 42
+			[
+				'dog' => (object) [
+					'weight' => 10,
+				],
+				'bird' => 0,
+			],
 		],
-		[
-			'dog' => (object) [
-				'weight' => 10
-			],
-			'bird' => 0
-		]
-	]
-]));
+	])
+);
 ```
 
 Returns:
@@ -1572,22 +1674,24 @@ array(
 ##### Moreover, objects can extend arrays and vice versa
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
-	'objects' => [
-		[
-			'name' => 'jokes',
-			'countries' => (object) [
-				'usa' => 'democracy',
-				'china' => 'chinese democracy'
+var_export(
+	\DDTools\Tools\Objects::extend([
+		'objects' => [
+			[
+				'name' => 'jokes',
+				'countries' => (object) [
+					'usa' => 'democracy',
+					'china' => 'chinese democracy',
+				],
+			],
+			(object) [
+				'countries' => [
+					'china' => 'democracy too',
+				],
 			],
 		],
-		(object) [
-			'countries' => [
-				'china' => 'democracy too'
-			]
-		]
-	]
-]));
+	])
+);
 ```
 
 Returns:
@@ -1610,19 +1714,21 @@ array(
 By default, empty field values (e. g. `''`) are treated as other values and will replace non-empty ones.
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
-	'objects' => [
-		(object) [
-			'firstName' => 'John',
-			'lastName' => 'Tesla',
-			'discipline' => 'Electrical engineering'
+var_export(
+	\DDTools\Tools\Objects::extend([
+		'objects' => [
+			(object) [
+				'firstName' => 'John',
+				'lastName' => 'Tesla',
+				'discipline' => 'Electrical engineering',
+			],
+			(object) [
+				'firstName' => 'Nikola',
+				'lastName' => '',
+			],
 		],
-		(object) [
-			'firstName' => 'Nikola',
-			'lastName' => ''
-		]
-	]
-]));
+	])
+);
 ```
 
 Returns:
@@ -1631,7 +1737,7 @@ Returns:
 stdClass::__set_state(array(
 	'firstName' => 'Nikola',
 	'lastName' => '',
-	'discipline' => 'Electrical engineering'
+	'discipline' => 'Electrical engineering',
 ))
 ```
 
@@ -1640,20 +1746,22 @@ Empty `lastName` from the second object replaced non-empty `lastName` from the f
 If you want to ignore empty values, just use `$params->overwriteWithEmpty` == `false`:
 
 ```php
-var_export(\DDTools\ObjectTools::extend([
-	'objects' => [
-		(object) [
-			'firstName' => 'John',
-			'lastName' => 'Tesla',
-			'discipline' => 'Electrical engineering'
+var_export(
+	\DDTools\Tools\Objects::extend([
+		'objects' => [
+			(object) [
+				'firstName' => 'John',
+				'lastName' => 'Tesla',
+				'discipline' => 'Electrical engineering',
+			],
+			(object) [
+				'firstName' => 'Nikola',
+				'lastName' => '',
+			],
 		],
-		(object) [
-			'firstName' => 'Nikola',
-			'lastName' => ''
-		]
-	],
-	'overwriteWithEmpty' => false
-]));
+		'overwriteWithEmpty' => false,
+	])
+);
 ```
 
 Returns:
@@ -1662,28 +1770,30 @@ Returns:
 stdClass::__set_state(array(
 	'firstName' => 'Nikola',
 	'lastName' => 'Tesla',
-	'discipline' => 'Electrical engineering'
+	'discipline' => 'Electrical engineering',
 ))
 ```
 
 
-#### `\DDTools\ObjectTools::unfold($params)`
+#### `\DDTools\Tools\Objects::unfold($params)`
 
 
 ##### Unfold an object
 
 ```php
-var_export(\DDTools\ObjectTools::unfold([
-	'object' => (object) [
-		'name' => 'Elon Musk',
-		'address' => (object) [
-			'line1' => '3500 Deer Creek Road',
-			'city' => 'Palo Alto',
-			'state' => 'California',
-			'country' => 'United States'
-		]
-	]
-]));
+var_export(
+	\DDTools\Tools\Objects::unfold([
+		'object' => (object) [
+			'name' => 'Elon Musk',
+			'address' => (object) [
+				'line1' => '3500 Deer Creek Road',
+				'city' => 'Palo Alto',
+				'state' => 'California',
+				'country' => 'United States',
+			],
+		],
+	])
+);
 ```
 
 Returns:
@@ -1694,7 +1804,7 @@ stdClass::__set_state(array (
 	'address.line1' => '3500 Deer Creek Road',
 	'address.city' => 'Palo Alto',
 	'address.state' => 'California',
-	'address.country' => 'United States'
+	'address.country' => 'United States',
 ))
 ```
 
@@ -1702,19 +1812,21 @@ stdClass::__set_state(array (
 ##### Unfold an array
 
 ```php
-var_export(\DDTools\ObjectTools::unfold([
-	'object' => [
-		'a' => 'a val',
-		'b' => [
-			'b1' => 'b1 val',
-			'b2' => [
-				'b21' => 'b21 val',
-				'b22' => 'b22 val'
-			]
+var_export(
+	\DDTools\Tools\Objects::unfold([
+		'object' => [
+			'a' => 'a val',
+			'b' => [
+				'b1' => 'b1 val',
+				'b2' => [
+					'b21' => 'b21 val',
+					'b22' => 'b22 val',
+				],
+			],
+			'c' => 'c val',
 		],
-		'c' => 'c val'
-	]
-]));
+	])
+);
 ```
 
 Returns:
@@ -1725,7 +1837,7 @@ array (
 	'b.b1' => 'b1 val',
 	'b.b2.b21' => 'b21 val',
 	'b.b2.b22' => 'b22 val',
-	'c' => 'c val'
+	'c' => 'c val',
 )
 ```
 
@@ -1733,16 +1845,18 @@ array (
 ##### Use custom key separator
 
 ```php
-var_export(\DDTools\ObjectTools::unfold([
-	'object' => [
-		'name' => 'Elon Musk',
-		'parents' => [
-			'mother' => 'Maye Musk',
-			'father' => 'Errol Musk'
-		]
-	],
-	'keySeparator' => '_'
-]));
+var_export(
+	\DDTools\Tools\Objects::unfold([
+		'object' => [
+			'name' => 'Elon Musk',
+			'parents' => [
+				'mother' => 'Maye Musk',
+				'father' => 'Errol Musk',
+			],
+		],
+		'keySeparator' => '_',
+	])
+);
 ```
 
 Returns:
@@ -1751,7 +1865,7 @@ Returns:
 stdClass::__set_state(array (
 	'name' => 'Elon Musk',
 	'parents_mother' => 'Maye Musk',
-	'parents_father' => 'Errol Musk'
+	'parents_father' => 'Errol Musk',
 ))
 ```
 
@@ -1765,14 +1879,14 @@ $data = [
 	'bin1' => [
 		'plastic' => 'plastic bottles',
 		'paper' => 'newspapers',
-		'glass' => 'glass bottles'
+		'glass' => 'glass bottles',
 	],
 	//Object
 	'bin2' => (object) [
 		'organic' => 'food waste',
 		'paper' => 'cardboard boxes',
-		'metal' => 'aluminum cans'
-	]
+		'metal' => 'aluminum cans',
+	],
 ];
 ```
 
@@ -1780,7 +1894,7 @@ $data = [
 
 ```php
 var_export(
-	\DDTools\ObjectTools::unfold([
+	\DDTools\Tools\Objects::unfold([
 		'object' => $data,
 	])
 );
@@ -1805,7 +1919,7 @@ array (
 
 ```php
 var_export(
-	\DDTools\ObjectTools::unfold([
+	\DDTools\Tools\Objects::unfold([
 		'object' => $data,
 		'isCrossTypeEnabled' => true,
 	])
@@ -1826,38 +1940,42 @@ array (
 ```
 
 
-#### `\DDTools\ObjectTools::isPropExists($params)`
+#### `\DDTools\Tools\Objects::isPropExists($params)`
 
 Checks if the object, class or array has a property / element using the same syntax.
 
 You can pass an object:
 
 ```php
-var_export(\DDTools\ObjectTools::isPropExists([
-	'object' => (object) [
-		'firstName' => 'John',
-		'lastName' => 'Lennon'
-	],
-	'propName' => 'firstName'
-]));
+var_export(
+	\DDTools\Tools\Objects::isPropExists([
+		'object' => (object) [
+			'firstName' => 'John',
+			'lastName' => 'Lennon',
+		],
+		'propName' => 'firstName',
+	])
+);
 ```
 
 Or an array:
 
 ```php
-var_export(\DDTools\ObjectTools::isPropExists([
-	'object' => [
-		'firstName' => 'Paul',
-		'lastName' => 'McCartney'
-	],
-	'propName' => 'firstName'
-]));
+var_export(
+	\DDTools\Tools\Objects::isPropExists([
+		'object' => [
+			'firstName' => 'Paul',
+			'lastName' => 'McCartney',
+		],
+		'propName' => 'firstName',
+	])
+);
 ```
 
 Both calls return `true`.
 
 
-#### `\DDTools\ObjectTools::getPropValue($params)`
+#### `\DDTools\Tools\Objects::getPropValue($params)`
 
 
 ##### Get the value of an object property or an array element using the same syntax
@@ -1865,25 +1983,29 @@ Both calls return `true`.
 You can pass an object:
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => (object) [
-		'name' => 'Floyd',
-		'weight' => 7
-	],
-	'propName' => 'name'
-]));
+var_export(
+	\DDTools\Tools\Objects::getPropValue([
+		'object' => (object) [
+			'name' => 'Floyd',
+			'weight' => 7,
+		],
+		'propName' => 'name',
+	])
+);
 ```
 
 Or an array:
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => [
-		'name' => 'Floyd',
-		'weight' => 7
-	],
-	'propName' => 'name'
-]));
+var_export(
+	\DDTools\Tools\Objects::getPropValue([
+		'object' => [
+			'name' => 'Floyd',
+			'weight' => 7,
+		],
+		'propName' => 'name',
+	])
+);
 ```
 
 Both calls return `'Floyd'`.
@@ -1901,26 +2023,26 @@ $sourceObject = (object) [
 		//Let the third level be an associative array
 		[
 			'name' => 'Syd Barrett',
-			'role' => 'lead and rhythm guitars, vocals'
+			'role' => 'lead and rhythm guitars, vocals',
 		],
 		[
 			'name' => 'David Gilmour',
-			'role' => 'lead and rhythm guitars, vocals, bass, keyboards, synthesisers'
+			'role' => 'lead and rhythm guitars, vocals, bass, keyboards, synthesisers',
 		],
 		//Let Roger be a little bit special ;)
 		(object) [
 			'name' => 'Roger Waters',
-			'role' => 'bass, vocals, rhythm guitar, synthesisers'
+			'role' => 'bass, vocals, rhythm guitar, synthesisers',
 		],
 		[
 			'name' => 'Richard Wright',
-			'role' => 'keyboards, piano, organ, synthesisers, vocals'
+			'role' => 'keyboards, piano, organ, synthesisers, vocals',
 		],
 		[
 			'name' => 'Nick Mason',
-			'role' => 'drums, percussion'
-		]
-	]
+			'role' => 'drums, percussion',
+		],
+	],
 ];
 ```
 
@@ -1930,10 +2052,12 @@ $sourceObject = (object) [
 There's nothing special, just look at this example for the full picture.
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => $sourceObject,
-	'propName' => 'PinkFloyd'
-]));
+var_export(
+	\DDTools\Tools\Objects::getPropValue([
+		'object' => $sourceObject,
+		'propName' => 'PinkFloyd',
+	])
+);
 ```
 
 Returns:
@@ -1969,10 +2093,12 @@ array (
 Let's make it a little more interesting: let's get the 4th element of the second-level indexed array.
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => $sourceObject,
-	'propName' => 'PinkFloyd.4'
-]));
+var_export(
+	\DDTools\Tools\Objects::getPropValue([
+		'object' => $sourceObject,
+		'propName' => 'PinkFloyd.4',
+	])
+);
 ```
 
 Returns:
@@ -1993,10 +2119,12 @@ No matter what type of element is used in any nesting level, the method will wor
 So let's get Roger's name. As you remember, he is stdClass as opposed to the other members who are associative arrays.
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => $sourceObject,
-	'propName' => 'PinkFloyd.2.name'
-]));
+var_export(
+	\DDTools\Tools\Objects::getPropValue([
+		'object' => $sourceObject,
+		'propName' => 'PinkFloyd.2.name',
+	])
+);
 ```
 
 Returns:
@@ -2009,13 +2137,15 @@ Returns:
 ###### Of course, it works fine with single-level objects that contain `'.'` in their property names
 
 ```php
-var_export(\DDTools\ObjectTools::getPropValue([
-	'object' => [
-		'1973.03.01' => 'The Dark Side of the Moon',
-		'1975.09.12' => 'Wish You Were Here'
-	],
-	'propName' => '1975.09.12'
-]));
+var_export(
+	\DDTools\Tools\Objects::getPropValue([
+		'object' => [
+			'1973.03.01' => 'The Dark Side of the Moon',
+			'1975.09.12' => 'Wish You Were Here',
+		],
+		'propName' => '1975.09.12',
+	])
+);
 ```
 
 Returns:
@@ -2038,27 +2168,27 @@ $collection = new \DDTools\ObjectCollection([
 			'isHuman' => 1,
 			'gender' => 'female',
 			'nobelPeacePrize' => 1,
-			'religion' => 'Catholicism'
+			'religion' => 'Catholicism',
 		],
 		[
 			'name' => 'Mahatma Gandhi',
 			'isHuman' => 1,
 			'gender' => 'male',
-			'nobelPeacePrize' => 0
+			'nobelPeacePrize' => 0,
 		],
 		[
 			'name' => 'Tenzin Gyatso',
 			'isHuman' => 1,
 			'gender' => 'male',
 			'nobelPeacePrize' => 1,
-			'religion' => 'Tibetan Buddhism'
+			'religion' => 'Tibetan Buddhism',
 		],
 		[
 			'name' => 'ICAN',
 			'isHuman' => 0,
-			'nobelPeacePrize' => 1
-		]
-	]
+			'nobelPeacePrize' => 1,
+		],
+	],
 ]);
 ```
 
@@ -2108,7 +2238,7 @@ $collection->setItems([
 
 ```php
 $collection->getItems([
-	'filter' => 'religion'
+	'filter' => 'religion',
 ]);
 ```
 
@@ -2121,15 +2251,15 @@ array(
 		'isHuman' => 1,
 		'gender' => 'female',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Catholicism'
+		'religion' => 'Catholicism',
 	),
 	1 => array(
 		'name' => 'Tenzin Gyatso',
 		'isHuman' => 1,
 		'gender' => 'male',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Tibetan Buddhism'
-	)
+		'religion' => 'Tibetan Buddhism',
+	),
 )
 ```
 
@@ -2138,7 +2268,7 @@ array(
 
 ```php
 $collection->getItems([
-	'filter' => 'gender==male'
+	'filter' => 'gender==male',
 ]);
 ```
 
@@ -2150,15 +2280,15 @@ array(
 		'name' => 'Mahatma Gandhi',
 		'isHuman' => 1,
 		'gender' => 'male',
-		'nobelPeacePrize' => 0
+		'nobelPeacePrize' => 0,
 	),
 	1 => array(
 		'name' => 'Tenzin Gyatso',
 		'isHuman' => 1,
 		'gender' => 'male',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Tibetan Buddhism'
-	)
+		'religion' => 'Tibetan Buddhism',
+	),
 )
 ```
 
@@ -2169,8 +2299,8 @@ array(
 $collection->getItems([
 	//Spaces, tabs and line breaks are also allowed and do not matter
 	'filter' => '
-		gender == female ||
-		nobelPeacePrize == 1 && isHuman == 0
+		gender == female
+		|| nobelPeacePrize == 1 && isHuman == 0
 	'
 ]);
 ```
@@ -2185,13 +2315,13 @@ array(
 		'isHuman' => 1,
 		'gender' => 'female',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Catholicism'
+		'religion' => 'Catholicism',
 	),
 	//nobelPeacePrize == 1 && isHuman == 0
 	1 => array(
 		'name' => 'ICAN',
 		'isHuman' => 0,
-		'nobelPeacePrize' => 1
+		'nobelPeacePrize' => 1,
 	),
 )
 ```
@@ -2201,7 +2331,7 @@ array(
 
 ```php
 $collection->getItems([
-	'propAsResultKey' => 'name'
+	'propAsResultKey' => 'name',
 ]);
 ```
 
@@ -2214,26 +2344,26 @@ array(
 		'isHuman' => 1,
 		'gender' => 'female',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Catholicism'
+		'religion' => 'Catholicism',
 	),
 	'Mahatma Gandhi' => array(
 		'name' => 'Mahatma Gandhi',
 		'isHuman' => 1,
 		'gender' => 'male',
-		'nobelPeacePrize' => 0
+		'nobelPeacePrize' => 0,
 	),
 	'Tenzin Gyatso' => array(
 		'name' => 'Tenzin Gyatso',
 		'isHuman' => 1,
 		'gender' => 'male',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Tibetan Buddhism'
+		'religion' => 'Tibetan Buddhism',
 	),
 	'ICAN' => array(
 		'name' => 'ICAN',
 		'isHuman' => 0,
-		'nobelPeacePrize' => 1
-	)
+		'nobelPeacePrize' => 1,
+	),
 )
 ```
 
@@ -2243,7 +2373,7 @@ array(
 ```php
 $collection->getItems([
 	'propAsResultKey' => 'name',
-	'propAsResultValue' => 'isHuman'
+	'propAsResultValue' => 'isHuman',
 ]);
 ```
 
@@ -2254,7 +2384,7 @@ array(
 	'Mary Teresa' => 1,
 	'Mahatma Gandhi' => 1,
 	'Tenzin Gyatso' => 1,
-	'ICAN' => 0
+	'ICAN' => 0,
 )
 ```
 
@@ -2263,7 +2393,7 @@ array(
 
 ```php
 $collection->getOneItem([
-	'filter' => 'name == Mahatma Gandhi'
+	'filter' => 'name == Mahatma Gandhi',
 ]);
 ```
 
@@ -2274,7 +2404,7 @@ array(
 	'name' => 'Mahatma Gandhi',
 	'isHuman' => 1,
 	'gender' => 'male',
-	'nobelPeacePrize' => 0
+	'nobelPeacePrize' => 0,
 )
 ```
 
@@ -2285,10 +2415,10 @@ array(
 ```php
 $collection->getOneItem([
 	'filter' => 'name == European Union',
-	notFoundResult' => [
+	'notFoundResult' => [
 		'name' => 'Default item',
-		'nobelPeacePrize' => 0
-	]
+		'nobelPeacePrize' => 0,
+	],
 ]);
 ```
 
@@ -2297,7 +2427,7 @@ Returns:
 ```php
 array(
 	'name' => 'Default item',
-	'nobelPeacePrize' => 0
+	'nobelPeacePrize' => 0,
 )
 ```
 
@@ -2307,7 +2437,7 @@ array(
 ```php
 $collection->convertItemsType([
 	'filter' => 'gender==male',
-	'itemType' => 'objectStdClass'
+	'itemType' => 'objectStdClass',
 ]);
 
 $collection->getItems();
@@ -2322,26 +2452,26 @@ array(
 		'isHuman' => 1,
 		'gender' => 'female',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Catholicism'
+		'religion' => 'Catholicism',
 	),
 	1 => stdClass::__set_state(array(
 		'name' => 'Mahatma Gandhi',
 		'isHuman' => 1,
 		'gender' => 'male',
-		'nobelPeacePrize' => 0
+		'nobelPeacePrize' => 0,
 	)),
 	2 => stdClass::__set_state(array(
 		'name' => 'Tenzin Gyatso',
 		'isHuman' => 1,
 		'gender' => 'male',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Tibetan Buddhism'
+		'religion' => 'Tibetan Buddhism',
 	)),
 	3 => array(
 		'name' => 'ICAN',
 		'isHuman' => 0,
-		'nobelPeacePrize' => 1
-	)
+		'nobelPeacePrize' => 1,
+	),
 )
 ```
 
@@ -2353,12 +2483,12 @@ $collection->updateItems([
 	'filter' => 'name==Mahatma Gandhi',
 	'data' => [
 		'nobelPeacePrize' => 1,
-		'birthday' => '2 October 1869'
+		'birthday' => '2 October 1869',
 	]
 ]);
 
 $collection->getItems(
-	'filter' => 'name==Mahatma Gandhi'
+	'filter' => 'name==Mahatma Gandhi',
 );
 ```
 
@@ -2374,7 +2504,7 @@ array(
 		//Given property values have overwritten the existing ones
 		'nobelPeacePrize' => 1,
 		//Non-existing properties have been created
-		'birthday' => '2 October 1869'
+		'birthday' => '2 October 1869',
 	))
 )
 ```
@@ -2385,7 +2515,7 @@ array(
 ```php
 $collection->updateItems([
 	'filter' => 'isHuman==1',
-	'limit' => 2
+	'limit' => 2,
 ]);
 
 $collection->getItems();
@@ -2401,13 +2531,13 @@ array(
 		'isHuman' => 1,
 		'gender' => 'male',
 		'nobelPeacePrize' => 1,
-		'religion' => 'Tibetan Buddhism'
+		'religion' => 'Tibetan Buddhism',
 	)),
 	1 => array(
 		'name' => 'ICAN',
 		'isHuman' => 0,
-		'nobelPeacePrize' => 1
-	)
+		'nobelPeacePrize' => 1,
+	),
 )
 ```
 

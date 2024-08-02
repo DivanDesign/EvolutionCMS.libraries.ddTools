@@ -1,7 +1,7 @@
 <?php
-namespace DDTools;
+namespace DDTools\Tools;
 
-class FilesTools {
+class Files {
 	/**
 	 * createDir
 	 * @version 1.3.1 (2019-09-03)
@@ -148,7 +148,7 @@ class FilesTools {
 	
 	/**
 	 * modifyImage
-	 * @version 2.6.2 (2021-03-09)
+	 * @version 2.6.4 (2024-08-02)
 	 * 
 	 * @see README.md
 	 * 
@@ -156,7 +156,7 @@ class FilesTools {
 	 */
 	public static function modifyImage($params){
 		//Defaults
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
 					'transformMode' => 'resize',
@@ -168,7 +168,7 @@ class FilesTools {
 			]
 		]);
 		
-		if (!\DDTools\ObjectTools::isPropExists([
+		if (!\DDTools\Tools\Objects::isPropExists([
 			'object' => $params,
 			'propName' => 'outputFullPathName'
 		])){
@@ -178,6 +178,8 @@ class FilesTools {
 		
 		//Include PHP.libraries.phpThumb
 		require_once(
+			'Files' .
+			DIRECTORY_SEPARATOR .
 			'phpThumb' .
 			DIRECTORY_SEPARATOR .
 			'phpthumb.class.php'
@@ -194,7 +196,7 @@ class FilesTools {
 		){
 			if (
 				//If the parameter is set
-				\DDTools\ObjectTools::isPropExists([
+				\DDTools\Tools\Objects::isPropExists([
 					'object' => $params,
 					'propName' => $paramName
 				]) &&
@@ -374,7 +376,7 @@ class FilesTools {
 		
 		
 		//If need to overlay image with watermark
-		if (\DDTools\ObjectTools::isPropExists([
+		if (\DDTools\Tools\Objects::isPropExists([
 			'object' => $params,
 			'propName' => 'watermarkImageFullPathName'
 		])){

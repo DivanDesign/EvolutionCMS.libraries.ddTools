@@ -87,7 +87,7 @@ abstract class Snippet {
 	
 	/**
 	 * prepareParams
-	 * @version 1.1.1 (2021-03-29)
+	 * @version 1.1.2 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * 
@@ -96,7 +96,7 @@ abstract class Snippet {
 	protected function prepareParams($params = []){
 		$this->params = (object) $this->params;
 		
-		$params = \DDTools\ObjectTools::convertType([
+		$params = \DDTools\Tools\Objects::convertType([
 			'object' => $params,
 			'type' => 'objectStdClass'
 		]);
@@ -120,7 +120,7 @@ abstract class Snippet {
 				
 				//Convert defaults
 				if (
-					\DDTools\ObjectTools::isPropExists([
+					\DDTools\Tools\Objects::isPropExists([
 						'object' => $this->params,
 						'propName' => $paramName
 					])
@@ -130,7 +130,7 @@ abstract class Snippet {
 					}elseif ($paramType == 'boolean'){
 						$this->params->{$paramName} = boolval($this->params->{$paramName});
 					}else{
-						$this->params->{$paramName} = \DDTools\ObjectTools::convertType([
+						$this->params->{$paramName} = \DDTools\Tools\Objects::convertType([
 							'object' => $this->params->{$paramName},
 							'type' => $paramType
 						]);
@@ -139,7 +139,7 @@ abstract class Snippet {
 				
 				//Convert given
 				if (
-					\DDTools\ObjectTools::isPropExists([
+					\DDTools\Tools\Objects::isPropExists([
 						'object' => $params,
 						'propName' => $paramName
 					])
@@ -149,7 +149,7 @@ abstract class Snippet {
 					}elseif ($paramType == 'boolean'){
 						$params->{$paramName} = boolval($params->{$paramName});
 					}else{
-						$params->{$paramName} = \DDTools\ObjectTools::convertType([
+						$params->{$paramName} = \DDTools\Tools\Objects::convertType([
 							'object' => $params->{$paramName},
 							'type' => $paramType
 						]);
@@ -158,7 +158,7 @@ abstract class Snippet {
 			}
 		}
 		
-		$this->params = \DDTools\ObjectTools::extend([
+		$this->params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				$this->params,
@@ -172,7 +172,7 @@ abstract class Snippet {
 	
 	/**
 	 * runSnippet
-	 * @version 1.0 (2021-02-18)
+	 * @version 1.0.1 (2024-08-02)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * @param $params->name {string}
@@ -184,14 +184,14 @@ abstract class Snippet {
 	public static function runSnippet($params){
 		$result = '';
 		
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
 					'name' => '',
 					'params' => []
 				],
-				\DDTools\ObjectTools::convertType([
+				\DDTools\Tools\Objects::convertType([
 					'object' => $params,
 					'type' => 'objectStdClass'
 				])

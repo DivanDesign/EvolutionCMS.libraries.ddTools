@@ -1,7 +1,7 @@
 <?php
-namespace DDTools;
+namespace DDTools\Tools;
 
-class ObjectTools {
+class Objects {
 	/**
 	 * isObjectOrArray
 	 * @version 0.1 (2020-04-30)
@@ -78,14 +78,14 @@ class ObjectTools {
 	
 	/**
 	 * getPropValue
-	 * @version 1.2 (2023-12-03)
+	 * @version 1.2.1 (2024-08-02)
 	 * 
 	 * @see README.md
 	 * 
 	 * @return {mixed|null}
 	 */
 	public static function getPropValue($params){
-		$params = \DDTools\ObjectTools::extend([
+		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				//Defaults
 				(object) [
@@ -107,7 +107,7 @@ class ObjectTools {
 			
 			//If first-level exists
 			if (
-				\DDTools\ObjectTools::isPropExists([
+				\DDTools\Tools\Objects::isPropExists([
 					'object' => $params->object,
 					'propName' => $propNames[0]
 				])
@@ -147,7 +147,7 @@ class ObjectTools {
 	
 	/**
 	 * convertType
-	 * @version 1.3 (2023-10-01)
+	 * @version 1.3.1 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
@@ -194,16 +194,22 @@ class ObjectTools {
 					if (is_null($result)){
 						//Include PHP.libraries.hjson
 						require_once(
+							'Objects' .
+							DIRECTORY_SEPARATOR .
 							'hjson' .
 							DIRECTORY_SEPARATOR .
 							'HJSONException.php'
 						);
 						require_once(
+							'Objects' .
+							DIRECTORY_SEPARATOR .
 							'hjson' .
 							DIRECTORY_SEPARATOR .
 							'HJSONUtils.php'
 						);
 						require_once(
+							'Objects' .
+							DIRECTORY_SEPARATOR .
 							'hjson' .
 							DIRECTORY_SEPARATOR .
 							'HJSONParser.php'

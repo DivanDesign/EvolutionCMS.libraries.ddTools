@@ -84,7 +84,7 @@ trait AncestorTrait {
 	
 	/**
 	 * createChildInstance
-	 * @version 1.2.2 (2024-02-06)
+	 * @version 1.2.3 (2024-08-02)
 	 * 
 	 * @see README.md
 	 */
@@ -94,7 +94,7 @@ trait AncestorTrait {
 		$objectClass = static::getChildClassName($params);
 		
 		return new $objectClass(
-			\DDTools\ObjectTools::isPropExists([
+			\DDTools\Tools\Objects::isPropExists([
 				'object' => $params,
 				'propName' => 'params',
 			])
