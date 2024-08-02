@@ -263,10 +263,10 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* Valid values: `mixed`
 
 
-### `\DDTools\FilesTools`
+### `\DDTools\Tools\Files`
 
 
-#### `\DDTools\FilesTools::modifyImage($params)`
+#### `\DDTools\Tools\Files::modifyImage($params)`
 
 Modify your images: create thumbnails, crop, resize, fill background color or add watermark.
 

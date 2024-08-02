@@ -6,3 +6,4 @@ abstract class BaseClass extends \DDTools\Base\Base {
 }
 
 class ObjectTools extends \DDTools\Tools\Objects {}
+class FilesTools extends \DDTools\Tools\Files {}

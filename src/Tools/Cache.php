@@ -8,7 +8,7 @@ class Cache {
 	
 	/**
 	 * initStatic
-	 * @version 2.0 (2024-08-01)
+	 * @version 2.0.1 (2024-08-02)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
@@ -26,7 +26,7 @@ class Cache {
 			;
 			
 			if (!is_dir(static::$cacheDir)){
-				\DDTools\FilesTools::createDir([
+				\DDTools\Tools\Files::createDir([
 					'path' => static::$cacheDir,
 				]);
 			}
@@ -137,7 +137,7 @@ class Cache {
 	
 	/**
 	 * clear
-	 * @version 2.2 (2024-08-01)
+	 * @version 2.2.1 (2024-08-02)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -164,7 +164,7 @@ class Cache {
 		
 		//Clear all cache
 		if (empty($params->resourceId)){
-			\DDTools\FilesTools::removeDir(static::$cacheDir);
+			\DDTools\Tools\Files::removeDir(static::$cacheDir);
 		//Clear cache for specified documents
 		}else{
 			$files = glob(

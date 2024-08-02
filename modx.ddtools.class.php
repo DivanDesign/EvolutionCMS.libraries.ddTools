@@ -112,7 +112,7 @@ class ddTools {
 	
 	/**
 	 * __construct
-	 * @version 1.0.4 (2020-02-11)
+	 * @version 1.0.5 (2024-08-02)
 	 */
 	private function __construct(){
 		global $modx;
@@ -129,7 +129,7 @@ class ddTools {
 		}
 		
 		//We need to include required files if Composer is not used
-		if(!class_exists('\DDTools\FilesTools')){
+		if(!class_exists('\DDTools\Tools\Files')){
 			require_once(
 				__DIR__ .
 				DIRECTORY_SEPARATOR .
@@ -3043,7 +3043,7 @@ class ddTools {
 	
 	/**
 	 * createDir
-	 * @version 1.0 (2019-10-22)
+	 * @version 1.0.1 (2024-08-02)
 	 * 
 	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
 	 * 
@@ -3053,12 +3053,12 @@ class ddTools {
 	 * @return {boolean} — Success status.
 	 */
 	public static function createDir($params){
-		return \DDTools\FilesTools::createDir($params);
+		return \DDTools\Tools\Files::createDir($params);
 	}
 	
 	/**
 	 * copyDir
-	 * @version 1.1 (2018-10-02)
+	 * @version 1.1.1 (2024-08-02)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
@@ -3071,7 +3071,7 @@ class ddTools {
 		$sourcePath,
 		$destinationPath
 	){
-		return \DDTools\FilesTools::copyDir([
+		return \DDTools\Tools\Files::copyDir([
 			'sourcePath' => $sourcePath,
 			'destinationPath' => $destinationPath
 		]);
@@ -3079,7 +3079,7 @@ class ddTools {
 	
 	/**
 	 * removeDir
-	 * @version 1.1 (2018-10-02)
+	 * @version 1.1.1 (2024-08-02)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -3088,7 +3088,7 @@ class ddTools {
 	 * @return {boolean}
 	 */
 	public static function removeDir($path){
-		return \DDTools\FilesTools::removeDir($path);
+		return \DDTools\Tools\Files::removeDir($path);
 	}
 	
 	/**

@@ -1,7 +1,7 @@
 <?php
-namespace DDTools;
+namespace DDTools\Tools;
 
-class FilesTools {
+class Files {
 	/**
 	 * createDir
 	 * @version 1.3.1 (2019-09-03)
@@ -148,7 +148,7 @@ class FilesTools {
 	
 	/**
 	 * modifyImage
-	 * @version 2.6.3 (2024-08-02)
+	 * @version 2.6.4 (2024-08-02)
 	 * 
 	 * @see README.md
 	 * 
@@ -178,6 +178,8 @@ class FilesTools {
 		
 		//Include PHP.libraries.phpThumb
 		require_once(
+			'Files' .
+			DIRECTORY_SEPARATOR .
 			'phpThumb' .
 			DIRECTORY_SEPARATOR .
 			'phpthumb.class.php'
