@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.63 (2024-08-02)
+
+* \+ `\DDTools\Tools\Cache`: Новый класс. Позволяет кэшировать какие-то данные (например, результаты сниппетов) в файл в папке `assets/cache/ddCache` (см. README).
+* \* `\DDTools\Tools\Objects`: Класс переименован из `\DDTools\ObjectTools` (с обратной совместимостью).
+* \* `\DDTools\Tools\Files`: Класс переименован из `\DDTools\FilesTools` (с обратной совместимостью).
+
+
 ## Версия 0.62.1 (2024-06-17)
 
 * \* `\ddTools::parseText` → Parameters → `$params->isCompletelyParsingEnabled`: Неработающая поддержка устаревшего названия `$params->mergeAll` исправлена.

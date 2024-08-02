@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.63 (2024-08-02)
+
+* \+ `\DDTools\Tools\Cache`: The new class. Allows you to cache some data (e. g. a snippet result) to a file in the `assets/cache/ddCache` folder (see README).
+* \* `\DDTools\Tools\Objects`: The class has been renamed from `\DDTools\ObjectTools` (with backward compatibility).
+* \* `\DDTools\Tools\Files`: The class has been renamed from `\DDTools\FilesTools` (with backward compatibility).
+
+
 ## Version 0.62.1 (2024-06-17)
 
 * \* `\ddTools::parseText` → Parameters → `$params->isCompletelyParsingEnabled`: Broken support for deprecated name `$params->mergeAll` has been fixed.
