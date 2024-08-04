@@ -432,12 +432,12 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.3.4 (2024-08-02)
+	 * @version 1.4 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
 	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values. @required
-	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (all items will be updated).
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be updated).
 	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
 	 * @param $params->limit {integer|0} — Maximum number of items to delete. `0` means all matching. Default: 0.
 	 * @param $params->offset {integer} — Offset of the first item (can be useful with $params->limit). Default: 0.
@@ -535,10 +535,10 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_delete
-	 * @version 1.1.1 (2024-08-02)
+	 * @version 1.2 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (all items will be deleted).
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be deleted).
 	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
 	 * @param $params->limit {integer|0} — Maximum number of items to delete. `0` means all matching. Default: 0.
 	 * @param $params->offset {integer} — Offset of the first item (can be useful with $params->limit). Default: 0.
@@ -572,10 +572,10 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_get
-	 * @version 1.2.1 (2024-08-02)
+	 * @version 1.3 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (all items will be returned).
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be returned).
 	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
 	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause. Default: ''.
 	 * @param $params->limit {integer|0} — Maximum number of items to return. `0` means all matching. Default: 0.
@@ -693,12 +693,12 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * buildSqlWhereString
-	 * @version 1.1.3 (2024-08-02)
+	 * @version 1.2 (2024-08-04)
 	 * 
 	 * @desc Builds where clause string from array.
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
-	 * @param $params->where {stdClass|arrayAssociative|string} — Data for SQL where. Default: ''.
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — Data for SQL where. Default: ''.
 	 * @param $params->where->{$propName} {string} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. @required
 	 * 
 	 * @return {string}
@@ -713,7 +713,9 @@ class Storage extends \DDTools\Storage\Storage {
 			]
 		]);
 		
-		if (is_string($params->where)){
+		if (\ddTools::isEmpty($params->where)){
+			$result = '';
+		}elseif (is_string($params->where)){
 			$result = $params->where;
 		//If it is array or object
 		}else{

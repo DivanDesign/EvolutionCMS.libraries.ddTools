@@ -57,12 +57,12 @@ abstract class Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.0 (2024-01-16)
+	 * @version 1.4 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
 	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values. @required
-	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (all items will be updated).
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be updated).
 	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
 	 * @param $params->limit {integer|0} — Maximum number of items to delete. `0` means all matching. Default: 0.
 	 * @param $params->offset {integer} — Offset of the first item (can be useful with $params->limit). Default: 0.
@@ -75,12 +75,12 @@ abstract class Storage {
 	
 	/**
 	 * items_updateOne
-	 * @version 1.1.1 (2024-08-02)
+	 * @version 1.2 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
 	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values. @required
-	 * @param $params->where {string} — SQL 'WHERE' clause. Default: '' (first found item will be updated).
+	 * @param $params->where {string|null} — SQL 'WHERE' clause. Default: '' (first found item will be updated).
 	 * @param $params->isEnabledAddNotFound {boolean} — Is allowed to add item if it is not exist? Default: false.
 	 * 
 	 * @return $result {stdClass|null} — An added item object or `null` if fail.
@@ -126,10 +126,10 @@ abstract class Storage {
 	
 	/**
 	 * items_delete
-	 * @version 1.0 (2024-01-16)
+	 * @version 1.1 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (all items will be deleted).
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be deleted).
 	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
 	 * @param $params->limit {integer|0} — Maximum number of items to delete. `0` means all matching. Default: 0.
 	 * @param $params->offset {integer} — Offset of the first item (can be useful with $params->limit). Default: 0.
@@ -141,10 +141,10 @@ abstract class Storage {
 	
 	/**
 	 * items_deleteOne
-	 * @version 1.0.1 (2024-08-02)
+	 * @version 1.1 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (first found item will be deleted).
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (first found item will be deleted).
 	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
 	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause. Default: ''.
 	 * 
@@ -165,10 +165,10 @@ abstract class Storage {
 	
 	/**
 	 * items_get
-	 * @version 1.0 (2024-01-16)
+	 * @version 1.1 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {stdClass|arrayAssociative|string} — SQL 'WHERE' clause. Default: '' (all items will be returned).
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be returned).
 	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
 	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause. Default: ''.
 	 * @param $params->limit {integer|0} — Maximum number of items to return. `0` means all matching. Default: 0.
@@ -185,10 +185,10 @@ abstract class Storage {
 	
 	/**
 	 * items_getOne
-	 * @version 1.0.1 (2024-08-02)
+	 * @version 1.1 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {string} — SQL 'WHERE' clause. Default: '' (first found item will be returned).
+	 * @param $params->where {string|null} — SQL 'WHERE' clause. Default: '' (first found item will be returned).
 	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause. Default: ''.
 	 * @param $params->propsToReturn {array|'*'|stringCommaSeparated} — Required item prop names to return. Can be set as array of prop names, comma separated string or '*' for all props. Default: '*' (all).
 	 * @param $params->propsToReturn[$i] {string} — A prop name. @required
