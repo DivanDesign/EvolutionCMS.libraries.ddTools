@@ -41,7 +41,7 @@ class Response {
 	
 	/**
 	 * validateMeta
-	 * @version 1.1.1 (2021-03-10)
+	 * @version 1.1.2 (2024-08-04)
 	 * 
 	 * @param $meta {arrayAssociative} — Is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
@@ -70,29 +70,29 @@ class Response {
 	public function validateMeta($meta){
 		$result = false;
 		
-		//Parameter is valid
+		// Parameter is valid
 		if (is_array($meta)){
 			$paramKeys = array_keys($meta);
 			
 			if(
-				//All required items are set
+				// All required items are set
 				!count(array_diff(
 					static::$requiredMetaKeys,
 					$paramKeys
 				)) &&
-				//And only allowed items are set
+				// And only allowed items are set
 				!count(array_diff(
 					$paramKeys,
 					static::$allowedMetaKeys
 				)) &&
-				//code is int
+				// code is int
 				is_int($meta['code']) &&
-				//success is bool
+				// success is bool
 				is_bool($meta['success']) &&
 				(
-					//message is not set
+					// message is not set
 					!isset($meta['message']) ||
-					//Or is valid
+					// Or is valid
 					$this->validateMetaMessage($meta['message'])
 				)
 			){
@@ -105,7 +105,7 @@ class Response {
 	
 	/**
 	 * validateMetaMessage
-	 * @version 1.1 (2021-03-10)
+	 * @version 1.1.1 (2024-08-04)
 	 * 
 	 * @param $message {arrayAssociative} — @reuired
 	 * @param $message['content'] {string} — @required
@@ -116,22 +116,22 @@ class Response {
 	public function validateMetaMessage($message){
 		$result = false;
 		
-		//Parameter is valid
+		// Parameter is valid
 		if (is_array($message)){
 			$paramKeys = array_keys($message);
 			
 			if (
-				//All required items are set
+				// All required items are set
 				!count(array_diff(
 					static::$requiredMetaMessageKeys,
 					$paramKeys
 				)) &&
-				//And only allowed items are set
+				// And only allowed items are set
 				!count(array_diff(
 					$paramKeys,
 					static::$allowedMetaMessageKeys
 				)) &&
-				//content is string
+				// content is string
 				is_string($message['content'])
 			){
 				$result = true;
@@ -143,7 +143,7 @@ class Response {
 	
 	/**
 	 * setMeta
-	 * @version 1.4.2 (2024-08-02)
+	 * @version 1.4.3 (2024-08-04)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -152,7 +152,7 @@ class Response {
 	 * @return {boolean}
 	 */
 	public function setMeta($meta = []){
-		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormatted
+		// If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormatted
 		if (!is_array($meta)){
 			$meta = \DDTools\Tools\Objects::convertType([
 				'object' => $meta,
@@ -160,25 +160,25 @@ class Response {
 			]);
 		}
 		
-		//If success is not set
+		// If success is not set
 		if (
 			!\DDTools\Tools\Objects::isPropExists([
 				'object' => $meta,
 				'propName' => 'success'
 			])
 		){
-			//true by default
+			// true by default
 			$meta['success'] = true;
 		}
 		
-		//If code is not set
+		// If code is not set
 		if (
 			!\DDTools\Tools\Objects::isPropExists([
 				'object' => $meta,
 				'propName' => 'code'
 			])
 		){
-			//Depends on success by default
+			// Depends on success by default
 			$meta['code'] =
 				$meta['success'] ?
 				200 :
@@ -199,7 +199,7 @@ class Response {
 	
 	/**
 	 * setMetaMessage
-	 * @version 1.1 (2021-05-11)
+	 * @version 1.1.1 (2024-08-04)
 	 * 
 	 * @desc Setter for $this->meta['message'].
 	 * 
@@ -210,9 +210,9 @@ class Response {
 	public function setMetaMessage($message){
 		$result = false;
 		
-		//If parameter is valid
+		// If parameter is valid
 		if ($this->validateMetaMessage($message)){
-			//Set default meta if it is not set
+			// Set default meta if it is not set
 			if (!is_array($this->meta)){
 				$this->setMeta();
 			}
@@ -238,7 +238,7 @@ class Response {
 	
 	/**
 	 * setMetaData
-	 * @version 1.0.2 (2024-08-02)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @desc Setter for $this->meta and $this->data.
 	 * 
@@ -247,7 +247,7 @@ class Response {
 	 * @return {void}
 	 */
 	public function setMetaData($params){
-		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormatted
+		// If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormatted
 		if (!is_array($params)){
 			$params = \DDTools\Tools\Objects::convertType([
 				'object' => $params,
@@ -298,7 +298,7 @@ class Response {
 	
 	/**
 	 * isSuccess
-	 * @version 1.0 (2021-03-11)
+	 * @version 1.0.1 (2024-08-04)
 	 * 
 	 * @return {boolean}
 	 */
@@ -306,9 +306,9 @@ class Response {
 		$result = false;
 		
 		if (
-			//If meta is set
+			// If meta is set
 			is_array($this->meta) &&
-			//And success
+			// And success
 			$this->meta['success']
 		){
 			$result = true;

@@ -8,7 +8,7 @@ class Cache {
 	
 	/**
 	 * initStatic
-	 * @version 2.0.1 (2024-08-02)
+	 * @version 2.0.2 (2024-08-04)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
@@ -17,7 +17,7 @@ class Cache {
 	private static function initStatic(): void {
 		if (is_null(static::$cacheDir)){
 			static::$cacheDir =
-				//path to `assets`
+				// Path to `assets`
 				dirname(
 					__DIR__,
 					4
@@ -35,9 +35,9 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.0.2 (2024-08-02)
+	 * @version 3.0.3 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
 	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param $params->data {string|array|stdClass} — Data to save.
@@ -50,14 +50,14 @@ class Cache {
 		
 		$params = (object) $params;
 		
-		//str|obj|arr
+		// str|obj|arr
 		$dataType =
 			is_object($params->data)
 			? 'obj'
 			: (
 				is_array($params->data)
 				? 'arr'
-				//All other types are considered as string (because of this we don't use the gettype function)
+				// All other types are considered as string (because of this we don't use the gettype function)
 				: 'str'
 			)
 		;
@@ -69,11 +69,11 @@ class Cache {
 			]);
 		}
 		
-		//Save cache file
+		// Save cache file
 		file_put_contents(
-			//Cache file path
+			// Cache file path
 			static::buildCacheFilePath($params),
-			//Cache content
+			// Cache content
 			(
 				static::$contentPrefix
 				. $dataType
@@ -84,9 +84,9 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.0 (2024-08-01)
+	 * @version 3.0.1 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
 	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
@@ -101,20 +101,20 @@ class Cache {
 		$filePath = static::buildCacheFilePath($params);
 		
 		if (is_file($filePath)){
-			//Cut PHP-code prefix
+			// Cut PHP-code prefix
 			$result = substr(
 				file_get_contents($filePath),
 				static::$contentPrefixLen
 			);
 			
-			//str|obj|arr
+			// str|obj|arr
 			$dataType = substr(
 				$result,
 				0,
 				3
 			);
 			
-			//Cut dataType
+			// Cut dataType
 			$result = substr(
 				$result,
 				3
@@ -137,11 +137,11 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.2.2 (2024-08-02)
+	 * @version 2.2.3 (2024-08-04)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
-	 * @param [$params] {stdClass|arrayAssociative} — The object of parameters.
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->resourceId=null] {integer|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param [$params->prefix='doc'] {string|'*'} — Cache prefix.
 	 * @param [$params->suffix='*'] {string|'*'} — Cache suffix.
@@ -162,10 +162,10 @@ class Cache {
 			],
 		]);
 		
-		//Clear all cache
+		// Clear all cache
 		if (empty($params->resourceId)){
 			\DDTools\Tools\Files::removeDir(static::$cacheDir);
-		//Clear cache for specified documents
+		// Clear cache for specified documents
 		}else{
 			$files = glob(
 				static::buildCacheFilePath($params)
@@ -182,9 +182,9 @@ class Cache {
 	
 	/**
 	 * buildCacheFilePath
-	 * @version 4.0 (2024-08-01)
+	 * @version 4.0.1 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
 	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.

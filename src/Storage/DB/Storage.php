@@ -45,21 +45,21 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * initStatic
-	 * @version 1.1.2 (2024-08-02)
+	 * @version 1.1.3 (2024-08-04)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
 	 * @return {void}
 	 */
 	private static function initStatic(): void {
-		//If is not inited before (type of static::$columnsDefaultParams is just used as flag)
+		// If is not inited before (type of static::$columnsDefaultParams is just used as flag)
 		if (!is_object(static::$columnsDefaultParams)){
-			//Merge columnsDefaultParams from parent and child static props
+			// Merge columnsDefaultParams from parent and child static props
 			static::$columnsDefaultParams = \DDTools\Tools\Objects::extend([
 				'objects' => [
-					//Parent (\DDTools\DB\Table::$columnsDefaultParams)
+					// Parent (\DDTools\DB\Table::$columnsDefaultParams)
 					(object) self::$columnsDefaultParams,
-					//Child (e.g. \Something\Table\Base\Table::$columnsDefaultParams)
+					// Child (e.g. \Something\Table\Base\Table::$columnsDefaultParams)
 					static::$columnsDefaultParams
 				]
 			]);
@@ -68,18 +68,18 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * __construct
-	 * @version 3.0.1 (2024-08-02)
+	 * @version 3.0.2 (2024-08-04)
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — Parameters, the pass-by-name style is used. Default: —.
-	 * @param $params->nameAlias {string} — Short table name (e. g. 'site_content'). You can define it in child classes or pass to the constructor directly. Default: ''.
-	 * @param $params->columns {array} — Additional columns (that not defined in the class). Default: [].
+	 * @param [$params] {arrayAssociative|stdClass} — The parameters object.
+	 * @param [$params->nameAlias=''] {string} — Short table name (e. g. 'site_content'). You can define it in child classes or pass to the constructor directly.
+	 * @param [$params->columns=[]] {array} — Additional columns (that not defined in the class).
 	 * @param $params->columns[$i] {stdClass|arrayAssociative|string} — Column parameters. Can be set as a simple string name if other parameters should be set by default.
-	 * @param $params->columns[$i]->name {string} — Column name. @required
-	 * @param $params->columns[$i]->isPublic {boolean} — Can column be used quite safely? Default: true.
-	 * @param $params->columns[$i]->attrs {string} — Column attributes (empty value means static::$columnsDefaultParams->attrs). Default: static::$columnsDefaultParams->attrs.
-	 * @param $params->columns[$i]->isReadOnly {boolean} — Can column be modified? Default: static::$columnsDefaultParams->isReadOnly.
-	 * @param $params->columns[$i]->isComparedCaseSensitive {boolean} — Should column to be compared case-sensitive in where clauses? Default: static::$columnsDefaultParams->isComparedCaseSensitive.
-	 * @param $params->columns[$i]->isTagsAllowed {boolean} — Are HTML and MODX tags allowed? Default: static::$columnsDefaultParams->isTagsAllowed.
+	 * @param $params->columns[$i]->name {string} — Column name.
+	 * @param [$params->columns[$i]->isPublic=true] {boolean} — Can column be used quite safely?
+	 * @param [$params->columns[$i]->attrs=static::$columnsDefaultParams->attrs] {string} — Column attributes (empty value means static::$columnsDefaultParams->attrs).
+	 * @param [$params->columns[$i]->isReadOnly=static::$columnsDefaultParams->isReadOnly] {boolean} — Can column be modified?
+	 * @param [$params->columns[$i]->isComparedCaseSensitive=static::$columnsDefaultParams->isComparedCaseSensitive] {boolean} — Should column to be compared case-sensitive in where clauses?
+	 * @param [$params->columns[$i]->isTagsAllowed=static::$columnsDefaultParams->isTagsAllowed] {boolean} — Are HTML and MODX tags allowed?
 	 */
 	public function __construct($params = []){
 		$params = \DDTools\Tools\Objects::extend([
@@ -91,7 +91,7 @@ class Storage extends \DDTools\Storage\Storage {
 			]
 		]);
 		
-		//Init static
+		// Init static
 		static::initStatic();
 		
 		$this->construct_props($params);
@@ -101,9 +101,9 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_props
-	 * @version 2.0.1 (2024-08-02)
+	 * @version 2.0.2 (2024-08-04)
 	 * 
-	 * @param $params {stdClass} — Parameters, see $this->__construct. @required
+	 * @param $params {stdClass} — Parameters, see $this->__construct.
 	 * 
 	 * @return {void}
 	 */
@@ -112,7 +112,7 @@ class Storage extends \DDTools\Storage\Storage {
 			$this->nameAlias = $params->nameAlias;
 		}
 		
-		//Prepare table name
+		// Prepare table name
 		$this->nameFull = \ddTools::$modx->getFullTableName($this->nameAlias);
 		
 		$this->columns = new \DDTools\ObjectCollection([
@@ -121,12 +121,12 @@ class Storage extends \DDTools\Storage\Storage {
 		]);
 		
 		if (!empty($params->columns)){
-			//Save additional columns to others
+			// Save additional columns to others
 			foreach (
 				$params->columns as
 				$columnParams
 			){
-				//If column is set as a simple string name
+				// If column is set as a simple string name
 				if (is_string($columnParams)){
 					$columnParams = [
 						'name' => $columnParams
@@ -137,9 +137,9 @@ class Storage extends \DDTools\Storage\Storage {
 					'items' => [
 						\DDTools\Tools\Objects::extend([
 							'objects' => [
-								//Column data
+								// Column data
 								(object) [
-									//All additional columns are considered as safe by default
+									// All additional columns are considered as safe by default
 									'isPublic' => true,
 								],
 								$columnParams,
@@ -153,12 +153,12 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_db
-	 * @version 1.0.2 (2024-08-02)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @return {void}
 	 */
 	private function construct_db(): void {
-		//We can't do something without table name
+		// We can't do something without table name
 		if (!empty($this->nameAlias)){
 			$isTableExist = boolval(
 				\ddTools::$modx->db->getValue(
@@ -169,19 +169,19 @@ class Storage extends \DDTools\Storage\Storage {
 				)
 			);
 			
-			//By default, consider that columns are absent
+			// By default, consider that columns are absent
 			$columnsExisting = [];
 			
 			$columnsQuery = [];
 			
-			//If table exists
+			// If table exists
 			if ($isTableExist){
-				//Получаем существующие колонки
+				// Получаем существующие колонки
 				$columnsExisting = \ddTools::$modx->db->getColumnNames(
 					\ddTools::$modx->db->select(
 						'*',
 						$this->nameFull,
-						//Что угодно, -1 выбран, так как таких записей точно быть не должно
+						// Что угодно, -1 выбран, так как таких записей точно быть не должно
 						'`id` = -1'
 					)
 				);
@@ -206,7 +206,7 @@ class Storage extends \DDTools\Storage\Storage {
 					}
 				}
 				
-				//If the column is not exist
+				// If the column is not exist
 				if (
 					!in_array(
 						$columnData->name,
@@ -232,9 +232,9 @@ class Storage extends \DDTools\Storage\Storage {
 					$columnsQuery
 				);
 				
-				//If table exists
+				// If table exists
 				if ($isTableExist){
-					//Create missing columns
+					// Create missing columns
 					$resultQuery =
 						'ALTER TABLE ' .
 						$this->nameFull .
@@ -242,7 +242,7 @@ class Storage extends \DDTools\Storage\Storage {
 						$columnsQuery
 					;
 				}else{
-					//Create table with needed columns
+					// Create table with needed columns
 					$resultQuery =
 						'CREATE TABLE IF NOT EXISTS ' .
 						$this->nameFull .
@@ -252,7 +252,7 @@ class Storage extends \DDTools\Storage\Storage {
 					;
 				}
 				
-				//Create the table or add/change columns
+				// Create the table or add/change columns
 				\ddTools::$modx->db->query($resultQuery);
 			}
 		}
@@ -260,11 +260,11 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getColsParams
-	 * @version 3.0.1 (2024-08-02)
+	 * @version 3.0.2 (2024-08-04)
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — Parameters, the pass-by-name style is used. Default: —.
-	 * @param $params->paramName {'name'|'attrs'} — Column property to return. Default: 'name'.
-	 * @param $params->filter {string} — Filter clause for column properties, see `\DDTools\ObjectCollection`. Default: ''.
+	 * @param [$params] {arrayAssociative|stdClass} — The parameters object.
+	 * @param [$params->paramName='name'] {'name'|'attrs'} — Column property to return.
+	 * @param [$params->filter=''] {string} — Filter clause for column properties, see `\DDTools\ObjectCollection`.
 	 * 
 	 * @return $result {arrayAssociative}
 	 * @return $result[$columnName] {string} — Key is column name, value is column property defined by $params->paramName.
@@ -272,7 +272,7 @@ class Storage extends \DDTools\Storage\Storage {
 	protected function cols_getColsParams($params = []): array {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'paramName' => 'name',
 					'filter' => '',
@@ -290,18 +290,18 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getOneColParam
-	 * @version 2.0.1 (2024-08-02)
+	 * @version 2.0.2 (2024-08-04)
 	 * 
-	 * @param $params {arrayAssociative|stdClass} — Parameters, the pass-by-name style is used. Default: —.
-	 * @param $params->filter {string} — Filter clause for column properties, see `\DDTools\ObjectCollection`. Default: ''.
-	 * @param $params->paramName {'name'|'attrs'} — Column property to return. Default: 'name'.
+	 * @param [$params] {arrayAssociative|stdClass} — The parameters object.
+	 * @param [$params->filter=''] {string} — Filter clause for column properties, see `\DDTools\ObjectCollection`.
+	 * @param [$params->paramName='name'] {'name'|'attrs'} — Column property to return.
 	 * 
 	 * @return {mixed|null} — `null` means that column or property is not exist.
 	 */
 	protected function cols_getOneColParam($params = []){
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'filter' => '',
 					'paramName' => 'name',
@@ -320,13 +320,13 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getValidNames
-	 * @version 1.1.3 (2024-08-02)
+	 * @version 1.1.4 (2024-08-04)
 	 * 
 	 * @desc Gets valid column names.
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
-	 * @param $params->colNames {array|'*'|stringCommaSeparated} — Required column names. Can be set as array of column names, comma separated string or '*' for all columns. Only valid column names will be returned. Default: '*' (all).
-	 * @param $params->colNames[$i] {string} — A column name. @required
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
+	 * @param [$params->colNames='*'] {array|'*'|stringCommaSeparated} — Required column names. Can be set as array of column names, comma separated string or '*' for all columns. Only valid column names will be returned.
+	 * @param $params->colNames[$i] {string} — A column name.
 	 * 
 	 * @return $result {arrayIndexed}
 	 * @return $result[$i] {string}
@@ -341,15 +341,15 @@ class Storage extends \DDTools\Storage\Storage {
 			]
 		]);
 		
-		//Return all exist columns by default
+		// Return all exist columns by default
 		$result = array_values($this->cols_getColsParams());
 		
-		//If we don't need all esixt columns
+		// If we don't need all esixt columns
 		if (
 			$params->colNames != '*' &&
 			!empty($params->colNames)
 		){
-			//If column names are set as single column name
+			// If column names are set as single column name
 			if (!is_array($params->colNames)){
 				$params->colNames = explode(
 					',',
@@ -357,7 +357,7 @@ class Storage extends \DDTools\Storage\Storage {
 				);
 			}
 			
-			//Delete non-existent columns
+			// Delete non-existent columns
 			$result = array_intersect(
 				$params->colNames,
 				$result
@@ -369,10 +369,10 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_add
-	 * @version 1.2.1 (2024-08-02)
+	 * @version 1.2.2 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
-	 * @param $params->items {mixed} — An array of items. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->items {mixed} — An array of items.
 	 * 	{array} — can be indexed or associative, keys will not be used
 	 * 	{object} — also can be set as an object for better convenience, only property values will be used
 	 * 	{stringJsonObject} — [JSON](https://en.wikipedia.org/wiki/JSON) object
@@ -380,8 +380,8 @@ class Storage extends \DDTools\Storage\Storage {
 	 * 	{stringHjsonObject} — [HJSON](https://hjson.github.io/) object
 	 * 	{stringHjsonArray} — [HJSON](https://hjson.github.io/) array
 	 * 	{stringQueryFormatted} — [Query string](https://en.wikipedia.org/wiki/Query_string)
-	 * @param $params->items[$itemIndex] {object|array} — An item. @required
-	 * @param $params->items[$itemIndex]->{$propName} {mixed} — Keys are property names, values are values. @required
+	 * @param $params->items[$itemIndex] {object|array} — An item.
+	 * @param $params->items[$itemIndex]->{$propName} {mixed} — Keys are property names, values are values.
 	 * 
 	 * @return $result {arrayIndexed} — Array of added items.
 	 * @return $result[$itemIndex] {stdClass} — A item object.
@@ -390,7 +390,7 @@ class Storage extends \DDTools\Storage\Storage {
 	public function items_add($params): array {
 		$params = (object) $params;
 		
-		//Items must be an array
+		// Items must be an array
 		if (!is_array($params->items)){
 			$params->items = \DDTools\Tools\Objects::convertType([
 				'object' => $params->items,
@@ -406,7 +406,7 @@ class Storage extends \DDTools\Storage\Storage {
 		){
 			$itemObject = (object) $itemObject;
 			
-			//ID can't be inserted
+			// ID can't be inserted
 			unset($itemObject->id);
 			
 			$itemObject = $this->items_validateData([
@@ -432,15 +432,15 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.4.1 (2024-08-04)
+	 * @version 1.4.2 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
-	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
-	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values. @required
-	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be updated).
-	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
-	 * @param $params->limit {integer|0} — Maximum number of items to delete. `0` means all matching. Default: 0.
-	 * @param $params->offset {integer} — Offset of the first item (can be useful with $params->limit). Default: 0.
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
+	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values.
+	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be updated.
+	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored.
+	 * @param [$params->limit=0] {integer|0} — Maximum number of items to delete. `0` means all matching.
+	 * @param [$params->offset=0] {integer} — Offset of the first item (can be useful with $params->limit).
 	 * 
 	 * @return $result {arrayIndexed} — Array of updated items.
 	 * @return $result[$itemIndex] {stdClass} — A item object.
@@ -449,7 +449,7 @@ class Storage extends \DDTools\Storage\Storage {
 	public function items_update($params): array {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'where' => '',
 					'data' => [],
@@ -464,17 +464,17 @@ class Storage extends \DDTools\Storage\Storage {
 			'data' => $params->data
 		]);
 		
-		//Validate data (keep all except unsaveable)
+		// Validate data (keep all except unsaveable)
 		$params->data = array_diff_key(
 			(array) $params->data,
-			//ReadOnly props can't be updated
+			// ReadOnly props can't be updated
 			$this->cols_getColsParams([
 				'filter' => 'isReadOnly == 1'
 			])
 		);
 		
 		if (!empty($params->data)){
-			//Collect all updated resource IDs to a SQL variable
+			// Collect all updated resource IDs to a SQL variable
 			\ddTools::$modx->db->query('SET @updated_ids := ""');
 			\ddTools::$modx->db->query('
 				UPDATE
@@ -504,7 +504,7 @@ class Storage extends \DDTools\Storage\Storage {
 				')
 			);
 			
-			//Comma separated string or fail
+			// Comma separated string or fail
 			if (
 				is_string($dbResult) &&
 				!empty($dbResult)
@@ -535,21 +535,21 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_delete
-	 * @version 1.2.1 (2024-08-04)
+	 * @version 1.2.2 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be deleted).
-	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
-	 * @param $params->limit {integer|0} — Maximum number of items to delete. `0` means all matching. Default: 0.
-	 * @param $params->offset {integer} — Offset of the first item (can be useful with $params->limit). Default: 0.
-	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause (can be useful with $params->limit). Default: ''.
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
+	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be deleted.
+	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored.
+	 * @param [$params->limit=0] {integer|0} — Maximum number of items to delete. `0` means all matching.
+	 * @param [$params->offset=''] {integer} — Offset of the first item (can be useful with $params->limit).
+	 * @param [$params->orderBy=''] {string} — SQL 'ORDER BY' clause (can be useful with $params->limit).
 	 * 
 	 * @return {void}
 	 */
 	public function items_delete($params = []): void {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'where' => '',
 					'orderBy' => '',
@@ -559,31 +559,31 @@ class Storage extends \DDTools\Storage\Storage {
 		]);
 		
 		\ddTools::$modx->db->delete(
-			//Table
+			// Table
 			$this->nameFull,
-			//Where
+			// Where
 			$this->items_prepareWhere($params),
-			//OrderBy
+			// OrderBy
 			$params->orderBy,
-			//Limit
+			// Limit
 			static::buildSqlLimitString($params)
 		);
 	}
 	
 	/**
 	 * items_get
-	 * @version 1.3.1 (2024-08-04)
+	 * @version 1.3.2 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be returned).
-	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored. @required
-	 * @param $params->orderBy {string} — SQL 'ORDER BY' clause. Default: ''.
-	 * @param $params->limit {integer|0} — Maximum number of items to return. `0` means all matching. Default: 0.
-	 * @param $params->offset {integer} — Offset of the first item (can be useful with $params->limit). Default: 0.
-	 * @param $params->propsToReturn {array|'*'|stringCommaSeparated} — Required item prop names to return. Can be set as array of prop names, comma separated string or '*' for all props. Default: '*' (all).
-	 * @param $params->propsToReturn[$i] {string} — A prop name. @required
-	 * @param $params->propAsResultKey {string|null} — Item property, which value will be an item key in result array instead of an item index. For example, it can be useful if items have an ID property or something like that. `null` — result array will be indexed. Default: null.
-	 * @param $params->propAsResultValue {string|null} — Item property, which value will be an item value in result array instead of an item object. Default: null.
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
+	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be returned.
+	 * @param $params->where->{$fieldName} {string} — Key is a property name, value is a value. Only valid properties names will be used, others will be ignored.
+	 * @param [$params->orderBy=''] {string} — SQL 'ORDER BY' clause.
+	 * @param [$params->limit=0] {integer|0} — Maximum number of items to return. `0` means all matching.
+	 * @param [$params->offset=0] {integer} — Offset of the first item (can be useful with $params->limit).
+	 * @param [$params->propsToReturn='*'] {array|'*'|stringCommaSeparated} — Required item prop names to return. Can be set as array of prop names, comma separated string or '*' for all props.
+	 * @param $params->propsToReturn[$i] {string} — A prop name.
+	 * @param [$params->propAsResultKey=null] {string|null} — Item property, which value will be an item key in result array instead of an item index. For example, it can be useful if items have an ID property or something like that. `null` — result array will be indexed.
+	 * @param [$params->propAsResultValue=null] {string|null} — Item property, which value will be an item value in result array instead of an item object.
 	 * 
 	 * @return $result {arrayIndexed|arrayAssociative} — An array of items. Item property values will be used as result keys if `$params->propAsResultKey` is set.
 	 * @return $result[$itemIndex|$itemFieldValue] {stdClass|mixed} — A item object or item property value if specified in `$params->propAsResultValue`.
@@ -591,7 +591,7 @@ class Storage extends \DDTools\Storage\Storage {
 	public function items_get($params = []): array {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'where' => '',
 					'orderBy' => '',
@@ -611,18 +611,18 @@ class Storage extends \DDTools\Storage\Storage {
 		
 		if (!empty($params->propsToReturn)){
 			$sqlResult = \ddTools::$modx->db->select(
-				//Fields
+				// Fields
 				implode(
 					',',
 					$params->propsToReturn
 				),
-				//Table
+				// Table
 				$this->nameFull,
-				//Where
+				// Where
 				$this->items_prepareWhere($params),
-				//Order by
+				// Order by
 				$params->orderBy,
-				//Limit
+				// Limit
 				$this->buildSqlLimitString($params)
 			);
 			
@@ -630,7 +630,7 @@ class Storage extends \DDTools\Storage\Storage {
 				while ($itemData = \ddTools::$modx->db->getRow($sqlResult)){
 					$itemData = (object) $itemData;
 					
-					//Save only field value instead of object if needed
+					// Save only field value instead of object if needed
 					if (!is_null($params->propAsResultValue)){
 						$resultItemObject = \DDTools\Tools\Objects::getPropValue([
 							'object' => $itemData,
@@ -640,7 +640,7 @@ class Storage extends \DDTools\Storage\Storage {
 						$resultItemObject = $itemData;
 					}
 					
-					//Save item
+					// Save item
 					if (!is_null($params->propAsResultKey)){
 						$result[
 							\DDTools\Tools\Objects::getPropValue([
@@ -660,13 +660,13 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_validateData
-	 * @version 1.0.1 (2023-12-28)
+	 * @version 1.0.2 (2024-08-04)
 	 * 
 	 * @desc Returns only used properties (columns) of $params->data.
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
- 	 * @param $params->data {stdClass|arrayAssociative} — An array/object of item properties (e. g. you can use $_POST). Properties with only valid names will be returned, others will be deleted. @required
- 	 * @param $params->data->{$fieldName} {mixed} — Key is an item property name, value is a value. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+ 	 * @param $params->data {stdClass|arrayAssociative} — An array/object of item properties (e. g. you can use $_POST). Properties with only valid names will be returned, others will be deleted.
+ 	 * @param $params->data->{$fieldName} {mixed} — Key is an item property name, value is a value.
 	 * 
 	 * @return {stdClass}
 	 */
@@ -675,15 +675,15 @@ class Storage extends \DDTools\Storage\Storage {
 		
 		$params->data = (array) $params->data;
 		
-		//Filter data (keep only used field names)
+		// Filter data (keep only used field names)
 		$params->data = array_intersect_key(
 			$params->data,
 			array_fill_keys(
-				//Only used field names
+				// Only used field names
 				$this->cols_getValidNames([
 					'colNames' => array_keys($params->data)
 				]),
-				//No matter because the only keys will be used for comparison
+				// No matter because the only keys will be used for comparison
 				null
 			)
 		);
@@ -693,13 +693,13 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_prepareWhere
-	 * @version 1.2.1 (2024-08-04)
+	 * @version 1.2.2 (2024-08-04)
 	 * 
 	 * @desc Builds a where clause in the required internal format from externally passed parameters.
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
-	 * @param $params->where {stdClass|arrayAssociative|string|null} — Data for SQL where. Default: ''.
-	 * @param $params->where->{$propName} {string} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. @required
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
+	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — Data for SQL where. null or '' means that it is not used at all.
+	 * @param $params->where->{$propName} {string} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored.
 	 * 
 	 * @return {string}
 	 */
@@ -717,9 +717,9 @@ class Storage extends \DDTools\Storage\Storage {
 			$result = '';
 		}elseif (is_string($params->where)){
 			$result = $params->where;
-		//If it is array or object
+		// If it is array or object
 		}else{
-			//Validate where conditions (keep only used field names)
+			// Validate where conditions (keep only used field names)
 			$params->where = $this->items_validateData([
 				'data' => $params->where
 			]);
@@ -733,7 +733,7 @@ class Storage extends \DDTools\Storage\Storage {
 			){
 				$result[] =
 					$propName . ' = ' .
-					//Case-sensitive comparison or not?
+					// Case-sensitive comparison or not?
 					(
 						$this->cols_getOneColParam([
 							'filter' => 'name == ' . $propName,
@@ -760,18 +760,18 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * escapeItemPropValue
-	 * @version 2.0.2 (2023-12-28)
+	 * @version 2.0.3 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
-	 * @param $params->propName {string} — Name of item property. @required
-	 * @param $params->propValue {string} — Value of item property. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->propName {string} — Name of item property.
+	 * @param $params->propValue {string} — Value of item property.
 	 * 
 	 * @return {string}
 	 */
 	final protected function escapeItemPropValue($params): string {
 		$params = (object) $params;
 		
-		//Strip tags if required
+		// Strip tags if required
 		if (
 			!$this->cols_getColsParams([
 				'filter' => 'name == ' . $params->propName,
@@ -786,11 +786,11 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * buildSqlSetString
-	 * @version 1.0.2 (2023-12-26)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
-	 * @param $params->data {object|array} — Item data. @required
-	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->data {object|array} — Item data.
+	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values.
 	 * 
 	 * @return {string}
 	 */
@@ -820,18 +820,18 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * buildSqlLimitString
-	 * @version 1.0.1 (2024-08-02)
+	 * @version 1.0.2 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
-	 * @param $params->limit {integer|0} — Maximum number of items to return. `0` means all matching. Default: 0.
-	 * @param $params->offset {integer} — Offset of the first item. Default: 0.
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
+	 * @param [$params->limit=0] {integer|0} — Maximum number of items to return. `0` means all matching.
+	 * @param [$params->offset=0] {integer} — Offset of the first item.
 	 * 
 	 * @return {string}
 	 */
 	final protected static function buildSqlLimitString($params = []): string {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'limit' => 0,
 					'offset' => 0,
@@ -841,20 +841,20 @@ class Storage extends \DDTools\Storage\Storage {
 		]);
 		
 		return
-			//If limit is used
+			// If limit is used
 			$params->limit > 0 ?
 			(
 				'LIMIT ' .
-				//Offset
+				// Offset
 				(
 					$params->offset > 0 ?
 					$params->offset . ', ' :
 					''
 				) .
-				//Count
+				// Count
 				$params->limit
 			) :
-			//Without limit
+			// Without limit
 			''
 		;
 	}

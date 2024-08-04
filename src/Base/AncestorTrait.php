@@ -4,14 +4,14 @@ namespace DDTools\Base;
 trait AncestorTrait {
 	/**
 	 * getChildClassName
-	 * @version 1.0 (2024-02-06)
+	 * @version 1.0.1 (2024-08-04)
 	 * 
 	 * @see README.md
 	 * 
 	 * @throws \Exception
 	 */
 	final public static function getChildClassName($params): string {
-		//Defaults
+		// Defaults
 		$params = (object) array_merge(
 			[
 				'parentDir' => null,
@@ -20,7 +20,7 @@ trait AncestorTrait {
 			(array) $params
 		);
 		
-		//Capitalize child name if needed
+		// Capitalize child name if needed
 		if ($params->capitalizeName){
 			$params->name = ucfirst(strtolower($params->name));
 		}
@@ -42,7 +42,7 @@ trait AncestorTrait {
 			)
 		);
 		
-		//Current classname without namespace
+		// Current classname without namespace
 		$thisClassName = substr(
 			$thisClassNameFull,
 			(

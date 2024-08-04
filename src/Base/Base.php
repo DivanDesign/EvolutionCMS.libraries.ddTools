@@ -15,7 +15,7 @@ abstract class Base {
 	
 	/**
 	 * getClassName
-	 * @version 1.0 (2024-06-14)
+	 * @version 1.0.1 (2024-08-04)
 	 * 
 	 * @see README.md
 	 * 
@@ -24,12 +24,12 @@ abstract class Base {
 	public static function getClassName(): \stdClass {
 		$full = get_called_class();
 		
-		//Init
+		// Init
 		if (is_null(self::$ddClassNames)){
 			self::$ddClassNames = new \stdClass();
 		}
 		
-		//If not defined before for this child class
+		// If not defined before for this child class
 		if (
 			!property_exists(
 				self::$ddClassNames,
@@ -52,10 +52,10 @@ abstract class Base {
 			);
 			
 			static::$ddClassNames->{$full}->full = '\\' . static::$ddClassNames->{$full}->full;
-			//Extract short class name
+			// Extract short class name
 			static::$ddClassNames->{$full}->nameShort = array_pop($fullArray);
 			
-			//If namespace exists
+			// If namespace exists
 			if (count($fullArray) > 0){
 				static::$ddClassNames->{$full}->namespaceFull =
 					'\\'
@@ -64,10 +64,10 @@ abstract class Base {
 						$fullArray
 					)
 				;
-				//Extract namespace
+				// Extract namespace
 				static::$ddClassNames->{$full}->namespaceShort = array_pop($fullArray);
 				
-				//If neamespace prefix exists
+				// If neamespace prefix exists
 				if (count($fullArray) > 0){
 					static::$ddClassNames->{$full}->namespacePrefix =
 						'\\'
@@ -114,11 +114,11 @@ abstract class Base {
 	
 	/**
 	 * ddSetProp
-	 * @version 1.0.2 (2020-05-06)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @throws \ReflectionException
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object. @required
 	 * @param $params->object {object} — Объект для модификации. @required
 	 * @param $params->propName {string} — Имя поля. @required
 	 * @param $params->propValue {mixed} — Значение. @required
@@ -127,7 +127,7 @@ abstract class Base {
 	 * @return {void}
 	 */
 	private function ddSetProp($params){
-		//Defaults
+		// Defaults
 		$params = (object) array_merge(
 			[
 				'class' => null
