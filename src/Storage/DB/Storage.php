@@ -432,7 +432,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.4 (2024-08-04)
+	 * @version 1.4.1 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. @required
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data. @required
@@ -483,7 +483,7 @@ class Storage extends \DDTools\Storage\Storage {
 					' . $this->buildSqlSetString(['data' => $params->data]) . '
 				WHERE
 					(
-						' . $this->buildSqlWhereString($params) . '
+						' . $this->items_prepareWhere($params) . '
 					)
 					AND (
 						@updated_ids := IF (
@@ -535,7 +535,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_delete
-	 * @version 1.2 (2024-08-04)
+	 * @version 1.2.1 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
 	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be deleted).
@@ -562,7 +562,7 @@ class Storage extends \DDTools\Storage\Storage {
 			//Table
 			$this->nameFull,
 			//Where
-			$this->buildSqlWhereString($params),
+			$this->items_prepareWhere($params),
 			//OrderBy
 			$params->orderBy,
 			//Limit
@@ -572,7 +572,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_get
-	 * @version 1.3 (2024-08-04)
+	 * @version 1.3.1 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters. Default: —.
 	 * @param $params->where {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. Default: '' (all items will be returned).
@@ -619,7 +619,7 @@ class Storage extends \DDTools\Storage\Storage {
 				//Table
 				$this->nameFull,
 				//Where
-				$this->buildSqlWhereString($params),
+				$this->items_prepareWhere($params),
 				//Order by
 				$params->orderBy,
 				//Limit
@@ -692,10 +692,10 @@ class Storage extends \DDTools\Storage\Storage {
 	}
 	
 	/**
-	 * buildSqlWhereString
-	 * @version 1.2 (2024-08-04)
+	 * items_prepareWhere
+	 * @version 1.2.1 (2024-08-04)
 	 * 
-	 * @desc Builds where clause string from array.
+	 * @desc Builds a where clause in the required internal format from externally passed parameters.
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
 	 * @param $params->where {stdClass|arrayAssociative|string|null} — Data for SQL where. Default: ''.
@@ -703,7 +703,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * 
 	 * @return {string}
 	 */
-	final protected function buildSqlWhereString($params = []): string {
+	final protected function items_prepareWhere($params = []): string {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
@@ -857,6 +857,13 @@ class Storage extends \DDTools\Storage\Storage {
 			//Without limit
 			''
 		;
+	}
+	
+	/**
+	 * @deprecated Use $this->items_prepareWhere
+	 */
+	final protected function buildSqlWhereString($params = []): string {
+		return $this->items_prepareWhere($params);
 	}
 }
 ?>

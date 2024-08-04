@@ -241,6 +241,20 @@ abstract class Storage {
 	abstract protected function items_validateData($params = []) :\stdClass;
 	
 	/**
+	 * items_prepareWhere
+	 * @version 1.0 (2024-08-04)
+	 * 
+	 * @desc Builds a where clause in the required internal format from externally passed parameters.
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
+	 * @param $params->where {stdClass|arrayAssociative|string|null} — Data for SQL where. Default: ''.
+	 * @param $params->where->{$propName} {string} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. @required
+	 * 
+	 * @return {string}
+	 */
+	abstract protected function items_prepareWhere($params = []): string;
+	
+	/**
 	 * escapeItemPropValue
 	 * @version 1.0 (2024-01-16)
 	 * 
