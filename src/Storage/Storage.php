@@ -57,13 +57,13 @@ abstract class Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.5 (2024-08-06)
+	 * @version 1.6 (2024-08-06)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
 	 * @param $params->data->{$propName} {mixed} — Keys are property names, values are values.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be updated.
-	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator).
+	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator), please note that empty arrays will just be ignored.
 	 * @param $params->where->{$propName}[$i] {string} — A value.
 	 * @param [$params->limit=0] {integer|0} — Maximum number of items to delete. `0` means all matching.
 	 * @param [$params->offset=0] {integer} — Offset of the first item (can be useful with $params->limit).
@@ -127,11 +127,11 @@ abstract class Storage {
 	
 	/**
 	 * items_delete
-	 * @version 1.2 (2024-08-06)
+	 * @version 1.3 (2024-08-06)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object. Default: —.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be deleted.
-	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator).
+	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator), please note that empty arrays will just be ignored.
 	 * @param $params->where->{$propName}[$i] {string} — A value.
 	 * @param [$params->limit=0] {integer|0} — Maximum number of items to delete. `0` means all matching.
 	 * @param [$params->offset=0] {integer} — Offset of the first item (can be useful with $params->limit).
@@ -143,11 +143,11 @@ abstract class Storage {
 	
 	/**
 	 * items_deleteOne
-	 * @version 1.2 (2024-08-08)
+	 * @version 1.3 (2024-08-08)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object. Default: —.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that first found item will be deleted.
-	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator).
+	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator), please note that empty arrays will just be ignored.
 	 * @param $params->where->{$propName}[$i] {string} — A value.
 	 * @param [$params->orderBy=''] {string} — SQL 'ORDER BY' clause.
 	 * 
@@ -168,11 +168,11 @@ abstract class Storage {
 	
 	/**
 	 * items_get
-	 * @version 1.2 (2024-08-06)
+	 * @version 1.3 (2024-08-06)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be returned.
-	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator).
+	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator), please note that empty arrays will just be ignored.
 	 * @param $params->where->{$propName}[$i] {string} — A value.
 	 * @param [$params->orderBy=''] {string} — SQL 'ORDER BY' clause.
 	 * @param [$params->limit=0] {integer|0} — Maximum number of items to return. `0` means all matching.
@@ -246,13 +246,13 @@ abstract class Storage {
 	
 	/**
 	 * items_prepareWhere
-	 * @version 1.1 (2024-08-06)
+	 * @version 1.2 (2024-08-06)
 	 * 
 	 * @desc Builds a where clause in the required internal format from externally passed parameters.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — Data for SQL where. null or '' means that it is not used at all.
-	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator).
+	 * @param $params->where->{$propName} {string|arrayIndexed} — Key is an item property name, value is a value. Only valid property names will be used, others will be ignored. You can specify multiple value variants through an array (SQL IN() operator), please note that empty arrays will just be ignored.
 	 * @param $params->where->{$propName}[$i] {string} — A value.
 	 * 
 	 * @return {string}
