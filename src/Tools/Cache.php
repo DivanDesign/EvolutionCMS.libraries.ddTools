@@ -48,7 +48,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.1.1 (2024-08-07)
+	 * @version 3.1.2 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -66,7 +66,7 @@ class Cache {
 		$cacheNameData = static::buildCacheNameData($params);
 		
 		// Save to quick storage
-		static::$quickStorage->{$cacheNameData->cacheName} = $params->data;
+		static::$quickStorage->{$cacheNameData->quickStorage} = $params->data;
 		
 		// str|obj|arr
 		$dataType =
@@ -90,7 +90,7 @@ class Cache {
 		// Save cache file
 		file_put_contents(
 			// Cache file path
-			$cacheNameData->pathNameFull,
+			$cacheNameData->stableStorage,
 			// Cache content
 			(
 				static::$stableStorage_contentPrefix
@@ -102,7 +102,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1.1 (2024-08-07)
+	 * @version 3.1.2 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -122,15 +122,15 @@ class Cache {
 		if (
 			\DDTools\ObjectTools::isPropExists([
 				'object' => static::$quickStorage,
-				'propName' => $cacheNameData->cacheName,
+				'propName' => $cacheNameData->quickStorage,
 			])
 		){
-			$result = static::$quickStorage->{$cacheNameData->cacheName};
+			$result = static::$quickStorage->{$cacheNameData->quickStorage};
 		// Then from file
-		}elseif (is_file($cacheNameData->pathNameFull)){
+		}elseif (is_file($cacheNameData->stableStorage)){
 			// Cut PHP-code prefix
 			$result = substr(
-				file_get_contents($cacheNameData->pathNameFull),
+				file_get_contents($cacheNameData->stableStorage),
 				static::$stableStorage_contentPrefixLen
 			);
 			
@@ -159,7 +159,7 @@ class Cache {
 			}
 			
 			// Save to quick storage
-			static::$quickStorage->{$cacheNameData->cacheName} = $result;
+			static::$quickStorage->{$cacheNameData->quickStorage} = $result;
 		}
 		
 		return $result;
@@ -167,7 +167,7 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.3.1 (2024-08-07)
+	 * @version 2.3.2 (2024-08-07)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -205,12 +205,12 @@ class Cache {
 			// Clear quick storage
 			if (
 				strpos(
-					$cacheNameData->cacheName,
+					$cacheNameData->quickStorage,
 					'*'
 				)
 				=== false
 			){
-				unset(static::$quickStorage->{$cacheNameData->cacheName});
+				unset(static::$quickStorage->{$cacheNameData->quickStorage});
 			}else{
 				foreach(
 					static::$quickStorage
@@ -243,7 +243,7 @@ class Cache {
 			
 			// Clear stable storage
 			$files = glob(
-				$cacheNameData->pathNameFull
+				$cacheNameData->stableStorage
 			);
 			
 			foreach (
@@ -257,7 +257,7 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 5.0.2 (2024-08-07)
+	 * @version 6.0 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -265,8 +265,8 @@ class Cache {
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
 	 * @return $result {stdClass}
-	 * @return $result->cacheName {string} — Short cache name, e. g. 'prefix-resourceId-suffix'.
-	 * @return $result->pathNameFull {string} — Full file name path.
+	 * @return $result->quickStorage {string} — Short cache name, e. g. 'prefix-resourceId-suffix'.
+	 * @return $result->stableStorage {string} — Full file name path.
 	 */
 	private static function buildCacheNameData($params): \stdClass {
 		$params = \DDTools\Tools\Objects::extend([
@@ -279,13 +279,13 @@ class Cache {
 		]);
 		
 		$result = (object) [
-			'cacheName' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
-			'pathNameFull' => '',
+			'quickStorage' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
+			'stableStorage' => '',
 		];
 		
-		$result->pathNameFull =
+		$result->stableStorage =
 			static::$stableStorage_dir
-			. '/' . $result->cacheName . '.php'
+			. '/' . $result->quickStorage . '.php'
 		;
 		
 		return $result;
