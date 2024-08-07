@@ -559,11 +559,14 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 
 ### `\DDTools\Tools\Cache`
 
-You can cache some data (e. g. a snippet result) to a file.
+You can cache some data (e. g. a snippet result).
 
+* There are 2 levels of caching: stable (file-based) and quick (`$_SESSION`-based). All methods utilize both levels automatically.
+* The name of each cache item is `[+prefix+]-[+resourceId+]-[+suffix+]`.
+* Each cache item can contain a `string`, `array` or `stdClass`.
 * All cache files are stored in the `assets/cache/ddCache` folder.
-* The name of each cache file is `[+prefix+]-[+resourceId+]-[+suffix+].php`.
-* Each cache file can contain a string, array or stdClass.
+* The name of each cache file is `[+cacheName+].php`.
+* Quick cache items are stored in `$_SESSION['ddCache']`.
 
 
 #### `\DDTools\Tools\Cache::save($params)`, `\DDTools\Tools\Cache::get($params)`
@@ -586,14 +589,14 @@ You can cache some data (e. g. a snippet result) to a file.
 	* **Required**
 	
 * `$params->prefix`
-	* Description: Cache file prefix. Useful if you want to cache some custom data that is not related to any documents.
+	* Description: Cache prefix. Useful if you want to cache some custom data that is not related to any documents.
 	* Valid values: `string`
 	* Default value: `'doc'`
 
 
 #### `\DDTools\Tools\Cache::save($params)`
 
-Saves custom data to a cache file.
+Saves custom data to cache storage.
 
 * `$params->data`
 	* Description: Data to save.
@@ -606,7 +609,7 @@ Saves custom data to a cache file.
 
 #### `\DDTools\Tools\Cache::get($params)`
 
-Retrieves data from a cache file.
+Retrieves item data from cache storage.
 
 
 ##### Returns
@@ -618,12 +621,12 @@ Retrieves data from a cache file.
 			* `string`
 			* `array`
 			* `stdClass`
-		* `null` — means that the cache file does not exist
+		* `null` — means that the cache item does not exist
 
 
 #### `\DDTools\Tools\Cache::delete($params)`
 
-Deletes one or more cache files.
+Deletes one or more cache items.
 
 * `$params`
 	* Description: The parameters object.
@@ -640,7 +643,7 @@ Deletes one or more cache files.
 	* Default value: `null`
 	
 * `$params->prefix`
-	* Description: Cache file prefix. Useful if you want to cache some custom data that is not related to any documents.
+	* Description: Cache prefix. Useful if you want to cache some custom data that is not related to any documents.
 	* Valid values:
 		* `string`
 		* `'*'` — means any prefix
