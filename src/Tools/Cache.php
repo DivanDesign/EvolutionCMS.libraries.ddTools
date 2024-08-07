@@ -35,7 +35,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.0.4 (2024-08-07)
+	 * @version 3.0.5 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -72,7 +72,7 @@ class Cache {
 		// Save cache file
 		file_put_contents(
 			// Cache file path
-			static::buildCacheFilePath($params)->pathNameFull,
+			static::buildCacheNameData($params)->pathNameFull,
 			// Cache content
 			(
 				static::$contentPrefix
@@ -84,7 +84,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.0.2 (2024-08-07)
+	 * @version 3.0.3 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -98,7 +98,7 @@ class Cache {
 		
 		$result = null;
 		
-		$filePath = static::buildCacheFilePath($params)->pathNameFull;
+		$filePath = static::buildCacheNameData($params)->pathNameFull;
 		
 		if (is_file($filePath)){
 			// Cut PHP-code prefix
@@ -137,7 +137,7 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.2.4 (2024-08-07)
+	 * @version 2.2.5 (2024-08-07)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -168,7 +168,7 @@ class Cache {
 		// Clear cache for specified documents
 		}else{
 			$files = glob(
-				static::buildCacheFilePath($params)->pathNameFull
+				static::buildCacheNameData($params)->pathNameFull
 			);
 			
 			foreach (
@@ -181,8 +181,8 @@ class Cache {
 	}
 	
 	/**
-	 * buildCacheFilePath
-	 * @version 5.0 (2024-08-07)
+	 * buildCacheNameData
+	 * @version 5.0.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -193,7 +193,7 @@ class Cache {
 	 * @return $result->cacheName {string} — Short cache name, e. g. 'prefix-resourceId-suffix'.
 	 * @return $result->pathNameFull {string} — Full file name path.
 	 */
-	private static function buildCacheFilePath($params): \stdClass {
+	private static function buildCacheNameData($params): \stdClass {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
