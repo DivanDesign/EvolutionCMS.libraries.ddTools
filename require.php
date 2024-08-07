@@ -5,6 +5,8 @@ require_once('src/Base/AncestorTrait.php');
 require_once('src/Tools/Objects.php');
 require_once('src/Tools/Files.php');
 require_once('src/Tools/Cache.php');
+require_once('src/Tools/Cache/Storage/Storage.php');
+require_once('src/Tools/Cache/Storage/Quick/Storage.php');
 
 require_once('src/ObjectCollection/ObjectCollection.php');
 require_once('src/Response/Response.php');

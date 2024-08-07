@@ -3,7 +3,7 @@ namespace DDTools\Tools;
 
 class Cache {
 	private static string $stableStorage_dir;
-	private static \stdClass $quickStorage;
+	private static $theQuickStorageClass = '\DDTools\Tools\Cache\Storage\Quick\Storage';
 	
 	private static string $stableStorage_contentPrefix = '<?php die("Unauthorized access."); ?>';
 	private static int $stableStorage_contentPrefixLen = 37;
@@ -12,7 +12,7 @@ class Cache {
 	
 	/**
 	 * initStatic
-	 * @version 2.1.3 (2024-08-07)
+	 * @version 2.1.4 (2024-08-07)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
@@ -37,22 +37,13 @@ class Cache {
 				]);
 			}
 			
-			if (
-				!\DDTools\ObjectTools::isPropExists([
-					'object' => $_SESSION,
-					'propName' => 'ddCache',
-				])
-			){
-				$_SESSION['ddCache'] = new \stdClass();
-			}
-			
-			static::$quickStorage = &$_SESSION['ddCache'];
+			static::$theQuickStorageClass::initStatic();
 		}
 	}
 	
 	/**
 	 * save
-	 * @version 3.1.3 (2024-08-07)
+	 * @version 3.1.4 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -70,7 +61,10 @@ class Cache {
 		$cacheNameData = static::buildCacheNameData($params);
 		
 		// Save to quick storage
-		static::$quickStorage->{$cacheNameData->name} = $params->data;
+		static::$theQuickStorageClass::save([
+			'name' => $cacheNameData->name,
+			'data' => $params->data,
+		]);
 		
 		// str|obj|arr
 		$dataType =
@@ -106,7 +100,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1.4 (2024-08-07)
+	 * @version 3.1.5 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -123,9 +117,8 @@ class Cache {
 		$cacheNameData = static::buildCacheNameData($params);
 		
 		// First try to get from quick storage
-		$result = \DDTools\ObjectTools::getPropValue([
-			'object' => static::$quickStorage,
-			'propName' => $cacheNameData->name,
+		$result = static::$theQuickStorageClass::get([
+			'name' => $cacheNameData->name,
 		]);
 		
 		if (
@@ -163,7 +156,10 @@ class Cache {
 			}
 			
 			// Save to quick storage
-			static::$quickStorage->{$cacheNameData->name} = $result;
+			static::$theQuickStorageClass::save([
+				'name' => $cacheNameData->name,
+				'data' => $result,
+			]);
 		}
 		
 		return $result;
@@ -171,9 +167,9 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.3.4 (2024-08-07)
+	 * @version 2.3.5 (2024-08-07)
 	 * 
-	 * @param Clear cache files for specified document or every documents.
+	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->resourceId=null] {integer|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
@@ -199,7 +195,7 @@ class Cache {
 		// Clear all cache
 		if (empty($params->resourceId)){
 			// Clear quick storage
-			static::$quickStorage = new \stdClass();
+			static::$theQuickStorageClass::delete();
 			// Clear stable storage
 			\DDTools\Tools\Files::removeDir(static::$stableStorage_dir);
 		// Clear cache for specified resources
@@ -207,43 +203,7 @@ class Cache {
 			$cacheNameData = static::buildCacheNameData($params);
 			
 			// Clear quick storage
-			if (
-				strpos(
-					$cacheNameData->name,
-					'*'
-				)
-				=== false
-			){
-				unset(static::$quickStorage->{$cacheNameData->name});
-			}else{
-				foreach(
-					static::$quickStorage
-					as $cacheName
-					=> $cacheValue
-				){
-					$cacheNameArray = explode(
-						'-',
-						$cacheName
-					);
-					
-					if (
-						// resourceId
-						$cacheNameArray[1] == $cacheNameData->resourceId
-						// prefix
-						&& (
-							$cacheNameData->prefix == '*'
-							|| $cacheNameArray[0] == $cacheNameData->prefix
-						)
-						// suffix
-						&& (
-							$cacheNameData->suffix == '*'
-							|| $cacheNameArray[2] == $cacheNameData->suffix
-						)
-					){
-						unset(static::$quickStorage->{$cacheName});
-					}
-				}
-			}
+			static::$theQuickStorageClass::delete($cacheNameData);
 			
 			// Clear stable storage
 			$files = glob(
