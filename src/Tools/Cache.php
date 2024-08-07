@@ -26,13 +26,14 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.1.5 (2024-08-07)
+	 * @version 3.2 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
 	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param $params->data {string|array|stdClass} — Data to save.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
+	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 
 	 * @return {void}
 	 */
@@ -41,19 +42,20 @@ class Cache {
 		
 		$params = (object) $params;
 		
-		$cacheNameData = static::buildCacheNameData($params);
+		$saveParams = (object) [
+			'name' => static::buildCacheNameData($params)->name,
+			'data' => $params->data,
+		];
+		
+		if (isset($params->isExtendEnabled)){
+			$saveParams->isExtendEnabled = $params->isExtendEnabled;
+		}
 		
 		// Save to quick storage
-		static::$theQuickStorageClass::save([
-			'name' => $cacheNameData->name,
-			'data' => $params->data,
-		]);
+		static::$theQuickStorageClass::save($saveParams);
 		
 		// Save to stable storage
-		static::$theStableStorageClass::save([
-			'name' => $cacheNameData->name,
-			'data' => $params->data,
-		]);
+		static::$theStableStorageClass::save($saveParams);
 	}
 	
 	/**

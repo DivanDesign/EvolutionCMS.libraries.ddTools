@@ -605,6 +605,11 @@ Saves custom data to cache storage.
 		* `array`
 		* `stdClass`
 	* **Required**
+	
+* `$params->isExtendEnabled`
+	* Description: Should existing data be extended by `$params->data` or overwritten?
+	* Valid values: `boolean`
+	* Default value: `false`
 
 
 #### `\DDTools\Tools\Cache::get($params)`

@@ -14,11 +14,12 @@ abstract class Storage {
 	
 	/**
 	 * save
-	 * @version 1.0 (2024-08-07)
+	 * @version 1.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
 	 * @param $params->data {string|array|stdClass} — Data to save.
+	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 
 	 * @return {void}
 	 */
@@ -26,17 +27,39 @@ abstract class Storage {
 	
 	/**
 	 * save_prepareData
-	 * @version 1.0 (2024-08-07)
+	 * @version 1.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->name {string} — Cache name.
 	 * @param $params->data {string|array|stdClass} — Data to prepare.
+	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 
 	 * @return {string|array|stdClass}
 	 */
 	protected static function save_prepareData($params){
-		$params = (object) $params;
+		$params = \DDTools\Tools\Objects::extend([
+			'objects' => [
+				(object) [
+					'isExtendEnabled' => false,
+				],
+				$params,
+			],
+		]);
 		
-		return $params->data;
+		return
+			$params->isExtendEnabled
+			// Extend existing
+			? \DDTools\Tools\Objects::extend([
+				'objects' => [
+					static::get([
+						'name' => $params->name
+					]),
+					$params->data,
+				],
+			])
+			// Overwrite existing
+			: $params->data
+		;
 	}
 	
 	/**
