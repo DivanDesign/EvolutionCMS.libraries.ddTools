@@ -35,7 +35,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.0.5 (2024-08-07)
+	 * @version 3.0.6 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -49,6 +49,8 @@ class Cache {
 		static::initStatic();
 		
 		$params = (object) $params;
+		
+		$cacheNameData = static::buildCacheNameData($params);
 		
 		// str|obj|arr
 		$dataType =
@@ -72,7 +74,7 @@ class Cache {
 		// Save cache file
 		file_put_contents(
 			// Cache file path
-			static::buildCacheNameData($params)->pathNameFull,
+			$cacheNameData->pathNameFull,
 			// Cache content
 			(
 				static::$contentPrefix
@@ -84,7 +86,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.0.3 (2024-08-07)
+	 * @version 3.0.4 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -98,12 +100,12 @@ class Cache {
 		
 		$result = null;
 		
-		$filePath = static::buildCacheNameData($params)->pathNameFull;
+		$cacheNameData = static::buildCacheNameData($params);
 		
-		if (is_file($filePath)){
+		if (is_file($cacheNameData->pathNameFull)){
 			// Cut PHP-code prefix
 			$result = substr(
-				file_get_contents($filePath),
+				file_get_contents($cacheNameData->pathNameFull),
 				static::$contentPrefixLen
 			);
 			
@@ -137,7 +139,7 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.2.5 (2024-08-07)
+	 * @version 2.2.6 (2024-08-07)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -167,8 +169,10 @@ class Cache {
 			\DDTools\Tools\Files::removeDir(static::$cacheDir);
 		// Clear cache for specified documents
 		}else{
+			$cacheNameData = static::buildCacheNameData($params);
+			
 			$files = glob(
-				static::buildCacheNameData($params)->pathNameFull
+				$cacheNameData->pathNameFull
 			);
 			
 			foreach (
