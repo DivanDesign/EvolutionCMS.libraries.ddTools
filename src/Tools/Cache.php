@@ -167,7 +167,7 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.3.2 (2024-08-07)
+	 * @version 2.3.3 (2024-08-07)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -224,16 +224,16 @@ class Cache {
 					
 					if (
 						// resourceId
-						$cacheNameArray[1] == $params->resourceId
+						$cacheNameArray[1] == $cacheNameData->resourceId
 						// prefix
 						&& (
-							$params->prefix == '*'
-							|| $cacheNameArray[0] == $params->prefix
+							$cacheNameData->prefix == '*'
+							|| $cacheNameArray[0] == $cacheNameData->prefix
 						)
 						// suffix
 						&& (
-							$params->suffix == '*'
-							|| $cacheNameArray[2] == $params->suffix
+							$cacheNameData->suffix == '*'
+							|| $cacheNameArray[2] == $cacheNameData->suffix
 						)
 					){
 						unset(static::$quickStorage->{$cacheName});
@@ -257,7 +257,7 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 6.0 (2024-08-07)
+	 * @version 6.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -267,6 +267,9 @@ class Cache {
 	 * @return $result {stdClass}
 	 * @return $result->quickStorage {string} — Short cache name, e. g. 'prefix-resourceId-suffix'.
 	 * @return $result->stableStorage {string} — Full file name path.
+	 * @return $result->resourceId {string} — $params->resourceId.
+	 * @return $result->prefix {string} — $params->prefix.
+	 * @return $result->suffix {string} — $params->suffix.
 	 */
 	private static function buildCacheNameData($params): \stdClass {
 		$params = \DDTools\Tools\Objects::extend([
@@ -281,6 +284,10 @@ class Cache {
 		$result = (object) [
 			'quickStorage' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
 			'stableStorage' => '',
+			
+			'resourceId' => $params->resourceId,
+			'prefix' => $params->prefix,
+			'suffix' => $params->suffix,
 		];
 		
 		$result->stableStorage =
