@@ -2,23 +2,23 @@
 namespace DDTools\Tools;
 
 class Cache {
-	private static ?string $cacheDir = null;
+	private static ?string $stableStorage_dir = null;
 	private static \stdClass $quickStorage;
 	
-	private static string $contentPrefix = '<?php die("Unauthorized access."); ?>';
-	private static int $contentPrefixLen = 37;
+	private static string $stableStorage_contentPrefix = '<?php die("Unauthorized access."); ?>';
+	private static int $stableStorage_contentPrefixLen = 37;
 	
 	/**
 	 * initStatic
-	 * @version 2.1 (2024-08-07)
+	 * @version 2.1.1 (2024-08-07)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
 	 * @return {void}
 	 */
 	private static function initStatic(): void {
-		if (is_null(static::$cacheDir)){
-			static::$cacheDir =
+		if (is_null(static::$stableStorage_dir)){
+			static::$stableStorage_dir =
 				// Path to `assets`
 				dirname(
 					__DIR__,
@@ -27,9 +27,9 @@ class Cache {
 				. '/cache/ddCache'
 			;
 			
-			if (!is_dir(static::$cacheDir)){
+			if (!is_dir(static::$stableStorage_dir)){
 				\DDTools\Tools\Files::createDir([
-					'path' => static::$cacheDir,
+					'path' => static::$stableStorage_dir,
 				]);
 			}
 			
@@ -48,7 +48,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.1 (2024-08-07)
+	 * @version 3.1.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -93,7 +93,7 @@ class Cache {
 			$cacheNameData->pathNameFull,
 			// Cache content
 			(
-				static::$contentPrefix
+				static::$stableStorage_contentPrefix
 				. $dataType
 				. $params->data
 			)
@@ -102,7 +102,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1 (2024-08-07)
+	 * @version 3.1.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -131,7 +131,7 @@ class Cache {
 			// Cut PHP-code prefix
 			$result = substr(
 				file_get_contents($cacheNameData->pathNameFull),
-				static::$contentPrefixLen
+				static::$stableStorage_contentPrefixLen
 			);
 			
 			// str|obj|arr
@@ -167,7 +167,7 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.3 (2024-08-07)
+	 * @version 2.3.1 (2024-08-07)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -197,7 +197,7 @@ class Cache {
 			// Clear quick storage
 			static::$quickStorage = new \stdClass();
 			// Clear stable storage
-			\DDTools\Tools\Files::removeDir(static::$cacheDir);
+			\DDTools\Tools\Files::removeDir(static::$stableStorage_dir);
 		// Clear cache for specified resources
 		}else{
 			$cacheNameData = static::buildCacheNameData($params);
@@ -257,7 +257,7 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 5.0.1 (2024-08-07)
+	 * @version 5.0.2 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -284,7 +284,7 @@ class Cache {
 		];
 		
 		$result->pathNameFull =
-			static::$cacheDir
+			static::$stableStorage_dir
 			. '/' . $result->cacheName . '.php'
 		;
 		
