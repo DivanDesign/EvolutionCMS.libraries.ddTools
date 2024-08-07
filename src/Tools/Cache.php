@@ -102,7 +102,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1.2 (2024-08-07)
+	 * @version 3.1.3 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -119,15 +119,15 @@ class Cache {
 		$cacheNameData = static::buildCacheNameData($params);
 		
 		// First try to get from quick storage
+		$result = \DDTools\ObjectTools::getPropValue([
+			'object' => static::$quickStorage,
+			'propName' => $cacheNameData->quickStorage,
+		]);
+		
 		if (
-			\DDTools\ObjectTools::isPropExists([
-				'object' => static::$quickStorage,
-				'propName' => $cacheNameData->quickStorage,
-			])
+			is_null($result)
+			&& is_file($cacheNameData->stableStorage)
 		){
-			$result = static::$quickStorage->{$cacheNameData->quickStorage};
-		// Then from file
-		}elseif (is_file($cacheNameData->stableStorage)){
 			// Cut PHP-code prefix
 			$result = substr(
 				file_get_contents($cacheNameData->stableStorage),
