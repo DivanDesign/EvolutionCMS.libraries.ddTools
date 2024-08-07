@@ -35,7 +35,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.0.3 (2024-08-04)
+	 * @version 3.0.4 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -72,7 +72,7 @@ class Cache {
 		// Save cache file
 		file_put_contents(
 			// Cache file path
-			static::buildCacheFilePath($params),
+			static::buildCacheFilePath($params)->pathNameFull,
 			// Cache content
 			(
 				static::$contentPrefix
@@ -84,7 +84,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.0.1 (2024-08-04)
+	 * @version 3.0.2 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -98,7 +98,7 @@ class Cache {
 		
 		$result = null;
 		
-		$filePath = static::buildCacheFilePath($params);
+		$filePath = static::buildCacheFilePath($params)->pathNameFull;
 		
 		if (is_file($filePath)){
 			// Cut PHP-code prefix
@@ -137,7 +137,7 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.2.3 (2024-08-04)
+	 * @version 2.2.4 (2024-08-07)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -168,7 +168,7 @@ class Cache {
 		// Clear cache for specified documents
 		}else{
 			$files = glob(
-				static::buildCacheFilePath($params)
+				static::buildCacheFilePath($params)->pathNameFull
 			);
 			
 			foreach (
@@ -182,16 +182,18 @@ class Cache {
 	
 	/**
 	 * buildCacheFilePath
-	 * @version 4.0.1 (2024-08-04)
+	 * @version 5.0 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
 	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
-	 * @return {string}
+	 * @return $result {stdClass}
+	 * @return $result->cacheName {string} — Short cache name, e. g. 'prefix-resourceId-suffix'.
+	 * @return $result->pathNameFull {string} — Full file name path.
 	 */
-	private static function buildCacheFilePath($params): string {
+	private static function buildCacheFilePath($params): \stdClass {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
@@ -201,9 +203,16 @@ class Cache {
 			],
 		]);
 		
-		return
+		$result = (object) [
+			'cacheName' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
+			'pathNameFull' => '',
+		];
+		
+		$result->pathNameFull =
 			static::$cacheDir
-			. '/' . $params->prefix . '-' . $params->resourceId . '-' . $params->suffix . '.php'
+			. '/' . $result->cacheName . '.php'
 		;
+		
+		return $result;
 	}
 }
