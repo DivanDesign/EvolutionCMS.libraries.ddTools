@@ -48,7 +48,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.1.2 (2024-08-07)
+	 * @version 3.1.3 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
@@ -66,7 +66,7 @@ class Cache {
 		$cacheNameData = static::buildCacheNameData($params);
 		
 		// Save to quick storage
-		static::$quickStorage->{$cacheNameData->quickStorage} = $params->data;
+		static::$quickStorage->{$cacheNameData->name} = $params->data;
 		
 		// str|obj|arr
 		$dataType =
@@ -102,7 +102,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1.3 (2024-08-07)
+	 * @version 3.1.4 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -121,7 +121,7 @@ class Cache {
 		// First try to get from quick storage
 		$result = \DDTools\ObjectTools::getPropValue([
 			'object' => static::$quickStorage,
-			'propName' => $cacheNameData->quickStorage,
+			'propName' => $cacheNameData->name,
 		]);
 		
 		if (
@@ -159,7 +159,7 @@ class Cache {
 			}
 			
 			// Save to quick storage
-			static::$quickStorage->{$cacheNameData->quickStorage} = $result;
+			static::$quickStorage->{$cacheNameData->name} = $result;
 		}
 		
 		return $result;
@@ -167,7 +167,7 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.3.3 (2024-08-07)
+	 * @version 2.3.4 (2024-08-07)
 	 * 
 	 * @param Clear cache files for specified document or every documents.
 	 * 
@@ -205,12 +205,12 @@ class Cache {
 			// Clear quick storage
 			if (
 				strpos(
-					$cacheNameData->quickStorage,
+					$cacheNameData->name,
 					'*'
 				)
 				=== false
 			){
-				unset(static::$quickStorage->{$cacheNameData->quickStorage});
+				unset(static::$quickStorage->{$cacheNameData->name});
 			}else{
 				foreach(
 					static::$quickStorage
@@ -257,7 +257,7 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 6.1 (2024-08-07)
+	 * @version 6.1.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -265,7 +265,7 @@ class Cache {
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
 	 * @return $result {stdClass}
-	 * @return $result->quickStorage {string} — Short cache name, e. g. 'prefix-resourceId-suffix'.
+	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'.
 	 * @return $result->stableStorage {string} — Full file name path.
 	 * @return $result->resourceId {string} — $params->resourceId.
 	 * @return $result->prefix {string} — $params->prefix.
@@ -282,7 +282,8 @@ class Cache {
 		]);
 		
 		$result = (object) [
-			'quickStorage' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
+			'name' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
+			
 			'stableStorage' => '',
 			
 			'resourceId' => $params->resourceId,
@@ -292,7 +293,7 @@ class Cache {
 		
 		$result->stableStorage =
 			static::$stableStorage_dir
-			. '/' . $result->quickStorage . '.php'
+			. '/' . $result->name . '.php'
 		;
 		
 		return $result;
