@@ -58,7 +58,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * save_prepareData
-	 * @version 1.0 (2024-08-07)
+	 * @version 1.0.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {string|array|stdClass} — Data to prepare.
@@ -66,14 +66,14 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	 * @return {string}
 	 */
 	protected static function save_prepareData($params): string {
-		$params = (object) $params;
+		$result = parent::save_prepareData($params);
 		
 		// str|obj|arr
 		$dataType =
-			is_object($params->data)
+			is_object($result)
 			? 'obj'
 			: (
-				is_array($params->data)
+				is_array($result)
 				? 'arr'
 				// All other types are considered as string (because of this we don't use the gettype function)
 				: 'str'
@@ -81,8 +81,8 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		;
 		
 		if ($dataType != 'str'){
-			$params->data = \DDTools\Tools\Objects::convertType([
-				'object' => $params->data,
+			$result = \DDTools\Tools\Objects::convertType([
+				'object' => $result,
 				'type' => 'stringJsonAuto',
 			]);
 		}
@@ -90,7 +90,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		return
 			static::$contentPrefix
 			. $dataType
-			. $params->data
+			. $result
 		;
 	}
 	
