@@ -29,7 +29,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * save
-	 * @version 1.0 (2024-08-07)
+	 * @version 1.0.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -41,7 +41,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		$params = (object) $params;
 		
 		// Save to quick storage
-		static::$targetObject->{$params->name} = $params->data;
+		static::$targetObject->{$params->name} = static::save_prepareData($params);
 	}
 	
 	/**

@@ -36,7 +36,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * save
-	 * @version 1.0 (2024-08-07)
+	 * @version 1.0.1 (2024-08-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -45,6 +45,27 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	 * @return {void}
 	 */
 	public static function save($params): void {
+		$params = (object) $params;
+		
+		// Save cache file
+		file_put_contents(
+			// Cache file path
+			static::buildCacheNamePath($params->name),
+			// Cache content
+			static::save_prepareData($params)
+		);
+	}
+	
+	/**
+	 * save_prepareData
+	 * @version 1.0 (2024-08-07)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->data {string|array|stdClass} — Data to prepare.
+	 * 
+	 * @return {string}
+	 */
+	protected static function save_prepareData($params): string {
 		$params = (object) $params;
 		
 		// str|obj|arr
@@ -66,17 +87,11 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			]);
 		}
 		
-		// Save cache file
-		file_put_contents(
-			// Cache file path
-			static::buildCacheNamePath($params->name),
-			// Cache content
-			(
-				static::$contentPrefix
-				. $dataType
-				. $params->data
-			)
-		);
+		return
+			static::$contentPrefix
+			. $dataType
+			. $params->data
+		;
 	}
 	
 	/**

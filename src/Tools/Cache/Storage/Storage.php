@@ -25,6 +25,21 @@ abstract class Storage {
 	abstract public static function save($params): void;
 	
 	/**
+	 * save_prepareData
+	 * @version 1.0 (2024-08-07)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->data {string|array|stdClass} — Data to prepare.
+	 * 
+	 * @return {string|array|stdClass}
+	 */
+	protected static function save_prepareData($params){
+		$params = (object) $params;
+		
+		return $params->data;
+	}
+	
+	/**
 	 * get
 	 * @version 1.0 (2024-08-07)
 	 * 
