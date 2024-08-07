@@ -8,16 +8,20 @@ class Cache {
 	private static string $stableStorage_contentPrefix = '<?php die("Unauthorized access."); ?>';
 	private static int $stableStorage_contentPrefixLen = 37;
 	
+	private static bool $isStaticInited = false;
+	
 	/**
 	 * initStatic
-	 * @version 2.1.2 (2024-08-07)
+	 * @version 2.1.3 (2024-08-07)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
 	 * @return {void}
 	 */
 	private static function initStatic(): void {
-		if (!isset(static::$stableStorage_dir)){
+		if (!static::$isStaticInited){
+			static::$isStaticInited = true;
+			
 			static::$stableStorage_dir =
 				// Path to `assets`
 				dirname(
