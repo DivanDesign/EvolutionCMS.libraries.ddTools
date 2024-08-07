@@ -2,7 +2,7 @@
 namespace DDTools\Tools;
 
 class Cache {
-	private static ?string $stableStorage_dir = null;
+	private static string $stableStorage_dir;
 	private static \stdClass $quickStorage;
 	
 	private static string $stableStorage_contentPrefix = '<?php die("Unauthorized access."); ?>';
@@ -10,14 +10,14 @@ class Cache {
 	
 	/**
 	 * initStatic
-	 * @version 2.1.1 (2024-08-07)
+	 * @version 2.1.2 (2024-08-07)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
 	 * @return {void}
 	 */
 	private static function initStatic(): void {
-		if (is_null(static::$stableStorage_dir)){
+		if (!isset(static::$stableStorage_dir)){
 			static::$stableStorage_dir =
 				// Path to `assets`
 				dirname(
