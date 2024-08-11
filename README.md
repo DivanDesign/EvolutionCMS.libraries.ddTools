@@ -644,6 +644,7 @@ Deletes one or more cache items.
 	* Description: Resource ID related to cache (e. g. document ID).
 	* Valid values:
 		* `integer`
+		* `'*'` — means any ID
 		* `null` — cache of all resources will be cleared independent of `$params->prefix`
 	* Default value: `null`
 	

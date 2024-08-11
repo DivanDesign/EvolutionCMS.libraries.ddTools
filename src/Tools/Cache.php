@@ -100,12 +100,12 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.3.6 (2024-08-07)
+	 * @version 2.4 (2024-08-11)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
-	 * @param [$params->resourceId=null] {integer|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param [$params->resourceId=null] {integer|null|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param [$params->prefix='doc'] {string|'*'} — Cache prefix.
 	 * @param [$params->suffix='*'] {string|'*'} — Cache suffix.
 	 * 
@@ -126,7 +126,14 @@ class Cache {
 		]);
 		
 		// Clear all cache
-		if (empty($params->resourceId)){
+		if (
+			empty($params->resourceId)
+			|| (
+				$params->resourceId == '*'
+				&& $params->prefix == '*'
+				&& $params->suffix == '*'
+			)
+		){
 			// Clear quick storage
 			static::$theQuickStorageClass::delete();
 			// Clear stable storage

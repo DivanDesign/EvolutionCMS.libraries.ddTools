@@ -65,13 +65,13 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 1.0 (2024-08-07)
+	 * @version 1.1 (2024-08-11)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->resourceId {integer|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param $params->resourceId {integer|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
 	 * 
@@ -108,7 +108,10 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 					
 					if (
 						// resourceId
-						$cacheNameArray[1] == $params->resourceId
+						(
+							$params->resourceId == '*'
+							|| $cacheNameArray[1] == $params->resourceId
+						)
 						// prefix
 						&& (
 							$params->prefix == '*'
