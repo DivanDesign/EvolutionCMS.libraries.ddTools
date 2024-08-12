@@ -580,7 +580,7 @@ You can cache some data (e. g. a snippet result).
 	
 * `$params->resourceId`
 	* Description: Resource ID related to cache (e. g. document ID).
-	* Valid values: `integer`
+	* Valid values: `string`
 	* **Required**
 	
 * `$params->suffix`
@@ -643,7 +643,7 @@ Deletes one or more cache items.
 * `$params->resourceId`
 	* Description: Resource ID related to cache (e. g. document ID).
 	* Valid values:
-		* `integer`
+		* `string`
 		* `'*'` — means any ID
 		* `null` — cache of all resources will be cleared independent of `$params->prefix`
 	* Default value: `null`

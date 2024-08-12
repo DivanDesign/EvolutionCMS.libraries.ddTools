@@ -26,10 +26,10 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.2 (2024-08-07)
+	 * @version 3.2.1 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
+	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
 	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param $params->data {string|array|stdClass} — Data to save.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
@@ -60,10 +60,10 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1.8 (2024-08-12)
+	 * @version 3.1.9 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param $params->resourceId {integer} — Document ID related to cache.
+	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
 	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
@@ -106,12 +106,12 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.4 (2024-08-11)
+	 * @version 2.4.1 (2024-08-12)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
-	 * @param [$params->resourceId=null] {integer|null|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param [$params->resourceId=null] {string|null|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param [$params->prefix='doc'] {string|'*'} — Cache prefix.
 	 * @param [$params->suffix='*'] {string|'*'} — Cache suffix.
 	 * 
@@ -157,12 +157,12 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 7.1 (2024-08-12)
+	 * @version 7.1.1 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param $params->resourceId {integer} — Document ID related to cache.
-	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
-	 * @param [$params->prefix='doc'] {string} — Cache prefix.
+	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID).
+	 * @param $params->suffix {string|'*'} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
+	 * @param [$params->prefix='doc'|'*'] {string} — Cache prefix.
 	 * 
 	 * @return $result {stdClass}
 	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'.
