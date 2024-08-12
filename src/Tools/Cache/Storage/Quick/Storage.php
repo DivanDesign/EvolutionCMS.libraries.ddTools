@@ -47,20 +47,29 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 1.0 (2024-08-07)
+	 * @version 2.0 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
 	 * 
-	 * @return {null|string|array|stdClass} — `null` means that the cache does not exist.
+	 * @return $result {stdClass|null} — `null` means that the cache does not exist.
+	 * @return $result->{$cacheName} {string|array|stdClass}
 	 */
-	public static function get($params){
+	public static function get($params): ?\stdClass {
 		$params = (object) $params;
 		
-		return \DDTools\Tools\Objects::getPropValue([
+		$result_resource = \DDTools\Tools\Objects::getPropValue([
 			'object' => static::$targetObject,
 			'propName' => $params->name,
 		]);
+		
+		return
+			is_null($result_resource)
+			? null
+			: (object) [
+				$params->name => $result_resource
+			]
+		;
 	}
 	
 	/**

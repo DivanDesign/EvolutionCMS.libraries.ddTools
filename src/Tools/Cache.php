@@ -60,7 +60,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1.7 (2024-08-12)
+	 * @version 3.1.8 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -77,17 +77,18 @@ class Cache {
 		$cacheNameData = static::buildCacheNameData($params);
 		
 		// First try to get from quick storage
-		$result = static::$theQuickStorageClass::get([
-			'name' => $cacheNameData->name,
-		]);
+		$resultCollection = static::$theQuickStorageClass::get($cacheNameData);
 		
-		$isQuickStorageDataExist = !is_null($result);
+		$isQuickStorageDataExist = !is_null($resultCollection);
 		
 		if (!$isQuickStorageDataExist){
-			$result = static::$theStableStorageClass::get([
-				'name' => $cacheNameData->name,
-			]);
+			$resultCollection = static::$theStableStorageClass::get($cacheNameData);
 		}
+		
+		$result = \DDTools\ObjectTools::getPropValue([
+			'object' => $resultCollection,
+			'propName' => $cacheNameData->name,
+		]);
 		
 		if (
 			!$isQuickStorageDataExist

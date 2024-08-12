@@ -27,7 +27,7 @@ abstract class Storage {
 	
 	/**
 	 * save_prepareData
-	 * @version 1.1 (2024-08-07)
+	 * @version 1.1.1 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -51,8 +51,11 @@ abstract class Storage {
 			// Extend existing
 			? \DDTools\Tools\Objects::extend([
 				'objects' => [
-					static::get([
-						'name' => $params->name
+					\DDTools\Tools\Objects::getPropValue([
+						'object' => static::get([
+							'name' => $params->name,
+						]),
+						'propName' => $params->name,
 					]),
 					$params->data,
 				],
@@ -64,14 +67,16 @@ abstract class Storage {
 	
 	/**
 	 * get
-	 * @version 1.0 (2024-08-07)
+	 * @version 2.0 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
+	 * @param $params->resourceId {string} — Resource ID related to cache.
 	 * 
-	 * @return {null|string|array|stdClass} — `null` means that the cache does not exist.
+	 * @return $result {stdClass|null} — `null` means that the cache does not exist.
+	 * @return $result->{$cacheName} {string|array|stdClass}
 	 */
-	abstract public static function get($params);
+	abstract public static function get($params): ?\stdClass;
 	
 	/**
 	 * delete

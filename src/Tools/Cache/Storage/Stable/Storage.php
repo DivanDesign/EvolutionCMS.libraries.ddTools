@@ -99,42 +99,44 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 1.0 (2024-08-07)
+	 * @version 2.0 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
 	 * 
-	 * @return {null|string|array|stdClass} — `null` means that the cache does not exist.
+	 * @return $result {stdClass|null}
+	 * @return $result->{$cacheName} {null|string|array|stdClass} — `null` means that the cache does not exist.
 	 */
-	public static function get($params){
+	public static function get($params): ?\stdClass {
 		$params = (object) $params;
-		$params->name = static::buildCacheNamePath($params->name);
 		
-		$result = null;
+		$filePath = static::buildCacheNamePath($params->name);
 		
-		if (is_file($params->name)){
+		$result_resource = null;
+		
+		if (is_file($filePath)){
 			// Cut PHP-code prefix
-			$result = substr(
-				file_get_contents($params->name),
+			$result_resource = substr(
+				file_get_contents($filePath),
 				static::$contentPrefixLen
 			);
 			
 			// str|obj|arr
 			$dataType = substr(
-				$result,
+				$result_resource,
 				0,
 				3
 			);
 			
 			// Cut dataType
-			$result = substr(
-				$result,
+			$result_resource = substr(
+				$result_resource,
 				3
 			);
 			
 			if ($dataType != 'str'){
-				$result = \DDTools\Tools\Objects::convertType([
-					'object' => $result,
+				$result_resource = \DDTools\Tools\Objects::convertType([
+					'object' => $result_resource,
 					'type' =>
 						$dataType == 'obj'
 						? 'objectStdClass'
@@ -144,7 +146,13 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			}
 		}
 		
-		return $result;
+		return
+			is_null($result_resource)
+			? null
+			: (object) [
+				$params->name => $result_resource
+			]
+		;
 	}
 	
 	/**
