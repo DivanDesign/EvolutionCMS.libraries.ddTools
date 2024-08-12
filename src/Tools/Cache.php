@@ -60,7 +60,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1.6 (2024-08-07)
+	 * @version 3.1.7 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -81,18 +81,23 @@ class Cache {
 			'name' => $cacheNameData->name,
 		]);
 		
-		if (is_null($result)){
+		$isQuickStorageDataExist = !is_null($result);
+		
+		if (!$isQuickStorageDataExist){
 			$result = static::$theStableStorageClass::get([
 				'name' => $cacheNameData->name,
 			]);
-			
-			if (!is_null($result)){
-				// Save to quick storage
-				static::$theQuickStorageClass::save([
-					'name' => $cacheNameData->name,
-					'data' => $result,
-				]);
-			}
+		}
+		
+		if (
+			!$isQuickStorageDataExist
+			&& !is_null($result)
+		){
+			// Save to quick storage
+			static::$theQuickStorageClass::save([
+				'name' => $cacheNameData->name,
+				'data' => $result,
+			]);
 		}
 		
 		return $result;
