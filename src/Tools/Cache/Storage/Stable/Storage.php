@@ -171,7 +171,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 2.0 (2024-08-12)
+	 * @version 2.0.1 (2024-08-12)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
@@ -189,19 +189,19 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			\DDTools\Tools\Files::removeDir(static::$targetDir);
 		// Clear cache for specified resources
 		}else{
-			$filepath = static::buildCacheNamePath($params->name);
+			$filePath = static::buildCacheNamePath($params->name);
 			
 			// Simple clear one item if pattern is not used
 			if (!$params->isPatternUsed){
-				unlink($filepath);
+				unlink($filePath);
 			}else{
-				$files = glob($filepath);
+				$files = glob($filePath);
 				
 				foreach (
 					$files
-					as $filepath
+					as $filePath
 				){
-					unlink($filepath);
+					unlink($filePath);
 				}
 			}
 		}
