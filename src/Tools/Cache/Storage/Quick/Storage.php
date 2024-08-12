@@ -74,7 +74,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 2.0.1 (2024-08-12)
+	 * @version 2.0.2 (2024-08-12)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
@@ -105,32 +105,57 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 					as $cacheName
 					=> $cacheValue
 				){
-					$cacheNameArray = explode(
-						'-',
-						$cacheName
-					);
-					
 					if (
-						// resourceId
-						(
-							$params->resourceId == '*'
-							|| $cacheNameArray[1] == $params->resourceId
-						)
-						// prefix
-						&& (
-							$params->prefix == '*'
-							|| $cacheNameArray[0] == $params->prefix
-						)
-						// suffix
-						&& (
-							$params->suffix == '*'
-							|| $cacheNameArray[2] == $params->suffix
-						)
+						static::isItemNameMatched([
+							'name' => $cacheName,
+							'resourceId' => $params->resourceId,
+							'prefix' => $params->prefix,
+							'suffix' => $params->suffix,
+						])
 					){
 						unset(static::$targetObject->{$cacheName});
 					}
 				}
 			}
 		}
+	}
+	
+	/**
+	 * isItemNameMatched
+	 * @version 1.0 (2024-08-12)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->name {string} — Cache name.
+	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param $params->prefix {string|'*'} — Cache prefix.
+	 * @param $params->suffix {string|'*'} — Cache suffix.
+	 * 
+	 * @return {boolean}
+	 */
+	private static function isItemNameMatched($params): bool {
+		$params = (object) $params;
+		
+		$cacheNameArray = explode(
+			'-',
+			$params->name
+		);
+		
+		return
+			// resourceId
+			(
+				$params->resourceId == '*'
+				|| $cacheNameArray[1] == $params->resourceId
+			)
+			// prefix
+			&& (
+				$params->prefix == '*'
+				|| $cacheNameArray[0] == $params->prefix
+			)
+			// suffix
+			&& (
+				$params->suffix == '*'
+				|| $cacheNameArray[2] == $params->suffix
+			)
+		;
 	}
 }
