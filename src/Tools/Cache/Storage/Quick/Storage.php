@@ -74,7 +74,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 1.1 (2024-08-11)
+	 * @version 2.0 (2024-08-12)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
@@ -83,6 +83,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	 * @param $params->resourceId {integer|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
+	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return {void}
 	 */
@@ -94,14 +95,8 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			static::$targetObject = new \stdClass();
 		// Clear cache for specified resources
 		}else{
-			// Simple clear one item if masks are not used
-			if (
-				strpos(
-					$params->name,
-					'*'
-				)
-				=== false
-			){
+			// Simple clear one item if pattern is not used
+			if (!$params->isPatternUsed){
 				unset(static::$targetObject->{$params->name});
 			}else{
 				// Find needed cache items

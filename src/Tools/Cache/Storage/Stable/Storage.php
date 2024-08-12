@@ -157,12 +157,13 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 1.0 (2024-08-07)
+	 * @version 2.0 (2024-08-12)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
+	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return {void}
 	 */
@@ -174,16 +175,20 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			\DDTools\Tools\Files::removeDir(static::$targetDir);
 		// Clear cache for specified resources
 		}else{
-			// Clear stable storage
-			$files = glob(
-				static::buildCacheNamePath($params->name)
-			);
+			$filepath = static::buildCacheNamePath($params->name);
 			
-			foreach (
-				$files
-				as $filepath
-			){
+			// Simple clear one item if pattern is not used
+			if (!$params->isPatternUsed){
 				unlink($filepath);
+			}else{
+				$files = glob($filepath);
+				
+				foreach (
+					$files
+					as $filepath
+				){
+					unlink($filepath);
+				}
 			}
 		}
 	}

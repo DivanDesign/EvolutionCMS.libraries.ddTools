@@ -80,7 +80,7 @@ abstract class Storage {
 	
 	/**
 	 * delete
-	 * @version 1.0 (2024-08-07)
+	 * @version 2.0 (2024-08-12)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
@@ -89,6 +89,7 @@ abstract class Storage {
 	 * @param $params->resourceId {integer|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
+	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return {void}
 	 */

@@ -157,7 +157,7 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 7.0 (2024-08-07)
+	 * @version 7.1 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {integer} — Document ID related to cache.
@@ -166,6 +166,7 @@ class Cache {
 	 * 
 	 * @return $result {stdClass}
 	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'.
+	 * @return $result->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * @return $result->resourceId {string} — $params->resourceId.
 	 * @return $result->prefix {string} — $params->prefix.
 	 * @return $result->suffix {string} — $params->suffix.
@@ -182,6 +183,11 @@ class Cache {
 		
 		return (object) [
 			'name' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
+			'isPatternUsed' => (
+				$params->resourceId == '*'
+				|| $params->prefix == '*'
+				|| $params->suffix == '*'
+			),
 			'resourceId' => $params->resourceId,
 			'prefix' => $params->prefix,
 			'suffix' => $params->suffix,
