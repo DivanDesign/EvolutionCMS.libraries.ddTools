@@ -47,10 +47,14 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 2.0 (2024-08-12)
+	 * @version 2.1 (2024-08-12)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param $params->name {string} — Cache name.
+	 * @param [$params->name] {string} — Cache name (required if $params->isPatternUsed == false).
+	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param $params->prefix {string|'*'} — Cache prefix.
+	 * @param $params->suffix {string|'*'} — Cache suffix.
 	 * 
 	 * @return $result {stdClass|null} — `null` means that the cache does not exist.
 	 * @return $result->{$cacheName} {string|array|stdClass}
@@ -58,17 +62,42 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	public static function get($params): ?\stdClass {
 		$params = (object) $params;
 		
-		$result_resource = \DDTools\Tools\Objects::getPropValue([
-			'object' => static::$targetObject,
-			'propName' => $params->name,
-		]);
+		$result = new \stdClass();
+		
+		// Simple get one item if pattern is not used
+		if (!$params->isPatternUsed){
+			$result_resource = \DDTools\Tools\Objects::getPropValue([
+				'object' => static::$targetObject,
+				'propName' => $params->name,
+			]);
+			
+			if (!is_null($result_resource)){
+				$result->{$params->name} = $result_resource;
+			}
+		}else{
+			// Find needed cache items
+			foreach(
+				static::$targetObject
+				as $cacheName
+				=> $cacheValue
+			){
+				if (
+					static::isItemNameMatched([
+						'name' => $cacheName,
+						'resourceId' => $params->resourceId,
+						'prefix' => $params->prefix,
+						'suffix' => $params->suffix,
+					])
+				){
+					$result->{$cacheName} = $cacheValue;
+				}
+			}
+		}
 		
 		return
-			is_null($result_resource)
-			? null
-			: (object) [
-				$params->name => $result_resource
-			]
+			!\ddTools::isEmpty($result)
+			? $result
+			: null
 		;
 	}
 	

@@ -105,6 +105,52 @@ class Cache {
 	}
 	
 	/**
+	 * getSeveral
+	 * @version 1.0 (2024-08-13)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
+	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
+	 * @param [$params->prefix='doc'] {string} — Cache prefix.
+	 * 
+	 * @return $result {stdClass|null} — `null` means that the cache of specified items does not exist.
+	 * @return $result->{$resourceName} {string|array|stdClass}
+	 */
+	public static function getSeveral($params): ?\stdClass {
+		static::initStatic();
+		
+		$cacheNameData = static::buildCacheNameData($params);
+		
+		// First try to get from quick storage
+		$resultCollection = static::$theQuickStorageClass::get($cacheNameData);
+		
+		$isQuickStorageDataExist = !is_null($resultCollection);
+		
+		if (!$isQuickStorageDataExist){
+			$resultCollection = static::$theStableStorageClass::get($cacheNameData);
+		}
+		
+		if (
+			!$isQuickStorageDataExist
+			&& !is_null($resultCollection)
+		){
+			// Save to quick storage
+			foreach (
+				$resultCollection
+				as $cacheName
+				=> $cacheValue
+			){
+				static::$theQuickStorageClass::save([
+					'name' => $cacheName,
+					'data' => $cacheValue,
+				]);
+			}
+		}
+		
+		return $resultCollection;
+	}
+	
+	/**
 	 * delete
 	 * @version 2.4.1 (2024-08-12)
 	 * 

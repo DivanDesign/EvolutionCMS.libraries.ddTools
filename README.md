@@ -569,7 +569,7 @@ You can cache some data (e. g. a snippet result).
 * Quick cache items are stored in `$_SESSION['ddCache']`.
 
 
-#### `\DDTools\Tools\Cache::save($params)`, `\DDTools\Tools\Cache::get($params)`
+#### `\DDTools\Tools\Cache::save($params)`, `\DDTools\Tools\Cache::get($params)`, `\DDTools\Tools\Cache::getSeveral($params)`
 
 * `$params`
 	* Description: The parameters object.
@@ -627,6 +627,29 @@ Retrieves item data from cache storage.
 			* `array`
 			* `stdClass`
 		* `null` — means that the cache item does not exist
+
+
+#### `\DDTools\Tools\Cache::getSeveral($params)`
+
+Retrieves data of several items from cache storage.
+
+
+##### Returns
+
+* `$result`
+	* Description: Cached items data.
+	* Valid values:
+		* `stdClass`
+		* `null` — means that the cache of specified items does not exist
+	
+* `$result->{$resourceName}`
+	* Description: Cached item data.
+		* A key is an item's cache name (`[+prefix+]-[+resourceId+]-[+suffix+]`), a value is a data.
+		* Type of returned data depends on type of saved data.
+	* Valid values:
+		* `string`
+		* `array`
+		* `stdClass`
 
 
 #### `\DDTools\Tools\Cache::delete($params)`

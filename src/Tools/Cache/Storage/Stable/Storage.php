@@ -99,10 +99,11 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 2.0.1 (2024-08-12)
+	 * @version 2.1 (2024-08-13)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
+	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return $result {stdClass|null}
 	 * @return $result->{$cacheName} {null|string|array|stdClass} — `null` means that the cache does not exist.
@@ -110,16 +111,37 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	public static function get($params): ?\stdClass {
 		$params = (object) $params;
 		
-		$result_resource = static::get_oneItem(
-			static::buildCacheNamePath($params->name)
-		);
+		$result = new \stdClass();
+		
+		$filePath = static::buildCacheNamePath($params->name);
+		
+		// Simple get one item if pattern is not used
+		if (!$params->isPatternUsed){
+			$result_resource = static::get_oneItem($filePath);
+			
+			if (!is_null($result_resource)){
+				$result->{$params->name} = $result_resource;
+			}
+		}else{
+			$files = glob($filePath);
+			
+			foreach (
+				$files
+				as $filePath
+			){
+				$cacheName = basename(
+					$filePath,
+					'.php'
+				);
+				
+				$result->{$cacheName} = static::get_oneItem($filePath);
+			}
+		}
 		
 		return
-			is_null($result_resource)
-			? null
-			: (object) [
-				$params->name => $result_resource
-			]
+			!\ddTools::isEmpty($result)
+			? $result
+			: null
 		;
 	}
 	
