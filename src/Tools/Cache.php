@@ -60,7 +60,7 @@ class Cache {
 	
 	/**
 	 * get
-	 * @version 3.1.9 (2024-08-12)
+	 * @version 3.1.10 (2024-08-13)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
@@ -70,38 +70,13 @@ class Cache {
 	 * @return {null|string|array|stdClass} — `null` means that the cache file does not exist.
 	 */
 	public static function get($params){
-		static::initStatic();
+		$resultCollection = static::getSeveral($params);
 		
-		$result = null;
-		
-		$cacheNameData = static::buildCacheNameData($params);
-		
-		// First try to get from quick storage
-		$resultCollection = static::$theQuickStorageClass::get($cacheNameData);
-		
-		$isQuickStorageDataExist = !is_null($resultCollection);
-		
-		if (!$isQuickStorageDataExist){
-			$resultCollection = static::$theStableStorageClass::get($cacheNameData);
-		}
-		
-		$result = \DDTools\ObjectTools::getPropValue([
-			'object' => $resultCollection,
-			'propName' => $cacheNameData->name,
-		]);
-		
-		if (
-			!$isQuickStorageDataExist
-			&& !is_null($result)
-		){
-			// Save to quick storage
-			static::$theQuickStorageClass::save([
-				'name' => $cacheNameData->name,
-				'data' => $result,
-			]);
-		}
-		
-		return $result;
+		return
+			!is_null($resultCollection)
+			? current((array) $resultCollection)
+			: null
+		;
 	}
 	
 	/**
