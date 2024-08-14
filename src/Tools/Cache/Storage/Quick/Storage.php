@@ -47,11 +47,11 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 2.1 (2024-08-12)
+	 * @version 3.0 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param [$params->name] {string} — Cache name (required if $params->isPatternUsed == false).
-	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param [$params->name] {string} — Cache name (required if $params->isAdvancedSearchEnabled == false).
+	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
@@ -65,7 +65,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		$result = new \stdClass();
 		
 		// Simple get one item if pattern is not used
-		if (!$params->isPatternUsed){
+		if (!$params->isAdvancedSearchEnabled){
 			$result_resource = \DDTools\Tools\Objects::getPropValue([
 				'object' => static::$targetObject,
 				'propName' => $params->name,
@@ -103,7 +103,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 2.0.2 (2024-08-12)
+	 * @version 3.0 (2024-08-14)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
@@ -112,7 +112,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
-	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return {void}
 	 */
@@ -125,7 +125,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		// Clear cache for specified resources
 		}else{
 			// Simple clear one item if pattern is not used
-			if (!$params->isPatternUsed){
+			if (!$params->isAdvancedSearchEnabled){
 				unset(static::$targetObject->{$params->name});
 			}else{
 				// Find needed cache items

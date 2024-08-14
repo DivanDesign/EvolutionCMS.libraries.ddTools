@@ -178,7 +178,7 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 7.1.1 (2024-08-12)
+	 * @version 8.0 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID).
@@ -187,7 +187,7 @@ class Cache {
 	 * 
 	 * @return $result {stdClass}
 	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'.
-	 * @return $result->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @return $result->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * @return $result->resourceId {string} — $params->resourceId.
 	 * @return $result->prefix {string} — $params->prefix.
 	 * @return $result->suffix {string} — $params->suffix.
@@ -204,7 +204,7 @@ class Cache {
 		
 		return (object) [
 			'name' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
-			'isPatternUsed' => (
+			'isAdvancedSearchEnabled' => (
 				$params->resourceId == '*'
 				|| $params->prefix == '*'
 				|| $params->suffix == '*'

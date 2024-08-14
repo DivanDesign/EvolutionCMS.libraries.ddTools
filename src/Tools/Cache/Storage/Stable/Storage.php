@@ -99,11 +99,11 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 2.1 (2024-08-13)
+	 * @version 3.0 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return $result {stdClass|null}
 	 * @return $result->{$cacheName} {null|string|array|stdClass} — `null` means that the cache does not exist.
@@ -116,7 +116,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		$filePath = static::buildCacheNamePath($params->name);
 		
 		// Simple get one item if pattern is not used
-		if (!$params->isPatternUsed){
+		if (!$params->isAdvancedSearchEnabled){
 			$result_resource = static::get_oneItem($filePath);
 			
 			if (!is_null($result_resource)){
@@ -193,13 +193,13 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 2.0.1 (2024-08-12)
+	 * @version 3.0 (2024-08-14)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return {void}
 	 */
@@ -214,7 +214,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			$filePath = static::buildCacheNamePath($params->name);
 			
 			// Simple clear one item if pattern is not used
-			if (!$params->isPatternUsed){
+			if (!$params->isAdvancedSearchEnabled){
 				unlink($filePath);
 			}else{
 				$files = glob($filePath);

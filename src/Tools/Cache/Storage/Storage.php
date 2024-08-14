@@ -27,7 +27,7 @@ abstract class Storage {
 	
 	/**
 	 * save_prepareData
-	 * @version 1.1.2 (2024-08-13)
+	 * @version 1.1.3 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -54,7 +54,7 @@ abstract class Storage {
 					\DDTools\Tools\Objects::getPropValue([
 						'object' => static::get([
 							'name' => $params->name,
-							'isPatternUsed' => false,
+							'isAdvancedSearchEnabled' => false,
 						]),
 						'propName' => $params->name,
 					]),
@@ -68,12 +68,12 @@ abstract class Storage {
 	
 	/**
 	 * get
-	 * @version 2.1 (2024-08-12)
+	 * @version 3.0 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
 	 * @param $params->resourceId {string} — Resource ID related to cache.
-	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return $result {stdClass|null} — `null` means that the cache does not exist.
 	 * @return $result->{$cacheName} {string|array|stdClass}
@@ -82,7 +82,7 @@ abstract class Storage {
 	
 	/**
 	 * delete
-	 * @version 2.0.1 (2024-08-12)
+	 * @version 3.0 (2024-08-14)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
@@ -91,7 +91,7 @@ abstract class Storage {
 	 * @param $params->resourceId {string|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
-	 * @param $params->isPatternUsed {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return {void}
 	 */
