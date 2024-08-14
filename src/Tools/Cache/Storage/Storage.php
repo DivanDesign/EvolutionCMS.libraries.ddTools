@@ -96,4 +96,43 @@ abstract class Storage {
 	 * @return {void}
 	 */
 	abstract public static function delete($params = []): void;
+	
+	/**
+	 * isOneItemNameMatched
+	 * @version 1.0.1 (2024-08-14)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->name {string} — Cache name.
+	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param $params->prefix {string|'*'} — Cache prefix.
+	 * @param $params->suffix {string|'*'} — Cache suffix.
+	 * 
+	 * @return {boolean}
+	 */
+	protected static function isOneItemNameMatched($params): bool {
+		$params = (object) $params;
+		
+		$cacheNameArray = explode(
+			'-',
+			$params->name
+		);
+		
+		return
+			// resourceId
+			(
+				$params->resourceId == '*'
+				|| $cacheNameArray[1] == $params->resourceId
+			)
+			// prefix
+			&& (
+				$params->prefix == '*'
+				|| $cacheNameArray[0] == $params->prefix
+			)
+			// suffix
+			&& (
+				$params->suffix == '*'
+				|| $cacheNameArray[2] == $params->suffix
+			)
+		;
+	}
 }
