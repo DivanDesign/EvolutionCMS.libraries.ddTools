@@ -26,7 +26,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.2.1 (2024-08-12)
+	 * @version 3.2.2 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
@@ -42,20 +42,25 @@ class Cache {
 		
 		$params = (object) $params;
 		
-		$saveParams = (object) [
-			'name' => static::buildCacheNameData($params)->name,
-			'data' => $params->data,
-		];
+		$cacheNameData = static::buildCacheNameData($params);
 		
-		if (isset($params->isExtendEnabled)){
-			$saveParams->isExtendEnabled = $params->isExtendEnabled;
+		// We can't save something containing '*' in name
+		if (!$cacheNameData->isAdvancedSearchEnabled){
+			$saveParams = (object) [
+				'name' => $cacheNameData->name,
+				'data' => $params->data,
+			];
+			
+			if (isset($params->isExtendEnabled)){
+				$saveParams->isExtendEnabled = $params->isExtendEnabled;
+			}
+			
+			// Save to quick storage
+			static::$theQuickStorageClass::save($saveParams);
+			
+			// Save to stable storage
+			static::$theStableStorageClass::save($saveParams);
 		}
-		
-		// Save to quick storage
-		static::$theQuickStorageClass::save($saveParams);
-		
-		// Save to stable storage
-		static::$theStableStorageClass::save($saveParams);
 	}
 	
 	/**
