@@ -99,11 +99,13 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 3.0 (2024-08-14)
+	 * @version 3.1 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
 	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
 	 * 
 	 * @return $result {stdClass|null}
 	 * @return $result->{$cacheName} {null|string|array|stdClass} — `null` means that the cache does not exist.
@@ -122,8 +124,11 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			if (!is_null($result_resource)){
 				$result->{$params->name} = $result_resource;
 			}
+		// Advanced search
 		}else{
 			$files = glob($filePath);
+			
+			$isResourceIdSingle = !is_array($params->resourceId);
 			
 			foreach (
 				$files
@@ -134,7 +139,19 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 					'.php'
 				);
 				
-				$result->{$cacheName} = static::get_oneItem($filePath);
+				if (
+					// Single
+					$isResourceIdSingle
+					// Multiple
+					|| static::isOneItemNameMatched([
+						'name' => $cacheName,
+						'resourceId' => $params->resourceId,
+						'prefix' => $params->prefix,
+						'suffix' => $params->suffix,
+					])
+				){
+					$result->{$cacheName} = static::get_oneItem($filePath);
+				}
 			}
 		}
 		
@@ -193,13 +210,15 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 3.0 (2024-08-14)
+	 * @version 3.1 (2024-08-14)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
 	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
 	 * 
 	 * @return {void}
 	 */
@@ -219,11 +238,28 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			}else{
 				$files = glob($filePath);
 				
+				$isResourceIdSingle = !is_array($params->resourceId);
+				
 				foreach (
 					$files
 					as $filePath
 				){
-					unlink($filePath);
+					if (
+						// Single
+						$isResourceIdSingle
+						// Multiple
+						|| static::isOneItemNameMatched([
+							'name' => basename(
+								$filePath,
+								'.php'
+							),
+							'resourceId' => $params->resourceId,
+							'prefix' => $params->prefix,
+							'suffix' => $params->suffix,
+						])
+					){
+						unlink($filePath);
+					}
 				}
 			}
 		}

@@ -99,11 +99,12 @@ abstract class Storage {
 	
 	/**
 	 * isOneItemNameMatched
-	 * @version 1.0.1 (2024-08-14)
+	 * @version 1.1 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
 	 * 
@@ -120,8 +121,19 @@ abstract class Storage {
 		return
 			// resourceId
 			(
+				// Any
 				$params->resourceId == '*'
-				|| $cacheNameArray[1] == $params->resourceId
+				// Specified
+				|| (
+					is_array($params->resourceId)
+					// Multiple
+					? in_array(
+						$cacheNameArray[1],
+						$params->resourceId
+					)
+					// Single
+					: $cacheNameArray[1] == $params->resourceId
+				)
 			)
 			// prefix
 			&& (

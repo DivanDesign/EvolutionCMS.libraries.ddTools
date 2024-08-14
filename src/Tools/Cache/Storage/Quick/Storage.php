@@ -47,12 +47,13 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 3.0.1 (2024-08-14)
+	 * @version 3.1 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->name] {string} — Cache name (required if $params->isAdvancedSearchEnabled == false).
 	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
-	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
 	 * 
@@ -74,6 +75,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			if (!is_null($result_resource)){
 				$result->{$params->name} = $result_resource;
 			}
+		// Advanced search
 		}else{
 			// Find needed cache items
 			foreach(
@@ -103,16 +105,17 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 3.0.1 (2024-08-14)
+	 * @version 3.1 (2024-08-14)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
-	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object. If the parameter is omitted or empty, cache of all resources will be cleared.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
 	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * @param $params->suffix {string|'*'} — Cache suffix.
-	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * 
 	 * @return {void}
 	 */
@@ -127,6 +130,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			// Simple clear one item if pattern is not used
 			if (!$params->isAdvancedSearchEnabled){
 				unset(static::$targetObject->{$params->name});
+			// Advanced search
 			}else{
 				// Find needed cache items
 				foreach(

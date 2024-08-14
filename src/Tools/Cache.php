@@ -69,7 +69,7 @@ class Cache {
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
-	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
+	 * @param $params->suffix {string} — Cache suffix.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
 	 * @return {null|string|array|stdClass} — `null` means that the cache file does not exist.
@@ -86,11 +86,12 @@ class Cache {
 	
 	/**
 	 * getSeveral
-	 * @version 1.0 (2024-08-13)
+	 * @version 1.1 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
-	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
+	 * @param $params->suffix {string} — Cache suffix.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
 	 * @return $result {stdClass|null} — `null` means that the cache of specified items does not exist.
@@ -132,12 +133,13 @@ class Cache {
 	
 	/**
 	 * delete
-	 * @version 2.4.1 (2024-08-12)
+	 * @version 2.5 (2024-08-14)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
-	 * @param [$params->resourceId=null] {string|null|'*'} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param [$params->resourceId=null] {string|'*'|array|null} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array. If the parameter is null or empty, cache of all resources will be cleared.
+	 * @param [$params->resourceId[$i]] {string} — Resource ID.
 	 * @param [$params->prefix='doc'] {string|'*'} — Cache prefix.
 	 * @param [$params->suffix='*'] {string|'*'} — Cache suffix.
 	 * 
@@ -183,15 +185,16 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 8.0 (2024-08-14)
+	 * @version 8.1 (2024-08-14)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param $params->resourceId {string|'*'} — Resource ID related to cache (e. g. document ID).
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
 	 * @param $params->suffix {string|'*'} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param [$params->prefix='doc'|'*'] {string} — Cache prefix.
 	 * 
 	 * @return $result {stdClass}
-	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'.
+	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'. If $params->resourceId is array, '*' will be used as resourceId.
 	 * @return $result->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
 	 * @return $result->resourceId {string} — $params->resourceId.
 	 * @return $result->prefix {string} — $params->prefix.
@@ -207,10 +210,16 @@ class Cache {
 			],
 		]);
 		
+		$resourceId =
+			is_array($params->resourceId)
+			? '*'
+			: $params->resourceId
+		;
+		
 		return (object) [
-			'name' => $params->prefix . '-' . $params->resourceId . '-' . $params->suffix,
+			'name' => $params->prefix . '-' . $resourceId . '-' . $params->suffix,
 			'isAdvancedSearchEnabled' => (
-				$params->resourceId == '*'
+				$resourceId == '*'
 				|| $params->prefix == '*'
 				|| $params->suffix == '*'
 			),

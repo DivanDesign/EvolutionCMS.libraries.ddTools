@@ -569,7 +569,9 @@ You can cache some data (e. g. a snippet result).
 * Quick cache items are stored in `$_SESSION['ddCache']`.
 
 
-#### `\DDTools\Tools\Cache::save($params)`, `\DDTools\Tools\Cache::get($params)`, `\DDTools\Tools\Cache::getSeveral($params)`
+#### `\DDTools\Tools\Cache::save($params)`
+
+Saves custom data to cache storage.
 
 * `$params`
 	* Description: The parameters object.
@@ -592,12 +594,7 @@ You can cache some data (e. g. a snippet result).
 	* Description: Cache prefix. Useful if you want to cache some custom data that is not related to any documents.
 	* Valid values: `string`
 	* Default value: `'doc'`
-
-
-#### `\DDTools\Tools\Cache::save($params)`
-
-Saves custom data to cache storage.
-
+	
 * `$params->data`
 	* Description: Data to save.
 	* Valid values:
@@ -616,6 +613,28 @@ Saves custom data to cache storage.
 
 Retrieves item data from cache storage.
 
+* `$params`
+	* Description: The parameters object.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->resourceId`
+	* Description: Resource ID related to cache (e. g. document ID).
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->suffix`
+	* Description: Cache suffix.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->prefix`
+	* Description: Cache prefix.
+	* Valid values: `string`
+	* Default value: `'doc'`
+
 
 ##### Returns
 
@@ -632,6 +651,37 @@ Retrieves item data from cache storage.
 #### `\DDTools\Tools\Cache::getSeveral($params)`
 
 Retrieves data of several items from cache storage.
+
+
+* `$params`
+	* Description: The parameters object.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->resourceId`
+	* Description: Resource ID(s) related to cache (e. g. document ID).
+	* Valid values:
+		* `string`
+		* `'*'` — means any ID
+		* `array` — you can specify multiple IDs
+	* **Required**
+	
+* `$params->resourceId[$i]`
+	* Description: A resource ID.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->suffix`
+	* Description: Cache suffix.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->prefix`
+	* Description: Cache prefix.
+	* Valid values: `string`
+	* Default value: `'doc'`
 
 
 ##### Returns
@@ -664,12 +714,18 @@ Deletes one or more cache items.
 	* Default value: —
 	
 * `$params->resourceId`
-	* Description: Resource ID related to cache (e. g. document ID).
+	* Description: Resource ID(s) related to cache (e. g. document ID).
 	* Valid values:
 		* `string`
 		* `'*'` — means any ID
+		* `array` — you can specify multiple IDs
 		* `null` — cache of all resources will be cleared independent of `$params->prefix`
 	* Default value: `null`
+	
+* `$params->resourceId[$i]`
+	* Description: A resource ID.
+	* Valid values: `string`
+	* Default value: —
 	
 * `$params->prefix`
 	* Description: Cache prefix. Useful if you want to cache some custom data that is not related to any documents.
