@@ -36,11 +36,12 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * save
-	 * @version 2.0 (2024-08-15)
+	 * @version 3.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param $params->name {string} — Cache name.
-	 * @param $params->data {string|array|stdClass} — Data to save.
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->items {stdClass|arrayAssociative} — Item's data to save.
+	 * @param $params->items->{$name} {string|array|stdClass} — Key is a cache name, value is a data.
 	 * @param $params->isExtendEnabled {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 
 	 * @return {void}
@@ -48,13 +49,23 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	public static function save($params): void {
 		$params = (object) $params;
 		
-		// Save cache file
-		file_put_contents(
-			// Cache file path
-			static::buildCacheNamePath($params->name),
-			// Cache content
-			static::save_prepareData($params)
-		);
+		foreach (
+			$params->items
+			as $itemName
+			=> $itemData
+		){
+			// Save cache file
+			file_put_contents(
+				// Cache file path
+				static::buildCacheNamePath($itemName),
+				// Cache content
+				static::save_prepareData([
+					'name' => $itemName,
+					'data' => $itemData,
+					'isExtendEnabled' => $params->isExtendEnabled,
+				])
+			);
+		}
 	}
 	
 	/**

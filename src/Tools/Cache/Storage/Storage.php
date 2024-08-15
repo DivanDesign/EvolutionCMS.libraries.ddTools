@@ -14,11 +14,11 @@ abstract class Storage {
 	
 	/**
 	 * save
-	 * @version 2.0 (2024-08-15)
+	 * @version 3.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param $params->name {string} — Cache name.
-	 * @param $params->data {string|array|stdClass} — Data to save.
+	 * @param $params->items {stdClass|arrayAssociative} — Item's data to save.
+	 * @param $params->items->{$name} {string|array|stdClass} — Key is a cache name, value is a data.
 	 * @param $params->isExtendEnabled {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 
 	 * @return {void}

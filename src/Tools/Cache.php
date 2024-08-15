@@ -26,7 +26,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.2.5 (2024-08-15)
+	 * @version 3.2.6 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {string|array|stdClass} — Data to save.
@@ -54,8 +54,9 @@ class Cache {
 		// We can't save something containing '*' in name
 		if (!$cacheNameData->advancedSearchData->isEnabled){
 			$saveParams = (object) [
-				'name' => $cacheNameData->name,
-				'data' => $params->data,
+				'items' => [
+					$cacheNameData->name => $params->data,
+				],
 				'isExtendEnabled' => $params->isExtendEnabled,
 			];
 			
@@ -90,7 +91,7 @@ class Cache {
 	
 	/**
 	 * getSeveral
-	 * @version 1.1.1 (2024-08-15)
+	 * @version 1.1.2 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
@@ -127,8 +128,9 @@ class Cache {
 				=> $cacheValue
 			){
 				static::$theQuickStorageClass::save([
-					'name' => $cacheName,
-					'data' => $cacheValue,
+					'items' => [
+						$cacheName => $cacheValue,
+					],
 					// Nothing to extend
 					'isExtendEnabled' => false,
 				]);
