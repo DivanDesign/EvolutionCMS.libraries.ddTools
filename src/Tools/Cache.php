@@ -91,7 +91,7 @@ class Cache {
 	
 	/**
 	 * getSeveral
-	 * @version 1.1.2 (2024-08-15)
+	 * @version 1.1.3 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
@@ -124,12 +124,12 @@ class Cache {
 			// Save to quick storage
 			foreach (
 				$resultCollection
-				as $cacheName
-				=> $cacheValue
+				as $itemName
+				=> $itemData
 			){
 				static::$theQuickStorageClass::save([
 					'items' => [
-						$cacheName => $cacheValue,
+						$itemName => $itemData,
 					],
 					// Nothing to extend
 					'isExtendEnabled' => false,

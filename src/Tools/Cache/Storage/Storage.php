@@ -63,7 +63,7 @@ abstract class Storage {
 	
 	/**
 	 * get
-	 * @version 4.0 (2024-08-15)
+	 * @version 4.0.1 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -75,7 +75,7 @@ abstract class Storage {
 	 * @param $params->advancedSearchData->suffix {string|'*'} — Cache suffix.
 	 * 
 	 * @return $result {stdClass|null} — `null` means that the cache does not exist.
-	 * @return $result->{$cacheName} {string|array|stdClass}
+	 * @return $result->{$itemName} {string|array|stdClass}
 	 */
 	abstract public static function get($params): ?\stdClass;
 	
@@ -100,7 +100,7 @@ abstract class Storage {
 	
 	/**
 	 * isOneItemNameMatched
-	 * @version 2.0 (2024-08-15)
+	 * @version 2.0.1 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -115,7 +115,7 @@ abstract class Storage {
 	protected static function isOneItemNameMatched($params): bool {
 		$params = (object) $params;
 		
-		$cacheNameArray = explode(
+		$itemNameArray = explode(
 			'-',
 			$params->name
 		);
@@ -130,22 +130,22 @@ abstract class Storage {
 					is_array($params->advancedSearchData->resourceId)
 					// Multiple
 					? in_array(
-						$cacheNameArray[1],
+						$itemNameArray[1],
 						$params->advancedSearchData->resourceId
 					)
 					// Single
-					: $cacheNameArray[1] == $params->advancedSearchData->resourceId
+					: $itemNameArray[1] == $params->advancedSearchData->resourceId
 				)
 			)
 			// prefix
 			&& (
 				$params->advancedSearchData->prefix == '*'
-				|| $cacheNameArray[0] == $params->advancedSearchData->prefix
+				|| $itemNameArray[0] == $params->advancedSearchData->prefix
 			)
 			// suffix
 			&& (
 				$params->advancedSearchData->suffix == '*'
-				|| $cacheNameArray[2] == $params->advancedSearchData->suffix
+				|| $itemNameArray[2] == $params->advancedSearchData->suffix
 			)
 		;
 	}

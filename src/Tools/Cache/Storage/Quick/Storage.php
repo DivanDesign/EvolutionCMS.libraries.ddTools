@@ -57,7 +57,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 4.0.1 (2024-08-15)
+	 * @version 4.0.2 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->name] {string} — Cache name (required if $params->advancedSearchData->isEnabled == false).
@@ -69,7 +69,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	 * @param $params->advancedSearchData->suffix {string|'*'} — Cache suffix.
 	 * 
 	 * @return $result {stdClass|null} — `null` means that the cache does not exist.
-	 * @return $result->{$cacheName} {string|array|stdClass}
+	 * @return $result->{$itemName} {string|array|stdClass}
 	 */
 	public static function get($params): ?\stdClass {
 		$params = (object) $params;
@@ -91,16 +91,16 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			// Find needed cache items
 			foreach(
 				static::$targetObject
-				as $cacheName
-				=> $cacheValue
+				as $itemName
+				=> $itemData
 			){
 				if (
 					static::isOneItemNameMatched([
-						'name' => $cacheName,
+						'name' => $itemName,
 						'advancedSearchData' => $params->advancedSearchData,
 					])
 				){
-					$result->{$cacheName} = $cacheValue;
+					$result->{$itemName} = $itemData;
 				}
 			}
 		}
@@ -114,7 +114,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 4.0.1 (2024-08-15)
+	 * @version 4.0.2 (2024-08-15)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
@@ -145,16 +145,16 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 				// Find needed cache items
 				foreach(
 					static::$targetObject
-					as $cacheName
-					=> $cacheValue
+					as $itemName
+					=> $itemData
 				){
 					if (
 						static::isOneItemNameMatched([
-							'name' => $cacheName,
+							'name' => $itemName,
 							'advancedSearchData' => $params->advancedSearchData,
 						])
 					){
-						unset(static::$targetObject->{$cacheName});
+						unset(static::$targetObject->{$itemName});
 					}
 				}
 			}

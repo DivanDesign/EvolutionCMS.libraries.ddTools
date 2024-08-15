@@ -110,7 +110,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 4.0.1 (2024-08-15)
+	 * @version 4.0.2 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -120,7 +120,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	 * @param $params->advancedSearchData->resourceId[$i] {string} — Resource ID.
 	 * 
 	 * @return $result {stdClass|null}
-	 * @return $result->{$cacheName} {null|string|array|stdClass} — `null` means that the cache does not exist.
+	 * @return $result->{$itemName} {null|string|array|stdClass} — `null` means that the cache does not exist.
 	 */
 	public static function get($params): ?\stdClass {
 		$params = (object) $params;
@@ -146,7 +146,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 				$files
 				as $filePath
 			){
-				$cacheName = basename(
+				$itemName = basename(
 					$filePath,
 					'.php'
 				);
@@ -156,11 +156,11 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 					$isResourceIdSingle
 					// Multiple
 					|| static::isOneItemNameMatched([
-						'name' => $cacheName,
+						'name' => $itemName,
 						'advancedSearchData' => $params->advancedSearchData,
 					])
 				){
-					$result->{$cacheName} = static::get_oneItem($filePath);
+					$result->{$itemName} = static::get_oneItem($filePath);
 				}
 			}
 		}
@@ -276,16 +276,16 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * buildCacheNamePath
-	 * @version 1.0 (2024-08-07)
+	 * @version 1.0.1 (2024-08-07)
 	 * 
-	 * @param $cacheName {string} — Cache name.
+	 * @param $itemName {string} — Cache name.
 	 * 
 	 * @return {string}
 	 */
-	private static function buildCacheNamePath($cacheName): string {
+	private static function buildCacheNamePath($itemName): string {
 		return
 			static::$targetDir
-			. '/' . $cacheName . '.php'
+			. '/' . $itemName . '.php'
 		;
 	}
 }
