@@ -26,7 +26,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.2.4 (2024-08-15)
+	 * @version 3.2.5 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {string|array|stdClass} — Data to save.
@@ -40,7 +40,14 @@ class Cache {
 	public static function save($params): void {
 		static::initStatic();
 		
-		$params = (object) $params;
+		$params = \DDTools\Tools\Objects::extend([
+			'objects' => [
+				(object) [
+					'isExtendEnabled' => false,
+				],
+				$params,
+			],
+		]);
 		
 		$cacheNameData = static::buildCacheNameData($params);
 		
@@ -49,11 +56,8 @@ class Cache {
 			$saveParams = (object) [
 				'name' => $cacheNameData->name,
 				'data' => $params->data,
+				'isExtendEnabled' => $params->isExtendEnabled,
 			];
-			
-			if (isset($params->isExtendEnabled)){
-				$saveParams->isExtendEnabled = $params->isExtendEnabled;
-			}
 			
 			// Save to quick storage
 			static::$theQuickStorageClass::save($saveParams);
@@ -86,7 +90,7 @@ class Cache {
 	
 	/**
 	 * getSeveral
-	 * @version 1.1 (2024-08-14)
+	 * @version 1.1.1 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
@@ -111,6 +115,7 @@ class Cache {
 			$resultCollection = static::$theStableStorageClass::get($cacheNameData);
 		}
 		
+		// Save absent items to quick storage from stable storage
 		if (
 			!$isQuickStorageDataExist
 			&& !is_null($resultCollection)
@@ -124,6 +129,8 @@ class Cache {
 				static::$theQuickStorageClass::save([
 					'name' => $cacheName,
 					'data' => $cacheValue,
+					// Nothing to extend
+					'isExtendEnabled' => false,
 				]);
 			}
 		}

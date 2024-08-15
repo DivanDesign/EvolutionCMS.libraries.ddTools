@@ -36,12 +36,12 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * save
-	 * @version 1.1 (2024-08-07)
+	 * @version 2.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
 	 * @param $params->data {string|array|stdClass} — Data to save.
-	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing data be extended by $params->data or overwritten?
+	 * @param $params->isExtendEnabled {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 
 	 * @return {void}
 	 */
@@ -59,12 +59,12 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * save_prepareData
-	 * @version 1.1 (2024-08-07)
+	 * @version 2.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
 	 * @param $params->data {string|array|stdClass} — Data to prepare.
-	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing data be extended by $params->data or overwritten?
+	 * @param $params->isExtendEnabled {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 
 	 * @return {string}
 	 */
