@@ -26,12 +26,12 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.2.3 (2024-08-15)
+	 * @version 3.2.4 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->data {string|array|stdClass} — Data to save.
 	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
 	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
-	 * @param $params->data {string|array|stdClass} — Data to save.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 

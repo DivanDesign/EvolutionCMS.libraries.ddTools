@@ -580,6 +580,14 @@ Saves custom data to cache storage.
 		* `arrayAssociative`
 	* **Required**
 	
+* `$params->data`
+	* Description: Data to save.
+	* Valid values:
+		* `string`
+		* `array`
+		* `stdClass`
+	* **Required**
+	
 * `$params->resourceId`
 	* Description: Resource ID related to cache (e. g. document ID).
 	* Valid values: `string`
@@ -594,14 +602,6 @@ Saves custom data to cache storage.
 	* Description: Cache prefix. Useful if you want to cache some custom data that is not related to any documents.
 	* Valid values: `string`
 	* Default value: `'doc'`
-	
-* `$params->data`
-	* Description: Data to save.
-	* Valid values:
-		* `string`
-		* `array`
-		* `stdClass`
-	* **Required**
 	
 * `$params->isExtendEnabled`
 	* Description: Should existing data be extended by `$params->data` or overwritten?
