@@ -107,14 +107,15 @@ abstract class Storage {
 	
 	/**
 	 * isOneItemNameMatched
-	 * @version 1.1 (2024-08-14)
+	 * @version 2.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
-	 * @param $params->resourceId[$i] {string} — Resource ID.
-	 * @param $params->prefix {string|'*'} — Cache prefix.
-	 * @param $params->suffix {string|'*'} — Cache suffix.
+	 * @param $params->advancedSearchData {stdClass} — Advanced search data.
+	 * @param $params->advancedSearchData->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->advancedSearchData->resourceId[$i] {string} — Resource ID.
+	 * @param $params->advancedSearchData->prefix {string|'*'} — Cache prefix.
+	 * @param $params->advancedSearchData->suffix {string|'*'} — Cache suffix.
 	 * 
 	 * @return {boolean}
 	 */
@@ -130,28 +131,28 @@ abstract class Storage {
 			// resourceId
 			(
 				// Any
-				$params->resourceId == '*'
+				$params->advancedSearchData->resourceId == '*'
 				// Specified
 				|| (
-					is_array($params->resourceId)
+					is_array($params->advancedSearchData->resourceId)
 					// Multiple
 					? in_array(
 						$cacheNameArray[1],
-						$params->resourceId
+						$params->advancedSearchData->resourceId
 					)
 					// Single
-					: $cacheNameArray[1] == $params->resourceId
+					: $cacheNameArray[1] == $params->advancedSearchData->resourceId
 				)
 			)
 			// prefix
 			&& (
-				$params->prefix == '*'
-				|| $cacheNameArray[0] == $params->prefix
+				$params->advancedSearchData->prefix == '*'
+				|| $cacheNameArray[0] == $params->advancedSearchData->prefix
 			)
 			// suffix
 			&& (
-				$params->suffix == '*'
-				|| $cacheNameArray[2] == $params->suffix
+				$params->advancedSearchData->suffix == '*'
+				|| $cacheNameArray[2] == $params->advancedSearchData->suffix
 			)
 		;
 	}

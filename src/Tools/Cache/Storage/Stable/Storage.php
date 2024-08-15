@@ -99,7 +99,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 4.0 (2024-08-15)
+	 * @version 4.0.1 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -146,9 +146,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 					// Multiple
 					|| static::isOneItemNameMatched([
 						'name' => $cacheName,
-						'resourceId' => $params->advancedSearchData->resourceId,
-						'prefix' => $params->advancedSearchData->prefix,
-						'suffix' => $params->advancedSearchData->suffix,
+						'advancedSearchData' => $params->advancedSearchData,
 					])
 				){
 					$result->{$cacheName} = static::get_oneItem($filePath);
@@ -211,7 +209,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 4.0 (2024-08-15)
+	 * @version 4.0.1 (2024-08-15)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
@@ -255,9 +253,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 								$filePath,
 								'.php'
 							),
-							'resourceId' => $params->advancedSearchData->resourceId,
-							'prefix' => $params->advancedSearchData->prefix,
-							'suffix' => $params->advancedSearchData->suffix,
+							'advancedSearchData' => $params->advancedSearchData,
 						])
 					){
 						unlink($filePath);
