@@ -27,7 +27,7 @@ abstract class Storage {
 	
 	/**
 	 * save_prepareData
-	 * @version 1.1.3 (2024-08-14)
+	 * @version 1.1.4 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
@@ -54,7 +54,9 @@ abstract class Storage {
 					\DDTools\Tools\Objects::getPropValue([
 						'object' => static::get([
 							'name' => $params->name,
-							'isAdvancedSearchEnabled' => false,
+							'advancedSearchData' => (object) [
+								'isEnabled' => false,
+							],
 						]),
 						'propName' => $params->name,
 					]),
@@ -68,12 +70,16 @@ abstract class Storage {
 	
 	/**
 	 * get
-	 * @version 3.0 (2024-08-14)
+	 * @version 4.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->resourceId {string} — Resource ID related to cache.
-	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->advancedSearchData {stdClass} — Advanced search data.
+	 * @param $params->advancedSearchData->isEnabled {boolean} — Is advanced search enabled?
+	 * @param $params->advancedSearchData->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->advancedSearchData->resourceId[$i] {string} — Resource ID.
+	 * @param $params->advancedSearchData->prefix {string|'*'} — Cache prefix.
+	 * @param $params->advancedSearchData->suffix {string|'*'} — Cache suffix.
 	 * 
 	 * @return $result {stdClass|null} — `null` means that the cache does not exist.
 	 * @return $result->{$cacheName} {string|array|stdClass}
@@ -82,16 +88,18 @@ abstract class Storage {
 	
 	/**
 	 * delete
-	 * @version 3.0 (2024-08-14)
+	 * @version 4.0 (2024-08-15)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
-	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object. If the parameter is omitted or empty, cache of all resources will be cleared.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->resourceId {string|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
-	 * @param $params->prefix {string|'*'} — Cache prefix.
-	 * @param $params->suffix {string|'*'} — Cache suffix.
-	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @param $params->advancedSearchData {stdClass} — Advanced search data.
+	 * @param $params->advancedSearchData->isEnabled {boolean} — Is advanced search enabled?
+	 * @param $params->advancedSearchData->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->advancedSearchData->resourceId[$i] {string} — Resource ID.
+	 * @param $params->advancedSearchData->prefix {string|'*'} — Cache prefix.
+	 * @param $params->advancedSearchData->suffix {string|'*'} — Cache suffix.
 	 * 
 	 * @return {void}
 	 */

@@ -99,13 +99,14 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 3.1 (2024-08-14)
+	 * @version 4.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
-	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
-	 * @param $params->resourceId[$i] {string} — Resource ID.
+	 * @param $params->advancedSearchData {stdClass} — Advanced search data.
+	 * @param $params->advancedSearchData->isEnabled {boolean} — Is advanced search enabled?
+	 * @param $params->advancedSearchData->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->advancedSearchData->resourceId[$i] {string} — Resource ID.
 	 * 
 	 * @return $result {stdClass|null}
 	 * @return $result->{$cacheName} {null|string|array|stdClass} — `null` means that the cache does not exist.
@@ -118,7 +119,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		$filePath = static::buildCacheNamePath($params->name);
 		
 		// Simple get one item if pattern is not used
-		if (!$params->isAdvancedSearchEnabled){
+		if (!$params->advancedSearchData->isEnabled){
 			$result_resource = static::get_oneItem($filePath);
 			
 			if (!is_null($result_resource)){
@@ -128,7 +129,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		}else{
 			$files = glob($filePath);
 			
-			$isResourceIdSingle = !is_array($params->resourceId);
+			$isResourceIdSingle = !is_array($params->advancedSearchData->resourceId);
 			
 			foreach (
 				$files
@@ -145,9 +146,9 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 					// Multiple
 					|| static::isOneItemNameMatched([
 						'name' => $cacheName,
-						'resourceId' => $params->resourceId,
-						'prefix' => $params->prefix,
-						'suffix' => $params->suffix,
+						'resourceId' => $params->advancedSearchData->resourceId,
+						'prefix' => $params->advancedSearchData->prefix,
+						'suffix' => $params->advancedSearchData->suffix,
 					])
 				){
 					$result->{$cacheName} = static::get_oneItem($filePath);
@@ -210,15 +211,16 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 3.1 (2024-08-14)
+	 * @version 4.0 (2024-08-15)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
-	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
-	 * @param $params->resourceId[$i] {string} — Resource ID.
+	 * @param $params->advancedSearchData {stdClass} — Advanced search data.
+	 * @param $params->advancedSearchData->isEnabled {boolean} — Is advanced search enabled?
+	 * @param $params->advancedSearchData->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->advancedSearchData->resourceId[$i] {string} — Resource ID.
 	 * 
 	 * @return {void}
 	 */
@@ -233,12 +235,12 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 			$filePath = static::buildCacheNamePath($params->name);
 			
 			// Simple clear one item if pattern is not used
-			if (!$params->isAdvancedSearchEnabled){
+			if (!$params->advancedSearchData->isEnabled){
 				unlink($filePath);
 			}else{
 				$files = glob($filePath);
 				
-				$isResourceIdSingle = !is_array($params->resourceId);
+				$isResourceIdSingle = !is_array($params->advancedSearchData->resourceId);
 				
 				foreach (
 					$files
@@ -253,9 +255,9 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 								$filePath,
 								'.php'
 							),
-							'resourceId' => $params->resourceId,
-							'prefix' => $params->prefix,
-							'suffix' => $params->suffix,
+							'resourceId' => $params->advancedSearchData->resourceId,
+							'prefix' => $params->advancedSearchData->prefix,
+							'suffix' => $params->advancedSearchData->suffix,
 						])
 					){
 						unlink($filePath);

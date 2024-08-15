@@ -26,7 +26,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.2.2 (2024-08-14)
+	 * @version 3.2.3 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
@@ -45,7 +45,7 @@ class Cache {
 		$cacheNameData = static::buildCacheNameData($params);
 		
 		// We can't save something containing '*' in name
-		if (!$cacheNameData->isAdvancedSearchEnabled){
+		if (!$cacheNameData->advancedSearchData->isEnabled){
 			$saveParams = (object) [
 				'name' => $cacheNameData->name,
 				'data' => $params->data,
@@ -185,7 +185,7 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 8.1 (2024-08-14)
+	 * @version 9.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
@@ -195,10 +195,11 @@ class Cache {
 	 * 
 	 * @return $result {stdClass}
 	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'. If $params->resourceId is array, '*' will be used as resourceId.
-	 * @return $result->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
-	 * @return $result->resourceId {string} — $params->resourceId.
-	 * @return $result->prefix {string} — $params->prefix.
-	 * @return $result->suffix {string} — $params->suffix.
+	 * @return $result->advancedSearchData {stdClass} — Advanced search data.
+	 * @return $result->advancedSearchData->isEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @return $result->advancedSearchData->resourceId {string} — $params->resourceId.
+	 * @return $result->advancedSearchData->prefix {string} — $params->prefix.
+	 * @return $result->advancedSearchData->suffix {string} — $params->suffix.
 	 */
 	private static function buildCacheNameData($params): \stdClass {
 		$params = \DDTools\Tools\Objects::extend([
@@ -218,14 +219,16 @@ class Cache {
 		
 		return (object) [
 			'name' => $params->prefix . '-' . $resourceId . '-' . $params->suffix,
-			'isAdvancedSearchEnabled' => (
-				$resourceId == '*'
-				|| $params->prefix == '*'
-				|| $params->suffix == '*'
-			),
-			'resourceId' => $params->resourceId,
-			'prefix' => $params->prefix,
-			'suffix' => $params->suffix,
+			'advancedSearchData' => (object) [
+				'isEnabled' => (
+					$resourceId == '*'
+					|| $params->prefix == '*'
+					|| $params->suffix == '*'
+				),
+				'resourceId' => $params->resourceId,
+				'prefix' => $params->prefix,
+				'suffix' => $params->suffix,
+			],
 		];
 	}
 }

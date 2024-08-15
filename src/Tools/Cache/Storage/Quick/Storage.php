@@ -47,15 +47,16 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * get
-	 * @version 3.1 (2024-08-14)
+	 * @version 4.0 (2024-08-15)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
-	 * @param [$params->name] {string} — Cache name (required if $params->isAdvancedSearchEnabled == false).
-	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
-	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
-	 * @param $params->resourceId[$i] {string} — Resource ID.
-	 * @param $params->prefix {string|'*'} — Cache prefix.
-	 * @param $params->suffix {string|'*'} — Cache suffix.
+	 * @param [$params->name] {string} — Cache name (required if $params->advancedSearchData->isEnabled == false).
+	 * @param $params->advancedSearchData {stdClass} — Advanced search data.
+	 * @param $params->advancedSearchData->isEnabled {boolean} — Is advanced search enabled?
+	 * @param $params->advancedSearchData->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->advancedSearchData->resourceId[$i] {string} — Resource ID.
+	 * @param $params->advancedSearchData->prefix {string|'*'} — Cache prefix.
+	 * @param $params->advancedSearchData->suffix {string|'*'} — Cache suffix.
 	 * 
 	 * @return $result {stdClass|null} — `null` means that the cache does not exist.
 	 * @return $result->{$cacheName} {string|array|stdClass}
@@ -66,7 +67,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		$result = new \stdClass();
 		
 		// Simple get one item if pattern is not used
-		if (!$params->isAdvancedSearchEnabled){
+		if (!$params->advancedSearchData->isEnabled){
 			$result_resource = \DDTools\Tools\Objects::getPropValue([
 				'object' => static::$targetObject,
 				'propName' => $params->name,
@@ -86,9 +87,9 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 				if (
 					static::isOneItemNameMatched([
 						'name' => $cacheName,
-						'resourceId' => $params->resourceId,
-						'prefix' => $params->prefix,
-						'suffix' => $params->suffix,
+						'resourceId' => $params->advancedSearchData->resourceId,
+						'prefix' => $params->advancedSearchData->prefix,
+						'suffix' => $params->advancedSearchData->suffix,
 					])
 				){
 					$result->{$cacheName} = $cacheValue;
@@ -105,17 +106,18 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 	
 	/**
 	 * delete
-	 * @version 3.1 (2024-08-14)
+	 * @version 4.0 (2024-08-15)
 	 * 
 	 * @param Clear cache for specified resource or every resources.
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object. If the parameter is omitted or empty, cache of all resources will be cleared.
 	 * @param $params->name {string} — Cache name.
-	 * @param $params->isAdvancedSearchEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
-	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
-	 * @param $params->resourceId[$i] {string} — Resource ID.
-	 * @param $params->prefix {string|'*'} — Cache prefix.
-	 * @param $params->suffix {string|'*'} — Cache suffix.
+	 * @param $params->advancedSearchData {stdClass} — Advanced search data.
+	 * @param $params->advancedSearchData->isEnabled {boolean} — Is advanced search enabled?
+	 * @param $params->advancedSearchData->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->advancedSearchData->resourceId[$i] {string} — Resource ID.
+	 * @param $params->advancedSearchData->prefix {string|'*'} — Cache prefix.
+	 * @param $params->advancedSearchData->suffix {string|'*'} — Cache suffix.
 	 * 
 	 * @return {void}
 	 */
@@ -128,7 +130,7 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 		// Clear cache for specified resources
 		}else{
 			// Simple clear one item if pattern is not used
-			if (!$params->isAdvancedSearchEnabled){
+			if (!$params->advancedSearchData->isEnabled){
 				unset(static::$targetObject->{$params->name});
 			// Advanced search
 			}else{
@@ -141,9 +143,9 @@ class Storage extends \DDTools\Tools\Cache\Storage\Storage {
 					if (
 						static::isOneItemNameMatched([
 							'name' => $cacheName,
-							'resourceId' => $params->resourceId,
-							'prefix' => $params->prefix,
-							'suffix' => $params->suffix,
+							'resourceId' => $params->advancedSearchData->resourceId,
+							'prefix' => $params->advancedSearchData->prefix,
+							'suffix' => $params->advancedSearchData->suffix,
 						])
 					){
 						unset(static::$targetObject->{$cacheName});
