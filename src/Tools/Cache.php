@@ -26,7 +26,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.2.6 (2024-08-15)
+	 * @version 3.2.7 (2024-08-17)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {string|array|stdClass} — Data to save.
@@ -43,6 +43,7 @@ class Cache {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
+					'prefix' => 'doc',
 					'isExtendEnabled' => false,
 				],
 				$params,
@@ -91,7 +92,7 @@ class Cache {
 	
 	/**
 	 * getSeveral
-	 * @version 1.1.3 (2024-08-15)
+	 * @version 1.1.4 (2024-08-17)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
@@ -104,6 +105,15 @@ class Cache {
 	 */
 	public static function getSeveral($params): ?\stdClass {
 		static::initStatic();
+		
+		$params = \DDTools\Tools\Objects::extend([
+			'objects' => [
+				(object) [
+					'prefix' => 'doc',
+				],
+				$params,
+			],
+		]);
 		
 		$cacheNameData = static::buildCacheNameData($params);
 		
@@ -194,13 +204,13 @@ class Cache {
 	
 	/**
 	 * buildCacheNameData
-	 * @version 9.0 (2024-08-15)
+	 * @version 10.0 (2024-08-17)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
 	 * @param $params->resourceId[$i] {string} — Resource ID.
 	 * @param $params->suffix {string|'*'} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
-	 * @param [$params->prefix='doc'|'*'] {string} — Cache prefix.
+	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * 
 	 * @return $result {stdClass}
 	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'. If $params->resourceId is array, '*' will be used as resourceId.
@@ -211,14 +221,7 @@ class Cache {
 	 * @return $result->advancedSearchData->suffix {string} — $params->suffix.
 	 */
 	private static function buildCacheNameData($params): \stdClass {
-		$params = \DDTools\Tools\Objects::extend([
-			'objects' => [
-				(object) [
-					'prefix' => 'doc',
-				],
-				$params,
-			],
-		]);
+		$params = (object) $params;
 		
 		$resourceId =
 			is_array($params->resourceId)
