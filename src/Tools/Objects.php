@@ -4,7 +4,7 @@ namespace DDTools\Tools;
 class Objects {
 	/**
 	 * isObjectOrArray
-	 * @version 0.1 (2020-04-30)
+	 * @version 0.1.1 (2024-08-18)
 	 * 
 	 * @todo Should it get $object directly or as $params->object?
 	 * 
@@ -12,14 +12,14 @@ class Objects {
 	 */
 	private static function isObjectOrArray($object){
 		return
-			is_object($object) ||
-			is_array($object)
+			is_object($object)
+			|| is_array($object)
 		;
 	}
 	
 	/**
 	 * isPropExists
-	 * @version 1.0.2 (2024-08-04)
+	 * @version 1.0.3 (2024-08-18)
 	 * 
 	 * @see README.md
 	 * 
@@ -29,28 +29,28 @@ class Objects {
 		$params = (object) $params;
 		
 		return
-			is_object($params->object) ?
+			is_object($params->object)
 			// Objects
-			property_exists(
+			? property_exists(
 				$params->object,
 				$params->propName
-			) :
-			(
-				is_array($params->object) ?
+			)
+			: (
+				is_array($params->object)
 				// Arrays
-				array_key_exists(
+				? array_key_exists(
 					$params->propName,
 					$params->object
-				) :
+				)
 				// Always not exist for other types for less fragility
-				false
+				: false
 			)
 		;
 	}
 	
 	/**
 	 * getSingleLevelPropValue
-	 * @version 1.0.1 (2024-08-04)
+	 * @version 1.0.2 (2024-08-18)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object. @required
 	 * @param $params->object {stdClass|array} — Source object or array.. @required
@@ -62,23 +62,23 @@ class Objects {
 		$params = (object) $params;
 		
 		return
-			!self::isPropExists($params) ?
+			!self::isPropExists($params)
 			// Non-existing properties
-			null :
+			? null
 			// Existing properties
-			(
-				is_object($params->object) ?
+			: (
+				is_object($params->object)
 				// Objects
-				$params->object->{$params->propName} :
+				? $params->object->{$params->propName}
 				// Arrays
-				$params->object[$params->propName]
+				: $params->object[$params->propName]
 			)
 		;
 	}
 	
 	/**
 	 * getPropValue
-	 * @version 1.2.2 (2024-08-04)
+	 * @version 1.2.3 (2024-08-18)
 	 * 
 	 * @see README.md
 	 * 
@@ -89,10 +89,10 @@ class Objects {
 			'objects' => [
 				// Defaults
 				(object) [
-					'notFoundResult' => null
+					'notFoundResult' => null,
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		// First try to get value by original propName
@@ -109,21 +109,21 @@ class Objects {
 			if (
 				\DDTools\Tools\Objects::isPropExists([
 					'object' => $params->object,
-					'propName' => $propNames[0]
+					'propName' => $propNames[0],
 				])
 			){
 				$result = $params->object;
 				
 				// Find needed value
 				foreach (
-					$propNames as
-					$propName
+					$propNames
+					as $propName
 				){
 					// If need to see deeper
 					if (self::isObjectOrArray($result)){
 						$result = self::getSingleLevelPropValue([
 							'object' => $result,
-							'propName' => $propName
+							'propName' => $propName,
 						]);
 					}else{
 						// We need to look deeper, but we can't
@@ -136,8 +136,8 @@ class Objects {
 		}
 		
 		if (
-			!is_null($params->notFoundResult) &&
-			is_null($result)
+			!is_null($params->notFoundResult)
+			&& is_null($result)
 		){
 			$result = $params->notFoundResult;
 		}
@@ -147,7 +147,7 @@ class Objects {
 	
 	/**
 	 * convertType
-	 * @version 1.3.2 (2024-08-04)
+	 * @version 1.3.3 (2024-08-18)
 	 * 
 	 * @see README.md
 	 */
@@ -155,7 +155,7 @@ class Objects {
 		// Defaults
 		$params = (object) array_merge(
 			[
-				'type' => 'objectAuto'
+				'type' => 'objectAuto',
 			],
 			(array) $params
 		);
@@ -180,7 +180,7 @@ class Objects {
 						),
 						[
 							'{',
-							'['
+							'[',
 						]
 					)
 				;
@@ -194,25 +194,25 @@ class Objects {
 					if (is_null($result)){
 						// Include PHP.libraries.hjson
 						require_once(
-							'Objects' .
-							DIRECTORY_SEPARATOR .
-							'hjson' .
-							DIRECTORY_SEPARATOR .
-							'HJSONException.php'
+							'Objects'
+							. DIRECTORY_SEPARATOR
+							. 'hjson'
+							. DIRECTORY_SEPARATOR
+							. 'HJSONException.php'
 						);
 						require_once(
-							'Objects' .
-							DIRECTORY_SEPARATOR .
-							'hjson' .
-							DIRECTORY_SEPARATOR .
-							'HJSONUtils.php'
+							'Objects'
+							. DIRECTORY_SEPARATOR
+							. 'hjson'
+							. DIRECTORY_SEPARATOR
+							. 'HJSONUtils.php'
 						);
 						require_once(
-							'Objects' .
-							DIRECTORY_SEPARATOR .
-							'hjson' .
-							DIRECTORY_SEPARATOR .
-							'HJSONParser.php'
+							'Objects'
+							. DIRECTORY_SEPARATOR
+							. 'hjson'
+							. DIRECTORY_SEPARATOR
+							. 'HJSONParser.php'
 						);
 						
 						try {
@@ -221,7 +221,7 @@ class Objects {
 							$result = $hjsonParser->parse(
 								$params->object,
 								[
-									'assoc' => $params->type == 'objectarray'
+									'assoc' => $params->type == 'objectarray',
 								]
 							);
 						}catch (\Exception $e){
@@ -250,9 +250,9 @@ class Objects {
 			$result = (array) $result;
 		// stringQueryFormatted
 		}elseif (
-			$params->type == 'stringqueryformatted' ||
+			$params->type == 'stringqueryformatted'
 			// Backward compatibility with typo
-			$params->type == 'stringqueryformated'
+			|| $params->type == 'stringqueryformated'
 		){
 			$result = http_build_query($result);
 		// stringHtmlAttrs
@@ -262,9 +262,9 @@ class Objects {
 			$result = [];
 			
 			foreach (
-				$resultObject as
-				$result_itemAttrName =>
-				$result_itemAttrValue
+				$resultObject
+				as $result_itemAttrName
+				=> $result_itemAttrValue
 			){
 				// Prepare value
 				// Boolean to 0|1
@@ -282,9 +282,10 @@ class Objects {
 				}
 				
 				$result[] =
-					$result_itemAttrName . '=\'' .
-					$result_itemAttrValue .
-					'\''
+					$result_itemAttrName
+					. '=\''
+						. $result_itemAttrValue
+					. '\''
 				;
 			}
 			
@@ -298,7 +299,8 @@ class Objects {
 				$params->type,
 				0,
 				10
-			) == 'stringjson'
+			)
+			== 'stringjson'
 		){
 			if ($params->type == 'stringjsonobject'){
 				$result = (object) $result;
@@ -318,7 +320,7 @@ class Objects {
 	
 	/**
 	 * extend
-	 * @version 1.3.11 (2024-08-04)
+	 * @version 1.3.12 (2024-08-18)
 	 * 
 	 * @see README.md
 	 * 
@@ -329,7 +331,7 @@ class Objects {
 		$params = (object) array_merge(
 			[
 				'deep' => true,
-				'overwriteWithEmpty' => true
+				'overwriteWithEmpty' => true,
 			],
 			(array) $params
 		);
@@ -344,27 +346,27 @@ class Objects {
 		$isResultObject = is_object($result);
 		
 		foreach (
-			$params->objects as
-			$additionalProps
+			$params->objects
+			as $additionalProps
 		){
 			// Invalid objects will not be used
 			if (self::isObjectOrArray($additionalProps)){
 				foreach (
-					$additionalProps as
-					$additionalPropName =>
-					$additionalPropValue
+					$additionalProps
+					as $additionalPropName
+					=> $additionalPropValue
 				){
 					// Is the source property exists
 					$isSourcePropExists = self::isPropExists([
 						'object' => $result,
-						'propName' => $additionalPropName
+						'propName' => $additionalPropName,
 					]);
 					
 					if ($isSourcePropExists){
 						// Source property value
 						$sourcePropValue = self::getSingleLevelPropValue([
 							'object' => $result,
-							'propName' => $additionalPropName
+							'propName' => $additionalPropName,
 						]);
 						
 						// Is the source property object or array
@@ -377,8 +379,8 @@ class Objects {
 					// Is the additional property object or array
 					$isAdditionalPropObject = is_object($additionalPropValue);
 					$isAdditionalPropObjectOrArray =
-						$isAdditionalPropObject ||
-						is_array($additionalPropValue)
+						$isAdditionalPropObject
+						|| is_array($additionalPropValue)
 					;
 					
 					// The additional property value will be used by default
@@ -386,25 +388,25 @@ class Objects {
 					
 					if (
 						// Overwriting with empty value is disabled
-						!$params->overwriteWithEmpty &&
+						!$params->overwriteWithEmpty
 						// And source property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
-						$isSourcePropExists
+						&& $isSourcePropExists
 					){
 						// Check if additional property value is empty
 						$isAdditionalPropUsed =
 							(
 								// Empty object or array
 								(
-									$isAdditionalPropObjectOrArray &&
-									count((array) $additionalPropValue) == 0
-								) ||
+									$isAdditionalPropObjectOrArray
+									&& count((array) $additionalPropValue) == 0
+								)
 								// Empty string
-								(
-									is_string($additionalPropValue) &&
-									$additionalPropValue == ''
-								) ||
+								|| (
+									is_string($additionalPropValue)
+									&& $additionalPropValue == ''
+								)
 								// NULL
-								is_null($additionalPropValue)
+								|| is_null($additionalPropValue)
 							) ?
 							// Additional is empty — don't use it
 							false:
@@ -414,24 +416,24 @@ class Objects {
 						
 						if (
 							// Additional property value is empty
-							!$isAdditionalPropUsed &&
+							!$isAdditionalPropUsed
 							// And source property value is empty too
-							(
+							&& (
 								// Empty object or array
 								(
-									$isSourcePropObjectOrArray &&
-									count((array) $sourcePropValue) == 0
-								) ||
+									$isSourcePropObjectOrArray
+									&& count((array) $sourcePropValue) == 0
+								)
 								// Empty string
-								(
-									is_string($sourcePropValue) &&
-									$sourcePropValue == ''
-								) ||
+								|| (
+									is_string($sourcePropValue)
+									&& $sourcePropValue == ''
+								)
 								// NULL
-								is_null($sourcePropValue)
-							) &&
+								|| is_null($sourcePropValue)
+							)
 							// But they have different types
-							$sourcePropValue !== $additionalPropValue
+							&& $sourcePropValue !== $additionalPropValue
 						){
 							// Okay, overwrite source in this case
 							$isAdditionalPropUsed = true;
@@ -442,28 +444,28 @@ class Objects {
 					if ($isAdditionalPropUsed){
 						if (
 							// If recursive merging is needed
-							$params->deep &&
+							$params->deep
 							// And the value is an object or array
-							$isAdditionalPropObjectOrArray
+							&& $isAdditionalPropObjectOrArray
 						){
 							// Start recursion (`clone` must be called for all nested additional props, so recursion must be called even if `$sourcePropValue` is not an object or array)
 							$additionalPropValue = self::extend([
 								'objects' => [
 									(
-										$isSourcePropObjectOrArray ?
-										$sourcePropValue :
+										$isSourcePropObjectOrArray
+										? $sourcePropValue
 										// If `$sourcePropValue` is not an array or object it isn't be used
-										(
+										: (
 											// Type of resulting prop depends on `$additionalPropValue` type
-											$isAdditionalPropObject ?
-											new \stdClass() :
-											[]
+											$isAdditionalPropObject
+											? new \stdClass()
+											: []
 										)
 									),
-									$additionalPropValue
+									$additionalPropValue,
 								],
 								'deep' => true,
-								'overwriteWithEmpty' => $params->overwriteWithEmpty
+								'overwriteWithEmpty' => $params->overwriteWithEmpty,
 							]);
 						}
 						
@@ -487,7 +489,7 @@ class Objects {
 	
 	/**
 	 * unfold
-	 * @version 1.2.1 (2024-08-04)
+	 * @version 1.2.2 (2024-08-18)
 	 * 
 	 * @see README.md
 	 * 
@@ -502,7 +504,7 @@ class Objects {
 					'keySeparator' => '.',
 					'keyPrefix' => '',
 					// The internal parameter, should not be used outside. Used only in child calls of recursion.
-					'isSourceObject' => null
+					'isSourceObject' => null,
 				],
 				$params
 			]
@@ -513,36 +515,36 @@ class Objects {
 		
 		$isSourceObject =
 			// If it's the first call of recurson
-			is_null($params->isSourceObject) ?
+			is_null($params->isSourceObject)
 			// Use original type
-			is_object($params->object) :
+			? is_object($params->object)
 			// Use from parent call of recursion
-			$params->isSourceObject
+			: $params->isSourceObject
 		;
 		
 		// Iterate over source
 		foreach (
-			$params->object as
-			$key =>
-			$value
+			$params->object
+			as $key
+			=> $value
 		){
 			// If the value must be unfolded
 			if (
 				// Arrays can unfold objects and vice versa
 				(
-					$params->isCrossTypeEnabled &&
-					(
-						is_object($value) ||
-						is_array($value)
+					$params->isCrossTypeEnabled
+					&& (
+						is_object($value)
+						|| is_array($value)
 					)
-				) ||
-				(
-					$isSourceObject &&
-					is_object($value)
-				) ||
-				(
-					!$isSourceObject &&
-					is_array($value)
+				)
+				|| (
+					$isSourceObject
+					&& is_object($value)
+				)
+				|| (
+					!$isSourceObject
+					&& is_array($value)
 				)
 			){
 				$result = array_merge(
@@ -550,9 +552,9 @@ class Objects {
 					self::unfold([
 						'object' => $value,
 						'keyPrefix' =>
-							$params->keyPrefix .
-							$key .
-							$params->keySeparator
+							$params->keyPrefix
+							. $key
+							. $params->keySeparator
 						,
 						'isSourceObject' => $isSourceObject,
 						'isCrossTypeEnabled' => $params->isCrossTypeEnabled,
@@ -567,9 +569,9 @@ class Objects {
 		
 		if (
 			// If it's first call of recurson
-			is_null($params->isSourceObject) &&
+			is_null($params->isSourceObject)
 			// And the final result must be an object
-			$isSourceObject
+			&& $isSourceObject
 		){
 			// Only the first call of recursion can return an object
 			$result = (object) $result;
