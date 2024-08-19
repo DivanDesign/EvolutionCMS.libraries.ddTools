@@ -621,6 +621,48 @@ Saves custom data to cache storage.
 	* Default value: `false`
 
 
+#### `\DDTools\Tools\Cache::saveSeveral($params)`
+
+Saves data of several items to cache storage.
+
+* `$params`
+	* Description: The parameters object.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->items`
+	* Description: Items to save.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->items->{$resourceId}`
+	* Description: Item data to save. Key is resource ID related to cache (e. g. document ID).
+	* Valid values:
+		* `string`
+		* `array`
+		* `stdClass`
+	* **Required**
+	
+* `$params->suffix`
+	* Description: Cache suffix.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->prefix`
+	* Description: Cache prefix.
+	* Valid values: `string`
+	* Default value: `'doc'`
+	
+* `$params->isExtendEnabled`
+	* Description: Should existing items data be extended by `$params->items` or overwritten?
+	* Valid values: `boolean`
+	* Default value: `false`
+
+
 #### `\DDTools\Tools\Cache::get($params)`
 
 Retrieves item data from cache storage.

@@ -26,7 +26,7 @@ class Cache {
 	
 	/**
 	 * save
-	 * @version 3.2.7 (2024-08-17)
+	 * @version 3.2.8 (2024-08-19)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {string|array|stdClass} — Data to save.
@@ -38,6 +38,42 @@ class Cache {
 	 * @return {void}
 	 */
 	public static function save($params): void {
+		$params = (object) $params;
+		
+		static::saveSeveral(
+			\DDTools\Tools\Objects::extend([
+				'objects' => [
+					(object) [
+						'items' => [
+							$params->resourceId => $params->data,
+						],
+					],
+					$params,
+				],
+				'extendableProperties' => [
+					'resourceId',
+					'suffix',
+					'prefix',
+					'isExtendEnabled',
+				],
+			])
+		);
+	}
+	
+	/**
+	 * saveSeveral
+	 * @version 1.0 (2024-08-19)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->items {stdClass|arrayAssociative} — Items to save.
+	 * @param $params->items->{$resourceId} {string|array|stdClass} — Item data to save. Key is resource ID related to cache (e. g. document ID).
+	 * @param $params->suffix {string} — Cache suffix.
+	 * @param [$params->prefix='doc'] {string} — Cache prefix.
+	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing items data be extended by `$params->items` or overwritten?
+	 * 
+	 * @return {void}
+	 */
+	public static function saveSeveral($params): void {
 		static::initStatic();
 		
 		$params = \DDTools\Tools\Objects::extend([
@@ -50,17 +86,29 @@ class Cache {
 			],
 		]);
 		
-		$cacheNameData = static::buildCacheNameData($params);
+		$saveParams = (object) [
+			'items' => new \stdClass(),
+			'isExtendEnabled' => $params->isExtendEnabled,
+		];
 		
-		// We can't save something containing '*' in name
-		if (!$cacheNameData->advancedSearchData->isEnabled){
-			$saveParams = (object) [
-				'items' => [
-					$cacheNameData->name => $params->data,
-				],
-				'isExtendEnabled' => $params->isExtendEnabled,
-			];
+		foreach (
+			$params->items
+			as $itemName_resourceId
+			=> $itemData
+		){
+			$cacheNameData = static::buildCacheNameData([
+				'resourceId' => $itemName_resourceId,
+				'prefix' => $params->prefix,
+				'suffix' => $params->suffix,
+			]);
 			
+			// We can't save something containing '*' in name
+			if (!$cacheNameData->advancedSearchData->isEnabled){
+				$saveParams->items->{$cacheNameData->name} = $itemData;
+			}
+		}
+		
+		if (!\ddTools::isEmpty($saveParams->items)){
 			// Save to quick storage
 			static::$theQuickStorageClass::save($saveParams);
 			
