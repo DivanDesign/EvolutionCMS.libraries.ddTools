@@ -511,6 +511,18 @@ Merge the contents of two or more objects or arrays together into the first one.
 		* `NULL`
 	* Valid values: `boolean`
 	* Default value: `true`
+	
+* `$params->extendableProperties`
+	* Description: An array of property names that can be extended from additional objects or arrays. Properties in the initial object or array are not restricted by this parameter.  
+	* Valid values:
+		* `array`
+		* `null` or any empty value — all properties will be extended
+	* Default value: `null`
+	
+* `$params->extendableProperties[$i]`
+	* Description: The name of a property that is allowed to be extended from additional objects or arrays.  
+	* Valid values: `string`
+	* **Required**
 
 
 #### `\DDTools\Tools\Objects::unfold($params)`
@@ -1859,6 +1871,57 @@ stdClass::__set_state(array(
 	'firstName' => 'Nikola',
 	'lastName' => 'Tesla',
 	'discipline' => 'Electrical engineering',
+))
+```
+
+
+##### Extending only specific properties from subsequent objects (`$params->extendableProperties`)
+
+Sometimes you want to keep only the key ingredients, like avoiding the pineapple on your pizza.
+
+```php
+var_export(
+	\DDTools\Tools\Objects::extend([
+		'objects' => [
+			(object) [
+				'name' => 'Classic Italian Pizza',
+				'toppings' => (object) [
+					'cheese' => 'mozzarella',
+					'tomatoSauce' => true,
+					'olive' => true,
+				],
+				'size' => 'medium',
+			],
+			[
+				// Not interested in extra toppings
+				'toppings' => [
+					'pineapple' => true,
+				],
+				'size' => 'large',
+				'price' => 15.99,
+			],
+		],
+		// Only keeping the price and size
+		'extendableProperties' => [
+			'price',
+			'size',
+		],
+	])
+);
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array(
+	'name' => 'Classic Italian Pizza',
+	'toppings' => stdClass::__set_state(array(
+		'cheese' => 'mozzarella',
+		'tomatoSauce' => true,
+		'olive' => true,
+	)),
+	'size' => 'large',
+	'price' => 15.99,
 ))
 ```
 
