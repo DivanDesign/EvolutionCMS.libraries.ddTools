@@ -320,7 +320,7 @@ class Objects {
 	
 	/**
 	 * extend
-	 * @version 1.3.12 (2024-08-18)
+	 * @version 1.3.13 (2024-08-19)
 	 * 
 	 * @see README.md
 	 * 
@@ -356,108 +356,33 @@ class Objects {
 					as $additionalPropName
 					=> $additionalPropValue
 				){
-					// Is the source property exists
-					$isSourcePropExists = self::isPropExists([
-						'object' => $result,
-						'propName' => $additionalPropName,
+					$propMetadata = static::extend_getPropMetadata([
+						'resultObject' => $result,
+						
+						'additionalPropName' => $additionalPropName,
+						'additionalPropValue' => $additionalPropValue,
+						
+						'overwriteWithEmpty' => $params->overwriteWithEmpty,
 					]);
 					
-					if ($isSourcePropExists){
-						// Source property value
-						$sourcePropValue = self::getSingleLevelPropValue([
-							'object' => $result,
-							'propName' => $additionalPropName,
-						]);
-						
-						// Is the source property object or array
-						$isSourcePropObjectOrArray = self::isObjectOrArray($sourcePropValue);
-					}else{
-						$sourcePropValue = null;
-						$isSourcePropObjectOrArray = false;
-					}
-					
-					// Is the additional property object or array
-					$isAdditionalPropObject = is_object($additionalPropValue);
-					$isAdditionalPropObjectOrArray =
-						$isAdditionalPropObject
-						|| is_array($additionalPropValue)
-					;
-					
-					// The additional property value will be used by default
-					$isAdditionalPropUsed = true;
-					
-					if (
-						// Overwriting with empty value is disabled
-						!$params->overwriteWithEmpty
-						// And source property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
-						&& $isSourcePropExists
-					){
-						// Check if additional property value is empty
-						$isAdditionalPropUsed =
-							(
-								// Empty object or array
-								(
-									$isAdditionalPropObjectOrArray
-									&& count((array) $additionalPropValue) == 0
-								)
-								// Empty string
-								|| (
-									is_string($additionalPropValue)
-									&& $additionalPropValue == ''
-								)
-								// NULL
-								|| is_null($additionalPropValue)
-							) ?
-							// Additional is empty — don't use it
-							false:
-							// Additional is not empty — use it
-							true
-						;
-						
-						if (
-							// Additional property value is empty
-							!$isAdditionalPropUsed
-							// And source property value is empty too
-							&& (
-								// Empty object or array
-								(
-									$isSourcePropObjectOrArray
-									&& count((array) $sourcePropValue) == 0
-								)
-								// Empty string
-								|| (
-									is_string($sourcePropValue)
-									&& $sourcePropValue == ''
-								)
-								// NULL
-								|| is_null($sourcePropValue)
-							)
-							// But they have different types
-							&& $sourcePropValue !== $additionalPropValue
-						){
-							// Okay, overwrite source in this case
-							$isAdditionalPropUsed = true;
-						}
-					}
-					
 					// If additional value must be used
-					if ($isAdditionalPropUsed){
+					if ($propMetadata->isAdditionalPropUsed){
 						if (
 							// If recursive merging is needed
 							$params->deep
 							// And the value is an object or array
-							&& $isAdditionalPropObjectOrArray
+							&& $propMetadata->isAdditionalPropObjectOrArray
 						){
-							// Start recursion (`clone` must be called for all nested additional props, so recursion must be called even if `$sourcePropValue` is not an object or array)
+							// Start recursion (`clone` must be called for all nested additional props, so recursion must be called even if `$propMetadata->sourcePropValue` is not an object or array)
 							$additionalPropValue = self::extend([
 								'objects' => [
 									(
-										$isSourcePropObjectOrArray
-										? $sourcePropValue
-										// If `$sourcePropValue` is not an array or object it isn't be used
+										$propMetadata->isSourcePropObjectOrArray
+										? $propMetadata->sourcePropValue
+										// If `$propMetadata->sourcePropValue` is not an array or object it isn't be used
 										: (
 											// Type of resulting prop depends on `$additionalPropValue` type
-											$isAdditionalPropObject
+											$propMetadata->isAdditionalPropObject
 											? new \stdClass()
 											: []
 										)
@@ -481,6 +406,122 @@ class Objects {
 						}
 					}
 				}
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * extend_getPropMetadata
+	 * @version 1.0 (2024-08-19)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->resultObject {object|array}
+	 * @param $params->additionalPropName {string|integer}
+	 * @param $params->additionalPropValue {mixed}
+	 * @param $params->overwriteWithEmpty {boolean}
+	 * 
+	 * @param $result {stdClass|arrayAssociative}
+	 * @param $result->isAdditionalPropUsed {boolean}
+	 * @param $result->isAdditionalPropObject {boolean}
+	 * @param $result->isAdditionalPropObjectOrArray {boolean}
+	 * @param $result->sourcePropValue {mixed}
+	 * @param $result->isSourcePropObjectOrArray {boolean}
+	 * @param $result->overwriteWithEmpty {boolean} — Equal to $params->overwriteWithEmpty.
+	 * 
+	 * @return {boolean}
+	 */
+	private static function extend_getPropMetadata($params): \stdClass {
+		$params = (object) $params;
+		
+		$result = (object) [
+			// The additional property value will be used by default
+			'isAdditionalPropUsed' => true,
+// 			'isAdditionalPropObject' => false,
+// 			'isAdditionalPropObjectOrArray' => false,
+			
+			'sourcePropValue' => null,
+			'isSourcePropObjectOrArray' => false,
+			
+			'overwriteWithEmpty' => $params->overwriteWithEmpty,
+		];
+		
+		// Is the source property exists
+		$isSourcePropExists = self::isPropExists([
+			'object' => $params->resultObject,
+			'propName' => $params->additionalPropName,
+		]);
+		
+		if ($isSourcePropExists){
+			// Source property value
+			$result->sourcePropValue = self::getSingleLevelPropValue([
+				'object' => $params->resultObject,
+				'propName' => $params->additionalPropName,
+			]);
+			
+			// Is the source property object or array
+			$result->isSourcePropObjectOrArray = self::isObjectOrArray($result->sourcePropValue);
+		}
+		
+		// Is the additional property object or array
+		$result->isAdditionalPropObject = is_object($params->additionalPropValue);
+		$result->isAdditionalPropObjectOrArray =
+			$result->isAdditionalPropObject
+			|| is_array($params->additionalPropValue)
+		;
+		
+		if (
+			// Overwriting with empty value is disabled
+			!$params->overwriteWithEmpty
+			// And source property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
+			&& $isSourcePropExists
+		){
+			// Check if additional property value is empty
+			$result->isAdditionalPropUsed =
+				(
+					// Empty object or array
+					(
+						$result->isAdditionalPropObjectOrArray
+						&& count((array) $params->additionalPropValue) == 0
+					)
+					// Empty string
+					|| (
+						is_string($params->additionalPropValue)
+						&& $params->additionalPropValue == ''
+					)
+					// NULL
+					|| is_null($params->additionalPropValue)
+				) ?
+				// Additional is empty — don't use it
+				false:
+				// Additional is not empty — use it
+				true
+			;
+			
+			if (
+				// Additional property value is empty
+				!$result->isAdditionalPropUsed
+				// And source property value is empty too
+				&& (
+					// Empty object or array
+					(
+						$result->isSourcePropObjectOrArray
+						&& count((array) $result->sourcePropValue) == 0
+					)
+					// Empty string
+					|| (
+						is_string($result->sourcePropValue)
+						&& $result->sourcePropValue == ''
+					)
+					// NULL
+					|| is_null($result->sourcePropValue)
+				)
+				// But they have different types
+				&& $result->sourcePropValue !== $params->additionalPropValue
+			){
+				// Okay, overwrite source in this case
+				$result->isAdditionalPropUsed = true;
 			}
 		}
 		
