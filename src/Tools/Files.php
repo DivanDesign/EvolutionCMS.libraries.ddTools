@@ -4,11 +4,11 @@ namespace DDTools\Tools;
 class Files {
 	/**
 	 * createDir
-	 * @version 1.3.1 (2019-09-03)
+	 * @version 1.3.2 (2024-08-04)
 	 * 
 	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object. @required
 	 * @param $params->path {string} — The directory path. @required
 	 * 
 	 * @return {boolean} — Success status.
@@ -16,10 +16,10 @@ class Files {
 	public static function createDir($params){
 		$params = (object) $params;
 		
-		//True by default
+		// True by default
 		$result = true;
 		
-		//На всякий случай проверим, что необходимой папки ещё нет
+		// На всякий случай проверим, что необходимой папки ещё нет
 		if (!file_exists($params->path)){
 			$result = mkdir(
 				$params->path,
@@ -36,11 +36,11 @@ class Files {
 	
 	/**
 	 * copyDir
-	 * @version 2.0.3 (2020-06-17)
+	 * @version 2.0.4 (2024-08-04)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object. @required
 	 * @param $params->sourcePath {string} — Path to the directory, that should copied. @required
 	 * @param $params->destinationPath {string} — The destination path. @required
 	 * 
@@ -49,7 +49,7 @@ class Files {
 	public static function copyDir($params){
 		$params = (object) $params;
 		
-		//Допишем папкам недостающие '/' при необходимости
+		// Допишем папкам недостающие '/' при необходимости
 		if (
 			substr(
 				$params->sourcePath,
@@ -67,16 +67,16 @@ class Files {
 			$params->destinationPath .= '/';
 		}
 		
-		//Проверяем существование
+		// Проверяем существование
 		if (!file_exists($params->sourcePath)){
 			return false;
 		}
-		//Если папки назначения нет, создадим её
+		// Если папки назначения нет, создадим её
 		if (!file_exists($params->destinationPath)){
 			mkdir($params->destinationPath);
 		}
 		
-		//Получаем файлы в директории
+		// Получаем файлы в директории
 		$fileNames = array_diff(
 			scandir($params->sourcePath),
 			[
@@ -89,7 +89,7 @@ class Files {
 			$fileNames as
 			$fileName
 		){
-			//Если это папка, обработаем её
+			// Если это папка, обработаем её
 			if (is_dir($params->sourcePath . $fileName)){
 				self::copyDir([
 					'sourcePath' => $params->sourcePath . $fileName,
@@ -108,7 +108,7 @@ class Files {
 	
 	/**
 	 * removeDir
-	 * @version 1.0.7 (2020-06-17)
+	 * @version 1.0.8 (2024-08-04)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -117,12 +117,12 @@ class Files {
 	 * @return {boolean}
 	 */
 	public static function removeDir($path){
-		//Если не существует, ок
+		// Если не существует, ок
 		if (!file_exists($path)){
 			return true;
 		}
 		
-		//Получаем файлы в директории
+		// Получаем файлы в директории
 		$fileNames = array_diff(
 			scandir($path),
 			[
@@ -135,7 +135,7 @@ class Files {
 			$fileNames as
 			$fileName
 		){
-			//Если это папка, обработаем её
+			// Если это папка, обработаем её
 			if (is_dir($path . '/' . $fileName)){
 				self::removeDir($path . '/' . $fileName);
 			}else{
@@ -148,14 +148,14 @@ class Files {
 	
 	/**
 	 * modifyImage
-	 * @version 2.6.4 (2024-08-02)
+	 * @version 2.6.5 (2024-08-04)
 	 * 
 	 * @see README.md
 	 * 
 	 * @return {void}
 	 */
 	public static function modifyImage($params){
-		//Defaults
+		// Defaults
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
@@ -176,7 +176,7 @@ class Files {
 		}
 		
 		
-		//Include PHP.libraries.phpThumb
+		// Include PHP.libraries.phpThumb
 		require_once(
 			'Files' .
 			DIRECTORY_SEPARATOR .
@@ -185,7 +185,7 @@ class Files {
 			'phpthumb.class.php'
 		);
 		
-		//Prepare source image addresses
+		// Prepare source image addresses
 		foreach (
 			[
 				'sourceFullPathName',
@@ -195,12 +195,12 @@ class Files {
 			$paramName
 		){
 			if (
-				//If the parameter is set
+				// If the parameter is set
 				\DDTools\Tools\Objects::isPropExists([
 					'object' => $params,
 					'propName' => $paramName
 				]) &&
-				//And set as relative path
+				// And set as relative path
 				substr(
 					$params->{$paramName},
 					0,
@@ -208,7 +208,7 @@ class Files {
 				) !=
 				\ddTools::$modx->getConfig('base_path')
 			){
-				//Convert relative path to absolute if needed
+				// Convert relative path to absolute if needed
 				$params->{$paramName} =
 					\ddTools::$modx->getConfig('base_path') .
 					$params->{$paramName}
@@ -217,7 +217,7 @@ class Files {
 		}
 		
 		
-		//If source image is not exists
+		// If source image is not exists
 		if (!file_exists($params->sourceFullPathName)){
 			return;
 		}
@@ -228,13 +228,13 @@ class Files {
 			'ratio' => 1
 		];
 		
-		//Вычислим размеры оригинаольного изображения
+		// Вычислим размеры оригинаольного изображения
 		list(
 			$originalImg->width,
 			$originalImg->height
 		) = getimagesize($params->sourceFullPathName);
 		
-		//Если хотя бы один из размеров оригинала оказался нулевым (например, это не изображение) — на(\s?)бок
+		// Если хотя бы один из размеров оригинала оказался нулевым (например, это не изображение) — на(\s?)бок
 		if (
 			$originalImg->width == 0 ||
 			$originalImg->height == 0
@@ -242,36 +242,36 @@ class Files {
 			return;
 		}
 		
-		//Пропрорции реального изображения
+		// Пропрорции реального изображения
 		$originalImg->ratio =
 			$originalImg->width /
 			$originalImg->height
 		;
 		
-		//Если по каким-то причинам высота не задана
+		// Если по каким-то причинам высота не задана
 		if (
 			$params->height == '' ||
 			$params->height == 0
 		){
-			//Вычислим соответственно пропорциям
+			// Вычислим соответственно пропорциям
 			$params->height =
 				$params->width /
 				$originalImg->ratio
 			;
 		}
-		//Если по каким-то причинам ширина не задана
+		// Если по каким-то причинам ширина не задана
 		if (
 			$params->width == '' ||
 			$params->width == 0
 		){
-			//Вычислим соответственно пропорциям
+			// Вычислим соответственно пропорциям
 			$params->width =
 				$params->height *
 				$originalImg->ratio
 			;
 		}
 		
-		//Если превьюшка уже есть и имеет нужный размер, ничего делать не нужно
+		// Если превьюшка уже есть и имеет нужный размер, ничего делать не нужно
 		if (
 			$originalImg->width == $params->width &&
 			$originalImg->height == $params->height &&
@@ -281,40 +281,40 @@ class Files {
 		}
 		
 		$thumb = new \phpThumb();
-		//зачистка формата файла на выходе
+		// Зачистка формата файла на выходе
 		$thumb->setParameter(
 			'config_output_format',
 			null
 		);
-		//Путь к оригиналу
+		// Путь к оригиналу
 		$thumb->setSourceFilename($params->sourceFullPathName);
-		//Качество (для JPEG)
+		// Качество (для JPEG)
 		$thumb->setParameter(
 			'q',
 			$params->quality
 		);
-		//Разрешить ли увеличивать изображение
+		// Разрешить ли увеличивать изображение
 		$thumb->setParameter(
 			'aoe',
 			intval($params->allowEnlargement)
 		);
 		
-		//Если нужно просто обрезать
+		// Если нужно просто обрезать
 		if($params->transformMode == 'crop'){
-			//Ширина превьюшки
+			// Ширина превьюшки
 			$thumb->setParameter(
 				'sw',
 				$params->width
 			);
-			//Высота превьюшки
+			// Высота превьюшки
 			$thumb->setParameter(
 				'sh',
 				$params->height
 			);
 			
-			//Если ширина оригинального изображения больше
+			// Если ширина оригинального изображения больше
 			if ($originalImg->width > $params->width){
-				//Позиция по оси x оригинального изображения (чтобы было по центру)
+				// Позиция по оси x оригинального изображения (чтобы было по центру)
 				$thumb->setParameter(
 					'sx',
 					(
@@ -325,9 +325,9 @@ class Files {
 				);
 			}
 			
-			//Если высота оригинального изображения больше
+			// Если высота оригинального изображения больше
 			if ($originalImg->height > $params->height){
-				//Позиция по оси y оригинального изображения (чтобы было по центру)
+				// Позиция по оси y оригинального изображения (чтобы было по центру)
 				$thumb->setParameter(
 					'sy',
 					(
@@ -338,26 +338,26 @@ class Files {
 				);
 			}
 		}else{
-			//Ширина превьюшки
+			// Ширина превьюшки
 			$thumb->setParameter(
 				'w',
 				$params->width
 			);
-			//Высота превьюшки
+			// Высота превьюшки
 			$thumb->setParameter(
 				'h',
 				$params->height
 			);
 			
-			//Если нужно уменьшить + отрезать
+			// Если нужно уменьшить + отрезать
 			if($params->transformMode == 'resizeAndCrop'){
 				$thumb->setParameter(
 					'zc',
 					'1'
 				);
-			//Если нужно пропорционально уменьшить, заполнив поля цветом
+			// Если нужно пропорционально уменьшить, заполнив поля цветом
 			}elseif($params->transformMode == 'resizeAndFill'){
-				//Устанавливаем фон (без решётки)
+				// Устанавливаем фон (без решётки)
 				$thumb->setParameter(
 					'bg',
 					str_replace(
@@ -366,7 +366,7 @@ class Files {
 						$params->backgroundColor
 					)
 				);
-				//Превьюшка должна точно соответствовать размеру и находиться по центру (недостающие области зальются цветом)
+				// Превьюшка должна точно соответствовать размеру и находиться по центру (недостающие области зальются цветом)
 				$thumb->setParameter(
 					'far',
 					'c'
@@ -375,7 +375,7 @@ class Files {
 		}
 		
 		
-		//If need to overlay image with watermark
+		// If need to overlay image with watermark
 		if (\DDTools\Tools\Objects::isPropExists([
 			'object' => $params,
 			'propName' => 'watermarkImageFullPathName'
@@ -385,13 +385,13 @@ class Files {
 				implode(
 					'|',
 					[
-						//WaterMarkImage
+						// WaterMarkImage
 						'wmi',
-						//Src
+						// Src
 						$params->watermarkImageFullPathName,
-						//Alignment — center
+						// Alignment — center
 						'C',
-						//Opacity — 100
+						// Opacity — 100
 						'100'
 					]
 				)
@@ -399,9 +399,9 @@ class Files {
 		}
 		
 		
-		//Создаём превьюшку
+		// Создаём превьюшку
 		$thumb->GenerateThumbnail();
-		//Сохраняем в файл
+		// Сохраняем в файл
 		$thumb->RenderToFile($params->outputFullPathName);
 	}
 }

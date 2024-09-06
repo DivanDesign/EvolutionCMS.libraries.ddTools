@@ -42,15 +42,15 @@ abstract class Snippet {
 	
 	/**
 	 * __construct
-	 * @version 1.1.1 (2021-03-10)
+	 * @version 1.1.2 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 */
 	public function __construct($params = []){
-		//# Prepare name
+		// # Prepare name
 		$thisClassName = get_called_class();
 		
-		//Get snippet name from namespace
+		// Get snippet name from namespace
 		$this->name = substr(
 			$thisClassName,
 			0,
@@ -61,11 +61,11 @@ abstract class Snippet {
 		);
 		
 		
-		//# Prepare paths
+		// # Prepare paths
 		$this->paths = (object) $this->paths;
 		
 		$this->paths->snippet =
-			//path to `assets`
+			// Path to `assets`
 			dirname(
 				__DIR__,
 				4
@@ -81,13 +81,13 @@ abstract class Snippet {
 		;
 		
 		
-		//# Prepare params
+		// # Prepare params
 		$this->prepareParams($params);
 	}
 	
 	/**
 	 * prepareParams
-	 * @version 1.1.2 (2024-08-02)
+	 * @version 1.1.3 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * 
@@ -101,7 +101,7 @@ abstract class Snippet {
 			'type' => 'objectStdClass'
 		]);
 		
-		//Renaming params with backward compatibility
+		// Renaming params with backward compatibility
 		if (!empty($this->renamedParamsCompliance)){
 			$params = \ddTools::verifyRenamedParams([
 				'params' => $params,
@@ -118,7 +118,7 @@ abstract class Snippet {
 			){
 				$paramType = strtolower($paramType);
 				
-				//Convert defaults
+				// Convert defaults
 				if (
 					\DDTools\Tools\Objects::isPropExists([
 						'object' => $this->params,
@@ -137,7 +137,7 @@ abstract class Snippet {
 					}
 				}
 				
-				//Convert given
+				// Convert given
 				if (
 					\DDTools\Tools\Objects::isPropExists([
 						'object' => $params,
@@ -160,9 +160,9 @@ abstract class Snippet {
 		
 		$this->params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				$this->params,
-				//Given parameters
+				// Given parameters
 				$params
 			]
 		]);
@@ -172,7 +172,7 @@ abstract class Snippet {
 	
 	/**
 	 * runSnippet
-	 * @version 1.0.1 (2024-08-02)
+	 * @version 1.0.2 (2024-08-04)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * @param $params->name {string}
@@ -186,7 +186,7 @@ abstract class Snippet {
 		
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'name' => '',
 					'params' => []
@@ -200,7 +200,7 @@ abstract class Snippet {
 		
 		$requireData = (object) [
 			'snippetDir' =>
-				//path to `assets`
+				// Path to `assets`
 				dirname(
 					__DIR__,
 					4

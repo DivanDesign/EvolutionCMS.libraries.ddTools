@@ -22,29 +22,29 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * setItems
-	 * @version 1.0 (2021-11-26)
+	 * @version 1.0.1 (2024-08-04)
 	 * 
 	 * @see README.md
 	 */
 	public function setItems($params = []){
-		//Reset items
+		// Reset items
 		$this->items = [];
 		
-		//Add new items
+		// Add new items
 		$this->addItems($params);
 	}
 	
 	/**
 	 * addItems
-	 * @version 1.2.1 (2024-08-02)
+	 * @version 1.2.2 (2024-08-04)
 	 * 
 	 * @see README.md
 	 */
 	public function addItems($params = []){
-		//# Prepare params
+		// # Prepare params
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'items' => null,
 					'itemType' => null
@@ -54,9 +54,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 		]);
 		
 		
-		//# Run
+		// # Run
 		if (!is_null($params->items)){
-			//Items must be an array
+			// Items must be an array
 			if (!is_array($params->items)){
 				$params->items = \DDTools\Tools\Objects::convertType([
 					'object' => $params->items,
@@ -64,10 +64,10 @@ class ObjectCollection extends \DDTools\Base\Base {
 				]);
 			}
 			
-			//Reset keys because they are no needed
+			// Reset keys because they are no needed
 			$params->items = array_values($params->items);
 			
-			//If need to convert type of items
+			// If need to convert type of items
 			if (!is_null($params->itemType)){
 				foreach (
 					$params->items as
@@ -90,15 +90,15 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * convertItemsType
-	 * @version 1.0.4 (2024-08-02)
+	 * @version 1.0.5 (2024-08-04)
 	 * 
 	 * @see README.md
 	 */
 	public function convertItemsType($params = []){
-		//# Prepare params
+		// # Prepare params
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'filter' => '',
 					'itemType' => 'objectStdClass'
@@ -110,14 +110,14 @@ class ObjectCollection extends \DDTools\Base\Base {
 		$params->filter = $this->prepareItemsFilter($params->filter);
 		
 		
-		//# Run
+		// # Run
 		foreach (
 			$this->items as
 			$itemIndex =>
 			$itemObject
 		){
 			if (
-				//If item is matched to filter
+				// If item is matched to filter
 				$this->isItemMatchFilter([
 					'itemObject' => $itemObject,
 					'filter' => $params->filter
@@ -138,15 +138,15 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * updateItems
-	 * @version 1.0.4 (2024-08-02)
+	 * @version 1.0.5 (2024-08-04)
 	 * 
 	 * @see README.md
 	 */
 	public function updateItems($params = []){
-		//# Prepare params
+		// # Prepare params
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'filter' => '',
 					'data' => [],
@@ -159,7 +159,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 		$params->filter = $this->prepareItemsFilter($params->filter);
 		
 		
-		//# Run
+		// # Run
 		$affectedCount = 0;
 		
 		foreach (
@@ -168,7 +168,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			$itemObject
 		){
 			if (
-				//If item is matched to filter
+				// If item is matched to filter
 				$this->isItemMatchFilter([
 					'itemObject' => $itemObject,
 					'filter' => $params->filter
@@ -186,12 +186,12 @@ class ObjectCollection extends \DDTools\Base\Base {
 					])
 				]);
 				
-				//Increment result count
+				// Increment result count
 				$affectedCount++;
 				
-				//If next item is no needed
+				// If next item is no needed
 				if ($affectedCount == $params->limit){
-					//Stop the cycle
+					// Stop the cycle
 					break;
 				}
 			}
@@ -200,15 +200,15 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * getItems
-	 * @version 2.0.3 (2024-08-02)
+	 * @version 2.0.4 (2024-08-04)
 	 * 
 	 * @see README.md
 	 */
 	public function getItems($params = []){
-		//# Prepare params
+		// # Prepare params
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'filter' => '',
 					'limit' => 0,
@@ -222,17 +222,17 @@ class ObjectCollection extends \DDTools\Base\Base {
 		$params->filter = $this->prepareItemsFilter($params->filter);
 		
 		
-		//# Run
+		// # Run
 		$result = [];
 		$resultCount = 0;
 		
-		//Filter items
+		// Filter items
 		foreach (
 			$this->items as
 			$itemObject
 		){
 			if (
-				//If item is matched to filter
+				// If item is matched to filter
 				$this->isItemMatchFilter([
 					'itemObject' => $itemObject,
 					'filter' => $params->filter
@@ -242,7 +242,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 					'itemObject' => $itemObject
 				]);
 				
-				//Save only field value instead of object if needed
+				// Save only field value instead of object if needed
 				if (!is_null($params->propAsResultValue)){
 					$resultItemObject = \DDTools\Tools\Objects::getPropValue([
 						'object' => $itemData,
@@ -252,7 +252,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 					$resultItemObject = $itemObject;
 				}
 				
-				//Save item
+				// Save item
 				if (!is_null($params->propAsResultKey)){
 					$result[
 						\DDTools\Tools\Objects::getPropValue([
@@ -264,12 +264,12 @@ class ObjectCollection extends \DDTools\Base\Base {
 					$result[] = $resultItemObject;
 				}
 				
-				//Increment result count
+				// Increment result count
 				$resultCount++;
 				
-				//If next item is no needed
+				// If next item is no needed
 				if ($resultCount == $params->limit){
-					//Stop the cycle
+					// Stop the cycle
 					break;
 				}
 			}
@@ -280,15 +280,15 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * getOneItem
-	 * @version 1.0.2 (2024-08-02)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @see README.md
 	 */
 	public function getOneItem($params = []){
-		//# Prepare params
+		// # Prepare params
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'filter' => '',
 					'notFoundResult' => null
@@ -298,7 +298,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 		]);
 		
 		
-		//# Run
+		// # Run
 		$result = $this->getItems([
 			'filter' => $params->filter,
 			'limit' => 1
@@ -315,15 +315,15 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * deleteItems
-	 * @version 1.0.2 (2024-08-02)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @see README.md
 	 */
 	public function deleteItems($params = []){
-		//# Prepare params
+		// # Prepare params
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'filter' => '',
 					'limit' => 0
@@ -335,7 +335,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 		$params->filter = $this->prepareItemsFilter($params->filter);
 		
 		
-		//# Run
+		// # Run
 		$affectedCount = 0;
 		
 		foreach (
@@ -344,7 +344,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 			$itemObject
 		){
 			if (
-				//If item is matched to filter
+				// If item is matched to filter
 				$this->isItemMatchFilter([
 					'itemObject' => $itemObject,
 					'filter' => $params->filter
@@ -356,12 +356,12 @@ class ObjectCollection extends \DDTools\Base\Base {
 					1
 				);
 				
-				//Increment result count
+				// Increment result count
 				$affectedCount++;
 				
-				//If next item is no needed
+				// If next item is no needed
 				if ($affectedCount == $params->limit){
-					//Stop the cycle
+					// Stop the cycle
 					break;
 				}
 			}
@@ -370,11 +370,11 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * setOneItemData
-	 * @version 1.0.1 (2023-12-25)
+	 * @version 1.0.2 (2024-08-04)
 	 * 
 	 * @desc Sets data of an item object. All setting of an item data inside the class must be use this method. It's convenient to override this method in child classes if items are not plain objects.
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object. @required
 	 * @param $params->index {integer} — Item index which data will be set. @required
 	 * @param $params->data {array|object} — New item data. @required
 	 * 
@@ -395,11 +395,11 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * getOneItemData
-	 * @version 1.0 (2022-12-27)
+	 * @version 1.0.1 (2024-08-04)
 	 * 
 	 * @desc Returns data of an item object. All getting of an item data inside the class must use this method. It's convenient to override this method in child classes if items are not plain objects.
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object. @required
 	 * @param $params->itemObject {array|object} — An item object which data will be returned. @required
 	 * 
 	 * @return $result {object|arrayAssociative}
@@ -412,9 +412,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * isItemMatchFilter
-	 * @version 2.0.2 (2024-08-02)
+	 * @version 2.0.3 (2024-08-04)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params {stdClass|arrayAssociative} — The parameters object. @required
 	 * @param $params->itemObject {array|object} — An item to test. @required
 	 * @param $params->filter {array} — Result of $this->prepareItemsFilter. @required
 	 * 
@@ -423,24 +423,24 @@ class ObjectCollection extends \DDTools\Base\Base {
 	private function isItemMatchFilter($params){
 		$params = (object) $params;
 		
-		//By default assume that item is matched
+		// By default assume that item is matched
 		$result = true;
 		
 		$itemData = $this->getOneItemData([
 			'itemObject' => $params->itemObject
 		]);
 		
-		//Iterate over “or” conditions
+		// Iterate over “or” conditions
 		foreach (
 			$params->filter as
 			$orCondition
 		){
-			//Iterate over “and” conditions
+			// Iterate over “and” conditions
 			foreach (
 				$orCondition as
 				$andCondition
 			){
-				//If the item has no the property
+				// If the item has no the property
 				if (
 					!\DDTools\Tools\Objects::isPropExists([
 						'object' => $itemData,
@@ -448,10 +448,10 @@ class ObjectCollection extends \DDTools\Base\Base {
 					])
 				){
 					$result = false;
-				//If filtration by the property value is no needed
+				// If filtration by the property value is no needed
 				}elseif ($andCondition->operator == 'isset'){
 					$result = true;
-				//==
+				// ==
 				}elseif ($andCondition->operator == '=='){
 					$result =
 						\DDTools\Tools\Objects::getPropValue([
@@ -460,7 +460,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 						]) ==
 						$andCondition->propValue
 					;
-				//!=
+				// !=
 				}else{
 					$result =
 						\DDTools\Tools\Objects::getPropValue([
@@ -471,13 +471,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 					;
 				}
 				
-				//If item is not matched to this “and” condition, check with next “or”
+				// If item is not matched to this “and” condition, check with next “or”
 				if (!$result){
 					break;
 				}
 			}
 			
-			//If the item is matched to all “and” conditions, so it's already success
+			// If the item is matched to all “and” conditions, so it's already success
 			if ($result){
 				break;
 			}
@@ -488,7 +488,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * prepareItemsFilter
-	 * @version 1.0 (2021-12-01)
+	 * @version 1.0.1 (2024-08-04)
 	 * 
 	 * @param $filter {string}
 	 * 
@@ -503,13 +503,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 		$result = [];
 		
 		if (!empty($filter)){
-			//Explode “or” conditions
+			// Explode “or” conditions
 			$filter = explode(
 				'||',
 				$filter
 			);
 			
-			//Iterate over “or” conditions
+			// Iterate over “or” conditions
 			foreach (
 				$filter as
 				$orIndex =>
@@ -517,9 +517,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 			){
 				$result[$orIndex] = [];
 				
-				//Iterate over “and” conditions
+				// Iterate over “and” conditions
 				foreach (
-					//Explode “and” conditions
+					// Explode “and” conditions
 					explode(
 						'&&',
 						$orCondition
@@ -527,13 +527,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 					$andIndex =>
 					$andCondition
 				){
-					//Condition object
+					// Condition object
 					$result[$orIndex][$andIndex] = (object) [
 						'operator' => 'isset',
 						'propName' => ''
 					];
 					
-					//Prepare operator
+					// Prepare operator
 					if (
 						strpos(
 							$andCondition,
@@ -550,34 +550,34 @@ class ObjectCollection extends \DDTools\Base\Base {
 						$result[$orIndex][$andIndex]->operator = '!=';
 					}
 					
-					//Prepare condition
+					// Prepare condition
 					if ($result[$orIndex][$andIndex]->operator == 'isset'){
-						//Just save name
+						// Just save name
 						$result[$orIndex][$andIndex]->propName = $andCondition;
 					}else{
-						//Explode to name and value
+						// Explode to name and value
 						$andCondition =	explode(
 							$result[$orIndex][$andIndex]->operator,
 							$andCondition
 						);
 						
-						//Save name
+						// Save name
 						$result[$orIndex][$andIndex]->propName = $andCondition[0];
 						
-						//Prepare and save value
+						// Prepare and save value
 						$result[$orIndex][$andIndex]->propValue = trim(
-							//Trim whitespaces
+							// Trim whitespaces
 							trim($andCondition[1]),
-							//Then trim quotes
+							// Then trim quotes
 							'"\''
 						);
 					}
 					
-					//Prepare name
+					// Prepare name
 					$result[$orIndex][$andIndex]->propName = trim(
-						//Trim whitespaces
+						// Trim whitespaces
 						trim($result[$orIndex][$andIndex]->propName),
-						//Then trim quotes
+						// Then trim quotes
 						'"\''
 					);
 				}

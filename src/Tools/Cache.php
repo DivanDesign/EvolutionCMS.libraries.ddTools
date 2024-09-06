@@ -2,147 +2,211 @@
 namespace DDTools\Tools;
 
 class Cache {
-	private static ?string $cacheDir = null;
-	private static string $contentPrefix = '<?php die("Unauthorized access."); ?>';
-	private static int $contentPrefixLen = 37;
+	private static $theStableStorageClass = '\DDTools\Tools\Cache\Storage\Stable\Storage';
+	private static $theQuickStorageClass = '\DDTools\Tools\Cache\Storage\Quick\Storage';
+	
+	private static bool $isStaticInited = false;
 	
 	/**
 	 * initStatic
-	 * @version 2.0.1 (2024-08-02)
+	 * @version 2.1.5 (2024-08-07)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
 	 * @return {void}
 	 */
 	private static function initStatic(): void {
-		if (is_null(static::$cacheDir)){
-			static::$cacheDir =
-				//path to `assets`
-				dirname(
-					__DIR__,
-					4
-				)
-				. '/cache/ddCache'
-			;
+		if (!static::$isStaticInited){
+			static::$isStaticInited = true;
 			
-			if (!is_dir(static::$cacheDir)){
-				\DDTools\Tools\Files::createDir([
-					'path' => static::$cacheDir,
-				]);
-			}
+			static::$theStableStorageClass::initStatic();
+			static::$theQuickStorageClass::initStatic();
 		}
 	}
 	
 	/**
 	 * save
-	 * @version 3.0.2 (2024-08-02)
+	 * @version 3.2.8 (2024-08-19)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
-	 * @param $params->resourceId {integer} — Resource ID related to cache (e. g. document ID).
-	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {string|array|stdClass} — Data to save.
+	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
+	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
+	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing data be extended by $params->data or overwritten?
 	 * 
 	 * @return {void}
 	 */
 	public static function save($params): void {
-		static::initStatic();
-		
 		$params = (object) $params;
 		
-		//str|obj|arr
-		$dataType =
-			is_object($params->data)
-			? 'obj'
-			: (
-				is_array($params->data)
-				? 'arr'
-				//All other types are considered as string (because of this we don't use the gettype function)
-				: 'str'
-			)
-		;
-		
-		if ($dataType != 'str'){
-			$params->data = \DDTools\Tools\Objects::convertType([
-				'object' => $params->data,
-				'type' => 'stringJsonAuto',
-			]);
-		}
-		
-		//Save cache file
-		file_put_contents(
-			//Cache file path
-			static::buildCacheFilePath($params),
-			//Cache content
-			(
-				static::$contentPrefix
-				. $dataType
-				. $params->data
-			)
+		static::saveSeveral(
+			\DDTools\Tools\Objects::extend([
+				'objects' => [
+					(object) [
+						'items' => [
+							$params->resourceId => $params->data,
+						],
+					],
+					$params,
+				],
+				'extendableProperties' => [
+					'resourceId',
+					'suffix',
+					'prefix',
+					'isExtendEnabled',
+				],
+			])
 		);
 	}
 	
 	/**
-	 * get
-	 * @version 3.0 (2024-08-01)
+	 * saveSeveral
+	 * @version 1.0 (2024-08-19)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
-	 * @param $params->resourceId {integer} — Document ID related to cache.
-	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->items {stdClass|arrayAssociative} — Items to save.
+	 * @param $params->items->{$resourceId} {string|array|stdClass} — Item data to save. Key is resource ID related to cache (e. g. document ID).
+	 * @param $params->suffix {string} — Cache suffix.
+	 * @param [$params->prefix='doc'] {string} — Cache prefix.
+	 * @param [$params->isExtendEnabled=false] {boolean} — Should existing items data be extended by `$params->items` or overwritten?
+	 * 
+	 * @return {void}
+	 */
+	public static function saveSeveral($params): void {
+		static::initStatic();
+		
+		$params = \DDTools\Tools\Objects::extend([
+			'objects' => [
+				(object) [
+					'prefix' => 'doc',
+					'isExtendEnabled' => false,
+				],
+				$params,
+			],
+		]);
+		
+		$saveParams = (object) [
+			'items' => new \stdClass(),
+			'isExtendEnabled' => $params->isExtendEnabled,
+		];
+		
+		foreach (
+			$params->items
+			as $itemName_resourceId
+			=> $itemData
+		){
+			$cacheNameData = static::buildCacheNameData([
+				'resourceId' => $itemName_resourceId,
+				'prefix' => $params->prefix,
+				'suffix' => $params->suffix,
+			]);
+			
+			// We can't save something containing '*' in name
+			if (!$cacheNameData->advancedSearchData->isEnabled){
+				$saveParams->items->{$cacheNameData->name} = $itemData;
+			}
+		}
+		
+		if (!\ddTools::isEmpty($saveParams->items)){
+			// Save to quick storage
+			static::$theQuickStorageClass::save($saveParams);
+			
+			// Save to stable storage
+			static::$theStableStorageClass::save($saveParams);
+		}
+	}
+	
+	/**
+	 * get
+	 * @version 3.1.10 (2024-08-13)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->resourceId {string} — Resource ID related to cache (e. g. document ID).
+	 * @param $params->suffix {string} — Cache suffix.
 	 * @param [$params->prefix='doc'] {string} — Cache prefix.
 	 * 
 	 * @return {null|string|array|stdClass} — `null` means that the cache file does not exist.
 	 */
 	public static function get($params){
+		$resultCollection = static::getSeveral($params);
+		
+		return
+			!is_null($resultCollection)
+			? current((array) $resultCollection)
+			: null
+		;
+	}
+	
+	/**
+	 * getSeveral
+	 * @version 1.1.4 (2024-08-17)
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
+	 * @param $params->suffix {string} — Cache suffix.
+	 * @param [$params->prefix='doc'] {string} — Cache prefix.
+	 * 
+	 * @return $result {stdClass|null} — `null` means that the cache of specified items does not exist.
+	 * @return $result->{$resourceName} {string|array|stdClass}
+	 */
+	public static function getSeveral($params): ?\stdClass {
 		static::initStatic();
 		
-		$result = null;
+		$params = \DDTools\Tools\Objects::extend([
+			'objects' => [
+				(object) [
+					'prefix' => 'doc',
+				],
+				$params,
+			],
+		]);
 		
-		$filePath = static::buildCacheFilePath($params);
+		$cacheNameData = static::buildCacheNameData($params);
 		
-		if (is_file($filePath)){
-			//Cut PHP-code prefix
-			$result = substr(
-				file_get_contents($filePath),
-				static::$contentPrefixLen
-			);
-			
-			//str|obj|arr
-			$dataType = substr(
-				$result,
-				0,
-				3
-			);
-			
-			//Cut dataType
-			$result = substr(
-				$result,
-				3
-			);
-			
-			if ($dataType != 'str'){
-				$result = \DDTools\Tools\Objects::convertType([
-					'object' => $result,
-					'type' =>
-						$dataType == 'obj'
-						? 'objectStdClass'
-						: 'objectArray'
-					,
+		// First try to get from quick storage
+		$resultCollection = static::$theQuickStorageClass::get($cacheNameData);
+		
+		$isQuickStorageDataExist = !is_null($resultCollection);
+		
+		if (!$isQuickStorageDataExist){
+			$resultCollection = static::$theStableStorageClass::get($cacheNameData);
+		}
+		
+		// Save absent items to quick storage from stable storage
+		if (
+			!$isQuickStorageDataExist
+			&& !is_null($resultCollection)
+		){
+			// Save to quick storage
+			foreach (
+				$resultCollection
+				as $itemName
+				=> $itemData
+			){
+				static::$theQuickStorageClass::save([
+					'items' => [
+						$itemName => $itemData,
+					],
+					// Nothing to extend
+					'isExtendEnabled' => false,
 				]);
 			}
 		}
 		
-		return $result;
+		return $resultCollection;
 	}
 	
 	/**
 	 * delete
-	 * @version 2.2.2 (2024-08-02)
+	 * @version 2.5 (2024-08-14)
 	 * 
-	 * @param Clear cache files for specified document or every documents.
+	 * @param Clear cache for specified resource or every resources.
 	 * 
-	 * @param [$params] {stdClass|arrayAssociative} — The object of parameters.
-	 * @param [$params->resourceId=null] {integer|null} — Resource ID related to cache (e. g. document ID). Default: null (cache of all resources will be cleared independent of `$params->prefix`).
+	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
+	 * @param [$params->resourceId=null] {string|'*'|array|null} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array. If the parameter is null or empty, cache of all resources will be cleared.
+	 * @param [$params->resourceId[$i]] {string} — Resource ID.
 	 * @param [$params->prefix='doc'] {string|'*'} — Cache prefix.
 	 * @param [$params->suffix='*'] {string|'*'} — Cache suffix.
 	 * 
@@ -162,48 +226,69 @@ class Cache {
 			],
 		]);
 		
-		//Clear all cache
-		if (empty($params->resourceId)){
-			\DDTools\Tools\Files::removeDir(static::$cacheDir);
-		//Clear cache for specified documents
+		// Clear all cache
+		if (
+			empty($params->resourceId)
+			|| (
+				$params->resourceId == '*'
+				&& $params->prefix == '*'
+				&& $params->suffix == '*'
+			)
+		){
+			// Clear quick storage
+			static::$theQuickStorageClass::delete();
+			// Clear stable storage
+			static::$theStableStorageClass::delete();
+		// Clear cache for specified resources
 		}else{
-			$files = glob(
-				static::buildCacheFilePath($params)
-			);
+			$cacheNameData = static::buildCacheNameData($params);
 			
-			foreach (
-				$files
-				as $filepath
-			){
-				unlink($filepath);
-			}
+			// Clear quick storage
+			static::$theQuickStorageClass::delete($cacheNameData);
+			// Clear stable storage
+			static::$theStableStorageClass::delete($cacheNameData);
 		}
 	}
 	
 	/**
-	 * buildCacheFilePath
-	 * @version 4.0 (2024-08-01)
+	 * buildCacheNameData
+	 * @version 10.0 (2024-08-17)
 	 * 
-	 * @param $params {stdClass|arrayAssociative} — The object of parameters.
-	 * @param $params->resourceId {integer} — Document ID related to cache.
-	 * @param $params->suffix {string} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
-	 * @param [$params->prefix='doc'] {string} — Cache prefix.
+	 * @param $params {stdClass|arrayAssociative} — The parameters object.
+	 * @param $params->resourceId {string|'*'|array} — Resource ID(s) related to cache (e. g. document ID). Pass multiple IDs via array.
+	 * @param $params->resourceId[$i] {string} — Resource ID.
+	 * @param $params->suffix {string|'*'} — Cache suffix. You can use several suffixes with the same `$params->resourceId` to cache some parts within a resource.
+	 * @param $params->prefix {string|'*'} — Cache prefix.
 	 * 
-	 * @return {string}
+	 * @return $result {stdClass}
+	 * @return $result->name {string} — Cache name, e. g. 'prefix-resourceId-suffix'. If $params->resourceId is array, '*' will be used as resourceId.
+	 * @return $result->advancedSearchData {stdClass} — Advanced search data.
+	 * @return $result->advancedSearchData->isEnabled {boolean} — Is $params->resourceId, $params->suffix or $params->prefix equal to '*'?
+	 * @return $result->advancedSearchData->resourceId {string} — $params->resourceId.
+	 * @return $result->advancedSearchData->prefix {string} — $params->prefix.
+	 * @return $result->advancedSearchData->suffix {string} — $params->suffix.
 	 */
-	private static function buildCacheFilePath($params): string {
-		$params = \DDTools\Tools\Objects::extend([
-			'objects' => [
-				(object) [
-					'prefix' => 'doc',
-				],
-				$params,
-			],
-		]);
+	private static function buildCacheNameData($params): \stdClass {
+		$params = (object) $params;
 		
-		return
-			static::$cacheDir
-			. '/' . $params->prefix . '-' . $params->resourceId . '-' . $params->suffix . '.php'
+		$resourceId =
+			is_array($params->resourceId)
+			? '*'
+			: $params->resourceId
 		;
+		
+		return (object) [
+			'name' => $params->prefix . '-' . $resourceId . '-' . $params->suffix,
+			'advancedSearchData' => (object) [
+				'isEnabled' => (
+					$resourceId == '*'
+					|| $params->prefix == '*'
+					|| $params->suffix == '*'
+				),
+				'resourceId' => $params->resourceId,
+				'prefix' => $params->prefix,
+				'suffix' => $params->suffix,
+			],
+		];
 	}
 }

@@ -74,7 +74,7 @@ The method tends to change URL as little as possible and just prepends required 
 All kinds of query parameters, hash, ports, etc. are not modified.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -135,7 +135,7 @@ The same as `$modx->getTpl` with some differences:
 Replaces placeholders in a text with required values.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -205,7 +205,7 @@ It returns an associative array, in which the correct parameter names are the ke
 You can use the `exctract` function to turn the array into variables of the current symbol table.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -271,7 +271,7 @@ You can use the `exctract` function to turn the array into variables of the curr
 Modify your images: create thumbnails, crop, resize, fill background color or add watermark.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -350,7 +350,7 @@ The first reason for creating this method is convenience to not thinking about t
 Second, the different order of parameters in the native PHP functions makes us crazy.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -376,7 +376,7 @@ Second, the different order of parameters in the native PHP functions makes us c
 Get the value of an object property or an array element in any nesting level in one way regardless of the “object” type.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -422,7 +422,7 @@ Converts an object type.
 Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en.wikipedia.org/wiki/Query_string) objects are also supported.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -471,7 +471,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 Merge the contents of two or more objects or arrays together into the first one.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -511,6 +511,18 @@ Merge the contents of two or more objects or arrays together into the first one.
 		* `NULL`
 	* Valid values: `boolean`
 	* Default value: `true`
+	
+* `$params->extendableProperties`
+	* Description: An array of property names that can be extended from additional objects or arrays. Properties in the initial object or array are not restricted by this parameter.  
+	* Valid values:
+		* `array`
+		* `null` or any empty value — all properties will be extended
+	* Default value: `null`
+	
+* `$params->extendableProperties[$i]`
+	* Description: The name of a property that is allowed to be extended from additional objects or arrays.  
+	* Valid values: `string`
+	* **Required**
 
 
 #### `\DDTools\Tools\Objects::unfold($params)`
@@ -519,7 +531,7 @@ Converts a multidimensional array/object into an one-dimensional one joining the
 For example, it can be helpful while using placeholders like `[+size.width+]`.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -559,25 +571,38 @@ For example, it can be helpful while using placeholders like `[+size.width+]`.
 
 ### `\DDTools\Tools\Cache`
 
-You can cache some data (e. g. a snippet result) to a file.
+You can cache some data (e. g. a snippet result).
 
+* There are 2 levels of caching: stable (file-based) and quick (`$_SESSION`-based). All methods utilize both levels automatically.
+* The name of each cache item is `[+prefix+]-[+resourceId+]-[+suffix+]`.
+* Each cache item can contain a `string`, `array` or `stdClass`.
 * All cache files are stored in the `assets/cache/ddCache` folder.
-* The name of each cache file is `[+prefix+]-[+resourceId+]-[+suffix+].php`.
-* Each cache file can contain a string, array or stdClass.
+* The name of each cache file is `[+cacheName+].php`.
+* Quick cache items are stored in `$_SESSION['ddCache']`.
 
 
-#### `\DDTools\Tools\Cache::save($params)`, `\DDTools\Tools\Cache::get($params)`
+#### `\DDTools\Tools\Cache::save($params)`
+
+Saves custom data to cache storage.
 
 * `$params`
-	* Description: The object of parameters.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* **Required**
 	
+* `$params->data`
+	* Description: Data to save.
+	* Valid values:
+		* `string`
+		* `array`
+		* `stdClass`
+	* **Required**
+	
 * `$params->resourceId`
 	* Description: Resource ID related to cache (e. g. document ID).
-	* Valid values: `integer`
+	* Valid values: `string`
 	* **Required**
 	
 * `$params->suffix`
@@ -586,27 +611,83 @@ You can cache some data (e. g. a snippet result) to a file.
 	* **Required**
 	
 * `$params->prefix`
-	* Description: Cache file prefix. Useful if you want to cache some custom data that is not related to any documents.
+	* Description: Cache prefix. Useful if you want to cache some custom data that is not related to any documents.
 	* Valid values: `string`
 	* Default value: `'doc'`
+	
+* `$params->isExtendEnabled`
+	* Description: Should existing data be extended by `$params->data` or overwritten?
+	* Valid values: `boolean`
+	* Default value: `false`
 
 
-#### `\DDTools\Tools\Cache::save($params)`
+#### `\DDTools\Tools\Cache::saveSeveral($params)`
 
-Saves custom data to a cache file.
+Saves data of several items to cache storage.
 
-* `$params->data`
-	* Description: Data to save.
+* `$params`
+	* Description: The parameters object.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->items`
+	* Description: Items to save.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->items->{$resourceId}`
+	* Description: Item data to save. Key is resource ID related to cache (e. g. document ID).
 	* Valid values:
 		* `string`
 		* `array`
 		* `stdClass`
 	* **Required**
+	
+* `$params->suffix`
+	* Description: Cache suffix.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->prefix`
+	* Description: Cache prefix.
+	* Valid values: `string`
+	* Default value: `'doc'`
+	
+* `$params->isExtendEnabled`
+	* Description: Should existing items data be extended by `$params->items` or overwritten?
+	* Valid values: `boolean`
+	* Default value: `false`
 
 
 #### `\DDTools\Tools\Cache::get($params)`
 
-Retrieves data from a cache file.
+Retrieves item data from cache storage.
+
+* `$params`
+	* Description: The parameters object.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->resourceId`
+	* Description: Resource ID related to cache (e. g. document ID).
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->suffix`
+	* Description: Cache suffix.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->prefix`
+	* Description: Cache prefix.
+	* Valid values: `string`
+	* Default value: `'doc'`
 
 
 ##### Returns
@@ -618,29 +699,90 @@ Retrieves data from a cache file.
 			* `string`
 			* `array`
 			* `stdClass`
-		* `null` — means that the cache file does not exist
+		* `null` — means that the cache item does not exist
+
+
+#### `\DDTools\Tools\Cache::getSeveral($params)`
+
+Retrieves data of several items from cache storage.
+
+
+* `$params`
+	* Description: The parameters object.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->resourceId`
+	* Description: Resource ID(s) related to cache (e. g. document ID).
+	* Valid values:
+		* `string`
+		* `'*'` — means any ID
+		* `array` — you can specify multiple IDs
+	* **Required**
+	
+* `$params->resourceId[$i]`
+	* Description: A resource ID.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->suffix`
+	* Description: Cache suffix.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->prefix`
+	* Description: Cache prefix.
+	* Valid values: `string`
+	* Default value: `'doc'`
+
+
+##### Returns
+
+* `$result`
+	* Description: Cached items data.
+	* Valid values:
+		* `stdClass`
+		* `null` — means that the cache of specified items does not exist
+	
+* `$result->{$resourceName}`
+	* Description: Cached item data.
+		* A key is an item's cache name (`[+prefix+]-[+resourceId+]-[+suffix+]`), a value is a data.
+		* Type of returned data depends on type of saved data.
+	* Valid values:
+		* `string`
+		* `array`
+		* `stdClass`
 
 
 #### `\DDTools\Tools\Cache::delete($params)`
 
-Deletes one or more cache files.
+Deletes one or more cache items.
 
 * `$params`
-	* Description: The object of parameters.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
 	* Default value: —
 	
 * `$params->resourceId`
-	* Description: Resource ID related to cache (e. g. document ID).
+	* Description: Resource ID(s) related to cache (e. g. document ID).
 	* Valid values:
-		* `integer`
+		* `string`
+		* `'*'` — means any ID
+		* `array` — you can specify multiple IDs
 		* `null` — cache of all resources will be cleared independent of `$params->prefix`
 	* Default value: `null`
 	
+* `$params->resourceId[$i]`
+	* Description: A resource ID.
+	* Valid values: `string`
+	* Default value: —
+	
 * `$params->prefix`
-	* Description: Cache file prefix. Useful if you want to cache some custom data that is not related to any documents.
+	* Description: Cache prefix. Useful if you want to cache some custom data that is not related to any documents.
 	* Valid values:
 		* `string`
 		* `'*'` — means any prefix
@@ -662,7 +804,7 @@ Class representing a collection of some objects or arrays.
 #### `\DDTools\ObjectCollection::__construct($params)`
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -717,7 +859,7 @@ Has the same parameters as `\DDTools\ObjectCollection::__construct($params)`.
 Gets an array of required collection items.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -803,7 +945,7 @@ Gets an array of required collection items.
 Gets required item.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -830,7 +972,7 @@ Counts all items.
 Converts type of needed items in collection.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -855,7 +997,7 @@ Converts type of needed items in collection.
 Undates properties of existing items with new values.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -890,7 +1032,7 @@ Undates properties of existing items with new values.
 Deletes required items from collection.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -927,7 +1069,7 @@ Sets data of an item object. All setting of an item data inside the class must b
 It's convenient to override this method in child classes if items are not plain objects.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -952,7 +1094,7 @@ Returns data of an item object. All getting of an item data inside the class mus
 It's convenient to override this method in child classes if items are not plain objects.
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -1089,7 +1231,7 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 #### `\DDTools\Base\AncestorTrait::createChildInstance($params)`
 
 * `$params`
-	* Description: Parameters, the pass-by-name style is used.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -1128,7 +1270,7 @@ You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGet
 #### `\DDTools\Base\AncestorTrait::getChildClassName($params)`
 
 * `$params`
-	* Description: The object of parameters.
+	* Description: The parameters object.
 	* Valid values:
 		* `stdClass`
 		* `arrayAssociative`
@@ -1293,22 +1435,22 @@ Static method for easy running needed snippet using only it's name and parameter
 `$params->url` can be set in various ways for more convenience:
 
 ```php
-//Relative
+// Relative
 $url = 'some/page?q=42#hash';
-//Relative starting with slash
+// Relative starting with slash
 $url = '/some/page?q=42#hash';
-//Absolute starting with domain
+// Absolute starting with domain
 $url = 'example.com/some/page?q=42#hash';
-//Absolute starting with double slash
+// Absolute starting with double slash
 $url = '//example.com/some/page?q=42#hash';
-//Absolute starting with scheme
+// Absolute starting with scheme
 $url = 'https://example.com/some/page?q=42#hash';
 ```
 
 ```php
 \ddTools::convertUrlToAbsolute([
 	'url' => $url,
-	//The parameter is optional and is used here just for clarity. By default it will be equal to domain of your site.
+	// The parameter is optional and is used here just for clarity. By default it will be equal to domain of your site.
 	'host' => 'example.com',
 ]);
 ```
@@ -1327,18 +1469,18 @@ Over time, we decided to rename the parameters as `docField` and `docId` respect
 And we want to save backward compatibility, the snippet must work with the old names and send message to the MODX event log.
 
 ```php
-//Include (MODX)EvolutionCMS.libraries.ddTools
+// Include (MODX)EvolutionCMS.libraries.ddTools
 require_once(
 	$modx->getConfig('base_path')
 	. 'assets/libs/ddTools/modx.ddtools.class.php'
 );
 
-//Backward compatibility
+// Backward compatibility
 extract(\ddTools::verifyRenamedParams([
-	//We called the method inside of a snippet, so its parameters are contained in the `$params` variable (MODX feature)
+	// We called the method inside of a snippet, so its parameters are contained in the `$params` variable (MODX feature)
 	'params' => $params,
 	'compliance' => [
-		//The new name => The old name
+		// The new name => The old name
 		'docField' => 'getEmail',
 		'docId' => 'getId',
 	],
@@ -1351,10 +1493,10 @@ After some time we decided to rename the parameters again as `email_docField` и
 
 ```php
 extract(\ddTools::verifyRenamedParams([
-	//We called the method inside of a snippet, so its parameters are contained in the `$params` variable (MODX feature)
+	// We called the method inside of a snippet, so its parameters are contained in the `$params` variable (MODX feature)
 	'params' => $params,
 	'compliance' => [
-		//The new name => The old names
+		// The new name => The old names
 		'email_docField' => [
 			'docField',
 			'getEmail',
@@ -1364,7 +1506,7 @@ extract(\ddTools::verifyRenamedParams([
 			'getId',
 		],
 	],
-	//Also you can prevent writing to the CMS event log if you want
+	// Also you can prevent writing to the CMS event log if you want
 	'writeToLog' => false,
 ]));
 ```
@@ -1409,14 +1551,14 @@ Returns:
 
 ```php
 \ddTools::parseText([
-	//Data can have a complex nested structure
+	// Data can have a complex nested structure
 	'data' => [
 		'title' => 'Bethink Yourselves!',
 		'text' => '<p>Question your actions and consider the morality behind them.</p>',
-		//Note that this is not a string, but that's okay
+		// Note that this is not a string, but that's okay
 		'meta' => [
-			//Moreover, any depth is supported
-			//And objects are also supported as well as arrays regardless of nesting level
+			// Moreover, any depth is supported
+			// And objects are also supported as well as arrays regardless of nesting level
 			'author' => (object) [
 				'firstName' => 'Leo',
 				'lastName' => 'Tolstoy',
@@ -1424,8 +1566,8 @@ Returns:
 			'date' => '1904',
 		],
 	],
-	//For nested data you can use placeholders like '[+meta.date+]' for getting a property
-	//Or like '[+meta+]' to get whole object as JSON
+	// For nested data you can use placeholders like '[+meta.date+]' for getting a property
+	// Or like '[+meta+]' to get whole object as JSON
 	'text' => '
 		<article data-meta=\'[+meta+]\'>
 			<h1>[+title+]</h1>
@@ -1460,7 +1602,7 @@ Users use the format that is convenient to them and we support both.
 Just call this method and don't care about it.
 
 ```php
-//We can pass string in JSON format
+// We can pass string in JSON format
 \DDTools\Tools\Objects::convertType([
 	'object' => '{
 		"pagetitle": "Test title",
@@ -1469,7 +1611,7 @@ Just call this method and don't care about it.
 	'type' => 'objectArray',
 ]);
 
-//Or Query string
+// Or Query string
 \DDTools\Tools\Objects::convertType([
 	'object' => 'pagetitle=Test title&published=0',
 	'type' => 'objectArray',
@@ -1532,7 +1674,7 @@ Returns:
 ```php
 \DDTools\Tools\Objects::convertType([
 	'object' => "{
-		//This is HJSON, not JSON, so we can use comments insides
+		// This is HJSON, not JSON, so we can use comments insides
 		keys: and values can be specified without quotes,
 		multilineValues:
 			'''
@@ -1564,9 +1706,9 @@ stdClass::__set_state(array(
 \DDTools\Tools\Objects::convertType([
 	'object' => [
 		'data-name' => 'KINO',
-		//Will be converted to 1
+		// Will be converted to 1
 		'data-is-active' => true,
-		//Will be converted to JSON array
+		// Will be converted to JSON array
 		'data-members' => [
 			'Viktor Tsoi',
 			'Yuri Kasparyan',
@@ -1697,10 +1839,10 @@ var_export(
 Returns:
 
 ```php
-//The object expanded the source array
+// The object expanded the source array
 array(
 	'name' => 'jokes',
-	//The array expanded the source object
+	// The array expanded the source object
 	'countries' => stdClass::__set_state(
 		'usa' => 'democracy',
 		'china' => 'democracy too',
@@ -1771,6 +1913,57 @@ stdClass::__set_state(array(
 	'firstName' => 'Nikola',
 	'lastName' => 'Tesla',
 	'discipline' => 'Electrical engineering',
+))
+```
+
+
+##### Extending only specific properties from subsequent objects (`$params->extendableProperties`)
+
+Sometimes you want to keep only the key ingredients, like avoiding the pineapple on your pizza.
+
+```php
+var_export(
+	\DDTools\Tools\Objects::extend([
+		'objects' => [
+			(object) [
+				'name' => 'Classic Italian Pizza',
+				'toppings' => (object) [
+					'cheese' => 'mozzarella',
+					'tomatoSauce' => true,
+					'olive' => true,
+				],
+				'size' => 'medium',
+			],
+			[
+				// Not interested in extra toppings
+				'toppings' => [
+					'pineapple' => true,
+				],
+				'size' => 'large',
+				'price' => 15.99,
+			],
+		],
+		// Only keeping the price and size
+		'extendableProperties' => [
+			'price',
+			'size',
+		],
+	])
+);
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array(
+	'name' => 'Classic Italian Pizza',
+	'toppings' => stdClass::__set_state(array(
+		'cheese' => 'mozzarella',
+		'tomatoSauce' => true,
+		'olive' => true,
+	)),
+	'size' => 'large',
+	'price' => 15.99,
 ))
 ```
 
@@ -1873,15 +2066,15 @@ stdClass::__set_state(array (
 ##### Cross-type unfolding (`$params->isCrossTypeEnabled` == `true`)
 
 ```php
-//Array
+// Array
 $data = [
-	//Array
+	// Array
 	'bin1' => [
 		'plastic' => 'plastic bottles',
 		'paper' => 'newspapers',
 		'glass' => 'glass bottles',
 	],
-	//Object
+	// Object
 	'bin2' => (object) [
 		'organic' => 'food waste',
 		'paper' => 'cardboard boxes',
@@ -2016,11 +2209,11 @@ Both calls return `'Floyd'`.
 Source object can be nested, and elements of all levels can be mix of objects and arrays.
 
 ```php
-//For example let the first level be stdClass
+// For example let the first level be stdClass
 $sourceObject = (object) [
-	//Let the second level be an indexed array
+	// Let the second level be an indexed array
 	'PinkFloyd' => [
-		//Let the third level be an associative array
+		// Let the third level be an associative array
 		[
 			'name' => 'Syd Barrett',
 			'role' => 'lead and rhythm guitars, vocals',
@@ -2029,7 +2222,7 @@ $sourceObject = (object) [
 			'name' => 'David Gilmour',
 			'role' => 'lead and rhythm guitars, vocals, bass, keyboards, synthesisers',
 		],
-		//Let Roger be a little bit special ;)
+		// Let Roger be a little bit special ;)
 		(object) [
 			'name' => 'Roger Waters',
 			'role' => 'bass, vocals, rhythm guitar, synthesisers',
@@ -2297,7 +2490,7 @@ array(
 
 ```php
 $collection->getItems([
-	//Spaces, tabs and line breaks are also allowed and do not matter
+	// Spaces, tabs and line breaks are also allowed and do not matter
 	'filter' => '
 		gender == female
 		|| nobelPeacePrize == 1 && isHuman == 0
@@ -2309,7 +2502,7 @@ Returns:
 
 ```php
 array(
-	//gender == female
+	// gender == female
 	0 => array(
 		'name' => 'Mary Teresa',
 		'isHuman' => 1,
@@ -2317,7 +2510,7 @@ array(
 		'nobelPeacePrize' => 1,
 		'religion' => 'Catholicism',
 	),
-	//nobelPeacePrize == 1 && isHuman == 0
+	// nobelPeacePrize == 1 && isHuman == 0
 	1 => array(
 		'name' => 'ICAN',
 		'isHuman' => 0,
@@ -2497,13 +2690,13 @@ Returns:
 ```php
 array(
 	0 => stdClass::__set_state(array(
-		//Existing properties that absent in `$params->data` have remained as is
+		// Existing properties that absent in `$params->data` have remained as is
 		'name' => 'Mahatma Gandhi',
 		'isHuman' => 1,
 		'gender' => 'male',
-		//Given property values have overwritten the existing ones
+		// Given property values have overwritten the existing ones
 		'nobelPeacePrize' => 1,
-		//Non-existing properties have been created
+		// Non-existing properties have been created
 		'birthday' => '2 October 1869',
 	))
 )
@@ -2525,7 +2718,7 @@ Returns:
 
 ```php
 array(
-	//2 humans have been deleted, 1 have remained
+	// 2 humans have been deleted, 1 have remained
 	0 => stdClass::__set_state(array(
 		'name' => 'Tenzin Gyatso',
 		'isHuman' => 1,

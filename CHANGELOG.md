@@ -1,6 +1,24 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.64 (2024-09-06)
+
+* \+ `\DDTools\Tools\Objects::extend` → Parameters → `$params->extendableProperties`: The new optional parameter. Allows to use for extending not all properties from additional objects or arrays (see README → Examples).
+* \+ `\DDTools\Storage\Storage` → `items_update`, `items_updateOne`, `items_delete`, `items_deleteOne`, `items_get`, `items_getOne` → Parameters:
+	* \+ `$params->where` → Valid values → `null`: The new supported value. It is equal to ''.
+	* \+ `$params->where->{$propName}`:
+		* \+ You can also specify multiple value variants through an array.
+		* \+ You don't have to worry about passing empty arrays, they will just be ignored.
+* \+ `\DDTools\Tools\Cache`:
+	* \+ There are now 2 levels of caching: stable (file-based) and quick (`$_SESSION`-based). All methods now utilize both levels automatically.
+	* \+ `getSeveral`: The new public static method. Retrieves data of several items from cache storage (see README).
+	* \+ `saveSeveral`: The new public static method. Saves data of several items to cache storage (see README).
+	* \+ `save`, `saveSeveral`, `get`, `getSeveral`, `delete` → Parameters → `$params->resourceId` → Valid values → `string`: The new supported value. You can use a custom string as the resource ID, not only an integer ID.
+	* \+ `getSeveral`, `delete` → Parameters → `$params->resourceId` → Valid values → `array`: The new supported value. You can specify multiple IDs.
+	* \+ `delete` → Parameters → `$params->resourceId` → Valid values → `'*'`: The new supported value.
+	* \+ `save` → Parameters → `$params->isExtendEnabled`: The new optional parameter. Allows to extend existing data (see README).
+
+
 ## Version 0.63 (2024-08-02)
 
 * \+ `\DDTools\Tools\Cache`: The new class. Allows you to cache some data (e. g. a snippet result) to a file in the `assets/cache/ddCache` folder (see README).
