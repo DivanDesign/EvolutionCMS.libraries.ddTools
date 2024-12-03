@@ -149,7 +149,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_db
-	 * @version 1.0.4 (2024-12-03)
+	 * @version 1.0.5 (2024-12-03)
 	 * 
 	 * @return {void}
 	 */
@@ -215,7 +215,7 @@ class Storage extends \DDTools\Storage\Storage {
 							? 'ADD '
 							: ''
 						)
-						. $columnData->name
+						. '`' . $columnData->name . '`'
 						. ' '
 						. $columnData->attrs
 					;
