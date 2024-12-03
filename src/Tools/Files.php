@@ -36,7 +36,7 @@ class Files {
 	
 	/**
 	 * copyDir
-	 * @version 2.0.4 (2024-08-04)
+	 * @version 2.0.5 (2024-12-03)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
@@ -86,8 +86,8 @@ class Files {
 		);
 		
 		foreach (
-			$fileNames as
-			$fileName
+			$fileNames
+			as $fileName
 		){
 			// Если это папка, обработаем её
 			if (is_dir($params->sourcePath . $fileName)){
@@ -108,7 +108,7 @@ class Files {
 	
 	/**
 	 * removeDir
-	 * @version 1.0.8 (2024-08-04)
+	 * @version 1.0.9 (2024-12-03)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -132,8 +132,8 @@ class Files {
 		);
 		
 		foreach (
-			$fileNames as
-			$fileName
+			$fileNames
+			as $fileName
 		){
 			// Если это папка, обработаем её
 			if (is_dir($path . '/' . $fileName)){
@@ -148,7 +148,7 @@ class Files {
 	
 	/**
 	 * modifyImage
-	 * @version 2.6.5 (2024-08-04)
+	 * @version 2.6.6 (2024-12-03)
 	 * 
 	 * @see README.md
 	 * 
@@ -178,11 +178,11 @@ class Files {
 		
 		// Include PHP.libraries.phpThumb
 		require_once(
-			'Files' .
-			DIRECTORY_SEPARATOR .
-			'phpThumb' .
-			DIRECTORY_SEPARATOR .
-			'phpthumb.class.php'
+			'Files'
+			. DIRECTORY_SEPARATOR
+			. 'phpThumb'
+			. DIRECTORY_SEPARATOR
+			. 'phpthumb.class.php'
 		);
 		
 		// Prepare source image addresses
@@ -191,17 +191,17 @@ class Files {
 				'sourceFullPathName',
 				'outputFullPathName',
 				'watermarkImageFullPathName'
-			] as
-			$paramName
+			]
+			as $paramName
 		){
 			if (
 				// If the parameter is set
 				\DDTools\Tools\Objects::isPropExists([
 					'object' => $params,
 					'propName' => $paramName
-				]) &&
+				])
 				// And set as relative path
-				substr(
+				&& substr(
 					$params->{$paramName},
 					0,
 					strlen(\ddTools::$modx->getConfig('base_path'))
@@ -210,8 +210,8 @@ class Files {
 			){
 				// Convert relative path to absolute if needed
 				$params->{$paramName} =
-					\ddTools::$modx->getConfig('base_path') .
-					$params->{$paramName}
+					\ddTools::$modx->getConfig('base_path')
+					. $params->{$paramName}
 				;
 			}
 		}
@@ -236,8 +236,8 @@ class Files {
 		
 		// Если хотя бы один из размеров оригинала оказался нулевым (например, это не изображение) — на(\s?)бок
 		if (
-			$originalImg->width == 0 ||
-			$originalImg->height == 0
+			$originalImg->width == 0
+			|| $originalImg->height == 0
 		){
 			return;
 		}
@@ -250,8 +250,8 @@ class Files {
 		
 		// Если по каким-то причинам высота не задана
 		if (
-			$params->height == '' ||
-			$params->height == 0
+			$params->height == ''
+			|| $params->height == 0
 		){
 			// Вычислим соответственно пропорциям
 			$params->height =
@@ -261,8 +261,8 @@ class Files {
 		}
 		// Если по каким-то причинам ширина не задана
 		if (
-			$params->width == '' ||
-			$params->width == 0
+			$params->width == ''
+			|| $params->width == 0
 		){
 			// Вычислим соответственно пропорциям
 			$params->width =
@@ -273,9 +273,9 @@ class Files {
 		
 		// Если превьюшка уже есть и имеет нужный размер, ничего делать не нужно
 		if (
-			$originalImg->width == $params->width &&
-			$originalImg->height == $params->height &&
-			file_exists($params->outputFullPathName)
+			$originalImg->width == $params->width
+			&& $originalImg->height == $params->height
+			&& file_exists($params->outputFullPathName)
 		){
 			return;
 		}

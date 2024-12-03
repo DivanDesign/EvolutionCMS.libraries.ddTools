@@ -2,46 +2,42 @@
 namespace DDTools;
 
 class Response {
-	protected static
-		/**
-		 * @property $allowedMetaKeys {array} — Allowed keys in $this->meta.
-		 */
-		$allowedMetaKeys = [
-			'code',
-			'eTag',
-			'success',
-			'message'
-		],
-		/**
-		 * @property $allowedMetaMessageKeys {array} — Allowed keys in $this->meta['message'].
-		 */
-		$allowedMetaMessageKeys = [
-			'content',
-			'title'
-		],
-		/**
-		 * @property $requiredMetaKeys {array} — Required keys in $this->meta.
-		 */
-		$requiredMetaKeys = [
-			'code',
-			'success'
-		],
-		/**
-		 * @property $requiredMetaMessageKeys {array} — Required keys in $this->meta['message'].
-		 */
-		$requiredMetaMessageKeys = [
-			'content'
-		]
-	;
+	/**
+	 * @property $allowedMetaKeys {array} — Allowed keys in $this->meta.
+	 */
+	protected static $allowedMetaKeys = [
+		'code',
+		'eTag',
+		'success',
+		'message'
+	];
+	/**
+	 * @property $allowedMetaMessageKeys {array} — Allowed keys in $this->meta['message'].
+	 */
+	protected static $allowedMetaMessageKeys = [
+		'content',
+		'title'
+	];
+	/**
+	 * @property $requiredMetaKeys {array} — Required keys in $this->meta.
+	 */
+	protected static $requiredMetaKeys = [
+		'code',
+		'success'
+	];
+	/**
+	 * @property $requiredMetaMessageKeys {array} — Required keys in $this->meta['message'].
+	 */
+	protected static $requiredMetaMessageKeys = [
+		'content'
+	];
 	
-	protected
-		$meta,
-		$data
-	;
+	protected $meta;
+	protected $data;
 	
 	/**
 	 * validateMeta
-	 * @version 1.1.2 (2024-08-04)
+	 * @version 1.1.3 (2024-12-03)
 	 * 
 	 * @param $meta {arrayAssociative} — Is an array of meta data. The method excludes any values passed in $meta except “code”, “eTag”, “success”,
 	 * and “message”. $meta['code'] and $meta['success'] are required. If defined, $meta['message'] must be an associative array with content
@@ -79,21 +75,21 @@ class Response {
 				!count(array_diff(
 					static::$requiredMetaKeys,
 					$paramKeys
-				)) &&
+				))
 				// And only allowed items are set
-				!count(array_diff(
+				&& !count(array_diff(
 					$paramKeys,
 					static::$allowedMetaKeys
-				)) &&
+				))
 				// code is int
-				is_int($meta['code']) &&
+				&& is_int($meta['code'])
 				// success is bool
-				is_bool($meta['success']) &&
-				(
+				&& is_bool($meta['success'])
+				&& (
 					// message is not set
-					!isset($meta['message']) ||
+					!isset($meta['message'])
 					// Or is valid
-					$this->validateMetaMessage($meta['message'])
+					|| $this->validateMetaMessage($meta['message'])
 				)
 			){
 				$result = true;
@@ -105,7 +101,7 @@ class Response {
 	
 	/**
 	 * validateMetaMessage
-	 * @version 1.1.1 (2024-08-04)
+	 * @version 1.1.2 (2024-12-03)
 	 * 
 	 * @param $message {arrayAssociative} — @reuired
 	 * @param $message['content'] {string} — @required
@@ -125,14 +121,14 @@ class Response {
 				!count(array_diff(
 					static::$requiredMetaMessageKeys,
 					$paramKeys
-				)) &&
+				))
 				// And only allowed items are set
-				!count(array_diff(
+				&& !count(array_diff(
 					$paramKeys,
 					static::$allowedMetaMessageKeys
-				)) &&
+				))
 				// content is string
-				is_string($message['content'])
+				&& is_string($message['content'])
 			){
 				$result = true;
 			}
@@ -143,7 +139,7 @@ class Response {
 	
 	/**
 	 * setMeta
-	 * @version 1.4.3 (2024-08-04)
+	 * @version 1.4.4 (2024-12-03)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -180,9 +176,9 @@ class Response {
 		){
 			// Depends on success by default
 			$meta['code'] =
-				$meta['success'] ?
-				200 :
-				400
+				$meta['success']
+				? 200
+				: 400
 			;
 		}
 		
@@ -238,7 +234,7 @@ class Response {
 	
 	/**
 	 * setMetaData
-	 * @version 1.0.3 (2024-08-04)
+	 * @version 1.0.4 (2024-12-03)
 	 * 
 	 * @desc Setter for $this->meta and $this->data.
 	 * 
@@ -251,14 +247,14 @@ class Response {
 		if (!is_array($params)){
 			$params = \DDTools\Tools\Objects::convertType([
 				'object' => $params,
-				'type' => 'objectArray'
+				'type' => 'objectArray',
 			]);
 		}
 		
 		if (
 			\DDTools\Tools\Objects::isPropExists([
 				'object' => $params,
-				'propName' => 'meta'
+				'propName' => 'meta',
 			])
 		){
 			$this->setMeta($params['meta']);
@@ -267,7 +263,7 @@ class Response {
 		if (
 			\DDTools\Tools\Objects::isPropExists([
 				'object' => $params,
-				'propName' => 'data'
+				'propName' => 'data',
 			])
 		){
 			$this->setData($params['data']);
@@ -298,7 +294,7 @@ class Response {
 	
 	/**
 	 * isSuccess
-	 * @version 1.0.1 (2024-08-04)
+	 * @version 1.0.2 (2024-12-03)
 	 * 
 	 * @return {boolean}
 	 */
@@ -307,9 +303,9 @@ class Response {
 		
 		if (
 			// If meta is set
-			is_array($this->meta) &&
+			is_array($this->meta)
 			// And success
-			$this->meta['success']
+			&& $this->meta['success']
 		){
 			$result = true;
 		}

@@ -2,47 +2,45 @@
 namespace DDTools;
 
 abstract class Snippet {
-	protected
-		/**
-		 * @property $name {string} — Constructor fills it from namespace.
-		 */
-		$name = '',
-		
-		/**
-		 * @property $version {string} — Set in children classes.
-		 */
-		$version = '',
-		
-		/**
-		 * @property $paths {stdClass}
-		 * @property $paths->snippet {string} — Full path to the snippet folder.
-		 * @property $paths->src {string} — Ful path to `src`.
-		 */
-		$paths = [
-			'snippet' => '/',
-			'src' => 'src/'
-		],
-		
-		/**
-		 * @property $params {stdClass} — Overwrite with defaults in children classes.
-		 */
-		$params = [],
-		
-		/**
-		 * @property $paramsTypes {arrayAssociative} — Overwrite in child classes if you want to convert some parameters types.
-		 * @property $paramsTypes[$paramName] {'integer'|'boolean'|'objectAuto'|'objectStdClass'|'objectArray'|'stringJsonAuto'|'stringJsonObject'|'stringJsonArray'} — The parameter type.
-		 */
-		$paramsTypes = [],
-		
-		/**
-		 * @property $renamedParamsCompliance {arrayAssociative} — Overwrite in child classes if you want to rename some parameters with backward compatibility (see \ddTools::verifyRenamedParams).
-		 */
-		$renamedParamsCompliance = []
-	;
+	/**
+	 * @property $name {string} — Constructor fills it from namespace.
+	 */
+	protected $name = '';
+	
+	/**
+	 * @property $version {string} — Set in children classes.
+	 */
+	protected $version = '';
+	
+	/**
+	 * @property $paths {stdClass}
+	 * @property $paths->snippet {string} — Full path to the snippet folder.
+	 * @property $paths->src {string} — Ful path to `src`.
+	 */
+	protected $paths = [
+		'snippet' => '/',
+		'src' => 'src/'
+	];
+	
+	/**
+	 * @property $params {stdClass} — Overwrite with defaults in children classes.
+	 */
+	protected $params = [];
+	
+	/**
+	 * @property $paramsTypes {arrayAssociative} — Overwrite in child classes if you want to convert some parameters types.
+	 * @property $paramsTypes[$paramName] {'integer'|'boolean'|'objectAuto'|'objectStdClass'|'objectArray'|'stringJsonAuto'|'stringJsonObject'|'stringJsonArray'} — The parameter type.
+	 */
+	protected $paramsTypes = [];
+	
+	/**
+	 * @property $renamedParamsCompliance {arrayAssociative} — Overwrite in child classes if you want to rename some parameters with backward compatibility (see \ddTools::verifyRenamedParams).
+	 */
+	protected $renamedParamsCompliance = [];
 	
 	/**
 	 * __construct
-	 * @version 1.1.2 (2024-08-04)
+	 * @version 1.1.3 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 */
@@ -69,15 +67,15 @@ abstract class Snippet {
 			dirname(
 				__DIR__,
 				4
-			) .
-			'/snippets/' .
-			$this->name .
-			$this->paths->snippet
+			)
+			. '/snippets/'
+			. $this->name
+			. $this->paths->snippet
 		;
 		
 		$this->paths->src =
-			$this->paths->snippet .
-			$this->paths->src
+			$this->paths->snippet
+			. $this->paths->src
 		;
 		
 		
@@ -87,7 +85,7 @@ abstract class Snippet {
 	
 	/**
 	 * prepareParams
-	 * @version 1.1.3 (2024-08-04)
+	 * @version 1.1.4 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * 
@@ -112,9 +110,9 @@ abstract class Snippet {
 		
 		if (!empty($this->paramsTypes)){
 			foreach (
-				$this->paramsTypes as
-				$paramName =>
-				$paramType
+				$this->paramsTypes
+				as $paramName
+				=> $paramType
 			){
 				$paramType = strtolower($paramType);
 				
@@ -172,7 +170,7 @@ abstract class Snippet {
 	
 	/**
 	 * runSnippet
-	 * @version 1.0.2 (2024-08-04)
+	 * @version 1.0.3 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * @param $params->name {string}
@@ -204,31 +202,31 @@ abstract class Snippet {
 				dirname(
 					__DIR__,
 					4
-				) .
-				'/snippets/' .
-				$params->name .
-				'/'
+				)
+				. '/snippets/'
+				. $params->name
+				. '/'
 			,
 			'snippetFile' => 'src/Snippet.php',
 			'requireFile' => 'require.php'
 		];
 		
 		$requireData->snippetFile =
-			$requireData->snippetDir .
-			$requireData->snippetFile
+			$requireData->snippetDir
+			. $requireData->snippetFile
 		;
 		$requireData->requireFile =
-			$requireData->snippetDir .
-			$requireData->requireFile
+			$requireData->snippetDir
+			. $requireData->requireFile
 		;
 		
 		if (file_exists($requireData->snippetFile)){
 			require_once($requireData->requireFile);
 			
 			$snippetClass =
-				'\\' .
-				$params->name .
-				'\Snippet'
+				'\\'
+				. $params->name
+				. '\Snippet'
 			;
 			
 			$snippetObject = new $snippetClass($params->params);

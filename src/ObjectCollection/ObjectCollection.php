@@ -2,13 +2,11 @@
 namespace DDTools;
 
 class ObjectCollection extends \DDTools\Base\Base {
-	protected
-		/**
-		 * @property $items {array}
-		 * @property $items[$itemIndex] {array|object}
-		 */
-		$items = []
-	;
+	/**
+	 * @property $items {array}
+	 * @property $items[$itemIndex] {array|object}
+	 */
+	protected $items = [];
 	
 	/**
 	 * __construct
@@ -36,7 +34,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * addItems
-	 * @version 1.2.2 (2024-08-04)
+	 * @version 1.2.3 (2024-12-03)
 	 * 
 	 * @see README.md
 	 */
@@ -70,9 +68,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 			// If need to convert type of items
 			if (!is_null($params->itemType)){
 				foreach (
-					$params->items as
-					$itemIndex =>
-					$itemObject
+					$params->items
+					as $itemIndex
+					=> $itemObject
 				){
 					$params->items[$itemIndex] = \DDTools\Tools\Objects::convertType([
 						'object' => $itemObject,
@@ -90,7 +88,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * convertItemsType
-	 * @version 1.0.5 (2024-08-04)
+	 * @version 1.0.6 (2024-12-03)
 	 * 
 	 * @see README.md
 	 */
@@ -112,9 +110,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 		
 		// # Run
 		foreach (
-			$this->items as
-			$itemIndex =>
-			$itemObject
+			$this->items
+			as $itemIndex
+			=> $itemObject
 		){
 			if (
 				// If item is matched to filter
@@ -138,7 +136,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * updateItems
-	 * @version 1.0.5 (2024-08-04)
+	 * @version 1.0.6 (2024-12-03)
 	 * 
 	 * @see README.md
 	 */
@@ -163,9 +161,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 		$affectedCount = 0;
 		
 		foreach (
-			$this->items as
-			$itemIndex =>
-			$itemObject
+			$this->items
+			as $itemIndex
+			=> $itemObject
 		){
 			if (
 				// If item is matched to filter
@@ -200,7 +198,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * getItems
-	 * @version 2.0.4 (2024-08-04)
+	 * @version 2.0.5 (2024-12-03)
 	 * 
 	 * @see README.md
 	 */
@@ -228,8 +226,8 @@ class ObjectCollection extends \DDTools\Base\Base {
 		
 		// Filter items
 		foreach (
-			$this->items as
-			$itemObject
+			$this->items
+			as $itemObject
 		){
 			if (
 				// If item is matched to filter
@@ -315,7 +313,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * deleteItems
-	 * @version 1.0.3 (2024-08-04)
+	 * @version 1.0.4 (2024-12-03)
 	 * 
 	 * @see README.md
 	 */
@@ -339,9 +337,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 		$affectedCount = 0;
 		
 		foreach (
-			$this->items as
-			$itemIndex =>
-			$itemObject
+			$this->items
+			as $itemIndex
+			=> $itemObject
 		){
 			if (
 				// If item is matched to filter
@@ -412,7 +410,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * isItemMatchFilter
-	 * @version 2.0.3 (2024-08-04)
+	 * @version 2.0.4 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object. @required
 	 * @param $params->itemObject {array|object} — An item to test. @required
@@ -432,13 +430,13 @@ class ObjectCollection extends \DDTools\Base\Base {
 		
 		// Iterate over “or” conditions
 		foreach (
-			$params->filter as
-			$orCondition
+			$params->filter
+			as $orCondition
 		){
 			// Iterate over “and” conditions
 			foreach (
-				$orCondition as
-				$andCondition
+				$orCondition
+				as $andCondition
 			){
 				// If the item has no the property
 				if (
@@ -488,7 +486,7 @@ class ObjectCollection extends \DDTools\Base\Base {
 	
 	/**
 	 * prepareItemsFilter
-	 * @version 1.0.1 (2024-08-04)
+	 * @version 1.0.2 (2024-12-03)
 	 * 
 	 * @param $filter {string}
 	 * 
@@ -511,9 +509,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 			
 			// Iterate over “or” conditions
 			foreach (
-				$filter as
-				$orIndex =>
-				$orCondition
+				$filter
+				as $orIndex
+				=> $orCondition
 			){
 				$result[$orIndex] = [];
 				
@@ -523,9 +521,9 @@ class ObjectCollection extends \DDTools\Base\Base {
 					explode(
 						'&&',
 						$orCondition
-					) as
-					$andIndex =>
-					$andCondition
+					)
+					as $andIndex
+					=> $andCondition
 				){
 					// Condition object
 					$result[$orIndex][$andIndex] = (object) [

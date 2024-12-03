@@ -85,7 +85,7 @@ abstract class Base {
 	
 	/**
 	 * setExistingProps
-	 * @version 1.4.1 (2024-08-02)
+	 * @version 1.4.2 (2024-12-03)
 	 * 
 	 * @see README.md
 	 * 
@@ -100,9 +100,9 @@ abstract class Base {
 		}
 		
 		foreach (
-			$props as
-			$propName =>
-			$propValue
+			$props
+			as $propName
+			=> $propValue
 		){
 			$this->ddSetProp([
 				'object' => $this,
@@ -168,7 +168,7 @@ abstract class Base {
 	
 	/**
 	 * ddGetPropValues
-	 * @version 1.0 (2020-05-06)
+	 * @version 1.0.1 (2024-12-03)
 	 * 
 	 * @throws \ReflectionException
 	 * 
@@ -189,8 +189,8 @@ abstract class Base {
 		
 		if (!empty($reflectionProperties)){
 			foreach(
-				$reflectionProperties as
-				$reflectionProperty
+				$reflectionProperties
+				as $reflectionProperty
 			){
 				if (!$reflectionProperty->isPublic()){
 					$reflectionProperty->setAccessible(true);
