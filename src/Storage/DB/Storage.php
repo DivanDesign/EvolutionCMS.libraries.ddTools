@@ -570,7 +570,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_get
-	 * @version 1.5 (2024-08-06)
+	 * @version 1.5.1 (2024-12-04)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be returned.
@@ -611,9 +611,13 @@ class Storage extends \DDTools\Storage\Storage {
 		if (!empty($params->propsToReturn)){
 			$sqlResult = \ddTools::$modx->db->select(
 				// Fields
-				implode(
-					',',
-					$params->propsToReturn
+				(
+					'`'
+					. implode(
+						'`,`',
+						$params->propsToReturn
+					)
+					. '`'
 				),
 				// Table
 				$this->nameFull,
