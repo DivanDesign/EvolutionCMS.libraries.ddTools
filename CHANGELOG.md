@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.64.1 (2024-12-04)
+
+* \* `\DDTools\Storage\DB\Storage`: Column names are quoted in all queries to avoid of errors when their names are equal to some reserved keywords, e. g. `repeat`.
+
+
 ## Version 0.64 (2024-09-06)
 
 * \+ `\DDTools\Tools\Objects::extend` → Parameters → `$params->extendableProperties`: The new optional parameter. Allows to use for extending not all properties from additional objects or arrays (see README → Examples).
@@ -153,7 +158,7 @@
 		* \+ `$meta['success']`: Is not required anymore and by default will be equal to `true`.
 		* \+ `$meta['code']`: Is not required anymore and by default will be equal to `200` or `400` depending on `$meta['success']`.
 		* \+ `$meta`:
-		 	* \+ Can also be set as stdClass, stringJsonObject, stringHjsonObject, stringQueryFormatted.
+			 * \+ Can also be set as stdClass, stringJsonObject, stringHjsonObject, stringQueryFormatted.
 			* \+ Is not required anymore and by default will be equal to `['success' => true, 'code' => 200]`.
 	* \+ `setMetaMessage`: If `$this->meta` is not set, it will be set with default values of `success` and `code`.
 

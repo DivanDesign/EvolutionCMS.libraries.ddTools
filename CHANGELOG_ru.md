@@ -1,7 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
-## Version 0.64 (2024-09-06)
+## Версия 0.64.1 (2024-12-04)
+
+* \* `\DDTools\Storage\DB\Storage`: Имена колонок берутся в кавычки во всех запросах, чтобы избежать ошибок, когда они равны каким-нибудь зарезервированным ключевым словам, например `repeat`.
+
+
+## Версия 0.64 (2024-09-06)
 
 * \+ `\DDTools\Tools\Objects::extend` → Параметры → `$params->extendableProperties`: Новый необязательный параметр. Позволяет использовать для расширения не все свойства из дополнительных объектов или массивов (см. README → Примеры).
 * \+ `\DDTools\Storage\Storage` → `items_update`, `items_updateOne`, `items_delete`, `items_deleteOne`, `items_get`, `items_getOne` → Параметры:
@@ -153,7 +158,7 @@
 		* \+ `$meta['success']`: Больше не обязателен и по умолчанию будет равен `true`.
 		* \+ `$meta['code']`: Больше не обязателен и по умолчанию будет равен `200` или `400` в зависимости от `$meta['success']`.
 		* \+ `$meta`:
-		 	* \+ Также может быть задан как stdClass, stringJsonObject, stringHjsonObject, stringQueryFormatted.
+			 * \+ Также может быть задан как stdClass, stringJsonObject, stringHjsonObject, stringQueryFormatted.
 			* \+ Больше не обязателен и по умолчанию будет равен `['success' => true, 'code' => 200]`.
 	* \+ `setMetaMessage`: Если `$this->meta` не задано, будет задано со значениями по умолчанию `success` и `code`.
 
