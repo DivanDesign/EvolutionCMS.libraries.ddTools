@@ -696,7 +696,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_prepareWhere
-	 * @version 1.4.1 (2024-12-03)
+	 * @version 1.4.2 (2024-12-03)
 	 * 
 	 * @desc Builds a where clause in the required internal format from externally passed parameters.
 	 * 
@@ -763,7 +763,7 @@ class Storage extends \DDTools\Storage\Storage {
 						;
 					}
 					
-					$resultItem = $propName . ' ';
+					$resultItem = '`' . $propName . '` ';
 					
 					if (count($propValue) > 1){
 						$resultItem .=
