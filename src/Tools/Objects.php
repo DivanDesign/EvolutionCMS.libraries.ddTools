@@ -434,7 +434,7 @@ class Objects {
 	
 	/**
 	 * extend_getPropMetadata
-	 * @version 1.1 (2024-08-19)
+	 * @version 1.1.1 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->resultObject {object|array}
@@ -520,11 +520,11 @@ class Objects {
 						)
 						// NULL
 						|| is_null($params->additionalPropValue)
-					) ?
+					)
 					// Additional is empty — don't use it
-					false:
+					? false
 					// Additional is not empty — use it
-					true
+					: true
 				;
 				
 				if (

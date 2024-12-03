@@ -28,7 +28,7 @@ abstract class Storage {
 	
 	/**
 	 * items_addOne
-	 * @version 2.0.1 (2024-08-04)
+	 * @version 2.0.2 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — An item.
@@ -42,8 +42,8 @@ abstract class Storage {
 		
 		$result = $this->items_add([
 			'items' => [
-				$params->data
-			]
+				$params->data,
+			],
 		]);
 		
 		if (!empty($result)){
@@ -76,7 +76,7 @@ abstract class Storage {
 	
 	/**
 	 * items_updateOne
-	 * @version 1.2.1 (2024-08-04)
+	 * @version 1.2.2 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
@@ -95,8 +95,8 @@ abstract class Storage {
 					'isEnabledAddNotFound' => false,
 					'data' => [],
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		$result = $this->items_update(
@@ -106,7 +106,7 @@ abstract class Storage {
 					[
 						'limit' => 1,
 					],
-				]
+				],
 			])
 		);
 		
@@ -115,7 +115,7 @@ abstract class Storage {
 		}else{
 			if ($params->isEnabledAddNotFound){
 				$result = $this->items_addOne([
-					'data' => $params->data
+					'data' => $params->data,
 				]);
 			}else{
 				$result = null;
@@ -143,7 +143,7 @@ abstract class Storage {
 	
 	/**
 	 * items_deleteOne
-	 * @version 1.3 (2024-08-08)
+	 * @version 1.3.1 (2024-12-03)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object. Default: —.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that first found item will be deleted.
@@ -161,7 +161,7 @@ abstract class Storage {
 					[
 						'limit' => 1,
 					],
-				]
+				],
 			])
 		);
 	}
@@ -189,7 +189,7 @@ abstract class Storage {
 	
 	/**
 	 * items_getOne
-	 * @version 1.1.1 (2024-08-04)
+	 * @version 1.1.2 (2024-12-03)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->where=''] {string|null} — SQL 'WHERE' clause. null or '' means that first found item will be returned.
@@ -210,8 +210,8 @@ abstract class Storage {
 					'propsToReturn' => '*',
 					'notFoundResult' => null,
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		$result = $this->items_get([

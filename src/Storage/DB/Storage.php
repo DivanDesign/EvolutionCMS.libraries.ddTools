@@ -2,50 +2,46 @@
 namespace DDTools\Storage\DB;
 
 class Storage extends \DDTools\Storage\Storage {
-	protected static
-		/**
-		 * @property $columnsDefaultParams {stdClass} — Default parameters for all columns. If some items are not defined in child classes, parent values will be used (see static::initStatic).
-		 * @property $columnsDefaultParams->{$paramName} {mixed} — Key is a property name, value is a default value that will be used if the property is undefined.
-		 */
-		$columnsDefaultParams = [
-			'attrs' => 'VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL',
-			'isReadOnly' => false,
-			'isPublic' => false,
-			'isComparedCaseSensitive' => false,
-			'isTagsAllowed' => false,
-		]
-	;
+	/**
+	 * @property $columnsDefaultParams {stdClass} — Default parameters for all columns. If some items are not defined in child classes, parent values will be used (see static::initStatic).
+	 * @property $columnsDefaultParams->{$paramName} {mixed} — Key is a property name, value is a default value that will be used if the property is undefined.
+	 */
+	protected static $columnsDefaultParams = [
+		'attrs' => 'VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL',
+		'isReadOnly' => false,
+		'isPublic' => false,
+		'isComparedCaseSensitive' => false,
+		'isTagsAllowed' => false,
+	];
 	
-	protected
-		/**
-		 * @property $nameAlias {string} — Short table name (e. g. 'web_users'), full table name will be built from it. Must be defined in child classes or passed to constructor.
-		 * @property $nameFull {string} — Full table name. Will be built automatically from $this->nameAlias.
-		 */
-		$nameAlias = '',
-		$nameFull = '',
-		
-		/**
-		 * @property $columns {\DDTools\ObjectCollection} — Table columns.
-		 * @property $columns->items[$i] {stdClass} — Column data.
-		 * @property $columns->items[$i]->name {string} — Column name.
-		 * @property $columns->items[$i]->attrs {string} — Column attributes (empty value means static::$columnsDefaultParams->attrs). Default: —.
-		 * @property $columns->items[$i]->isReadOnly {boolean} — Can column be modified? Default: false.
-		 * @property $columns->items[$i]->isPublic {boolean} — Can column be used quite safely? Default: false.
-		 * @property $columns->items[$i]->isComparedCaseSensitive {boolean} — Should column to be compared case-sensitive in where clauses? Default: false.
-		 * @property $columns->items[$i]->isTagsAllowed {boolean} — Are HTML and MODX tags allowed? Default: false.
-		 */
-		$columns = [
-			[
-				'name' => 'id',
-				'attrs' => 'INTEGER(10) AUTO_INCREMENT PRIMARY KEY',
-				'isReadOnly' => true,
-			],
-		]
-	;
+	/**
+	 * @property $nameAlias {string} — Short table name (e. g. 'web_users'), full table name will be built from it. Must be defined in child classes or passed to constructor.
+	 * @property $nameFull {string} — Full table name. Will be built automatically from $this->nameAlias.
+	 */
+	protected $nameAlias = '';
+	protected $nameFull = '';
+	
+	/**
+	 * @property $columns {\DDTools\ObjectCollection} — Table columns.
+	 * @property $columns->items[$i] {stdClass} — Column data.
+	 * @property $columns->items[$i]->name {string} — Column name.
+	 * @property $columns->items[$i]->attrs {string} — Column attributes (empty value means static::$columnsDefaultParams->attrs). Default: —.
+	 * @property $columns->items[$i]->isReadOnly {boolean} — Can column be modified? Default: false.
+	 * @property $columns->items[$i]->isPublic {boolean} — Can column be used quite safely? Default: false.
+	 * @property $columns->items[$i]->isComparedCaseSensitive {boolean} — Should column to be compared case-sensitive in where clauses? Default: false.
+	 * @property $columns->items[$i]->isTagsAllowed {boolean} — Are HTML and MODX tags allowed? Default: false.
+	 */
+	protected $columns = [
+		[
+			'name' => 'id',
+			'attrs' => 'INTEGER(10) AUTO_INCREMENT PRIMARY KEY',
+			'isReadOnly' => true,
+		],
+	];
 	
 	/**
 	 * initStatic
-	 * @version 1.1.3 (2024-08-04)
+	 * @version 1.1.4 (2024-12-03)
 	 * 
 	 * @desc Static “constructor”.
 	 * 
@@ -60,15 +56,15 @@ class Storage extends \DDTools\Storage\Storage {
 					// Parent (\DDTools\DB\Table::$columnsDefaultParams)
 					(object) self::$columnsDefaultParams,
 					// Child (e.g. \Something\Table\Base\Table::$columnsDefaultParams)
-					static::$columnsDefaultParams
-				]
+					static::$columnsDefaultParams,
+				],
 			]);
 		}
 	}
 	
 	/**
 	 * __construct
-	 * @version 3.0.2 (2024-08-04)
+	 * @version 3.0.3 (2024-12-03)
 	 * 
 	 * @param [$params] {arrayAssociative|stdClass} — The parameters object.
 	 * @param [$params->nameAlias=''] {string} — Short table name (e. g. 'site_content'). You can define it in child classes or pass to the constructor directly.
@@ -85,10 +81,10 @@ class Storage extends \DDTools\Storage\Storage {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
-					'columns' => []
+					'columns' => [],
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		// Init static
@@ -101,7 +97,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_props
-	 * @version 2.0.2 (2024-08-04)
+	 * @version 2.0.3 (2024-12-03)
 	 * 
 	 * @param $params {stdClass} — Parameters, see $this->__construct.
 	 * 
@@ -123,8 +119,8 @@ class Storage extends \DDTools\Storage\Storage {
 		if (!empty($params->columns)){
 			// Save additional columns to others
 			foreach (
-				$params->columns as
-				$columnParams
+				$params->columns
+				as $columnParams
 			){
 				// If column is set as a simple string name
 				if (is_string($columnParams)){
@@ -153,7 +149,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_db
-	 * @version 1.0.3 (2024-08-04)
+	 * @version 1.0.5 (2024-12-03)
 	 * 
 	 * @return {void}
 	 */
@@ -162,10 +158,10 @@ class Storage extends \DDTools\Storage\Storage {
 		if (!empty($this->nameAlias)){
 			$isTableExist = boolval(
 				\ddTools::$modx->db->getValue(
-					'show tables like "' .
-					\ddTools::$modx->db->config['table_prefix'] .
-					$this->nameAlias .
-					'"'
+					'show tables like "'
+					. \ddTools::$modx->db->config['table_prefix']
+					. $this->nameAlias
+					. '"'
 				)
 			);
 			
@@ -188,13 +184,13 @@ class Storage extends \DDTools\Storage\Storage {
 			}
 			
 			foreach (
-				$this->columns->getItems() as
-				$columnData
+				$this->columns->getItems()
+				as $columnData
 			){
 				foreach (
-					static::$columnsDefaultParams as
-					$propName =>
-					$propDefaultValue
+					static::$columnsDefaultParams
+					as $propName
+					=> $propDefaultValue
 				){
 					if (
 						!\DDTools\Tools\Objects::isPropExists([
@@ -215,13 +211,13 @@ class Storage extends \DDTools\Storage\Storage {
 				){
 					$columnsQuery[] =
 						(
-							$isTableExist ?
-							'ADD ' :
-							''
-						) .
-						$columnData->name .
-						' ' .
-						$columnData->attrs
+							$isTableExist
+							? 'ADD '
+							: ''
+						)
+						. '`' . $columnData->name . '`'
+						. ' '
+						. $columnData->attrs
 					;
 				}
 			}
@@ -236,19 +232,19 @@ class Storage extends \DDTools\Storage\Storage {
 				if ($isTableExist){
 					// Create missing columns
 					$resultQuery =
-						'ALTER TABLE ' .
-						$this->nameFull .
-						' ' .
-						$columnsQuery
+						'ALTER TABLE '
+						. $this->nameFull
+						. ' '
+						. $columnsQuery
 					;
 				}else{
 					// Create table with needed columns
 					$resultQuery =
-						'CREATE TABLE IF NOT EXISTS ' .
-						$this->nameFull .
-						' (' .
-						$columnsQuery .
-						')'
+						'CREATE TABLE IF NOT EXISTS '
+						. $this->nameFull
+						. ' ('
+						. $columnsQuery
+						. ')'
 					;
 				}
 				
@@ -320,7 +316,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getValidNames
-	 * @version 1.1.4 (2024-08-04)
+	 * @version 1.1.5 (2024-12-03)
 	 * 
 	 * @desc Gets valid column names.
 	 * 
@@ -346,8 +342,8 @@ class Storage extends \DDTools\Storage\Storage {
 		
 		// If we don't need all esixt columns
 		if (
-			$params->colNames != '*' &&
-			!empty($params->colNames)
+			$params->colNames != '*'
+			&& !empty($params->colNames)
 		){
 			// If column names are set as single column name
 			if (!is_array($params->colNames)){
@@ -369,7 +365,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_add
-	 * @version 1.2.2 (2024-08-04)
+	 * @version 1.2.3 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->items {mixed} — An array of items.
@@ -401,8 +397,8 @@ class Storage extends \DDTools\Storage\Storage {
 		$result = [];
 		
 		foreach (
-			$params->items as
-			$itemObject
+			$params->items
+			as $itemObject
 		){
 			$itemObject = (object) $itemObject;
 			
@@ -432,7 +428,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.6 (2024-08-06)
+	 * @version 1.6.1 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
@@ -507,8 +503,8 @@ class Storage extends \DDTools\Storage\Storage {
 			
 			// Comma separated string or fail
 			if (
-				is_string($dbResult) &&
-				!empty($dbResult)
+				is_string($dbResult)
+				&& !empty($dbResult)
 			){
 				$dbResult = explode(
 					',',
@@ -516,8 +512,8 @@ class Storage extends \DDTools\Storage\Storage {
 				);
 				
 				foreach (
-					$dbResult as
-					$itemId
+					$dbResult
+					as $itemId
 				){
 					$result[] = \DDTools\Tools\Objects::extend([
 						'objects' => [
@@ -574,7 +570,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_get
-	 * @version 1.5 (2024-08-06)
+	 * @version 1.5.1 (2024-12-04)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be returned.
@@ -615,9 +611,13 @@ class Storage extends \DDTools\Storage\Storage {
 		if (!empty($params->propsToReturn)){
 			$sqlResult = \ddTools::$modx->db->select(
 				// Fields
-				implode(
-					',',
-					$params->propsToReturn
+				(
+					'`'
+					. implode(
+						'`,`',
+						$params->propsToReturn
+					)
+					. '`'
 				),
 				// Table
 				$this->nameFull,
@@ -668,8 +668,8 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @desc Returns only used properties (columns) of $params->data.
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
- 	 * @param $params->data {stdClass|arrayAssociative} — An array/object of item properties (e. g. you can use $_POST). Properties with only valid names will be returned, others will be deleted.
- 	 * @param $params->data->{$fieldName} {mixed} — Key is an item property name, value is a value.
+		* @param $params->data {stdClass|arrayAssociative} — An array/object of item properties (e. g. you can use $_POST). Properties with only valid names will be returned, others will be deleted.
+		* @param $params->data->{$fieldName} {mixed} — Key is an item property name, value is a value.
 	 * 
 	 * @return {stdClass}
 	 */
@@ -696,7 +696,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_prepareWhere
-	 * @version 1.4 (2024-08-06)
+	 * @version 1.4.2 (2024-12-03)
 	 * 
 	 * @desc Builds a where clause in the required internal format from externally passed parameters.
 	 * 
@@ -731,9 +731,9 @@ class Storage extends \DDTools\Storage\Storage {
 			$result = [];
 			
 			foreach (
-				$params->where as
-				$propName =>
-				$propValue
+				$params->where
+				as $propName
+				=> $propValue
 			){
 				if (!is_array($propValue)){
 					$propValue = [$propValue];
@@ -752,18 +752,18 @@ class Storage extends \DDTools\Storage\Storage {
 								$this->cols_getOneColParam([
 									'filter' => 'name == ' . $propName,
 									'paramName' => 'isComparedCaseSensitive',
-								]) ?
-								'BINARY ' :
-								''
-							) .
-							'"' . $this->escapeItemPropValue([
+								])
+								? 'BINARY '
+								: ''
+							)
+							. '"' . $this->escapeItemPropValue([
 								'propName' => $propName,
 								'propValue' => $propValue_variantValue,
 							]) . '"'
 						;
 					}
 					
-					$resultItem = $propName . ' ';
+					$resultItem = '`' . $propName . '` ';
 					
 					if (count($propValue) > 1){
 						$resultItem .=
@@ -819,7 +819,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * buildSqlSetString
-	 * @version 1.0.3 (2024-08-04)
+	 * @version 1.0.4 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — Item data.
@@ -833,9 +833,9 @@ class Storage extends \DDTools\Storage\Storage {
 		$result = [];
 		
 		foreach (
-			$params->data as
-			$propName =>
-			$propValue
+			$params->data
+			as $propName
+			=> $propValue
 		){
 			$result[] = '`' . $propName . '` = "' . $this->escapeItemPropValue([
 				'propName' => $propName,
@@ -853,7 +853,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * buildSqlLimitString
-	 * @version 1.0.2 (2024-08-04)
+	 * @version 1.0.3 (2024-12-03)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->limit=0] {integer|0} — Maximum number of items to return. `0` means all matching.
@@ -875,20 +875,20 @@ class Storage extends \DDTools\Storage\Storage {
 		
 		return
 			// If limit is used
-			$params->limit > 0 ?
-			(
-				'LIMIT ' .
+			$params->limit > 0
+			? (
+				'LIMIT '
 				// Offset
-				(
-					$params->offset > 0 ?
-					$params->offset . ', ' :
-					''
-				) .
+				. (
+					$params->offset > 0
+					? $params->offset . ', '
+					: ''
+				)
 				// Count
-				$params->limit
-			) :
+				. $params->limit
+			)
 			// Without limit
-			''
+			: ''
 		;
 	}
 	

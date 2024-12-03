@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.64 (2024-09-06)
+ * @version 0.64.1 (2024-12-04)
  * 
  * @see README.md
  * 
@@ -12,107 +12,103 @@ global $modx;
 
 if (!class_exists('ddTools')){
 class ddTools {
-	public static
-		$modx,
-		// Contains names of document fields (`site_content`)
-		$documentFields = [
-			'id',
-			'type',
-			'contentType',
-			'pagetitle',
-			'longtitle',
-			'description',
-			'alias',
-			'alias_visible',
-			'link_attributes',
-			'published',
-			'pub_date',
-			'unpub_date',
-			'parent',
-			'isfolder',
-			'introtext',
-			'content',
-			'richtext',
-			'template',
-			'menuindex',
-			'searchable',
-			'cacheable',
-			'createdby',
-			'createdon',
-			'editedby',
-			'editedon',
-			'deleted',
-			'deletedon',
-			'deletedby',
-			'publishedon',
-			'publishedby',
-			'menutitle',
-			'donthit',
-			'haskeywords',
-			'hasmetatags',
-			'privateweb',
-			'privatemgr',
-			'content_dispo',
-			'hidemenu'
-		],
-		// Contains full names of db tables
-		$tables = [
-			// System
-			'categories' => '',
-			'event_log' => '',
-			'manager_log' => '',
-			'manager_users' => '',
-			'system_eventnames' => '',
-			'system_settings' => '',
-			// Documents
-			'site_content' => '',
-			'documentgroup_names' => '',
-			'document_groups' => '',
-			// Templates
-			'site_templates' => '',
-			// Chunks
-			'site_htmlsnippets' => '',
-			// TVs
-			'site_tmplvars' => '',
-			'site_tmplvar_access' => '',
-			'site_tmplvar_contentvalues' => '',
-			'site_tmplvar_templates' => '',
-			// Snippets
-			'site_snippets' => '',
-			// Plugins
-			'site_plugins' => '',
-			'site_plugin_events' => '',
-			// Modules
-			'site_modules' => '',
-			'site_module_access' => '',
-			'site_module_depobj' => '',
-			// Users
-			'membergroup_access' => '',
-			'membergroup_names' => '',
-			'member_groups' => '',
-			'active_users' => '',
-			'active_user_locks' => '',
-			'active_user_sessions' => '',
-			'user_attributes' => '',
-			'user_messages' => '',
-			'user_roles' => '',
-			'user_settings' => '',
-			'webgroup_access' => '',
-			'webgroup_names' => '',
-			'web_groups' => '',
-			'web_users' => '',
-			'web_user_attributes' => '',
-			'web_user_settings' => ''
-		]
-	;
+	public static $modx;
+	// Contains names of document fields (`site_content`)
+	public static $documentFields = [
+		'id',
+		'type',
+		'contentType',
+		'pagetitle',
+		'longtitle',
+		'description',
+		'alias',
+		'alias_visible',
+		'link_attributes',
+		'published',
+		'pub_date',
+		'unpub_date',
+		'parent',
+		'isfolder',
+		'introtext',
+		'content',
+		'richtext',
+		'template',
+		'menuindex',
+		'searchable',
+		'cacheable',
+		'createdby',
+		'createdon',
+		'editedby',
+		'editedon',
+		'deleted',
+		'deletedon',
+		'deletedby',
+		'publishedon',
+		'publishedby',
+		'menutitle',
+		'donthit',
+		'haskeywords',
+		'hasmetatags',
+		'privateweb',
+		'privatemgr',
+		'content_dispo',
+		'hidemenu'
+	];
+	// Contains full names of db tables
+	public static $tables = [
+		// System
+		'categories' => '',
+		'event_log' => '',
+		'manager_log' => '',
+		'manager_users' => '',
+		'system_eventnames' => '',
+		'system_settings' => '',
+		// Documents
+		'site_content' => '',
+		'documentgroup_names' => '',
+		'document_groups' => '',
+		// Templates
+		'site_templates' => '',
+		// Chunks
+		'site_htmlsnippets' => '',
+		// TVs
+		'site_tmplvars' => '',
+		'site_tmplvar_access' => '',
+		'site_tmplvar_contentvalues' => '',
+		'site_tmplvar_templates' => '',
+		// Snippets
+		'site_snippets' => '',
+		// Plugins
+		'site_plugins' => '',
+		'site_plugin_events' => '',
+		// Modules
+		'site_modules' => '',
+		'site_module_access' => '',
+		'site_module_depobj' => '',
+		// Users
+		'membergroup_access' => '',
+		'membergroup_names' => '',
+		'member_groups' => '',
+		'active_users' => '',
+		'active_user_locks' => '',
+		'active_user_sessions' => '',
+		'user_attributes' => '',
+		'user_messages' => '',
+		'user_roles' => '',
+		'user_settings' => '',
+		'webgroup_access' => '',
+		'webgroup_names' => '',
+		'web_groups' => '',
+		'web_users' => '',
+		'web_user_attributes' => '',
+		'web_user_settings' => ''
+	];
 	
-	private static
-		$instance
-	;
+	private static $instance;
 	
 	/**
 	 * __construct
-	 * @version 1.0.6 (2024-08-04)
+	 * @version 1.0.7 (2024-12-03)
 	 */
 	private function __construct(){
 		global $modx;
@@ -121,9 +117,9 @@ class ddTools {
 		
 		// Init full table names
 		foreach (
-			self::$tables as
-			$tableAlias =>
-			$tableFullName
+			self::$tables
+			as $tableAlias
+			=> $tableFullName
 		){
 			self::$tables[$tableAlias] = self::$modx->getFullTableName($tableAlias);
 		}
@@ -131,9 +127,9 @@ class ddTools {
 		// We need to include required files if Composer is not used
 		if(!class_exists('\DDTools\Tools\Files')){
 			require_once(
-				__DIR__ .
-				DIRECTORY_SEPARATOR .
-				'require.php'
+				__DIR__
+				. DIRECTORY_SEPARATOR
+				. 'require.php'
 			);
 		}
 	}
@@ -142,14 +138,14 @@ class ddTools {
 	
 	/**
 	 * getInstance
-	 * @version 1.0 (2018-10-01)
+	 * @version 1.0.1 (2024-12-03)
 	 */
 	public static function getInstance(){
 		global $modx;
 		
 		if(
-			isset($modx) &&
-			!self::$instance
+			isset($modx)
+			&& !self::$instance
 		){
 			self::$instance = new ddTools();
 		}
@@ -175,7 +171,7 @@ class ddTools {
 	
 	/**
 	 * orderedParamsToNamed
-	 * @version 1.1.7 (2024-08-04)
+	 * @version 1.1.8 (2024-12-03)
 	 * 
 	 * @desc Convert list of ordered parameters to named. Method is public, but be advised that this is beta-version!
 	 * 
@@ -199,9 +195,9 @@ class ddTools {
 		
 		// Перебираем массив соответствия
 		foreach (
-			$params->compliance as
-			$index =>
-			$name
+			$params->compliance
+			as $index
+			=> $name
 		){
 			// Если параметр задан
 			if (isset($params->paramsList[$index])){
@@ -218,33 +214,33 @@ class ddTools {
 		$caller = $logData->backtraceArray[0];
 		$caller =
 			(
-				isset($caller['class']) ?
-				$caller['class'] . '->' :
-				''
-			) .
-			$caller['function']
+				isset($caller['class'])
+				? $caller['class'] . '->'
+				: ''
+			)
+			. $caller['function']
 		;
 		
 		// General info with code example
 		$logData->message =
-			'<p>Deprecated ordered parameters.</p><p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>' .
-			'<pre><code>//Old style' .
-			$caller .
-			'($' .
-			implode(
-				', $',
-				$params->compliance
-			) .
-			');' .
-			'//Pass-by-name' .
-			$caller .
-			'([' .
-			implode(
-				',' . PHP_EOL . "\t",
-				$logData->message
-			) .
-			']);' .
-			'</code></pre>'
+			'<p>Deprecated ordered parameters.</p><p>Ordered list of parameters is no longer allowed, use the “<a href="https://en.wikipedia.org/wiki/Named_parameter" target="_blank">pass-by-name</a>” style.</p>'
+			. '<pre><code>//Old style'
+				. $caller
+				. '($'
+				. implode(
+					', $',
+					$params->compliance
+				)
+				. ');'
+				. '//Pass-by-name'
+				. $caller
+				. '(['
+				. implode(
+					',' . PHP_EOL . "\t",
+					$logData->message
+				)
+				. ']);'
+			. '</code></pre>'
 		;
 		
 		self::logEvent($logData);
@@ -254,7 +250,7 @@ class ddTools {
 	
 	/**
 	 * explodeAssoc
-	 * @version 1.1.7 (2024-08-04)
+	 * @version 1.1.8 (2024-12-03)
 	 * 
 	 * @desc Splits string on two separators in the associative array.
 	 * 
@@ -283,8 +279,8 @@ class ddTools {
 		);
 		
 		foreach (
-			$inputString as
-			$item
+			$inputString
+			as $item
 		){
 			// Разбиваем на ключ-значение
 			$item = explode(
@@ -293,9 +289,9 @@ class ddTools {
 			);
 			
 			$result[$item[0]] =
-				isset($item[1]) ?
-				$item[1] :
-				''
+				isset($item[1])
+				? $item[1]
+				: ''
 			;
 		}
 		
@@ -304,7 +300,7 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.3.2 (2024-08-04)
+	 * @version 1.3.3 (2024-12-03)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
@@ -343,9 +339,9 @@ class ddTools {
 		
 		// Перебираем массив
 		foreach (
-			$array as
-			$arrayItemKey =>
-			$arrayItem
+			$array
+			as $arrayItemKey
+			=> $arrayItem
 		){
 			$arrayItem_comparisonValue = \DDTools\Tools\Objects::getPropValue([
 				'object' => $arrayItem,
@@ -354,17 +350,17 @@ class ddTools {
 			
 			// Если эталон и текущее значение — числа
 			if (
-				$isCurrentItemComparisonValueNumeric &&
-				is_numeric($arrayItem_comparisonValue)
+				$isCurrentItemComparisonValueNumeric
+				&& is_numeric($arrayItem_comparisonValue)
 			){
 				// Получаем нужную циферку
 				$cmpRes =
-					$arrayItem_comparisonValue == $currentItem_comparisonValue ?
-					0 :
-					(
-						$arrayItem_comparisonValue > $currentItem_comparisonValue ?
-						1 :
-						-1
+					$arrayItem_comparisonValue == $currentItem_comparisonValue
+					? 0
+					: (
+						$arrayItem_comparisonValue > $currentItem_comparisonValue
+						? 1
+						: -1
 					)
 				;
 			// Если они строки
@@ -396,38 +392,38 @@ class ddTools {
 		
 		// Массивы меньших и массивы больших прогоняем по тому же алгоритму (если в них что-то есть)
 		$resultArrayLeft =
-			count($resultArrayLeft) > 1 ?
-			self::sort2dArray(
+			count($resultArrayLeft) > 1
+			? self::sort2dArray(
 				$resultArrayLeft,
 				$sortBy,
 				$sortDir,
 				$i
-			) :
-			$resultArrayLeft
+			)
+			: $resultArrayLeft
 		;
 		$resultArrayRight =
-			count($resultArrayRight) > 1 ?
-			self::sort2dArray(
+			count($resultArrayRight) > 1
+			? self::sort2dArray(
 				$resultArrayRight,
 				$sortBy,
 				$sortDir,
 				$i
-			) :
-			$resultArrayRight
+			)
+			: $resultArrayRight
 		;
 		// Массив одинаковых прогоняем по следующему условию сортировки (если есть условие и есть что сортировать)
 		$resultArrayCenter =
 			(
-				count($resultArrayCenter) > 1 &&
-				$sortBy[$i + 1]
-			) ?
-			self::sort2dArray(
+				count($resultArrayCenter) > 1
+				&& $sortBy[$i + 1]
+			)
+			? self::sort2dArray(
 				$resultArrayCenter,
 				$sortBy,
 				$sortDir,
 				$i + 1
-			) :
-			$resultArrayCenter
+			)
+			: $resultArrayCenter
 		;
 		
 		// Склеиваем отсортированные меньшие, средние и большие
@@ -440,7 +436,7 @@ class ddTools {
 	
 	/**
 	 * parseFileNameVersion
-	 * @version 1.1.5 (2024-08-04)
+	 * @version 1.1.6 (2024-12-03)
 	 * 
 	 * @desc Parses a file path and gets its name, version & extension.
 	 * 
@@ -458,9 +454,9 @@ class ddTools {
 			$fileinfo = $file;
 			// А также запоминаем строку
 			$file =
-				$fileinfo['dirname'] .
-				'/' .
-				$fileinfo['basename']
+				$fileinfo['dirname']
+				. '/'
+				. $fileinfo['basename']
 			;
 			// Если передали строку
 		}else{
@@ -473,9 +469,9 @@ class ddTools {
 			'name' => strtolower($file),
 			'version' => '0',
 			'extension' =>
-				!$fileinfo['extension'] ?
-				'' :
-				$fileinfo['extension']
+				!$fileinfo['extension']
+				? ''
+				: $fileinfo['extension']
 		];
 		
 		// Try to get file version [0 — full name, 1 — script name, 2 — version, 3 — all chars after version]
@@ -496,7 +492,7 @@ class ddTools {
 	
 	/**
 	 * convertUrlToAbsolute
-	 * @version 1.0.2 (2024-08-04)
+	 * @version 1.0.3 (2024-12-03)
 	 * 
 	 * @desc Converts relative URLs to absolute.
 	 * 
@@ -524,14 +520,14 @@ class ddTools {
 		if (is_null($params->scheme)){
 			$params->scheme =
 				(
-					isset($_SERVER['HTTPS']) &&
-					(
-						$_SERVER['HTTPS'] == 'on' ||
-						$_SERVER['HTTPS'] == 1
+					isset($_SERVER['HTTPS'])
+					&& (
+						$_SERVER['HTTPS'] == 'on'
+						|| $_SERVER['HTTPS'] == 1
 					)
-				) ?
-				'https' :
-				'http'
+				)
+				? 'https'
+				: 'http'
 			;
 		}
 		
@@ -549,9 +545,9 @@ class ddTools {
 			'//'
 		){
 			$result =
-				$params->scheme .
-				':' .
-				$params->url
+				$params->scheme
+				. ':'
+				. $params->url
 			;
 		// E. g. 'https://example.com/some/url'
 		}elseif (
@@ -570,18 +566,18 @@ class ddTools {
 			0
 		){
 			$result =
-				$params->scheme .
-				'://' .
-				$params->url
+				$params->scheme
+				. '://'
+				. $params->url
 			;
 		// E. g. 'some/url', '/some/url'
 		}else{
 			$result =
-				$params->scheme .
-				'://' .
-				$params->host .
-				'/' .
-				ltrim(
+				$params->scheme
+				. '://'
+				. $params->host
+				. '/'
+				. ltrim(
 					$params->url,
 					'/'
 				)
@@ -699,7 +695,7 @@ class ddTools {
 
 	/**
 	 * getPlaceholdersFromText
-	 * @version 1.0.3 (2024-08-04)
+	 * @version 1.0.4 (2024-12-03)
 	 * 
 	 * @desc Finds all placeholders' names and returns them as an array.
 	 * 
@@ -728,11 +724,11 @@ class ddTools {
 		
 		preg_match_all(
 			(
-				'/' .
-				$params->placeholderPrefix .
-				'(.*?)' .
-				$params->placeholderSuffix .
 				'/'
+				. $params->placeholderPrefix
+				. '(.*?)'
+				. $params->placeholderSuffix
+				. '/'
 			),
 			$params->text,
 			$result
@@ -745,7 +741,7 @@ class ddTools {
 	
 	/**
 	 * logEvent
-	 * @version 1.0.4 (2024-08-04)
+	 * @version 1.0.5 (2024-12-03)
 	 * 
 	 * @desc Add an alert message to the system event log with debug info (backtrace, snippet name, document id, etc).
 	 * 
@@ -782,11 +778,11 @@ class ddTools {
 		$caller = $params->backtraceArray[0];
 		$caller =
 			(
-				isset($caller['class']) ?
-				$caller['class'] . '->' :
-				''
-			) .
-			$caller['function']
+				isset($caller['class'])
+				? $caller['class'] . '->'
+				: ''
+			)
+			. $caller['function']
 		;
 		
 		
@@ -795,9 +791,9 @@ class ddTools {
 		// Add current document Id to debug info
 		if (!empty(self::$modx->documentIdentifier)){
 			$debugInfo[] =
-				'<li>Document id: “' .
-				self::$modx->documentIdentifier .
-				'”;</li>'
+				'<li>Document id: “'
+				. self::$modx->documentIdentifier
+				. '”;</li>'
 			;
 		}
 		
@@ -810,9 +806,9 @@ class ddTools {
 			}else{
 				// Add to debug info
 				$debugInfo[] =
-					'<li>Snippet: “' .
-					self::$modx->currentSnippet .
-					'”;</li>'
+					'<li>Snippet: “'
+					. self::$modx->currentSnippet
+					. '”;</li>'
 				;
 			}
 		}
@@ -827,12 +823,12 @@ class ddTools {
 		
 		if (!empty($debugInfo)){
 			$params->message .=
-				'<ul>' .
-				implode(
+				'<ul>'
+				. implode(
 					'',
 					$debugInfo
-				) .
-				'</ul>'
+				)
+				. '</ul>'
 			;
 		}
 		
@@ -907,7 +903,7 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.9.2 (2024-08-04)
+	 * @version 1.9.3 (2024-12-03)
 	 * 
 	 * @see README.md
 	 */
@@ -927,9 +923,9 @@ class ddTools {
 		]);
 		
 		foreach (
-			$params->data as
-			$key =>
-			$value
+			$params->data
+			as $key
+			=> $value
 		){
 			$result = static::parseText_parseItem([
 				'text' => $result,
@@ -1006,7 +1002,7 @@ class ddTools {
 	
 	/**
 	 * parseText_prepareData
-	 * @version 1.0.2 (2024-08-04)
+	 * @version 1.0.3 (2024-12-03)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object. See $this->parseText.
 	 * @param $params->data {stdClass|array|string}
@@ -1020,8 +1016,8 @@ class ddTools {
 		
 		// Arrays and objects are already ready to use
 		if (
-			!is_object($params->data) &&
-			!is_array($params->data)
+			!is_object($params->data)
+			&& !is_array($params->data)
 		){
 			$params->data = \DDTools\Tools\Objects::convertType([
 				'object' => $params->data,
@@ -1030,13 +1026,13 @@ class ddTools {
 		}
 		
 		foreach (
-			$params->data as
-			$key =>
-			$value
+			$params->data
+			as $key
+			=> $value
 		){
 			if (
-				is_object($value) ||
-				is_array($value)
+				is_object($value)
+				|| is_array($value)
 			){
 				// Unfold for nested objects and arrays support (e. g. ['some' => ['a' => 'one', 'b' => 'two'] ] → '[+some.a+]', '[+some.b+]'; ['some' => ['one', 'two'] ] → '[+some.0+]', '[some.1]')
 				$unfoldedValue = \DDTools\Tools\Objects::unfold([
@@ -1047,9 +1043,9 @@ class ddTools {
 				]);
 				
 				foreach (
-					$unfoldedValue as
-					$unfoldedValue_itemKey =>
-					$unfoldedValue_itemValue
+					$unfoldedValue
+					as $unfoldedValue_itemKey
+					=> $unfoldedValue_itemValue
 				){
 					$result->{$unfoldedValue_itemKey} = $unfoldedValue_itemValue;
 				}
@@ -1117,7 +1113,7 @@ class ddTools {
 	
 	/**
 	 * clearCache
-	 * @version 1.1.1 (2024-08-04)
+	 * @version 1.1.2 (2024-12-03)
 	 * 
 	 * @desc Clears cache of required document(s) and their parents.
 	 * 
@@ -1146,34 +1142,34 @@ class ddTools {
 		}
 		
 		$cacheFilePrefix =
-			self::$modx->getConfig('base_path') .
-			self::$modx->getCacheFolder() .
-			'docid_'
+			self::$modx->getConfig('base_path')
+			. self::$modx->getCacheFolder()
+			. 'docid_'
 		;
 		
 		$cacheFileSuffix = '.pageCache.php';
 		
 		foreach (
-			$params->docIds as
-			$docId
+			$params->docIds
+			as $docId
 		){
 			// $_GET cache
 			$cacheFiles = glob(
-				$cacheFilePrefix .
-				$docId .
-				'_*' .
-				$cacheFileSuffix
+				$cacheFilePrefix
+				. $docId
+				. '_*'
+				. $cacheFileSuffix
 			);
 			// Without $_GET
 			$cacheFiles[] =
-				$cacheFilePrefix .
-				$docId .
-				$cacheFileSuffix
+				$cacheFilePrefix
+				. $docId
+				. $cacheFileSuffix
 			;
 			
 			foreach (
-				$cacheFiles as
-				$cacheFiles_item
+				$cacheFiles
+				as $cacheFiles_item
 			){
 				if (!is_file($cacheFiles_item)){
 					continue;
@@ -1197,7 +1193,7 @@ class ddTools {
 	
 	/**
 	 * prepareDocData
-	 * @version 2.0.5 (2024-08-04)
+	 * @version 2.0.6 (2024-12-03)
 	 * 
 	 * @desc Prepare document data from single array of fields and TVs: separate them and get TV IDs if needed.
 	 * 
@@ -1233,9 +1229,9 @@ class ddTools {
 		
 		// Перебираем поля, раскидываем на поля документа и TV
 		foreach (
-			$params->data as
-			$data_itemFieldName =>
-			$data_itemFieldValue
+			$params->data
+			as $data_itemFieldName
+			=> $data_itemFieldValue
 		){
 			// Если это не поле документа
 			if (!in_array(
@@ -1251,9 +1247,9 @@ class ddTools {
 		}
 		
 		if (
-			!empty($params->tvAdditionalFieldsToGet) &&
+			!empty($params->tvAdditionalFieldsToGet)
 			// Если есть хоть одна TV
-			count($result->tvsData) > 0
+			&& count($result->tvsData) > 0
 		){
 			if (!in_array(
 				'name',
@@ -1266,23 +1262,23 @@ class ddTools {
 			$dbRes = self::$modx->db->select(
 				// Fields
 				(
-					'`' .
-					implode(
+					'`'
+					. implode(
 						'`, `',
 						$params->tvAdditionalFieldsToGet
-					) .
-					'`'
+					)
+					. '`'
 				),
 				// From
 				self::$tables['site_tmplvars'],
 				// Where
 				(
-					"`name` IN ('" .
-					implode(
+					"`name` IN ('"
+					. implode(
 						"','",
 						array_keys($result->tvsData)
-					) .
-					"')"
+					)
+					. "')"
 				)
 			);
 			
@@ -1329,7 +1325,7 @@ class ddTools {
 	
 	/**
 	 * createDocument
-	 * @version 1.5.2 (2024-08-04)
+	 * @version 1.5.3 (2024-12-03)
 	 * 
 	 * @desc Create a new document.
 	 * 
@@ -1378,9 +1374,9 @@ class ddTools {
 		$docAlias = $docData->alias;
 		
 		foreach (
-			$docData as
-			$fieldName =>
-			$fieldValue
+			$docData
+			as $fieldName
+			=> $fieldValue
 		){
 			$docData->{$fieldName} = self::$modx->db->escape($fieldValue);
 		}
@@ -1407,14 +1403,14 @@ class ddTools {
 		if (count($docData->tvsAdditionalData) > 0){
 			// Перебираем массив TV с ID
 			foreach (
-				$docData->tvsAdditionalData as
-				$tvName =>
-				$tvData
+				$docData->tvsAdditionalData
+				as $tvName
+				=> $tvData
 			){
 				if (
 					// Если это дата
-					$tvData['type'] == 'date' &&
-					// И она задана как Unixtime
+					$tvData['type'] == 'date'
+					&& // И она задана как Unixtime
 					is_numeric($docData->tvsData[$tvName])
 				){
 					// Приведём её к формату системы
@@ -1439,8 +1435,8 @@ class ddTools {
 		if ($docGroups){
 			// Перебираем все группы
 			foreach (
-				$docGroups as
-				$docGroupId
+				$docGroups
+				as $docGroupId
 			){
 				self::$modx->db->insert(
 					// Field
@@ -1456,14 +1452,14 @@ class ddTools {
 		
 		// Смотрим родителя нового документа, является ли он папкой и его псевдоним
 		$docParent =
-			isset($docData->fieldsData['parent']) ?
-			$docData->fieldsData['parent'] :
-			0
+			isset($docData->fieldsData['parent'])
+			? $docData->fieldsData['parent']
+			: 0
 		;
 		$docIsFolder =
-			isset($docData->fieldsData['isfolder']) ?
-			$docData->fieldsData['isfolder'] :
-			0
+			isset($docData->fieldsData['isfolder'])
+			? $docData->fieldsData['isfolder']
+			: 0
 		;
 		
 		// Пусть созданного документа
@@ -1493,11 +1489,11 @@ class ddTools {
 		// Добавляем в documentListing
 		if(self::$modx->aliasListing[$docId]['path'] !== ''){
 			self::$modx->documentListing[
-				self::$modx->aliasListing[$docId]['path'] . '/' .
-				(
+				self::$modx->aliasListing[$docId]['path'] . '/'
+				. (
 					self::$modx->aliasListing[$docId]['alias'] != ''?
-					self::$modx->aliasListing[$docId]['alias'] :
-					self::$modx->aliasListing[$docId]['id']
+					self::$modx->aliasListing[$docId]['alias']
+					: self::$modx->aliasListing[$docId]['id']
 				)
 			] = $docId;
 		}
@@ -1507,7 +1503,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.5.2 (2024-08-04)
+	 * @version 1.5.3 (2024-12-03)
 	 * 
 	 * @desc Update document(s). Cache of the updated docs and their parents will be cleared.
 	 * 
@@ -1526,8 +1522,8 @@ class ddTools {
 	){
 		// Required parameters
 		if (
-			$docId == 0 &&
-			trim($where) == ''
+			$docId == 0
+			&& trim($where) == ''
 		){
 			return false;
 		}
@@ -1549,21 +1545,21 @@ class ddTools {
 		$whereSql = '';
 		
 		if (
-			is_array($docId) &&
-			count($docId)
+			is_array($docId)
+			&& count($docId)
 		){
 			// Обрабатываем массив id
 			$whereSql .=
-				'`id` IN ("' .
-				implode(
+				'`id` IN ("'
+				. implode(
 					'","',
 					$docId
-				) .
-				'")'
+				)
+				. '")'
 			;
 		}elseif (
-			is_numeric($docId) &&
-			$docId != 0
+			is_numeric($docId)
+			&& $docId != 0
 		){
 			// Обрабатываем числовой id
 			$whereSql .= '`id`="' . $docId . '"';
@@ -1573,11 +1569,11 @@ class ddTools {
 		if ($where != ''){
 			$whereSql .=
 				(
-					$whereSql != '' ?
-					' AND ' :
-					''
-				) .
-				$where
+					$whereSql != ''
+					? ' AND '
+					: ''
+				)
+				. $where
 			;
 		}
 		
@@ -1595,9 +1591,9 @@ class ddTools {
 			}
 			
 			foreach (
-				$docData as
-				$fieldName =>
-				$fieldValue
+				$docData
+				as $fieldName
+				=> $fieldValue
 			){
 				$docData->{$fieldName} = self::$modx->db->escape($fieldValue);
 			}
@@ -1624,19 +1620,19 @@ class ddTools {
 			if (count($docData->tvsAdditionalData) > 0){
 				// Обновляем TV всех найденых документов
 				foreach (
-					$docIdsToUpdate as
-					$docId
+					$docIdsToUpdate
+					as $docId
 				){
 					// Перебираем массив существующих TV
 					foreach (
-						$docData->tvsAdditionalData as
-						$tvName =>
-						$tvData
+						$docData->tvsAdditionalData
+						as $tvName
+						=> $tvData
 					){
 						if (
 							// Если это дата
-							$tvData['type'] == 'date' &&
-							// И она задана как Unixtime
+							$tvData['type'] == 'date'
+							&& // И она задана как Unixtime
 							is_numeric($docData->tvsData[$tvName])
 						){
 							// Приведём её к формату системы
@@ -1700,7 +1696,7 @@ class ddTools {
 	
 	/**
 	 * getDocuments
-	 * @version 1.2.9 (2024-08-04)
+	 * @version 1.2.10 (2024-12-03)
 	 * 
 	 * @desc Returns required documents (documents fields).
 	 * 
@@ -1770,8 +1766,8 @@ class ddTools {
 		}else{
 			// modify field names to use sc. table reference
 			$fields =
-				'sc.' .
-				implode(
+				'sc.'
+				. implode(
 					',sc.',
 					array_filter(array_map(
 						'trim',
@@ -1783,11 +1779,11 @@ class ddTools {
 				)
 			;
 			$sort =
-				$sort == '' ?
-				'' :
-				(
-					'sc.' .
-					implode(
+				$sort == ''
+				? ''
+				: (
+					'sc.'
+					. implode(
 						',sc.',
 						array_filter(array_map(
 							'trim',
@@ -1804,14 +1800,14 @@ class ddTools {
 			}
 			
 			$published =
-				$published !== 'all' ?
-				"AND sc.published = '{$published}'" :
-				''
+				$published !== 'all'
+				? "AND sc.published = '{$published}'"
+				: ''
 			;
 			$deleted =
-				$deleted !== 'all' ?
-				"AND sc.deleted = '{$deleted}'" :
-				''
+				$deleted !== 'all'
+				? "AND sc.deleted = '{$deleted}'"
+				: ''
 			;
 			
 			$result = self::$modx->db->select(
@@ -1824,24 +1820,24 @@ class ddTools {
 				',
 				// Where
 				(
-					'(sc.id IN (' .
-					implode(
+					'(sc.id IN ('
+					. implode(
 						',',
 						$ids
-					) .
-					') ' .
-					$published .
-					' ' .
-					$deleted .
-					' ' .
-					$where .
-					') GROUP BY sc.id'
+					)
+					. ') '
+					. $published
+					. ' '
+					. $deleted
+					. ' '
+					. $where
+					. ') GROUP BY sc.id'
 				),
 				// Order
 				(
-					$sort ?
-					$sort . ' ' . $dir :
-					''
+					$sort
+					? $sort . ' ' . $dir
+					: ''
 				),
 				// Limit
 				$limit
@@ -1919,7 +1915,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.11 (2024-08-04)
+	 * @version 1.3.12 (2024-12-03)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -1954,10 +1950,10 @@ class ddTools {
 		}
 		
 		if (
-			empty($idnames) ||
-			(
-				!is_array($idnames) &&
-				$idnames != '*'
+			empty($idnames)
+			|| (
+				!is_array($idnames)
+				&& $idnames != '*'
 			)
 		){
 			return false;
@@ -1981,11 +1977,11 @@ class ddTools {
 			
 			// get user defined template variables
 			$fields =
-				$fields == '' ?
-				'tv.*' :
-				(
-					'tv.' .
-					implode(
+				$fields == ''
+				? 'tv.*'
+				: (
+					'tv.'
+					. implode(
 						',tv.',
 						array_filter(array_map(
 							'trim',
@@ -1998,11 +1994,11 @@ class ddTools {
 				)
 			;
 			$sort =
-				$sort == '' ?
-				'' :
-				(
-					'tv.' .
-					implode(
+				$sort == ''
+				? ''
+				: (
+					'tv.'
+					. implode(
 						',tv.',
 						array_filter(array_map(
 							'trim',
@@ -2020,24 +2016,24 @@ class ddTools {
 			}else{
 				$query =
 					(
-						is_numeric($idnames[0]) ?
-						'tv.id' :
-						'tv.name'
-					) .
-					' IN ("' .
-					implode(
+						is_numeric($idnames[0])
+						? 'tv.id'
+						: 'tv.name'
+					)
+					. ' IN ("'
+					. implode(
 						'","',
 						$idnames
-					) .
-					'")'
+					)
+					. '")'
 				;
 			}
 			
 			$rs = self::$modx->db->select(
 				// Fields
 				(
-					$fields .
-					', IF(tvc.value != "", tvc.value, tv.default_text) as value'
+					$fields
+					. ', IF(tvc.value != "", tvc.value, tv.default_text) as value'
 				),
 				// From
 				self::$tables['site_tmplvars'] . ' tv
@@ -2048,16 +2044,16 @@ class ddTools {
 				',
 				// Where
 				(
-					$query .
-					' AND tvtpl.templateid = "' .
-					$docRow['template'] .
-					'"'
+					$query
+					. ' AND tvtpl.templateid = "'
+					. $docRow['template']
+					. '"'
 				),
 				// Order
 				(
-					$sort ?
-					$sort . ' ' . $dir :
-					''
+					$sort
+					? $sort . ' ' . $dir
+					: ''
 				)
 			);
 			
@@ -2067,13 +2063,13 @@ class ddTools {
 			ksort($docRow);
 			
 			foreach (
-				$docRow as
-				$key =>
-				$value
+				$docRow
+				as $key
+				=> $value
 			){
 				if (
-					$idnames == '*' ||
-					in_array(
+					$idnames == '*'
+					|| in_array(
 						$key,
 						$idnames
 					)
@@ -2094,7 +2090,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.10 (2024-08-04)
+	 * @version 1.1.11 (2024-12-03)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -2125,10 +2121,10 @@ class ddTools {
 		}
 		
 		if (
-			empty($idnames) ||
-			(
-				!is_array($idnames) &&
-				$idnames != '*'
+			empty($idnames)
+			|| (
+				!is_array($idnames)
+				&& $idnames != '*'
 			)
 		){
 			return false;
@@ -2136,17 +2132,17 @@ class ddTools {
 			$output = [];
 			$vars =
 				(
-					$idnames == '*' ||
-					is_array($idnames)
-				) ?
-				$idnames :
-				[$idnames]
+					$idnames == '*'
+					|| is_array($idnames)
+				)
+				? $idnames
+				: [$idnames]
 			;
 			
 			$docid =
-				intval($docid) ?
-				intval($docid) :
-				self::$modx->documentIdentifier
+				intval($docid)
+				? intval($docid)
+				: self::$modx->documentIdentifier
 			;
 			// remove sort for speed
 			$result = self::getTemplateVars(
@@ -2162,17 +2158,17 @@ class ddTools {
 				return false;
 			}else{
 				$baspath =
-					MODX_MANAGER_PATH .
-					'includes'
+					MODX_MANAGER_PATH
+					. 'includes'
 				;
 				
 				include_once(
-					$baspath .
-					'/tmplvars.format.inc.php'
+					$baspath
+					. '/tmplvars.format.inc.php'
 				);
 				include_once(
-					$baspath .
-					'/tmplvars.commands.inc.php'
+					$baspath
+					. '/tmplvars.commands.inc.php'
 				);
 				
 				for (
@@ -2204,7 +2200,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildren
-	 * @version 1.2.8 (2024-08-04)
+	 * @version 1.2.9 (2024-12-03)
 	 * 
 	 * @desc Returns the associative array of a document fields.
 	 * 
@@ -2253,14 +2249,14 @@ class ddTools {
 		}
 		
 		$published =
-			$published !== 'all' ?
-			'AND sc.published = ' . $published :
-			''
+			$published !== 'all'
+			? 'AND sc.published = ' . $published
+			: ''
 		;
 		$deleted =
-			$deleted !== 'all' ?
-			'AND sc.deleted = ' . $deleted :
-			''
+			$deleted !== 'all'
+			? 'AND sc.deleted = ' . $deleted
+			: ''
 		;
 		
 		if ($where != ''){
@@ -2269,8 +2265,8 @@ class ddTools {
 		
 		// Modify field names to use sc. table reference
 		$fields =
-			'sc.' .
-			implode(
+			'sc.'
+			. implode(
 				',sc.',
 				array_filter(array_map(
 					'trim',
@@ -2282,11 +2278,11 @@ class ddTools {
 			)
 		;
 		$sort =
-			$sort == '' ?
-			'' :
-			(
-				'sc.' .
-				implode(
+			$sort == ''
+			? ''
+			: (
+				'sc.'
+				. implode(
 					',sc.',
 					array_filter(array_map(
 						'trim',
@@ -2310,14 +2306,14 @@ class ddTools {
 		// Build query
 		$access =
 			(
-				self::$modx->isFrontend() ?
-				'sc.privateweb=0' :
-				'1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0'
-			) .
-			(
-				!$docgrp ?
-				'' :
-				' OR dg.document_group IN (' . $docgrp . ')'
+				self::$modx->isFrontend()
+				? 'sc.privateweb=0'
+				: '1="' . $_SESSION['mgrRole'] . '" OR sc.privatemgr=0'
+			)
+			. (
+				!$docgrp
+				? ''
+				: ' OR dg.document_group IN (' . $docgrp . ')'
 			)
 		;
 		
@@ -2331,23 +2327,23 @@ class ddTools {
 			',
 			// Where
 			(
-				'sc.parent = "' .
-				$parentid .
-				'" ' .
-				$published .
-				' ' .
-				$deleted .
-				' ' .
-				$where .
-				' AND (' .
-				$access .
-				') GROUP BY sc.id'
+				'sc.parent = "'
+				. $parentid
+				. '" '
+				. $published
+				. ' '
+				. $deleted
+				. ' '
+				. $where
+				. ' AND ('
+				. $access
+				. ') GROUP BY sc.id'
 			),
 			// Order
 			(
-				$sort ?
-				$sort . ' ' . $dir :
-				''
+				$sort
+				? $sort . ' ' . $dir
+				: ''
 			),
 			// Limit
 			$limit
@@ -2360,7 +2356,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildrenTVarOutput
-	 * @version 1.3.6 (2024-08-04)
+	 * @version 1.3.7 (2024-12-03)
 	 * 
 	 * @desc Get necessary children of document.
 	 * 
@@ -2412,8 +2408,8 @@ class ddTools {
 			if ($resultKey !== false){
 				if (is_array($tvidnames)){
 					if (
-						count($tvidnames) != 0 &&
-						!in_array(
+						count($tvidnames) != 0
+						&& !in_array(
 							$resultKey,
 							$tvidnames
 						)
@@ -2422,8 +2418,8 @@ class ddTools {
 						$unsetResultKey = true;
 					}
 				}elseif (
-					$tvidnames != '*' &&
-					$tvidnames != $resultKey
+					$tvidnames != '*'
+					&& $tvidnames != $resultKey
 				){
 					$tvidnames = [
 						$tvidnames,
@@ -2449,8 +2445,8 @@ class ddTools {
 				if ($tvs){
 					// Если нужно в качестве ключа использовать не индекс и такое поле есть
 					if (
-						$resultKey !== false &&
-						array_key_exists(
+						$resultKey !== false
+						&& array_key_exists(
 							$resultKey,
 							$tvs
 						)
@@ -2474,7 +2470,7 @@ class ddTools {
 	
 	/**
 	 * regEmptyClientScript
-	 * @version 1.1.4 (2024-08-04)
+	 * @version 1.1.5 (2024-12-03)
 	 * 
 	 * @desc Adds a required JS-file into a required MODX inner list according to its version and name. The method is used to register the scripts, that has already been connected manually.
 	 * Be advised that the method does not add script code, but register its name and version to avoid future connections with $modx->regClientScript and $modx->regClientStartupScript, and the script code will be deleted if the script had been connected with $modx->regClientScript or $modx->regClientStartupScript.
@@ -2513,15 +2509,15 @@ class ddTools {
 		$name = strtolower($params->name);
 		// Если версия не задана, будет нулевая (полезно дальше при сравнении version_compare)
 		$version =
-			isset($params->version) ?
-			strtolower($params->version) :
-			'0'
+			isset($params->version)
+			? strtolower($params->version)
+			: '0'
 		;
 		// Куда подключён скрипт: перед </head>, или перед </body>
 		$startup =
-			isset($params->startup) ?
-			$params->startup :
-			false
+			isset($params->startup)
+			? $params->startup
+			: false
 		;
 		// Ну мало ли
 		unset($overwritepos);
@@ -2546,20 +2542,20 @@ class ddTools {
 			
 			// Если надо юзать старую версию
 			if (!$useThisVer){
-				// Запомним версию как старую. Здесь нам пофиг на его код, ведь новый код будет подключен мануально.
+				// Запомним версию как старую. Здесь нам пофиг на его код, ведь новый код будет подключен мануально
 				$version = self::$modx->loadedjscripts[$name]['version'];
 			}
 			
 			// Если новая версия должна подключаться в <header>, а старая подключалась перед </body>
 			if (
-				$startup == true &&
-				self::$modx->loadedjscripts[$name]['startup'] == false
+				$startup == true
+				&& self::$modx->loadedjscripts[$name]['startup'] == false
 			){
-				// Снесём старый скрипт из массива подключения перед </body> (ведь новая подключится в <head>). Здесь нам пофиг на его код, ведь новый код будет подключен мануально.
+				// Снесём старый скрипт из массива подключения перед </body> (ведь новая подключится в <head>). Здесь нам пофиг на его код, ведь новый код будет подключен мануально
 				unset(self::$modx->jscripts[self::$modx->loadedjscripts[$name]['pos']]);
-				// Если новая версия должна подключаться перед </body> или старая уже подключалась перед </head>. На самом деле, сработает только если обе перед </body> или обе перед </head>, т.к. если старая была перед </head>, то новая выставится также кодом выше.
+			// Если новая версия должна подключаться перед </body> или старая уже подключалась перед </head>. На самом деле, сработает только если обе перед </body> или обе перед </head>, т.к. если старая была перед </head>, то новая выставится также кодом выше
 			}else{
-				// Запомним позицию старого скрипта (порядок подключения может быть важен для зависимых скриптов), на новую пофиг. Дальше код старой просто перетрётся в соответсвтии с позицией.
+				// Запомним позицию старого скрипта (порядок подключения может быть важен для зависимых скриптов), на новую пофиг. Дальше код старой просто перетрётся в соответсвтии с позицией
 				$overwritepos = self::$modx->loadedjscripts[$name]['pos'];
 			}
 		}
@@ -2568,23 +2564,23 @@ class ddTools {
 		if ($startup){
 			// Позиция такова: либо старая (уже вычислена), либо максимальное значение между нолём и одним из ключей массива подключённых скриптов + 1 (это, чтобы заполнить возможные дыры)
 			$pos =
-				isset($overwritepos) ?
-				$overwritepos :
-				max(array_merge(
+				isset($overwritepos)
+				? $overwritepos
+				: max(array_merge(
 					[0],
 					array_keys(self::$modx->sjscripts)
 				)) + 1
 			;
 			if ($useThisVer){
-				// Запоминаем пустую строку подключения в нужный массив, т.к. подключаем мануально.
+				// Запоминаем пустую строку подключения в нужный массив, т.к. подключаем мануально
 				self::$modx->sjscripts[$pos] = '';
 			}
 		// Если надо подключить перед </body>, то всё по аналогии, только массив другой
 		}else{
 			$pos =
-				isset($overwritepos) ?
-				$overwritepos :
-				max(array_merge(
+				isset($overwritepos)
+				? $overwritepos
+				: max(array_merge(
 					[0],
 					array_keys(self::$modx->jscripts)
 				)) + 1
@@ -2678,7 +2674,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentIdByUrl
-	 * @version 1.2.2 (2024-08-04)
+	 * @version 1.2.3 (2024-12-03)
 	 * 
 	 * @desc Gets id of a document by its url.
 	 * 
@@ -2697,9 +2693,9 @@ class ddTools {
 			
 			// For domains in IDNA ASCII-compatible format
 			$siteHost['host'] =
-				function_exists('idn_to_utf8') ?
-				idn_to_utf8($siteHost['host']) :
-				$siteHost['host']
+				function_exists('idn_to_utf8')
+				? idn_to_utf8($siteHost['host'])
+				: $siteHost['host']
 			;
 			
 			// На всякий случай вышережем host из адреса (а то вдруг url просто без http:// передали) + лишние слэши по краям
@@ -2730,7 +2726,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.7.3 (2024-08-04)
+	 * @version 1.7.4 (2024-12-03)
 	 * 
 	 * @see README.md
 	 */
@@ -2769,9 +2765,9 @@ class ddTools {
 		
 		// Перебираем таблицу соответствия
 		foreach (
-			$params->compliance as
-			$newName =>
-			$oldNames
+			$params->compliance
+			as $newName
+			=> $oldNames
 		){
 			// Если параметр с новым именем не задан
 			if (!isset($params->params[$newName])){
@@ -2793,14 +2789,14 @@ class ddTools {
 					// If need to write to the CMS event log
 					if ($params->writeToLog){
 						$logMessageItems[] .=
-							'<li><code>' .
-							implode(
+							'<li><code>'
+							. implode(
 								'</code>, <code>',
 								$oldNames
-							) .
-							'</code> must be renamed as <code>' .
-							$newName .
-							'</code>;</li>'
+							)
+							. '</code> must be renamed as <code>'
+							. $newName
+							. '</code>;</li>'
 						;
 					}
 				}
@@ -2825,13 +2821,13 @@ class ddTools {
 		// If there is something to write to the CMS event log
 		if (count($logMessageItems) > 0){
 			self::logEvent([
-				'message' =>
-					'<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>' .
-					implode(
+				'message'
+					=> '<p>Some of the snippet parameters have been renamed. Please, correct the following parameters:</p><ul>'
+					. implode(
 						'',
 						$logMessageItems
-					) .
-					'</ul>'
+					)
+					. '</ul>'
 			]);
 		}
 		
@@ -2844,7 +2840,7 @@ class ddTools {
 	
 	/**
 	 * sendMail
-	 * @version 3.0.4 (2024-08-04)
+	 * @version 3.0.5 (2024-12-03)
 	 * 
 	 * @desc Method for sending e-mails.
 	 * 
@@ -2894,8 +2890,8 @@ class ddTools {
 			
 			// Перебираем имена полей с файлами
 			foreach(
-				$params->fileInputNames as
-				$value
+				$params->fileInputNames
+				as $value
 			){
 				// Проверяем находится ли в POST массив
 				if(is_array($_FILES[$value]['name'])){
@@ -2904,9 +2900,9 @@ class ddTools {
 					
 					// Перебираем пост
 					foreach(
-						$_FILES[$value]['name'] as
-						$key =>
-						$name
+						$_FILES[$value]['name']
+						as $key
+						=> $name
 					){
 						// Если нет ошибок
 						if ($_FILES[$value]['error'][$key] == 0){
@@ -2935,8 +2931,8 @@ class ddTools {
 		$result = [];
 		
 		foreach (
-			$params->to as
-			$val
+			$params->to
+			as $val
 		){
 			// Если адрес валидный
 			if (filter_var(
@@ -2947,15 +2943,15 @@ class ddTools {
 				
 				self::$modx->mail->AddAddress($val);
 				self::$modx->mail->From = $params->from;
-		        self::$modx->mail->FromName = self::$modx->config['site_name'];
-		        self::$modx->mail->Subject = $params->subject;
-		        self::$modx->mail->Body = $message;
+				self::$modx->mail->FromName = self::$modx->config['site_name'];
+				self::$modx->mail->Subject = $params->subject;
+				self::$modx->mail->Body = $message;
 				
 				// Перебираем присоединяемые файлы
 				if(!empty($attachFiles)){
 					foreach(
-						$attachFiles as
-						$value
+						$attachFiles
+						as $value
 					){
 						// добавить еще парамет name
 						self::$modx->mail->AddAttachment(
@@ -2991,7 +2987,7 @@ class ddTools {
 	
 	/**
 	 * encodedStringToArray
-	 * @version 1.2.2 (2024-08-04)
+	 * @version 1.2.3 (2024-12-03)
 	 * 
 	 * @desc Converts encoded strings to arrays.
 	 * Supported formats:
@@ -3010,15 +3006,15 @@ class ddTools {
 		
 		// The old deprecated format where string is separated by '||' and '::'
 		if (
-			count($result) == 1 &&
-			array_keys($result)[0] == $inputString
+			count($result) == 1
+			&& array_keys($result)[0] == $inputString
 		){
 			$result = self::explodeAssoc($inputString);
 			
 			self::logEvent([
 				'message' =>
-				'<p>Strings separated by <code>::</code> && <code>||</code> in parameters are deprecated.</p>' .
-				'<p>Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
+					'<p>Strings separated by <code>::</code> && <code>||</code> in parameters are deprecated.</p>'
+					. '<p>Use <a href="https://en.wikipedia.org/wiki/JSON" target="_blank">JSON</a> or <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank">Query string</a> instead.</p>'
 			]);
 		}
 		
@@ -3140,9 +3136,9 @@ class ddTools {
 		$result[0] = $docData->fieldsData;
 		// And TVs
 		foreach (
-			$docData->tvsData as
-			$tvName =>
-			$tvValue
+			$docData->tvsData
+			as $tvName
+			=> $tvValue
 		){
 			$result[1][$tvName] = ['val' => $tvValue];
 			
