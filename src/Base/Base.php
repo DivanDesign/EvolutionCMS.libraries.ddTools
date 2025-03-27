@@ -15,14 +15,18 @@ abstract class Base {
 	
 	/**
 	 * getClassName
-	 * @version 1.0.2 (2024-03-27)
+	 * @version 1.1 (2024-03-27)
 	 * 
 	 * @see README.md
 	 * 
 	 * @return $result {stdClass}
 	 */
-	public static function getClassName(): \stdClass {
-		$classNameFull = get_called_class();
+	public static function getClassName(?string $classNameFull = null): \stdClass {
+		$classNameFull =
+			is_null($classNameFull)
+			? get_called_class()
+			: ltrim($classNameFull, '\\')
+		;
 		
 		// Init
 		if (is_null(self::$ddClassNames)){
