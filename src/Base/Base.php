@@ -15,14 +15,14 @@ abstract class Base {
 	
 	/**
 	 * getClassName
-	 * @version 1.0.1 (2024-08-04)
+	 * @version 1.0.2 (2024-03-27)
 	 * 
 	 * @see README.md
 	 * 
 	 * @return $result {stdClass}
 	 */
 	public static function getClassName(): \stdClass {
-		$full = get_called_class();
+		$classNameFull = get_called_class();
 		
 		// Init
 		if (is_null(self::$ddClassNames)){
@@ -33,10 +33,10 @@ abstract class Base {
 		if (
 			!property_exists(
 				self::$ddClassNames,
-				$full
+				$classNameFull
 			)
 		){
-			static::$ddClassNames->{$full} = (object) [
+			static::$ddClassNames->{$classNameFull} = (object) [
 				'full' => '',
 				'nameShort' => '',
 				'namespaceFull' => '',
@@ -44,20 +44,20 @@ abstract class Base {
 				'namespacePrefix' => '',
 			];
 			
-			static::$ddClassNames->{$full}->full = $full;
+			static::$ddClassNames->{$classNameFull}->full = $classNameFull;
 			
 			$fullArray = explode(
 				'\\',
-				static::$ddClassNames->{$full}->full
+				static::$ddClassNames->{$classNameFull}->full
 			);
 			
-			static::$ddClassNames->{$full}->full = '\\' . static::$ddClassNames->{$full}->full;
+			static::$ddClassNames->{$classNameFull}->full = '\\' . static::$ddClassNames->{$classNameFull}->full;
 			// Extract short class name
-			static::$ddClassNames->{$full}->nameShort = array_pop($fullArray);
+			static::$ddClassNames->{$classNameFull}->nameShort = array_pop($fullArray);
 			
 			// If namespace exists
 			if (count($fullArray) > 0){
-				static::$ddClassNames->{$full}->namespaceFull =
+				static::$ddClassNames->{$classNameFull}->namespaceFull =
 					'\\'
 					. implode(
 						'\\',
@@ -65,11 +65,11 @@ abstract class Base {
 					)
 				;
 				// Extract namespace
-				static::$ddClassNames->{$full}->namespaceShort = array_pop($fullArray);
+				static::$ddClassNames->{$classNameFull}->namespaceShort = array_pop($fullArray);
 				
 				// If neamespace prefix exists
 				if (count($fullArray) > 0){
-					static::$ddClassNames->{$full}->namespacePrefix =
+					static::$ddClassNames->{$classNameFull}->namespacePrefix =
 						'\\'
 						. implode(
 							'\\',
@@ -80,7 +80,7 @@ abstract class Base {
 			}
 		}
 		
-		return static::$ddClassNames->{$full};
+		return static::$ddClassNames->{$classNameFull};
 	}
 	
 	/**
