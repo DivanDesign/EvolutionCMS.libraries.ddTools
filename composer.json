@@ -47,7 +47,7 @@
 	],
 	"license": "MIT",
 	"require": {
-		"php": ">=5.6.0",
+		"php": ">=7.4.0",
 		"dd/composer-plugin-modxevo-library-ddtools-installer": "1.0.5"
 	},
 	"autoload": {

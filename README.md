@@ -5,7 +5,7 @@ A library with various tools facilitating your work.
 
 ## Requires
 
-* PHP >= 5.6
+* PHP >= 7.4
 * [(MODX)EvolutionCMS](https://github.com/evolution-cms/evolution) >= 1.1
 * [PHP.libraries.HJSON](https://github.com/hjson/hjson-php) 2.2 (included)
 * [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.19-202210110924 (included)
