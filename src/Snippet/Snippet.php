@@ -29,7 +29,7 @@ abstract class Snippet {
 	
 	/**
 	 * @property $paramsTypes {arrayAssociative} — Overwrite in child classes if you want to convert some parameters types.
-	 * @property $paramsTypes[$paramName] {'integer'|'boolean'|'objectAuto'|'objectStdClass'|'objectArray'|'stringJsonAuto'|'stringJsonObject'|'stringJsonArray'} — The parameter type.
+	 * @property $paramsTypes[$paramName] {'integer'|'float'|'boolean'|'objectAuto'|'objectStdClass'|'objectArray'|'stringJsonAuto'|'stringJsonObject'|'stringJsonArray'} — The parameter type.
 	 */
 	protected $paramsTypes = [];
 	
@@ -85,7 +85,7 @@ abstract class Snippet {
 	
 	/**
 	 * prepareParams
-	 * @version 1.1.4 (2024-12-03)
+	 * @version 1.2 (2025-04-28)
 	 * 
 	 * @param $params {stdClass|arrayAssociative|stringJsonObject|stringQueryFormatted}
 	 * 
@@ -125,6 +125,8 @@ abstract class Snippet {
 				){
 					if ($paramType == 'integer'){
 						$this->params->{$paramName} = intval($this->params->{$paramName});
+					}elseif ($paramType == 'float'){
+						$this->params->{$paramName} = floatval($this->params->{$paramName});
 					}elseif ($paramType == 'boolean'){
 						$this->params->{$paramName} = boolval($this->params->{$paramName});
 					}else{
@@ -144,6 +146,8 @@ abstract class Snippet {
 				){
 					if ($paramType == 'integer'){
 						$params->{$paramName} = intval($params->{$paramName});
+					}elseif ($paramType == 'float'){
+						$params->{$paramName} = floatval($params->{$paramName});
 					}elseif ($paramType == 'boolean'){
 						$params->{$paramName} = boolval($params->{$paramName});
 					}else{

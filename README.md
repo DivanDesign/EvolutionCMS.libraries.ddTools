@@ -1365,6 +1365,7 @@ Abstract class for snippets.
 		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
 	* Valid values:
 		* `'integer'`
+		* `'float'`
 		* `'boolean'`
 		* `'objectAuto'`
 		* `'objectStdClass'`
