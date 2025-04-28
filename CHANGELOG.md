@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.65 (2025-04-28)
+
+* \+ `\DDTools\Base\Base::getClassName` → Parameters → `$classNameFull`: The new optional parameter. Allows to specify custom class name, not current called only.
+* \+ `\DDTools\Snippet::$paramsTypes[$paramName]` → Valid values → `'float'`: The new supported value.
+* \* PHP >= 7.4 is required.
+
+
 ## Version 0.64.1 (2024-12-04)
 
 * \* `\DDTools\Storage\DB\Storage`: Column names are quoted in all queries to avoid of errors when their names are equal to some reserved keywords, e. g. `repeat`.
