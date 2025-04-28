@@ -1,7 +1,7 @@
 {
 	"name": "dd/evolutioncms-libraries-ddtools",
 	"type": "modxevo-library-ddtools",
-	"version": "0.64.1",
+	"version": "0.65.0",
 	"description": "A library with various tools facilitating your work.",
 	"keywords": [
 		"modx",
@@ -47,7 +47,7 @@
 	],
 	"license": "MIT",
 	"require": {
-		"php": ">=5.6.0",
+		"php": ">=7.4.0",
 		"dd/composer-plugin-modxevo-library-ddtools-installer": "1.0.5"
 	},
 	"autoload": {

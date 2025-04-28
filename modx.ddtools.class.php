@@ -1,11 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.64.1 (2024-12-04)
+ * @version 0.65 (2025-04-28)
  * 
  * @see README.md
  * 
- * @copyright 2012–2024 https://Ronef.me
+ * @copyright 2012–2025 https://Ronef.me
  */
 
 global $modx;

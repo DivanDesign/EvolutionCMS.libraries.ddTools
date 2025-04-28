@@ -5,7 +5,7 @@ A library with various tools facilitating your work.
 
 ## Requires
 
-* PHP >= 5.6
+* PHP >= 7.4
 * [(MODX)EvolutionCMS](https://github.com/evolution-cms/evolution) >= 1.1
 * [PHP.libraries.HJSON](https://github.com/hjson/hjson-php) 2.2 (included)
 * [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.19-202210110924 (included)
@@ -1125,9 +1125,19 @@ It is convenient to inherit your classes from this.
 You can see an example of how it works in the [(MODX)EvolutionCMS.snippets.ddGetDocumentField](https://code.divandesign.ru/modx/ddgetdocumentfield) code.
 
 
-#### `\DDTools\Base\Base::getClassName()`
+#### `\DDTools\Base\Base::getClassName($classNameFull = null)`
 
 Gets data about a class name.
+
+
+##### Parameters
+
+* `$classNameFull`
+	* Description: Full class name including namespace.
+	* Valid values:
+		* `string`
+		* `null` — If not specified, will be used `get_called_class()`
+	* Default value: `null`
 
 
 ##### Returns
@@ -1355,6 +1365,7 @@ Abstract class for snippets.
 		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
 	* Valid values:
 		* `'integer'`
+		* `'float'`
 		* `'boolean'`
 		* `'objectAuto'`
 		* `'objectStdClass'`
