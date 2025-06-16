@@ -4,13 +4,13 @@ namespace DDTools\Base;
 trait AncestorTrait {
 	/**
 	 * getChildClassName
-	 * @version 1.0.1 (2024-08-04)
+	 * @version 1.0.2 (2025-06-16)
 	 * 
 	 * @see README.md
 	 * 
 	 * @throws \Exception
 	 */
-	final public static function getChildClassName($params): string {
+	public static function getChildClassName($params): string {
 		// Defaults
 		$params = (object) array_merge(
 			[
