@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.65.1 (2025-06-16)
+
+* \* `\DDTools\Base\AncestorTrait::getChildClassName`: The public static method is no longer final. Now child classes can override this method.
+
+
 ## Version 0.65 (2025-04-28)
 
 * \+ `\DDTools\Base\Base::getClassName` → Parameters → `$classNameFull`: The new optional parameter. Allows to specify custom class name, not current called only.
