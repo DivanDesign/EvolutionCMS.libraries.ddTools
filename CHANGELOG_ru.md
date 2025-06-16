@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.65.1 (2025-06-16)
+
+* \* `\DDTools\Base\AncestorTrait::getChildClassName`: Публичный статичный метод больше не является финальным. Теперь дочерние классы могут переопределять его.
+
+
 ## Версия 0.65 (2025-04-28)
 
 * \+ `\DDTools\Base\Base::getClassName` → Параметры → `$classNameFull`: Новый необязательный параметр. Позволяет задать произвольное имя класса, не только текущее.
