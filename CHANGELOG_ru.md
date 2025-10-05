@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.65.2 (2025-10-05)
+
+* \* `\DDTools\Storage\DB\Storage::items_add`: `$params->items[$itemIndex]->id` используется, если он передан и валиден через `$this->items_validateData`.
+
+
 ## Версия 0.65.1 (2025-06-16)
 
 * \* `\DDTools\Base\AncestorTrait::getChildClassName`: Публичный статичный метод больше не является финальным. Теперь дочерние классы могут переопределять его.

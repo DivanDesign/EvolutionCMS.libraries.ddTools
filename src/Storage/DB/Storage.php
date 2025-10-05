@@ -365,7 +365,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_add
-	 * @version 1.2.3 (2024-12-03)
+	 * @version 1.2.4 (2025-10-05)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->items {mixed} — An array of items.
@@ -400,13 +400,8 @@ class Storage extends \DDTools\Storage\Storage {
 			$params->items
 			as $itemObject
 		){
-			$itemObject = (object) $itemObject;
-			
-			// ID can't be inserted
-			unset($itemObject->id);
-			
 			$itemObject = $this->items_validateData([
-				'data' => $itemObject
+				'data' => $itemObject,
 			]);
 			
 			\ddTools::$modx->db->query('
