@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.65.2 (2025-10-05)
+
+* \* `\DDTools\Storage\DB\Storage::items_add`: `$params->items[$itemIndex]->id` is used if it is passed and validated via `$this->items_validateData`.
+
+
 ## Version 0.65.1 (2025-06-16)
 
 * \* `\DDTools\Base\AncestorTrait::getChildClassName`: The public static method is no longer final. Now child classes can override this method.
