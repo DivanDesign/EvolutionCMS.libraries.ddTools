@@ -149,7 +149,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_db
-	 * @version 1.0.5 (2024-12-03)
+	 * @version 1.0.6 (2025-10-07)
 	 * 
 	 * @return {void}
 	 */
@@ -172,13 +172,17 @@ class Storage extends \DDTools\Storage\Storage {
 			
 			// If table exists
 			if ($isTableExist){
+				$firstColumnName = $this->columns->getOneItem()->name;
+				
 				// Получаем существующие колонки
 				$columnsExisting = \ddTools::$modx->db->getColumnNames(
 					\ddTools::$modx->db->select(
 						'*',
 						$this->nameFull,
-						// Что угодно, -1 выбран, так как таких записей точно быть не должно
-						'`id` = -1'
+						(
+							// Что угодно, -1 выбран, так как таких записей точно быть не должно
+							'`' . $firstColumnName . '` = -1'
+						)
 					)
 				);
 			}
@@ -423,7 +427,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.6.1 (2024-12-03)
+	 * @version 1.6.2 (2025-10-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
@@ -436,7 +440,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * 
 	 * @return $result {arrayIndexed} — Array of updated items.
 	 * @return $result[$itemIndex] {stdClass} — A item object.
-	 * @return $result[$itemIndex]->id {integer} — ID of added item.
+	 * @return $result[$itemIndex]->{$firstColumnName} {mixed} — `id` or other first column name of updated item.
 	 */
 	public function items_update($params): array {
 		$params = \DDTools\Tools\Objects::extend([
@@ -466,6 +470,8 @@ class Storage extends \DDTools\Storage\Storage {
 		);
 		
 		if (!empty($params->data)){
+			$firstColumnName = $this->columns->getOneItem()->name;
+			
 			// Collect all updated resource IDs to a SQL variable
 			\ddTools::$modx->db->query('SET @updated_ids := ""');
 			\ddTools::$modx->db->query('
@@ -480,10 +486,10 @@ class Storage extends \DDTools\Storage\Storage {
 					AND (
 						@updated_ids := IF (
 							@updated_ids = "",
-							`id`,
+							`' . $firstColumnName . '`,
 							CONCAT_WS(
 								",",
-								`id`,
+								`' . $firstColumnName . '`,
 								@updated_ids
 							)
 						)
@@ -513,7 +519,7 @@ class Storage extends \DDTools\Storage\Storage {
 					$result[] = \DDTools\Tools\Objects::extend([
 						'objects' => [
 							(object) [
-								'id' => $itemId
+								$firstColumnName => $itemId
 							],
 							$params->data
 						]
