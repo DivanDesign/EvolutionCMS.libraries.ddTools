@@ -97,7 +97,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_props
-	 * @version 2.0.3 (2024-12-03)
+	 * @version 2.0.4 (2025-10-07)
 	 * 
 	 * @param $params {stdClass} — Parameters, see $this->__construct.
 	 * 
@@ -125,7 +125,7 @@ class Storage extends \DDTools\Storage\Storage {
 				// If column is set as a simple string name
 				if (is_string($columnParams)){
 					$columnParams = [
-						'name' => $columnParams
+						'name' => $columnParams,
 					];
 				}
 				
@@ -139,7 +139,7 @@ class Storage extends \DDTools\Storage\Storage {
 									'isPublic' => true,
 								],
 								$columnParams,
-							]
+							],
 						])
 					],
 				]);
@@ -149,7 +149,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * construct_db
-	 * @version 1.0.5 (2024-12-03)
+	 * @version 1.0.7 (2025-10-07)
 	 * 
 	 * @return {void}
 	 */
@@ -172,13 +172,17 @@ class Storage extends \DDTools\Storage\Storage {
 			
 			// If table exists
 			if ($isTableExist){
+				$firstColumnName = $this->columns->getOneItem()->name;
+				
 				// Получаем существующие колонки
 				$columnsExisting = \ddTools::$modx->db->getColumnNames(
 					\ddTools::$modx->db->select(
 						'*',
 						$this->nameFull,
-						// Что угодно, -1 выбран, так как таких записей точно быть не должно
-						'`id` = -1'
+						(
+							// Что угодно, -1 выбран, так как таких записей точно быть не должно
+							'`' . $firstColumnName . '` = -1'
+						)
 					)
 				);
 			}
@@ -195,7 +199,7 @@ class Storage extends \DDTools\Storage\Storage {
 					if (
 						!\DDTools\Tools\Objects::isPropExists([
 							'object' => $columnData,
-							'propName' => $propName
+							'propName' => $propName,
 						])
 					){
 						$columnData->{$propName} = $propDefaultValue;
@@ -256,7 +260,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getColsParams
-	 * @version 3.0.2 (2024-08-04)
+	 * @version 3.0.3 (2025-10-07)
 	 * 
 	 * @param [$params] {arrayAssociative|stdClass} — The parameters object.
 	 * @param [$params->paramName='name'] {'name'|'attrs'} — Column property to return.
@@ -273,8 +277,8 @@ class Storage extends \DDTools\Storage\Storage {
 					'paramName' => 'name',
 					'filter' => '',
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		return $this->columns->getItems([
@@ -286,7 +290,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * cols_getOneColParam
-	 * @version 2.0.2 (2024-08-04)
+	 * @version 2.0.3 (2025-10-07)
 	 * 
 	 * @param [$params] {arrayAssociative|stdClass} — The parameters object.
 	 * @param [$params->filter=''] {string} — Filter clause for column properties, see `\DDTools\ObjectCollection`.
@@ -302,21 +306,21 @@ class Storage extends \DDTools\Storage\Storage {
 					'filter' => '',
 					'paramName' => 'name',
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		return \DDTools\Tools\Objects::getPropValue([
 			'object' => $this->columns->getOneItem([
 				'filter' => $params->filter,
 			]),
-			'paramName' => $params->paramName
+			'paramName' => $params->paramName,
 		]);
 	}
 	
 	/**
 	 * cols_getValidNames
-	 * @version 1.1.5 (2024-12-03)
+	 * @version 1.1.6 (2025-10-07)
 	 * 
 	 * @desc Gets valid column names.
 	 * 
@@ -331,10 +335,10 @@ class Storage extends \DDTools\Storage\Storage {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
-					'colNames' => '*'
+					'colNames' => '*',
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		// Return all exist columns by default
@@ -365,7 +369,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_add
-	 * @version 1.2.4 (2025-10-05)
+	 * @version 1.2.5 (2025-10-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->items {mixed} — An array of items.
@@ -390,7 +394,7 @@ class Storage extends \DDTools\Storage\Storage {
 		if (!is_array($params->items)){
 			$params->items = \DDTools\Tools\Objects::convertType([
 				'object' => $params->items,
-				'type' => 'objectArray'
+				'type' => 'objectArray',
 			]);
 		}
 		
@@ -423,7 +427,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.6.1 (2024-12-03)
+	 * @version 1.6.3 (2025-10-07)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
@@ -436,7 +440,7 @@ class Storage extends \DDTools\Storage\Storage {
 	 * 
 	 * @return $result {arrayIndexed} — Array of updated items.
 	 * @return $result[$itemIndex] {stdClass} — A item object.
-	 * @return $result[$itemIndex]->id {integer} — ID of added item.
+	 * @return $result[$itemIndex]->{$firstColumnName} {mixed} — `id` or other first column name of updated item.
 	 */
 	public function items_update($params): array {
 		$params = \DDTools\Tools\Objects::extend([
@@ -446,14 +450,14 @@ class Storage extends \DDTools\Storage\Storage {
 					'where' => '',
 					'data' => [],
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		$result = [];
 		
 		$params->data = $this->items_validateData([
-			'data' => $params->data
+			'data' => $params->data,
 		]);
 		
 		// Validate data (keep all except unsaveable)
@@ -461,11 +465,13 @@ class Storage extends \DDTools\Storage\Storage {
 			(array) $params->data,
 			// ReadOnly props can't be updated
 			$this->cols_getColsParams([
-				'filter' => 'isReadOnly == 1'
+				'filter' => 'isReadOnly == 1',
 			])
 		);
 		
 		if (!empty($params->data)){
+			$firstColumnName = $this->columns->getOneItem()->name;
+			
 			// Collect all updated resource IDs to a SQL variable
 			\ddTools::$modx->db->query('SET @updated_ids := ""');
 			\ddTools::$modx->db->query('
@@ -480,10 +486,10 @@ class Storage extends \DDTools\Storage\Storage {
 					AND (
 						@updated_ids := IF (
 							@updated_ids = "",
-							`id`,
+							`' . $firstColumnName . '`,
 							CONCAT_WS(
 								",",
-								`id`,
+								`' . $firstColumnName . '`,
 								@updated_ids
 							)
 						)
@@ -513,10 +519,10 @@ class Storage extends \DDTools\Storage\Storage {
 					$result[] = \DDTools\Tools\Objects::extend([
 						'objects' => [
 							(object) [
-								'id' => $itemId
+								$firstColumnName => $itemId,
 							],
-							$params->data
-						]
+							$params->data,
+						],
 					]);
 				}
 			}
@@ -527,7 +533,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_delete
-	 * @version 1.4 (2024-08-06)
+	 * @version 1.4.1 (2025-10-07)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be deleted.
@@ -547,8 +553,8 @@ class Storage extends \DDTools\Storage\Storage {
 					'where' => '',
 					'orderBy' => '',
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		\ddTools::$modx->db->delete(
@@ -565,7 +571,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_get
-	 * @version 1.5.1 (2024-12-04)
+	 * @version 1.5.2 (2025-10-07)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->where=''] {stdClass|arrayAssociative|string|null} — SQL 'WHERE' clause. null or '' means that all items will be returned.
@@ -593,14 +599,14 @@ class Storage extends \DDTools\Storage\Storage {
 					'propAsResultKey' => null,
 					'propAsResultValue' => null,
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		$result = [];
 		
 		$params->propsToReturn = $this->cols_getValidNames([
-			'colNames' => $params->propsToReturn
+			'colNames' => $params->propsToReturn,
 		]);
 		
 		if (!empty($params->propsToReturn)){
@@ -632,7 +638,7 @@ class Storage extends \DDTools\Storage\Storage {
 					if (!is_null($params->propAsResultValue)){
 						$resultItemObject = \DDTools\Tools\Objects::getPropValue([
 							'object' => $itemData,
-							'propName' => $params->propAsResultValue
+							'propName' => $params->propAsResultValue,
 						]);
 					}else{
 						$resultItemObject = $itemData;
@@ -643,7 +649,7 @@ class Storage extends \DDTools\Storage\Storage {
 						$result[
 							\DDTools\Tools\Objects::getPropValue([
 								'object' => $itemData,
-								'propName' => $params->propAsResultKey
+								'propName' => $params->propAsResultKey,
 							])
 						] = $resultItemObject;
 					}else{
@@ -658,7 +664,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_validateData
-	 * @version 1.0.2 (2024-08-04)
+	 * @version 1.0.3 (2025-10-07)
 	 * 
 	 * @desc Returns only used properties (columns) of $params->data.
 	 * 
@@ -679,7 +685,7 @@ class Storage extends \DDTools\Storage\Storage {
 			array_fill_keys(
 				// Only used field names
 				$this->cols_getValidNames([
-					'colNames' => array_keys($params->data)
+					'colNames' => array_keys($params->data),
 				]),
 				// No matter because the only keys will be used for comparison
 				null
@@ -691,7 +697,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_prepareWhere
-	 * @version 1.4.2 (2024-12-03)
+	 * @version 1.4.3 (2025-10-07)
 	 * 
 	 * @desc Builds a where clause in the required internal format from externally passed parameters.
 	 * 
@@ -706,10 +712,10 @@ class Storage extends \DDTools\Storage\Storage {
 		$params = \DDTools\Tools\Objects::extend([
 			'objects' => [
 				(object) [
-					'where' => ''
+					'where' => '',
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		if (\ddTools::isEmpty($params->where)){
@@ -720,7 +726,7 @@ class Storage extends \DDTools\Storage\Storage {
 		}else{
 			// Validate where conditions (keep only used field names)
 			$params->where = $this->items_validateData([
-				'data' => $params->where
+				'data' => $params->where,
 			]);
 			
 			$result = [];
@@ -848,7 +854,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * buildSqlLimitString
-	 * @version 1.0.3 (2024-12-03)
+	 * @version 1.0.4 (2025-10-07)
 	 * 
 	 * @param [$params] {stdClass|arrayAssociative} — The parameters object.
 	 * @param [$params->limit=0] {integer|0} — Maximum number of items to return. `0` means all matching.
@@ -864,8 +870,8 @@ class Storage extends \DDTools\Storage\Storage {
 					'limit' => 0,
 					'offset' => 0,
 				],
-				$params
-			]
+				$params,
+			],
 		]);
 		
 		return
