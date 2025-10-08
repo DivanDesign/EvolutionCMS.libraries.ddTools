@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.65.3 (2025-10-07)
+
+* \* `\DDTools\Storage\DB\Storage`: Работает корректно даже если колонка `id` не существует в таблице.
+
+
 ## Версия 0.65.2 (2025-10-05)
 
 * \* `\DDTools\Storage\DB\Storage::items_add`: `$params->items[$itemIndex]->id` используется, если он передан и валиден через `$this->items_validateData`.
