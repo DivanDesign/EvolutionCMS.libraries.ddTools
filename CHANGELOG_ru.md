@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.66 (2025-10-22)
+
+* \+ `\DDTools\Base\Base::getClassName()` → Результат → `$result->namespacePrefixRoot`: Новое свойство, содержащее корневой префикс пространства имён (например, `'\\ddSendFeedback'` из `'\\ddSendFeedback\\Sender\\Email\\Sender'`).
+
+
 ## Версия 0.65.3 (2025-10-07)
 
 * \* `\DDTools\Storage\DB\Storage`: Работает корректно даже если колонка `id` не существует в таблице.

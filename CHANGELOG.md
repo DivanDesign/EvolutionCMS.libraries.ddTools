@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.66 (2025-10-22)
+
+* \+ `\DDTools\Base\Base::getClassName()` → Result → `$result->namespacePrefixRoot`: The new result property contains the root namespace prefix (e. g. `'\\ddSendFeedback'` of `'\\ddSendFeedback\\Sender\\Email\\Sender'`).
+
+
 ## Version 0.65.3 (2025-10-07)
 
 * \* `\DDTools\Storage\DB\Storage`: Works fine even if `id` column is not present in the table.

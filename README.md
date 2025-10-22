@@ -1164,6 +1164,10 @@ Gets data about a class name.
 * `$result->namespacePrefix`
 	* Description: Namespace prefix, e. g.: `'\\ddSendFeedback\\Sender'`.
 	* Valid values: `string`
+	
+* `$result->namespacePrefixRoot`
+	* Description: Root namespace prefix, e. g.: `'\\ddSendFeedback'`.
+	* Valid values: `string`
 
 
 #### `\DDTools\Base\Base::setExistingProps($props)`

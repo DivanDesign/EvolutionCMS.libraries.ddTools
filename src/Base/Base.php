@@ -10,12 +10,13 @@ abstract class Base {
 	 * @var $ddClassNames->{$className}->namespaceFull {string} — Namespace, e. g.: '\\ddSendFeedback\\Sender\\Email'.
 	 * @var $ddClassNames->{$className}->namespaceShort {string} — Last namespace item, e. g.: 'Email'.
 	 * @var $ddClassNames->{$className}->namespacePrefix {string} — Namespace prefix, e. g.: '\\ddSendFeedback\\Sender'.
+	 * @var $ddClassNames->{$className}->namespacePrefixRoot {string} — Root namespace prefix, e. g.: '\\ddSendFeedback'.
 	 */
 	private static $ddClassNames = null;
 	
 	/**
 	 * getClassName
-	 * @version 1.1 (2024-03-27)
+	 * @version 1.2 (2025-10-22)
 	 * 
 	 * @see README.md
 	 * 
@@ -46,6 +47,7 @@ abstract class Base {
 				'namespaceFull' => '',
 				'namespaceShort' => '',
 				'namespacePrefix' => '',
+				'namespacePrefixRoot' => '',
 			];
 			
 			static::$ddClassNames->{$classNameFull}->full = $classNameFull;
@@ -79,6 +81,12 @@ abstract class Base {
 							'\\',
 							$fullArray
 						)
+					;
+					
+					// Extract root namespace (first element)
+					static::$ddClassNames->{$classNameFull}->namespacePrefixRoot =
+						'\\'
+						. $fullArray[0]
 					;
 				}
 			}
