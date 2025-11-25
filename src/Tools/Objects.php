@@ -147,7 +147,7 @@ class Objects {
 	
 	/**
 	 * convertType
-	 * @version 1.3.3 (2024-08-18)
+	 * @version 1.4 (2025-11-25)
 	 * 
 	 * @see README.md
 	 */
@@ -244,6 +244,14 @@ class Objects {
 		
 		// stdClass
 		if ($params->type == 'objectstdclass'){
+			// Support custom classes
+			if (
+				is_object($result)
+				&& !($result instanceof \stdClass)
+			){
+				$result = (array) $result;
+			}
+			
 			$result = (object) $result;
 		// array
 		}elseif ($params->type == 'objectarray'){

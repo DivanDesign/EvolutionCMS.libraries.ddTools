@@ -431,6 +431,7 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 	* Description: Input object | array | encoded string.
 	* Valid values:
 		* `stdClass`
+		* `object` — custom class instances are also supported
 		* `array`
 		* `stringJsonObject` — [JSON](https://en.wikipedia.org/wiki/JSON) object
 		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
