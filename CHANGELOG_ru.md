@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.67 (2025-11-25)
+
+* \+ `\DDTools\Tools\Objects::convertType` → Параметры → `$params->object` → Допустимые значения → `object`: Теперь также поддерживаются экземпляры кастомных классов.
+
+
 ## Версия 0.66 (2025-10-22)
 
 * \+ `\DDTools\Base\Base::getClassName()` → Результат → `$result->namespacePrefixRoot`: Новое свойство, содержащее корневой префикс пространства имён (например, `'\\ddSendFeedback'` из `'\\ddSendFeedback\\Sender\\Email\\Sender'`).

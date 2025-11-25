@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.67 (2025-11-25)
+
+* \+ `\DDTools\Tools\Objects::convertType` → Parameters → `$params->object` → Valid values → `object`: Custom class instances are now also supported.
+
+
 ## Version 0.66 (2025-10-22)
 
 * \+ `\DDTools\Base\Base::getClassName()` → Result → `$result->namespacePrefixRoot`: The new result property contains the root namespace prefix (e. g. `'\\ddSendFeedback'` of `'\\ddSendFeedback\\Sender\\Email\\Sender'`).
