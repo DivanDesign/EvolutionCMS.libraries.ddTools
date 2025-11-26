@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.67.1 (2025-11-26)
+
+* \* `\DDTools\Storage\DB\Storage::items_update`: Fixed UPDATE query execution bug in some MariaDB versions.
+
+
 ## Version 0.67 (2025-11-25)
 
 * \+ `\DDTools\Tools\Objects::convertType` → Parameters → `$params->object` → Valid values → `object`: Custom class instances are now also supported.
