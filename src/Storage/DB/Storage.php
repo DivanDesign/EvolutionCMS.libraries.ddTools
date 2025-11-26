@@ -427,7 +427,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.6.3 (2025-10-07)
+	 * @version 1.6.4 (2025-11-26)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
@@ -493,7 +493,9 @@ class Storage extends \DDTools\Storage\Storage {
 								@updated_ids
 							)
 						)
-					)
+					)'
+					// IS NOT NULL ensures the variable assignment condition (@updated_ids := ...) is properly evaluated as true. Without it, the UPDATE query may not execute in some MariaDB versions.
+					. ' IS NOT NULL
 				' . static::buildSqlLimitString($params) . '
 			');
 			$dbResult = \ddTools::$modx->db->getValue(
