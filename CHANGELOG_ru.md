@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.67.1 (2025-11-26)
+
+* \* `\DDTools\Storage\DB\Storage::items_update`: Исправлена ошибка выполнения запроса UPDATE в некоторых версиях MariaDB.
+
+
 ## Версия 0.67 (2025-11-25)
 
 * \+ `\DDTools\Tools\Objects::convertType` → Параметры → `$params->object` → Допустимые значения → `object`: Теперь также поддерживаются экземпляры кастомных классов.
