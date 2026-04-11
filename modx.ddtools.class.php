@@ -1695,6 +1695,177 @@ class ddTools {
 	}
 	
 	/**
+	 * deleteDocuments
+	 * @version 1.0 (2026-04-11)
+	 * 
+	 * @desc Delete document(s) with all their children (recursively). Cache of the deleted docs and their parents will be cleared.
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — Parameters.
+	 * @param $params->docIds {arrayIndexed|integer} — Document id(s) to delete.
+	 * @param $params->docIds[$index] {integer} — Document id to delete.
+	 * 
+	 * @return {boolean} — true — if everything is ok, or false — if there is no document, or something else went wrong.
+	 */
+	public static function deleteDocuments($params = []): bool {
+		// # Prepare parameters
+		$params = (object) $params;
+		
+		if (\ddTools::isEmpty($params->docIds)){
+			return false;
+		}
+		
+		// Support single ID
+		if (!is_array($params->docIds)){
+			$params->docIds = [$params->docIds];
+		}
+		
+		
+		// # Get info
+		
+		// Get IDs of documents to delete (validate that they actually exist)
+		$docIdsToDeleteDbRes = self::$modx->db->select(
+			'id',
+			self::$tables['site_content'],
+			// WHERE clause: process array of IDs
+			'`id` IN ("'
+				. implode(
+					'","',
+					$params->docIds
+				)
+			. '")'
+		);
+		
+		if (!self::$modx->db->getRecordCount($docIdsToDeleteDbRes)){
+			// Nothing to delete
+			return false;
+		}
+		
+		$docIdsToDelete = [];
+		
+		while ($doc = self::$modx->db->getRow($docIdsToDeleteDbRes)){
+			$docIdsToDelete[] = $doc['id'];
+		}
+		
+		$docIdsInSql =
+			' IN ("'
+				. implode(
+					'","',
+					$docIdsToDelete
+				)
+			. '")'
+		;
+		
+		
+		// # First delete children (recursively)
+		
+		$childDocsDbRes = self::$modx->db->select(
+			'id',
+			self::$tables['site_content'],
+			'`parent`' . $docIdsInSql
+		);
+		
+		if (self::$modx->db->getRecordCount($childDocsDbRes)){
+			$childIds = [];
+			
+			while ($child = self::$modx->db->getRow($childDocsDbRes)){
+				$childIds[] = $child['id'];
+			}
+			
+			self::deleteDocuments(['docIds' => $childIds]);
+		}
+		
+		
+		// # Delete
+		
+		// Delete documents
+		self::$modx->db->delete(
+			self::$tables['site_content'],
+			'`id`' . $docIdsInSql
+		);
+		
+		// Delete TV values
+		self::$modx->db->delete(
+			self::$tables['site_tmplvar_contentvalues'],
+			'`contentid`' . $docIdsInSql
+		);
+		
+		// Delete from document groups
+		self::$modx->db->delete(
+			self::$tables['document_groups'],
+			'`document`' . $docIdsInSql
+		);
+		
+		
+		// # Update usages (in-memory structures and cache)
+		
+		// Clear cache (including parents)
+		self::clearCache([
+			'docIds' => $docIdsToDelete,
+			'clearParentsCache' => true,
+		]);
+		
+		foreach (
+			$docIdsToDelete
+			as $deletedDocId
+		){
+			// Delete from documentMap:
+			// * entries where this doc is the child ($parentId => $deletedDocId)
+			// * entries where this doc is the parent ($deletedDocId => $childId)
+			foreach (
+				self::$modx->documentMap
+				as $mapIndex
+				=> $mapEntry
+			){
+				foreach (
+					$mapEntry
+					as $parentId
+					=> $childId
+				){
+					if (
+						$childId == $deletedDocId
+						|| $parentId == $deletedDocId
+					){
+						unset(self::$modx->documentMap[$mapIndex]);
+					}
+				}
+			}
+			
+			// Delete from documentListing, aliasListing
+			if (isset(self::$modx->aliasListing[$deletedDocId])){
+				$docPath = self::$modx->aliasListing[$deletedDocId]['path'];
+				$docAlias = self::$modx->aliasListing[$deletedDocId]['alias'];
+				
+				$listingKey =
+					$docPath !== ''
+					? (
+						$docPath
+						. '/'
+						. (
+							$docAlias != ''
+							? $docAlias
+							: $deletedDocId
+						)
+					)
+					: ''
+				;
+				
+				// Delete from documentListing
+				if (
+					$listingKey !== ''
+					&& isset(self::$modx->documentListing[$listingKey])
+				){
+					unset(self::$modx->documentListing[$listingKey]);
+				}
+				
+				// Delete from aliasListing
+				unset(self::$modx->aliasListing[$deletedDocId]);
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * getDocuments
 	 * @version 1.2.10 (2024-12-03)
 	 * 
