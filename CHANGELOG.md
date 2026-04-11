@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.68 (2026-04-11)
+
+* \+ `\ddTools::deleteDocuments`: The new public static method. Deletes document(s) with all their children (recursively). Cache of the deleted docs and their parents will be cleared.
+
+
 ## Version 0.67.1 (2025-11-26)
 
 * \* `\DDTools\Storage\DB\Storage::items_update`: Fixed UPDATE query execution bug in some MariaDB versions.
