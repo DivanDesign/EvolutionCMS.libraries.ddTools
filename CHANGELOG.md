@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.69 (2026-05-28)
+
+* \+ `\ddTools::getDocumentUrlById($docId)`: The new public static method. Gets relative URL of a document by its ID.
+* \+ README → Parameters description, Examples → `\ddTools::getDocumentIdByUrl`: Added the method description.
+
+
 ## Version 0.68 (2026-04-11)
 
 * \+ `\ddTools::deleteDocuments`: The new public static method. Deletes document(s) with all their children (recursively). Cache of the deleted docs and their parents will be cleared.
