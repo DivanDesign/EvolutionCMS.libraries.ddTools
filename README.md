@@ -283,6 +283,25 @@ Gets ID of a document by its URL.
 	* Valid values: `integer`
 
 
+### `\ddTools::getDocumentUrlById($docId)`
+
+Gets relative URL path of a document by its ID.
+
+* `$docId`
+	* Description: Document ID.
+	* Valid values: `integer`
+	* **Required**
+
+
+#### Returns
+
+* `$result`
+	* Description: Relative path without leading or trailing slashes.
+	* Valid values:
+		* `stringUrlRelative`
+		* `''` — empty string for site start or invalid ID (not found in `aliasListing`)
+
+
 ### `\DDTools\Tools\Files`
 
 
@@ -1548,9 +1567,14 @@ extract(\ddTools::verifyRenamedParams([
 ```
 
 
-### Document ID by URL (`\ddTools::getDocumentIdByUrl`)
+### Document URL and ID (`\ddTools::getDocumentIdByUrl`, `\ddTools::getDocumentUrlById`)
+
+Resolve document ID ↔ relative URL path.
 
 Suppose document `8` is available at `info/about` on the site:
+
+
+#### URL → ID (`\ddTools::getDocumentIdByUrl`)
 
 ```php
 \ddTools::getDocumentIdByUrl('info/about');
@@ -1564,6 +1588,20 @@ Suppose document `8` is available at `info/about` on the site:
 
 \ddTools::getDocumentIdByUrl('unknown/path');
 // 0
+```
+
+
+#### ID → URL path (`\ddTools::getDocumentUrlById`)
+
+```php
+\ddTools::getDocumentUrlById(8);
+// 'info/about'
+
+\ddTools::getDocumentUrlById($modx->getConfig('site_start'));
+// ''
+
+\ddTools::getDocumentUrlById(0);
+// ''
 ```
 
 
