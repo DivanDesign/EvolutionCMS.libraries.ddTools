@@ -262,6 +262,46 @@ You can use the `exctract` function to turn the array into variables of the curr
 	* Valid values: `mixed`
 
 
+### `\ddTools::getDocumentIdByUrl($url)`
+
+Gets ID of a document by its URL.
+
+* `$url`
+	* Description: Document URL or relative path.
+	* Valid values:
+		* `stringUrl`
+			* Relative path: `info/about`
+			* Absolute URL: `https://example.com/info/about`
+			* IDNA ASCII-compatible domains in absolute URLs are also supported.
+	* **Required**
+
+
+#### Returns
+
+* `$result`
+	* Description: Document ID, or `0` if the document was not found.
+	* Valid values: `integer`
+
+
+### `\ddTools::getDocumentUrlById($docId)`
+
+Gets relative URL path of a document by its ID.
+
+* `$docId`
+	* Description: Document ID.
+	* Valid values: `integer`
+	* **Required**
+
+
+#### Returns
+
+* `$result`
+	* Description: Relative path without leading or trailing slashes.
+	* Valid values:
+		* `stringUrlRelative`
+		* `''` — empty string for site start or invalid ID (not found in `aliasListing`)
+
+
 ### `\DDTools\Tools\Files`
 
 
@@ -1524,6 +1564,44 @@ extract(\ddTools::verifyRenamedParams([
 	// Also you can prevent writing to the CMS event log if you want
 	'writeToLog' => false,
 ]));
+```
+
+
+### Document URL and ID (`\ddTools::getDocumentIdByUrl`, `\ddTools::getDocumentUrlById`)
+
+Resolve document ID ↔ relative URL path.
+
+Suppose document `8` is available at `info/about` on the site:
+
+
+#### URL → ID (`\ddTools::getDocumentIdByUrl`)
+
+```php
+\ddTools::getDocumentIdByUrl('info/about');
+// 8
+
+\ddTools::getDocumentIdByUrl('https://example.com/info/about');
+// 8
+
+\ddTools::getDocumentIdByUrl('/');
+// site_start document ID (from `$modx->getConfig('site_start')`)
+
+\ddTools::getDocumentIdByUrl('unknown/path');
+// 0
+```
+
+
+#### ID → URL path (`\ddTools::getDocumentUrlById`)
+
+```php
+\ddTools::getDocumentUrlById(8);
+// 'info/about'
+
+\ddTools::getDocumentUrlById($modx->getConfig('site_start'));
+// ''
+
+\ddTools::getDocumentUrlById(0);
+// ''
 ```
 
 

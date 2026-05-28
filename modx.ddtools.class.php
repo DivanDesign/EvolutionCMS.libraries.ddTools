@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.68 (2026-04-11)
+ * @version 0.69 (2026-05-28)
  * 
  * @see README.md
  * 
@@ -2893,6 +2893,47 @@ class ddTools {
 		}else{
 			return 0;
 		}
+	}
+	
+	/**
+	 * getDocumentUrlById
+	 * @version 1.0 (2026-05-28)
+	 * 
+	 * @desc Gets relative URL path of a document by its ID.
+	 * 
+	 * @param $docId {integer} — Document ID.
+	 * 
+	 * @return {string} — Relative path without leading/trailing slashes (same as `documentListing` key). Empty string for site start or invalid ID (not found in `aliasListing`).
+	 */
+	public static function getDocumentUrlById($docId): string {
+		$result = '';
+		$docId = intval($docId);
+		
+		if (
+			// If not site start
+			$docId != self::$modx->getConfig('site_start')
+			// And ID is valid
+			&& !empty(self::$modx->aliasListing[$docId])
+		){
+			$docAliasListingItem = (object) self::$modx->aliasListing[$docId];
+			
+			// Path can be empty for root documents
+			if (!empty($docAliasListingItem->path)){
+				$result =
+					$docAliasListingItem->path
+					. '/'
+				;
+			}
+			
+			// Add alias
+			$result .=
+				!empty($docAliasListingItem->alias)
+				? $docAliasListingItem->alias
+				: $docId
+			;
+		}
+		
+		return $result;
 	}
 	
 	/**
