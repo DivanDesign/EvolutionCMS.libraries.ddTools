@@ -25,11 +25,11 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @property $columns {\DDTools\ObjectCollection} — Table columns.
 	 * @property $columns->items[$i] {stdClass} — Column data.
 	 * @property $columns->items[$i]->name {string} — Column name.
-	 * @property $columns->items[$i]->attrs {string} — Column attributes (empty value means static::$columnsDefaultParams->attrs). Default: —.
-	 * @property $columns->items[$i]->isReadOnly {boolean} — Can column be modified? Default: false.
-	 * @property $columns->items[$i]->isPublic {boolean} — Can column be used quite safely? Default: false.
-	 * @property $columns->items[$i]->isComparedCaseSensitive {boolean} — Should column to be compared case-sensitive in where clauses? Default: false.
-	 * @property $columns->items[$i]->isTagsAllowed {boolean} — Are HTML and MODX tags allowed? Default: false.
+	 * @property [$columns->items[$i]->attrs=static::$columnsDefaultParams->attrs] {string} — Column attributes.
+	 * @property [$columns->items[$i]->isReadOnly=false] {boolean} — Can column be modified?
+	 * @property [$columns->items[$i]->isPublic=false] {boolean} — Can column be used quite safely?
+	 * @property [$columns->items[$i]->isComparedCaseSensitive=false] {boolean} — Should column to be compared case-sensitive in where clauses?
+	 * @property [$columns->items[$i]->isTagsAllowed=false] {boolean} — Are HTML and MODX tags allowed?
 	 */
 	protected $columns = [
 		[
