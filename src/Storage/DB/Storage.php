@@ -427,7 +427,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.6.4 (2025-11-26)
+	 * @version 1.6.5 (2026-09-05)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
@@ -472,6 +472,13 @@ class Storage extends \DDTools\Storage\Storage {
 		if (!empty($params->data)){
 			$firstColumnName = $this->columns->getOneItem()->name;
 			
+			$where = $this->items_prepareWhere($params);
+			
+			// Empty parentheses are invalid SQL, `1` means all rows
+			if ($where === ''){
+				$where = '1';
+			}
+			
 			// Collect all updated resource IDs to a SQL variable
 			\ddTools::$modx->db->query('SET @updated_ids := ""');
 			\ddTools::$modx->db->query('
@@ -481,7 +488,7 @@ class Storage extends \DDTools\Storage\Storage {
 					' . $this->buildSqlSetString(['data' => $params->data]) . '
 				WHERE
 					(
-						' . $this->items_prepareWhere($params) . '
+						' . $where . '
 					)
 					AND (
 						@updated_ids := IF (
