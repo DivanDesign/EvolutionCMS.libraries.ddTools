@@ -1157,6 +1157,12 @@ It's convenient to override this method in child classes if items are not plain 
 		* `object`
 
 
+### [`\DDTools\Storage`](docs/en/Storage.md)
+
+A uniform API for collections of items (`items_add`, `items_update`, `items_delete`, `items_get`).
+Use it for a project table or an existing DB table (e. g. `site_content`) instead of raw SQL queries.
+
+
 ### `\DDTools\Base\Base`
 
 Simple abstract class with some small methods facilitating your work.
