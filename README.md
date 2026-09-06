@@ -50,49 +50,17 @@ require_once(
 
 ## Reference
 
-
-### [`\ddTools`](docs/en/ddTools.md)
-
-Static helpers: empty values, URLs, templates, `parseText`, renamed params, document ID/URL.
-
-
-### [`\DDTools\Tools\Files`](docs/en/Tools/Files.md)
-
-File helpers: create, copy and remove directories, transform images (thumbnails, crop, resize, fill, watermark).
-
-
-### [`\DDTools\Tools\Objects`](docs/en/Tools/Objects.md)
-
-Helpers for objects and arrays: property access, type conversion, extend, unfold.
-
-
-### [`\DDTools\Tools\Cache`](docs/en/Tools/Cache.md)
-
-You can cache some data (e. g. a snippet result).
-
-There are 2 levels of caching: stable (file-based) and quick (`$_SESSION`-based). All methods utilize both levels automatically.
-
-
-### [`\DDTools\ObjectCollection`](docs/en/ObjectCollection.md)
-
-Class representing a collection of some objects or arrays.
-
-
-### [`\DDTools\Storage`](docs/en/Storage.md)
-
-A uniform API for collections of items (`items_add`, `items_update`, `items_delete`, `items_get`).
-Use it for a project table or an existing DB table (e. g. `site_content`) instead of raw SQL queries.
-
-
-### [`\DDTools\Base`](docs/en/Base.md)
-
-Simple abstract class and trait with some small methods facilitating your work.
-It is convenient to inherit your classes from `\DDTools\Base\Base` or use `\DDTools\Base\AncestorTrait`.
-
-
-### [`\DDTools\Snippet`](docs/en/Snippet.md)
-
-Abstract class for snippets.
+* [`\ddTools`](docs/en/ddTools.md) — Static helpers: empty values, URLs, templates, `parseText`, renamed params, document ID/URL.
+* `\DDTools\Tools\`:
+	* [`Files`](docs/en/Tools/Files.md) — File helpers: create, copy and remove directories, transform images (thumbnails, crop, resize, fill, watermark).
+	* [`Objects`](docs/en/Tools/Objects.md) — Helpers for objects and arrays: property access, type conversion, extend, unfold.
+	* [`Cache`](docs/en/Tools/Cache.md) — You can cache some data (e. g. a snippet result).
+		* There are 2 levels of caching: stable (file-based) and quick (`$_SESSION`-based). All methods utilize both levels automatically.
+* [`\DDTools\ObjectCollection`](docs/en/ObjectCollection.md) — Class representing a collection of some objects or arrays.
+* [`\DDTools\Storage`](docs/en/Storage.md) — A uniform API for collections of items (`items_add`, `items_update`, `items_delete`, `items_get`).
+	* Use it for a project table or an existing DB table (e. g. `site_content`) instead of raw SQL queries.
+* [`\DDTools\Base`](docs/en/Base.md) — Simple abstract class and trait with some small methods facilitating your work.
+* [`\DDTools\Snippet`](docs/en/Snippet.md) — Abstract class for snippets.
 
 
 ## Links
