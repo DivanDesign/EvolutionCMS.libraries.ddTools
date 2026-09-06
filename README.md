@@ -58,7 +58,7 @@ Static helpers: empty values, URLs, templates, `parseText`, renamed params, docu
 
 ### [`\DDTools\Tools\Files`](docs/en/Tools/Files.md)
 
-Image transforms: thumbnails, crop, resize, fill background, watermark.
+File helpers: create, copy and remove directories, transform images (thumbnails, crop, resize, fill, watermark).
 
 
 ### [`\DDTools\Tools\Objects`](docs/en/Tools/Objects.md)

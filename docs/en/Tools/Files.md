@@ -1,12 +1,98 @@
 # `\DDTools\Tools\Files`
 
-Image transforms: thumbnails, crop, resize, fill background, watermark.
+File helpers: create, copy and remove directories, transform images (thumbnails, crop, resize, fill, watermark).
 
 See also:
 * [README](../../../README.md)
 
 
 ## Reference
+
+
+### `\DDTools\Tools\Files::createDir($params)`
+
+* Description: Makes a directory using `$modx->config['new_folder_permissions']`.
+	* Nested directories will be created too.
+	* Does not throw an exception if the folder already exists.
+* Modifiers: `public static`
+
+
+#### Parameters
+
+* `$params`
+	* Description: Parameters.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->path`
+	* Description: The directory path.
+	* Valid values: `string`
+	* **Required**
+
+
+#### Returns
+
+* `$result`
+	* Description: Success status.
+	* Valid values: `boolean`
+
+
+### `\DDTools\Tools\Files::copyDir($params)`
+
+* Description: Copies a folder with all contents recursively.
+* Modifiers: `public static`
+
+
+#### Parameters
+
+* `$params`
+	* Description: Parameters.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->sourcePath`
+	* Description: Path to the directory to copy.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->destinationPath`
+	* Description: The destination path.
+		* Created if it does not exist.
+	* Valid values: `string`
+	* **Required**
+
+
+#### Returns
+
+* `$result`
+	* Description: `true` on success, `false` on failure (e. g. source path does not exist).
+	* Valid values: `boolean`
+
+
+### `\DDTools\Tools\Files::removeDir($path)`
+
+* Description: Removes a folder with all contents recursively.
+	* Returns `true` if the folder does not already exist.
+* Modifiers: `public static`
+
+
+#### Parameters
+
+* `$path`
+	* Description: Path to the directory to remove.
+	* Valid values: `string`
+	* **Required**
+
+
+#### Returns
+
+* `$result`
+	* Description: Success status, `true` if the folder does not already exist.
+	* Valid values: `boolean`
 
 
 ### `\DDTools\Tools\Files::modifyImage($params)`
