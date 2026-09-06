@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.69.1 (2026-09-06)
+
+* \* `\DDTools\Storage\DB\Storage::items_update` → Параметры → `$params->where` → Допустимые значения → `null` | `''`: Пустое значение теперь обновляет все элементы, как и было описано.
+* \* README: Подробный справочник перенесён в [`docs/en/`](docs/en/).
+* \+ Docs → [Files](docs/en/Tools/Files.md) → Reference → `createDir`, `copyDir`, `removeDir`: Добавлено описание.
+
+
 ## Версия 0.69 (2026-05-28)
 
 * \+ `\ddTools::getDocumentUrlById($docId)`: Новый публичный статичный метод. Получает относительный URL документа по его ID.

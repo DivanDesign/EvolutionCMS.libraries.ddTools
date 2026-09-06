@@ -25,11 +25,11 @@ class Storage extends \DDTools\Storage\Storage {
 	 * @property $columns {\DDTools\ObjectCollection} — Table columns.
 	 * @property $columns->items[$i] {stdClass} — Column data.
 	 * @property $columns->items[$i]->name {string} — Column name.
-	 * @property $columns->items[$i]->attrs {string} — Column attributes (empty value means static::$columnsDefaultParams->attrs). Default: —.
-	 * @property $columns->items[$i]->isReadOnly {boolean} — Can column be modified? Default: false.
-	 * @property $columns->items[$i]->isPublic {boolean} — Can column be used quite safely? Default: false.
-	 * @property $columns->items[$i]->isComparedCaseSensitive {boolean} — Should column to be compared case-sensitive in where clauses? Default: false.
-	 * @property $columns->items[$i]->isTagsAllowed {boolean} — Are HTML and MODX tags allowed? Default: false.
+	 * @property [$columns->items[$i]->attrs=static::$columnsDefaultParams->attrs] {string} — Column attributes.
+	 * @property [$columns->items[$i]->isReadOnly=false] {boolean} — Can column be modified?
+	 * @property [$columns->items[$i]->isPublic=false] {boolean} — Can column be used quite safely?
+	 * @property [$columns->items[$i]->isComparedCaseSensitive=false] {boolean} — Should column to be compared case-sensitive in where clauses?
+	 * @property [$columns->items[$i]->isTagsAllowed=false] {boolean} — Are HTML and MODX tags allowed?
 	 */
 	protected $columns = [
 		[
@@ -427,7 +427,7 @@ class Storage extends \DDTools\Storage\Storage {
 	
 	/**
 	 * items_update
-	 * @version 1.6.4 (2025-11-26)
+	 * @version 1.6.5 (2026-09-05)
 	 * 
 	 * @param $params {stdClass|arrayAssociative} — The parameters object.
 	 * @param $params->data {object|array} — New item data. Existing item will be extended by this data.
@@ -472,6 +472,13 @@ class Storage extends \DDTools\Storage\Storage {
 		if (!empty($params->data)){
 			$firstColumnName = $this->columns->getOneItem()->name;
 			
+			$where = $this->items_prepareWhere($params);
+			
+			// Empty parentheses are invalid SQL, `1` means all rows
+			if ($where === ''){
+				$where = '1';
+			}
+			
 			// Collect all updated resource IDs to a SQL variable
 			\ddTools::$modx->db->query('SET @updated_ids := ""');
 			\ddTools::$modx->db->query('
@@ -481,7 +488,7 @@ class Storage extends \DDTools\Storage\Storage {
 					' . $this->buildSqlSetString(['data' => $params->data]) . '
 				WHERE
 					(
-						' . $this->items_prepareWhere($params) . '
+						' . $where . '
 					)
 					AND (
 						@updated_ids := IF (

@@ -1,6 +1,13 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.69.1 (2026-09-06)
+
+* \* `\DDTools\Storage\DB\Storage::items_update` → Parameters → `$params->where` → Valid values → `null` | `''`: Empty value now updates all items as documented.
+* \* README: Detailed reference moved to [`docs/en/`](docs/en/).
+* \+ Docs → [Files](docs/en/Tools/Files.md) → Reference → `createDir`, `copyDir`, `removeDir`: Documented.
+
+
 ## Version 0.69 (2026-05-28)
 
 * \+ `\ddTools::getDocumentUrlById($docId)`: The new public static method. Gets relative URL of a document by its ID.
