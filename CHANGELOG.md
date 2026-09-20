@@ -1,6 +1,12 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.70 (2026-09-20)
+
+* \+ `\DDTools\Tools\Objects::convertType` → Parameters → `$params->type` → Valid values → `'stringGluedValues'`: The new available value. Glues object/array values into one string (keys are discarded, empty input yields an empty string).
+* \+ README_ru.md: Russian translation of the high-level README.
+
+
 ## Version 0.69.1 (2026-09-06)
 
 * \* `\DDTools\Storage\DB\Storage::items_update` → Parameters → `$params->where` → Valid values → `null` | `''`: Empty value now updates all items as documented.

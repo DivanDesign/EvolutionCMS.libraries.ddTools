@@ -139,6 +139,7 @@ See also:
 		* `'stringJsonArray'`
 		* `'stringQueryFormatted'`
 		* `'stringHtmlAttrs'` — HTML attributes string (e. g. `width='100' height='50'`), boolean values will be converted to `0` or `1` (e. g. `data-is-loaded='1'`), objects/arrays will be converted to JSON string (e. g. `data-user-data='{"firstName": "Elon", "lastName": "Musk"}'`)
+		* `'stringGluedValues'` — glued object/array values in original order, keys discarded (e. g. `{a: 'Hello', b: 'World'}` → `'HelloWorld'`), empty input yields an empty string
 	* Default value: `'objectAuto'`
 
 
@@ -151,6 +152,7 @@ See also:
 		* `array`
 		* `stringJsonObject`
 		* `stringJsonArray`
+		* `stringGluedValues`
 
 
 ### `\DDTools\Tools\Objects::extend($params)`
@@ -402,6 +404,27 @@ Returns:
 
 ```html
 data-name='KINO' data-is-active='1' data-members='["Viktor Tsoi","Yuri Kasparyan","Aleksei Rybin","Igor Tikhomirov","Aleksandr Titov","Georgy Guryanov","Oleg Valinsky"]'
+```
+
+
+#### Glue object or array values into one string
+
+Keys are discarded, values stay in original order.
+
+```php
+\DDTools\Tools\Objects::convertType([
+	'object' => [
+		'header' => '<header><h1>Pink Floyd</h1></header>',
+		'main' => '<main><p>An English rock band formed in London.</p></main>',
+	],
+	'type' => 'stringGluedValues',
+]);
+```
+
+Returns:
+
+```html
+<header><h1>Pink Floyd</h1></header><main><p>An English rock band formed in London.</p></main>
 ```
 
 

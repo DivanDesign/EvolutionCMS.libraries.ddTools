@@ -147,7 +147,7 @@ class Objects {
 	
 	/**
 	 * convertType
-	 * @version 1.4 (2025-11-25)
+	 * @version 1.5 (2026-09-20)
 	 * 
 	 * @see README.md
 	 */
@@ -300,6 +300,12 @@ class Objects {
 			$result = implode(
 				' ',
 				$result
+			);
+		// stringGluedValues
+		}elseif ($params->type == 'stringgluedvalues'){
+			$result = implode(
+				'',
+				array_values((array) $result)
 			);
 		// stringJson
 		}elseif(
