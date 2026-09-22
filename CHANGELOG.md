@@ -1,6 +1,14 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.71 (2026-09-22)
+
+* \* **Breaking.** `\ddTools::parseSource`: Parses a custom string without replacing `$modx->documentOutput` and without invoking `OnParseDocument`:
+	* \* The method was always meant for fragments, not the document body, nested `$modx->parseDocumentSource` used to overwrite the page output. `$modx->parseDocumentSource` wrote `documentOutput` only so page plugins could rewrite the full page.
+	* \* Same merge/eval steps and min/max parser passes as `$modx->parseDocumentSource`, tags in `$source` still execute (settings, fields, chunks, snippets, placeholders, URLs).
+* \* Attention! Backward compatibility is broken.
+
+
 ## Version 0.70 (2026-09-20)
 
 * \+ `\DDTools\Tools\Objects::convertType` → Parameters → `$params->type` → Valid values → `'stringGluedValues'`: The new available value. Glues object/array values into one string (keys are discarded, empty input yields an empty string).

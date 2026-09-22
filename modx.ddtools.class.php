@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.70 (2026-09-20)
+ * @version 0.71 (2026-09-22)
  * 
  * @see README.md
  * 
@@ -1090,25 +1090,78 @@ class ddTools {
 	
 	/**
 	 * parseSource
-	 * @version 1.1.1 (2024-08-04)
+	 * @version 1.2 (2026-09-21)
 	 * 
-	 * @desc Parse the source (run $modx->parseDocumentSource and $modx->rewriteUrls);
+	 * @desc Parses a custom string with Evolution tags (settings, document fields, chunks, snippets, placeholders, URLs).
+	 * Does not replace `$modx->documentOutput` and does not invoke `OnParseDocument` — those belong to the page parser, not a custom fragment.
 	 * 
 	 * @param $source {string} — Text to parse. @required
 	 * 
 	 * @return {string}
 	 */
-	public static function parseSource($source){
-		// Uncashed snippets must be evaled too
-		$source = strtr(
-			$source,
+	public static function parseSource($source): string {
+		$result = $source;
+		
+		$sourceHash = '';
+		
+		$parserPasses =
+			empty(self::$modx->minParserPasses)
+			? 2
+			: self::$modx->minParserPasses
+		;
+		$maxParserPasses =
+			empty(self::$modx->maxParserPasses)
+			? 10
+			: self::$modx->maxParserPasses
+		;
+		
+		// Uncached snippets must be evaled too
+		$result = strtr(
+			$result,
 			[
 				'[!' => '[[',
-				'!]' => ']]'
+				'!]' => ']]',
 			]
 		);
 		
-		return self::$modx->rewriteUrls(self::$modx->parseDocumentSource($source));
+		// Same merge/eval loop as `$modx->parseDocumentSource`, but without writing `documentOutput` or firing `OnParseDocument` (those exist so page plugins can rewrite the full document)
+		for (
+			$i = 0;
+			$i < $parserPasses;
+			$i++
+		){
+			// Hash on the last scheduled pass so we can add another pass if nested tags appeared
+			if ($i == ($parserPasses - 1)){
+				$resultHash = md5($result);
+			}
+			
+			if (self::$modx->getConfig('enable_at_syntax')){
+				$result = self::$modx->ignoreCommentedTagsContent($result);
+				$result = self::$modx->mergeConditionalTagsContent($result);
+			}
+			
+			$result = self::$modx->mergeSettingsContent($result);
+			$result = self::$modx->mergeDocumentContent($result);
+			$result = self::$modx->mergeChunkContent($result);
+			$result = self::$modx->evalSnippets($result);
+			$result = self::$modx->mergePlaceholderContent($result);
+			
+			// Add another pass
+			if (
+				// Last pass
+				$i == ($parserPasses - 1)
+				// Within the maximum limit
+				&& $i < ($maxParserPasses - 1)
+				// Result has changed
+				&& $resultHash != md5($result)
+			){
+				$parserPasses++;
+			}
+		}
+		
+		$result = self::$modx->rewriteUrls($result);
+		
+		return $result;
 	}
 	
 	/**
