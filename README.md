@@ -50,7 +50,7 @@ require_once(
 
 ## Reference
 
-* [`\ddTools`](docs/en/ddTools.md) — Static helpers: empty values, URLs, templates, `parseText`, renamed params, document ID/URL.
+* [`\ddTools`](docs/en/ddTools.md) — Static helpers: empty values, URLs, templates, `parseText`, `parseSource`, renamed params, document ID/URL.
 * `\DDTools\Tools\`:
 	* [`Files`](docs/en/Tools/Files.md) — File helpers: create, copy and remove directories, transform images (thumbnails, crop, resize, fill, watermark).
 	* [`Objects`](docs/en/Tools/Objects.md) — Helpers for objects and arrays: property access, type conversion, extend, unfold.

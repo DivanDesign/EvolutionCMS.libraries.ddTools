@@ -163,7 +163,7 @@ See also:
 	* Default value: `false`
 	
 * `$params->isCompletelyParsingEnabled`
-	* Description: Additional parsing of document fields, settings, chunks, snippets, URLs — everything.
+	* Description: Additional parsing of document fields, settings, chunks, snippets, URLs — everything (via `\ddTools::parseSource`).
 	* Valid values: `boolean`
 	* Default value: `true`
 
@@ -172,6 +172,30 @@ See also:
 
 * `$result`
 	* Description: Parsed text.
+	* Valid values: `string`
+
+
+### `\ddTools::parseSource($source)`
+
+* Description: Parses a custom string with Evolution tags (settings, document fields, chunks, snippets, placeholders, URLs).
+	* Uncached snippets are executed too.
+	* Same merge/eval passes as `$modx->parseDocumentSource` (`minParserPasses` / `maxParserPasses`, default 2–10), then `$modx->rewriteUrls`.
+	* Does **not** replace `$modx->documentOutput` and does **not** invoke `OnParseDocument`. The method is for fragments, not the document body, calling `$modx->parseDocumentSource` on a fragment would overwrite the page output.
+* Modifiers: `public static`
+
+
+#### Parameters
+
+* `$source`
+	* Description: String to parse.
+	* Valid values: `string`
+	* **Required**
+
+
+#### Returns
+
+* `$result`
+	* Description: Parsed string.
 	* Valid values: `string`
 
 
